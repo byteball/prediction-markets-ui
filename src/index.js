@@ -5,6 +5,7 @@ import { Provider } from 'react-redux';
 import { PersistGate } from "redux-persist/integration/react";
 import "antd/dist/antd.less";
 
+import client from 'services/obyte';
 import getStore from "./store";
 import AppRouter from 'AppRouter';
 import './index.css';

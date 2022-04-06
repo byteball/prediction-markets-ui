@@ -8,7 +8,7 @@
     "@reduxjs/toolkit": "^1.8.1",
     "antd": "^4.19.5",
     "craco-less": "^1.17.1",
-    "obyte": "^0.1.14",
+    "obyte": "^0.1.23",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
     "react-helmet-async": "^1.2.3",
