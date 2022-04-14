@@ -3,12 +3,34 @@ import { createSlice } from '@reduxjs/toolkit';
 export const settingsSlice = createSlice({
   name: 'settings',
   initialState: {
-    
+    creationOrder: null
   },
-  reducers: {}
+  reducers: {
+    saveCreationOrder: (state, action) => {
+      state.creationOrder = {
+        data: action.payload,
+        status: 'order'
+      };
+    },
+    removeCreationOrder: (state) => {
+      state.creationOrder = null;
+    },
+    updateCreationOrder: (state, action) => {
+      const payload = action.payload || {};
+
+      state.creationOrder = {
+        ...state.creationOrder,
+        ...payload
+      };
+    },
+  }
 });
 
-export const {} = settingsSlice.actions;
+export const {
+  saveCreationOrder,
+  removeCreationOrder,
+  updateCreationOrder
+} = settingsSlice.actions;
 
 export default settingsSlice.reducer;
 
@@ -16,4 +38,4 @@ export default settingsSlice.reducer;
 // the state. Selectors can also be defined inline where they're used instead of
 // in the slice file. For example: `useSelector((state) => state.auth.value)`
 
-export const selectSettings = state => state.settings;
+export const selectCreationOrder = state => state.settings.creationOrder;

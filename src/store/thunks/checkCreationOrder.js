@@ -1,0 +1,1 @@
+arb_profit_tax = 0.05
