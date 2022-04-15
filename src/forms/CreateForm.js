@@ -93,8 +93,8 @@ export const paramList = {
   },
   arb_profit_fee: {
     description: 'info',
-    placeholder: "3",
-    initValue: 3,
+    placeholder: "90",
+    initValue: 90,
     validator: (value) => {
       return value && isNumber(Number(value)) && Number(value) >= 0 && Number(value) < 100
     }
