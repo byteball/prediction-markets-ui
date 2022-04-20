@@ -1,0 +1,52 @@
+.itemWrap {
+  padding: 15px;
+  color: #333;
+  border-radius: 7px;
+  margin-bottom: 30px;
+  box-shadow: 0px 0px 10px 10px rgba(244, 244, 244, 0.7);
+  position: relative;
+}
+
+.notifyWrap {
+  font-size: 12px;
+  font-weight: 300;
+  margin-bottom: 5px;
+}
+
+.eventDesc {
+  margin-bottom: 5px;
+  font-weight: 500;
+  font-size: 16px;
+}
+
+.infoWrap {
+  padding-top: 25px;
+  font-size: 14px;
+}
+
+.infoTitle {
+  color: #bfbfbf;
+  text-transform: uppercase;
+  font-size: 14px;
+}
+
+.infoValueInCrypto {
+  font-size: 14px;
+  margin-bottom: 10px;
+}
+
+/* Small devices (landscape phones, 576px and up) */
+@media (min-width: 576px) {}
+
+/* Medium devices (tablets, 768px and up) */
+@media (min-width: 768px) {
+  .infoValueInCrypto {
+    margin-bottom: 0;
+  }
+}
+
+/* Large devices (desktops, 992px and up) */
+@media (min-width: 992px) {}
+
+/* Extra large devices (large desktops, 1200px and up) */
+@media (min-width: 1200px) {}

@@ -1,4 +1,4 @@
-import { CreatePage, MainPage } from "pages";
+import { CreatePage, MainPage, MarketPage } from "pages";
 import { Routes, Route, BrowserRouter } from "react-router-dom";
 
 const AppRouter = () => {
@@ -6,6 +6,7 @@ const AppRouter = () => {
     <Routes>
       <Route path="/" element={<MainPage />} />
       <Route path="/create" element={<CreatePage />} />
+      <Route path="/market" element={<MarketPage />} />
     </Routes>
   </BrowserRouter>
 }

@@ -23,7 +23,7 @@ export const Header = () => {
           </div>
         </Col>
         <Col>
-          <Button size="large" type="primary">WALLET</Button>
+          <Button size="large">WALLET</Button>
         </Col>
       </Row>
     </div>

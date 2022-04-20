@@ -4,6 +4,7 @@
   "private": true,
   "dependencies": {
     "@ant-design/icons": "^4.2.1",
+    "@ant-design/plots": "^1.0.9",
     "@craco/craco": "^6.0.0",
     "@reduxjs/toolkit": "^1.8.1",
     "antd": "^4.19.5",
