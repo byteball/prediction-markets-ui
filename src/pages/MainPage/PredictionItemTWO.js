@@ -1,14 +1,12 @@
-import { Line, TinyArea, TinyLine } from '@ant-design/plots';
-import { Fragment, useEffect, useRef, useState } from "react";
-import { Badge, Card, Col, Row, Space, Tooltip } from "antd";
+import { Line } from '@ant-design/plots';
+import { useEffect, useRef, useState } from "react";
+import { Col, Row, Space, Tooltip } from "antd";
 import { Link } from "react-router-dom";
 import moment from 'moment';
 
 import styles from "./PredictionItemTWO.module.css";
 import { useSelector } from 'react-redux';
-import { selectReserveAssets, selectReservesToUsdRate } from 'store/slices/settingsSlice';
-import { createChart } from 'lightweight-charts';
-import { min } from 'lodash';
+import { selectReservesToUsdRate } from 'store/slices/settingsSlice';
 
 export const data = [
   {
@@ -105,64 +103,74 @@ export const data = [
 
 
 
-// const config = 
+const config = {
+  xField: 'date',
+  yField: 'value',
+  seriesField: 'type',
+  legend: false,
+  xAxis: false,
+  yAxis: false,
+  autoFit: true,
+  animation: false,
+  annotations: false,
+  label: null,
+  labelOffset: 0,
+  renderer: 'svg',
+  antialias: true,
+  appendPadding: 0,
+  padding: [0, 0, 0, 0],
+  meta: {
+    count: { min: 0 }
+  },
+  color: ({ type }) => {
+    return type === 'NO' ? '#ffa39e' : type === 'YES' ? '#b7eb8f' : '#ffe58f';
+  }
+};
 
 const max_display_decimals = 5;
 
-export const PredictionItem = ({ category, reserve_asset, aa_address, event, reserve = 0, reserve_decimals = 0, yes_decimals = 0, no_decimals = 0, draw_decimals = 0, yes_price = 0, no_price = 0, draw_price = 0, allow_draw, end_of_trading_period, candles, reserve_symbol, yes_symbol, no_symbol, draw_symbol }) => {
+export const PredictionItem = ({category, aa_address, event, reserve_asset, reserve = 0, reserve_decimals = 0, yes_decimals = 0, no_decimals = 0, draw_decimals = 0, yes_price = 0, no_price = 0, draw_price = 0, allow_draw, end_of_trading_period, candles, reserve_symbol, yes_symbol, no_symbol, draw_symbol }) => {
   const infoWrapRef = useRef();
   const [infoHeight, setInfoHeight] = useState();
   const rates = useSelector(selectReservesToUsdRate);
-  const reserveAssets = useSelector(selectReserveAssets);
-  const nowHourTimestamp = moment.utc().startOf("hour").unix();
-  const now = moment.utc().unix();
-
-  const actualReserveSymbol = Object.entries(reserveAssets).find(([_, asset]) => asset === reserve_asset)?.[0];
-
-  const [config, setConfig] = useState({
-    autoFit: true,
-    smooth: true,
-    renderer: 'svg',
-    animation: false,
-    meta: {
-      nice: true
-    },
-    color: "#1D90FF"
-  });
-
-  const currentReserveRate = rates ? rates[actualReserveSymbol]?.[nowHourTimestamp] || rates[actualReserveSymbol]?.[nowHourTimestamp - 3600] || 0 : 0;
+  const currentReserveRate = rates ? rates[reserve_asset] : 0;
   const [dataForChart, setDataForChart] = useState([]);
+
+  // {
+  //   "date": "1850",
+  //   "value": 0,
+  //   "type": "YES"
+  // },
 
   useEffect(async () => {
     let data = [];
-
-    if (rates[reserve_symbol]) {
-      (candles || []).forEach((item, i) => {
-        data = [...data,
-        item.yes_price * rates[reserve_symbol][item.start_timestamp],
-        ]
-      });
-    }
-    const minValue = min(data);
-    setConfig(c => ({
-      ...c,
-      formatter: () => 3,
-      tooltip: {
-        customContent: (_, data) => {
-          if (data && data[0]) {
-            const { value } = data[0];
-            return <span>1 {yes_symbol || "YES-token"} = ${Number(+value + minValue).toFixed(2)}</span>
-          }
-        }
+    (candles || []).forEach((item, i) => {
+      data = [...data,
+      {
+        "date": item.start_timestamp,
+        "value": item.yes_price * item.reserve_to_usd_rate,
+        "type": "YES"
+      },
+      {
+        "date": item.start_timestamp,
+        "value": item.no_price * item.reserve_to_usd_rate,
+        "type": "NO"
       }
-    }));
-
-    setDataForChart(data.map((value) => value - minValue));
-  }, [candles, rates, yes_symbol]);
+      ]
+      if (allow_draw) {
+        data.push({
+          "date": item.start_timestamp,
+          "value": item.draw_price * item.reserve_to_usd_rate,
+          "type": "DRAW"
+        })
+      }
+    });
+    
+    setDataForChart(data);
+  }, [candles]);
 
   useEffect(() => {
     const height = infoWrapRef.current.clientHeight;
-
     if (height) {
       setInfoHeight(height);
     }
@@ -175,21 +183,14 @@ export const PredictionItem = ({ category, reserve_asset, aa_address, event, res
   const expirationDateView = moment.unix(end_of_trading_period).format('ll')
   const afterExpirationDateView = moment.unix(end_of_trading_period).fromNow();
 
-  const isExpiry = now > end_of_trading_period;
-  const Wrapper = false && isExpiry ? Badge.Ribbon : Fragment;
-
-  const wrapperProps = false && isExpiry ? { 
-    color: "red",
-    text: <div style={{ fontSize: 12 }}>Expiry</div>,
-    placement: "start"
-  } : {};
-
-  return <Wrapper {...wrapperProps}><Link to={`/market/${aa_address}`}>
-    <Card className={styles.itemWrap} style={{color: "#fff"}}>
+  console.log(reserve_symbol, reserve_asset, reserveView, currentReserveRate)
+  // display: 'flex', flexDirection: 'column' 
+  return <Link to={`/market/${aa_address}`}>
+    <div className={styles.itemWrap}>
       <Row gutter={10}>
         <Col md={{ span: 16 }} xs={{ span: 24 }} sm={{ span: 24 }} ref={infoWrapRef}>
           <Space className={styles.notifyWrap}>
-            {category && <span className='firstBigLetter'>{category} </span>}<span>Expiration {expirationDateView} ({afterExpirationDateView})</span>
+            {category && <span>{category} </span>}<span>Expiration {expirationDateView} ({afterExpirationDateView})</span>
           </Space>
 
           <div className={styles.eventDesc}>
@@ -230,17 +231,10 @@ export const PredictionItem = ({ category, reserve_asset, aa_address, event, res
           </Row>
         </Col>
 
-        {infoHeight && dataForChart.length > 0 && <Col md={{ span: 8 }} xs={{ span: 24 }} sm={{ span: 24 }} style={{ display: 'flex', alignItems: 'center' }}>
-          <div style={{ height: infoHeight * 0.7, width: '100%', boxSizing: 'border-box' }}>
-            <TinyLine {...config} data={dataForChart} />
-            {/* {dataForChart.length > 0 && <div style={{ textAlign: 'center', color: '#ddd' }}>
-              <small>last 24 hours</small>
-            </div>} */}
-          </div>
-          {/* <div ref={chartRef} /> */}
+        {infoHeight && <Col md={{ span: 8 }} xs={{ span: 24 }} sm={{ span: 24 }} style={{ height: infoHeight, marginRight: '-25px', boxSizing: 'border-box' }}>
+          <Line {...config} data={dataForChart} />
         </Col>}
       </Row>
-    </Card>
+    </div>
   </Link>
-  </Wrapper>
 }

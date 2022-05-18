@@ -1,30 +1,51 @@
-import {  Row, Col, Space, Button } from "antd";
+import { Row, Col, Space, Button, Drawer, Typography } from "antd";
+import { MainMenu } from "components/MainMenu/MainMenu";
+import { SocialLinks } from "components/SocialLinks/SocialLinks";
+import { useWindowSize } from "hooks/useWindowSize";
+import { WalletModal } from "modals/WalletModal";
+import { useState } from "react";
 import { Link } from "react-router-dom";
 
 import styles from "./Header.module.css";
 
 export const Header = () => {
+  const [width] = useWindowSize();
+  const [showMenu, setShowMenu] = useState(false);
+
+  const changeVisible = () => setShowMenu((v) => !v);
+
   return <div style={{ padding: "20px", fontSize: 16 }}>
-    <div className="container">
+    <div>
       <Row align="middle" justify="space-between">
         <Col>
-          <Link to="/" style={{ color: "#333" }}>
+          <Link to="/" style={{ color: "#fff" }}>
             site name
           </Link>
         </Col>
-        <Col>
-          <div style={{ verticalAlign: "middle" }}>
-            <Space size="large" align="center">
-              <Link className={styles.menu_item} to="/">Home</Link>
-              <Link className={styles.menu_item} to="/create">Create</Link>
-              <Link className={styles.menu_item} to="/how-it-work">How it work</Link>
-              <Link className={styles.menu_item} to="/about">About</Link>
-            </Space>
-          </div>
-        </Col>
-        <Col>
-          <Button size="large">WALLET</Button>
-        </Col>
+        {width >= 780 ? <>
+          <Col>
+            <div style={{ verticalAlign: "middle" }}>
+              <MainMenu />
+            </div>
+          </Col>
+          <Col>
+            <WalletModal />
+          </Col>
+        </> : <>
+          <Button onClick={changeVisible} size="large">Menu</Button>
+          <Drawer width={width >= 320 ? 320 : width} visible={showMenu} onClose={changeVisible}>
+            <Typography.Title>Menu</Typography.Title>
+            <div>
+              <MainMenu direction="vertical" />
+            </div>
+            <div style={{ marginTop: 20 }}>
+              <WalletModal />
+            </div>
+            <div style={{ marginTop: 15 }}>
+              <SocialLinks size="small" />
+            </div>
+          </Drawer>
+        </>}
       </Row>
     </div>
   </div>

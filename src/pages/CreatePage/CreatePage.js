@@ -12,6 +12,8 @@ import { RegisterSymbols } from "./RegSymbol";
 export const CreatePage = () => {
   const creationOrder = useSelector(selectCreationOrder);
   const dispatch = useDispatch();
+  
+  const symbolsAlreadyReg = creationOrder ? creationOrder.yes_symbol && creationOrder.no_symbol && (!creationOrder.data.allow_draw || creationOrder.draw_symbol) || creationOrder.cancelRegSymbol : false;
 
   return <Layout>
     <Typography.Title level={1}>Create</Typography.Title>
@@ -19,9 +21,8 @@ export const CreatePage = () => {
 
     {!creationOrder ? <CreateForm /> : <div>
       {(creationOrder.status === 'order' || creationOrder.status === 'pending') && <CreatePredictionMarket data={creationOrder.data} status={creationOrder.status} />}
-      {creationOrder.status === 'created' && (!creationOrder.yes_symbol || !creationOrder.no_symbol || creationOrder.yes_asset && !creationOrder.yes_symbol) ? <RegisterSymbols /> : <>
-        <Result status="success" title="Prediction market created successfully" extra={<Link to={`/market/${creationOrder.prediction_address}`}><Button onClick={() => dispatch(removeCreationOrder())}>Go to the market</Button></Link>} />
-      </>}
+      {creationOrder.status === 'created' && !symbolsAlreadyReg && <RegisterSymbols />}
+      {creationOrder.status === 'created' && symbolsAlreadyReg && <Result status="success" title="Prediction market created successfully" extra={<Link to={`/market/${creationOrder.prediction_address}`}><Button onClick={() => dispatch(removeCreationOrder())}>Go to the market</Button></Link>} />}
     </div>}
   </Layout>
 }

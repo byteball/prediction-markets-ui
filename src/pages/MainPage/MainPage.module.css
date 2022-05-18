@@ -1,0 +1,29 @@
+.mainHeader {
+  text-transform: uppercase;
+  font-size: 42px;
+  font-weight: bold;
+  line-height: 1.3;
+}
+
+.mainHeader .select {
+  color: #1D90FF;
+  display: block;
+}
+
+.headerWrap {
+  margin-top: 40px;
+}
+
+.description {
+  font-size: 18px;
+}
+
+@media (max-width: 580px) {
+  .mainHeader {
+    font-size: 36px;
+  }
+
+  .headerWrap {
+    margin-top: 20px;
+  }
+}

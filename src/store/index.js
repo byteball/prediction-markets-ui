@@ -12,16 +12,20 @@ import {
 import storage from "redux-persist/lib/storage";
 
 import settingsSlice from './slices/settingsSlice';
+import marketsSlice from './slices/marketsSlice';
 
 import config from "appConfig";
+import activeSlice from './slices/activeSlice';
 
 const rootReducer = combineReducers({
-  settings: settingsSlice
+  settings: settingsSlice,
+  markets: marketsSlice,
+  active: activeSlice
 });
 
 const persistConfig = {
   key: `prediction${config.ENVIRONMENT === "testnet" ? "-tn" : ""}`,
-  version: 2,
+  version: 3,
   storage,
   whitelist: ['settings'],
 }

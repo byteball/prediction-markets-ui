@@ -1,0 +1,39 @@
+.eventList {
+  margin-bottom: 20px;
+}
+
+.eventWrap {
+  border-radius: 10px;
+  padding-bottom: 15px;
+  padding-top: 15px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-direction: row;
+}
+
+.eventWrap:first-child {
+  padding-top: 0;
+}
+
+.timestamp {
+  color: #ddd;
+  font-size: 12px;
+}
+
+.moreButtonWrap {
+  display: flex;
+  justify-content: center;
+  margin-top: 10px;
+}
+
+@media (max-width: 580px) {
+  .eventWrap {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .moreButtonWrap {
+    justify-content: flex-start;
+  }
+}

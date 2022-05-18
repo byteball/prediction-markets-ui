@@ -4,8 +4,9 @@ import client from "services/obyte";
 import { isBoolean } from "lodash";
 import { generateLink } from "utils/generateLink";
 import { useWindowSize } from "hooks/useWindowSize.js";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import QRButton from "obyte-qr-button";
+import { cancelRegSymbol } from "store/slices/settingsSlice";
 
 const { Text } = Typography;
 const { Step } = Steps;
@@ -46,6 +47,7 @@ export const RegisterSymbols = () => {
   const checkRef = useRef(null);
   const regRef = useRef(null);
   const symbolInputRef = useRef(null);
+  const dispatch = useDispatch();
 
   const currentAsset = order[currentSymbol + "_asset"];
 
@@ -90,10 +92,11 @@ export const RegisterSymbols = () => {
           setIsAvailable(false);
         } else {
           setIsAvailable(true);
+          const value = `${String(currentSymbol).toUpperCase()}-token for event: «${order.data.event}»`
 
           setDescr({
-            value: `${String(currentSymbol).toUpperCase()}-token for event: «${order.data.event}»`,
-            valid: true,
+            value,
+            valid: value.length <= 140,
           });
 
           setTokenSupport({ value: "0.1", valid: true })
@@ -225,7 +228,11 @@ export const RegisterSymbols = () => {
           />
         </Form.Item>
         {isAvailable && (
-          <Form.Item>
+          <Form.Item
+            // hasFeedback
+            validateStatus={tokenSupport.valid ? undefined : "error"}
+            extra={!tokenSupport.valid ? <span style={{ color: 'red' }}>Min amount 0.1 GB</span> : null}
+          >
             <Input
               placeholder="Support (Min amount 0.1 GB)"
               suffix="GB"
@@ -238,18 +245,18 @@ export const RegisterSymbols = () => {
           </Form.Item>
         )}
         {isAvailable === true && !symbolByCurrentAsset && (
-          <Form.Item>
-            <Form.Item
-              hasFeedback
-            >
-              <Input.TextArea
-                style={{ fontSize: 16 }}
-                rows={5}
-                value={descr.value}
-                onChange={handleChangeDescr}
-                placeholder="Description of an asset (up to 140 characters)"
-              />
-            </Form.Item>
+
+          <Form.Item
+            validateStatus={descr.valid ? undefined : "error"}
+            extra={!descr.valid ? <span style={{ color: 'red' }}>Maximum number of characters 140</span> : null}
+          >
+            <Input.TextArea
+              style={{ fontSize: 16 }}
+              rows={5}
+              value={descr.value}
+              onChange={handleChangeDescr}
+              placeholder="Description of an asset (up to 140 characters)"
+            />
           </Form.Item>
         )}
         <Form.Item>
@@ -268,7 +275,7 @@ export const RegisterSymbols = () => {
               </Button>
             ) : (
               <QRButton
-                disabled={!token.valid || !tokenSupport.valid}
+                disabled={!token.valid || !tokenSupport.valid || !descr.valid}
                 key="btn-reg"
                 ref={regRef}
                 href={generateLink(
@@ -284,6 +291,9 @@ export const RegisterSymbols = () => {
           </Space>
         </Form.Item>
       </Form>
+      <div style={{ display: 'flex', justifyContent: 'center' }}>
+        <Button type="link" danger onClick={() => dispatch(cancelRegSymbol())}>Unregister symbols</Button>
+      </div>
     </div>
   );
 };

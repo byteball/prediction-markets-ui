@@ -14,11 +14,11 @@ const config = {
   color: '#F0F5FF'
 };
 
-export const StatsCard = ({ title, desc = 'info', value = '$9253', subValue = <span>205.923123 <small>GBYTE</small></span>, showChart = false }) => {
-  return <div style={{ background: '#f0f5ff', borderRadius: 15, padding: 15, display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', position: 'relative' }}>
+export const StatsCard = ({ title, desc = 'info', value = null, subValue = <span>205.923123 <small>GBYTE</small></span>, showChart = false }) => {
+  return <div style={{ background: '#303030', borderRadius: 15, padding: 15, display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', position: 'relative' }}>
     <div>
       <div style={{ textTransform: 'uppercase', fontSize: 16 }}>{title}</div>
-      <div style={{ fontWeight: 500, fontSize: 28 }}>{value}</div>
+      <div style={{ fontWeight: 500, fontSize: 28, minHeight: '1em'}}>{value}</div>
       <div>{subValue}</div>
     </div>
     {showChart && <div style={{ marginTop: 10, height: 50, maxWidth: '160px' }}>

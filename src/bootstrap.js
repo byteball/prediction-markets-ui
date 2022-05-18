@@ -1,13 +1,34 @@
 import config from "appConfig";
 import { store } from "index";
+import { isEmpty } from "lodash";
 import client from "services/obyte";
+import { addRecentEvent, updateStateForActualMarket } from "store/slices/activeSlice";
 import { updateCreationOrder } from "store/slices/settingsSlice";
+import { loadCategories } from "store/thunks/loadCategories";
+import { loadMarkets } from "store/thunks/loadMarkets";
+import { loadReserveAssets } from "store/thunks/loadReserveAssets";
+import { setActiveMarket } from "store/thunks/setActiveMarket";
+import { responseToEvent } from "utils/responseToEvent";
 
 const getAAPayload = (messages = []) => messages.find(m => m.app === 'data')?.payload || {};
 
 export const bootstrap = async () => {
   console.log("connect");
 
+  // load data from backend
+  store.dispatch(loadMarkets());
+  store.dispatch(loadCategories());
+  store.dispatch(loadReserveAssets());
+
+  const state = store.getState();
+
+  if (state.active.address) { // reload data for active market
+    store.dispatch(setActiveMarket(state.active.address));
+  }
+
+  const updateMarkets = setInterval(() => {
+    store.dispatch(loadMarkets());
+  }, 1800 * 1000);
 
   const heartbeat = setInterval(() => {
     client.api.heartbeat();
@@ -33,6 +54,8 @@ export const bootstrap = async () => {
       handleEventPredictionFactory(result);
     } else if (body.aa_address === tokenRegistry) {
       handleTokenRegistry(result);
+    } else if (state.active.address && body.aa_address === state.active.address) {
+      handleActivePredictionMarket(result);
     }
   });
 
@@ -87,16 +110,13 @@ export const bootstrap = async () => {
     const { subject, body } = result[1];
     const order = state.settings.creationOrder;
     const orderData = order?.data;
-    console.log('pay1', orderData);
     if (!orderData) return null;
 
     if (subject === "light/aa_request") {
       const { messages, unit } = body.unit;
       const payload = getAAPayload(messages);
-      console.log('pay2', payload, orderData, payload.event && orderData.event === payload.event, (String(orderData.end_of_trading_period) === String(payload.end_of_trading_period)), orderData.oracle === payload.oracle);
 
       if (order.status === 'order' && payload.event && orderData.event === payload.event && (String(orderData.end_of_trading_period) === String(payload.end_of_trading_period)) && orderData.oracle === payload.oracle) {
-        console.log('req', result, payload);
         // actual order
         store.dispatch(updateCreationOrder({
           status: 'pending',
@@ -106,19 +126,19 @@ export const bootstrap = async () => {
 
     } else if (subject === "light/aa_response") {
       const { updatedStateVars, trigger_initial_unit } = body;
-      console.log('res', !orderData, !updatedStateVars, order.status !== 'pending')
+
       if (!orderData || !updatedStateVars || updatedStateVars && !(config.FACTORY_AA in updatedStateVars) || order.status !== 'pending') return null;
 
       if (trigger_initial_unit === order.creation_unit) {
         const newFactoryStateVars = updatedStateVars[config.FACTORY_AA];
         const varName = Object.keys(newFactoryStateVars)?.[0];
-        console.log('varName', varName)
+
         if (varName && varName.includes('prediction_')) {
           const prediction_address = varName.split("_")[1];
 
           if (prediction_address) {
             const data = newFactoryStateVars[varName]?.value;
-            console.log('data', data)
+
             if (data && ('yes_asset' in data) && ('no_asset' in data)) {
               store.dispatch(updateCreationOrder({
                 status: 'created',
@@ -134,12 +154,38 @@ export const bootstrap = async () => {
           }
 
         }
-        console.log('res', result)
       }
     }
   }
 
+  const handleActivePredictionMarket = (result) => {
+    const state = store.getState();
+    const { subject, body } = result[1];
+    const { aa_address, updatedStateVars } = body;
+
+    if (subject === "light/aa_response" && aa_address === state.active.address) {
+      let diff = {};
+      if (updatedStateVars) {
+        for (let var_name in updatedStateVars[aa_address]) {
+          diff[var_name] = updatedStateVars[aa_address][var_name].value;
+        }
+      }
+
+      if (!isEmpty(diff)) {
+        store.dispatch(updateStateForActualMarket({ diff, address: aa_address }));
+      }
+
+      const recentEventObject = responseToEvent(body, state.active.params, state.active.stateVars);
+
+      store.dispatch(addRecentEvent(recentEventObject));
+
+    } else {
+      console.log('handle req')
+    }
+  }
+
   client.client.ws.addEventListener("close", () => {
+    clearInterval(updateMarkets);
     clearInterval(heartbeat);
   });
 }

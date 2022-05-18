@@ -1,9 +1,10 @@
 .itemWrap {
-  padding: 15px;
+  padding: 20px;
   color: #333;
   border-radius: 7px;
   margin-bottom: 30px;
-  box-shadow: 0px 0px 10px 10px rgba(244, 244, 244, 0.7);
+  /* box-shadow: 0px 0px 10px 10px rgba(244, 244, 244, 0.7); */
+  /* border: 1px solid #eee; */
   position: relative;
 }
 

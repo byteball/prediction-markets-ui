@@ -1,9 +1,10 @@
 .itemWrap {
-  padding: 15px;
+  /* padding: 20px; */
   color: #333;
   border-radius: 7px;
   margin-bottom: 30px;
-  box-shadow: 0px 0px 10px 10px rgba(244, 244, 244, 0.7);
+  /* box-shadow: 0px 0px 10px 10px rgba(244, 244, 244, 0.7); */
+  border: 1px solid #424342;
   position: relative;
 }
 
@@ -16,33 +17,24 @@
 .eventDesc {
   margin-bottom: 5px;
   font-weight: 500;
-  font-size: 16px;
+  font-size: 18px;
 }
 
 .infoWrap {
-  padding-top: 25px;
+  padding-top: 10px;
   font-size: 14px;
 }
 
 .infoTitle {
   color: #bfbfbf;
   text-transform: uppercase;
-  font-size: 14px;
+  font-size: 12px;
 }
 
 .infoValueInCrypto {
-  font-size: 14px;
+  font-size: 11px;
   margin-bottom: 10px;
 }
-
-.category {
-  display: block;
-}
-
-.category:first-letter {
-  text-transform: uppercase;
-}
-
 
 /* Small devices (landscape phones, 576px and up) */
 @media (min-width: 576px) {}

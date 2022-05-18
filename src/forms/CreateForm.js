@@ -1,12 +1,12 @@
-import { Form, Input, Row, Col, Select, Switch, DatePicker, Button } from "antd";
+import { Form, Input, Row, Col, Select, Switch, DatePicker, Button, Divider, Space } from "antd";
 import { useState } from "react";
 import obyte from "obyte";
-import { isNumber } from "lodash";
+import { isNumber, union } from "lodash";
 import moment from "moment";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 
 import { FormLabel } from "components/FormLabel/FormLabel";
-import { saveCreationOrder } from "store/slices/settingsSlice";
+import { addExtraCategory, saveCreationOrder, selectCategories, selectExtraCategories, selectReserveAssets } from "store/slices/settingsSlice";
 
 export const paramList = {
   event: {
@@ -118,6 +118,14 @@ export const CreateForm = () => {
   const [issueFee, setIssueFee] = useState({ value: paramList.issue_fee.initValue !== undefined ? paramList.issue_fee.initValue : '', valid: paramList.issue_fee.initValue !== undefined });
   const [redeemFee, setRedeemFee] = useState({ value: paramList.redeem_fee.initValue !== undefined ? paramList.redeem_fee.initValue : '', valid: paramList.redeem_fee.initValue !== undefined });
   const [arbProfitFee, setArbProfitFee] = useState({ value: paramList.arb_profit_fee.initValue !== undefined ? paramList.arb_profit_fee.initValue : '', valid: paramList.arb_profit_fee.initValue !== undefined });
+  const [category, setCategory] = useState({ value: null, valid: true });
+
+  const [extraCategory, setExtraCategory] = useState({ value: '', valid: true });
+  const [categorySearchQuery, setCategorySearchQuery] = useState('');
+
+  const reserveAssets = useSelector(selectReserveAssets);
+  const categories = useSelector(selectCategories);
+  const extraCategories = useSelector(selectExtraCategories);
 
   // handles
   const handleChangeValue = (evOrValue, type) => {
@@ -177,7 +185,8 @@ export const CreateForm = () => {
       waiting_period_length: waitingPeriodLength.value * 24 * 3600,
       issue_fee: issueFee.value / 100,
       redeem_fee: redeemFee.value / 100,
-      arb_profit_fee: arbProfitFee.value / 100
+      arb_profit_tax: arbProfitFee.value / 100,
+      category: category.value
     }
 
     if (allowDraw.value) {
@@ -188,11 +197,68 @@ export const CreateForm = () => {
     dispatch(saveCreationOrder(data));
   }
 
+  const isValidCategory = (value) => {
+    const trimValueLength = value.trim().length;
+    return trimValueLength <= 14 && trimValueLength > 0;
+  }
+
+  const handleChangeExtraCategory = (e) => {
+    const value = String(e.target.value);
+
+    setExtraCategory({ value, valid: isValidCategory(value) });
+  }
+
+  const saveExtraCategory = (ev) => {
+
+    // if (ev) {
+    //   ev.preventDefault();
+    // }
+
+    const value = String(extraCategory.value).trim().toLowerCase();
+
+    if (extraCategory.valid) {
+      setCategory({ value, valid: true })
+      setExtraCategory({ value: '', valid: true });
+
+      dispatch(addExtraCategory(value));
+    }
+  }
+
   return <Form layout="vertical">
     <Form.Item help={event.value !== '' && !event.valid ? paramList.event.errorMessage : ''} validateStatus={event.value !== '' ? (event.valid ? 'success' : 'error') : undefined} label={<FormLabel info={paramList.event.description}>Event</FormLabel>}>
       <Input value={event.value} autoFocus={true} size="large" onChange={(ev) => handleChangeValue(ev, 'event')} placeholder={paramList.event.placeholder} />
     </Form.Item>
+    <Row gutter={16}>
+      <Col xs={{ span: 24 }} md={{ span: 8 }}>
+        <Form.Item label={<FormLabel info="desc category">Category</FormLabel>}>
+          <Select
+            size="large"
+            defaultActiveFirstOption={false}
+            dropdownClassName="firstBigLetter"
+            value={category.value}
+            className='firstBigLetter'
+            onChange={(c) => setCategory({ value: c, valid: true })}
+            onDropdownVisibleChange={() => setCategorySearchQuery('')}
+            showSearch={true}
+            dropdownRender={menu => (
+              <>
+                {menu}
+                <Divider style={{ margin: '8px 0' }} />
 
+                <div style={{ padding: '0 8px 4px', display: 'flex' }}>
+                  <Input placeholder="Category" style={{ flex: 1, marginRight: 8 }} value={extraCategory.value} onChange={handleChangeExtraCategory} />
+                  <Button type="primary" disabled={!extraCategory.valid || !extraCategory.value} onClick={saveExtraCategory}>Add</Button>
+                </div>
+              </>
+            )}>
+
+            {(!categorySearchQuery || categorySearchQuery.includes('No category')) && <Select.Option value={null}>No category</Select.Option>}
+
+            {union(categories, extraCategories || []).filter((category) => !categorySearchQuery || category.includes(categorySearchQuery)).map(category => <Select.Option value={category}>{category}</Select.Option>)}
+          </Select>
+        </Form.Item>
+      </Col>
+    </Row>
     <Form.Item>
       <FormLabel info={paramList.allow_draw.description}>Allow draw</FormLabel> <Switch style={{ marginLeft: 10 }} onChange={(ev) => handleChangeValue(ev, 'allow_draw')} defaultChecked={allowDraw.value} />
     </Form.Item>
@@ -213,7 +279,8 @@ export const CreateForm = () => {
 
     <Form.Item validateStatus='success' label={<FormLabel info={paramList.reserve_asset.description}>Reserve asset</FormLabel>}>
       <Select onChange={(ev) => handleChangeValue(ev, 'reserve_asset')} size="large" value={reserveAsset.value}>
-        <Select.Option value='base'>GBYTE</Select.Option>
+        {!reserveAssets && <Select.Option value='base'>GBYTE</Select.Option>}
+        {reserveAssets && Object.entries(reserveAssets).map(([name, value]) => <Select.Option key={value} value={value}>{name}</Select.Option>)}
       </Select>
     </Form.Item>
 

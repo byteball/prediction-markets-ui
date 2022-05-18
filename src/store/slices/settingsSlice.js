@@ -1,9 +1,16 @@
 import { createSlice } from '@reduxjs/toolkit';
+import { loadCategories } from 'store/thunks/loadCategories';
+import { loadReserveAssets } from 'store/thunks/loadReserveAssets';
+import { updateReserveRate } from 'store/thunks/updateReserveRate';
 
 export const settingsSlice = createSlice({
   name: 'settings',
   initialState: {
-    creationOrder: null
+    creationOrder: null,
+    walletAddress: null,
+    categories: [],
+    extraCategories: [],
+    reserveRates: {}
   },
   reducers: {
     saveCreationOrder: (state, action) => {
@@ -11,6 +18,13 @@ export const settingsSlice = createSlice({
         data: action.payload,
         status: 'order'
       };
+    },
+    addExtraCategory: (state, action) => {
+      const value = action.payload;
+
+      if (value && ![...state.categories, ...state.extraCategories].find((c) => c === value)) {
+        state.extraCategories.push(value)
+      }
     },
     removeCreationOrder: (state) => {
       state.creationOrder = null;
@@ -23,13 +37,35 @@ export const settingsSlice = createSlice({
         ...payload
       };
     },
+    cancelRegSymbol: (state) => {
+      if (state.creationOrder) {
+        state.creationOrder.cancelRegSymbol = true;
+      }
+    },
+    changeWalletAddress: (state, action) => {
+      state.walletAddress = action.payload;
+    }
+  },
+  extraReducers: {
+    [loadCategories.fulfilled]: (state, action) => {
+      state.categories = action.payload;
+    },
+    [loadReserveAssets.fulfilled]: (state, action) => {
+      state.reserveAssets = action.payload;
+    },
+    [updateReserveRate.fulfilled]: (state, action) => {
+      state.reserveRates = action.payload;
+    }
   }
 });
 
 export const {
   saveCreationOrder,
   removeCreationOrder,
-  updateCreationOrder
+  updateCreationOrder,
+  cancelRegSymbol,
+  addExtraCategory,
+  changeWalletAddress
 } = settingsSlice.actions;
 
 export default settingsSlice.reducer;
@@ -39,3 +75,8 @@ export default settingsSlice.reducer;
 // in the slice file. For example: `useSelector((state) => state.auth.value)`
 
 export const selectCreationOrder = state => state.settings.creationOrder;
+export const selectReserveAssets = state => state.settings.reserveAssets;
+export const selectCategories = state => state.settings.categories;
+export const selectExtraCategories = state => state.settings.extraCategories;
+export const selectReservesToUsdRate = state => state.settings.reserveRates;
+export const selectWalletAddress = state => state.settings.walletAddress;
