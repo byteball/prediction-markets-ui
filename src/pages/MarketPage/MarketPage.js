@@ -187,24 +187,26 @@ export const MarketPage = () => {
         <ViewParamsModal {...params} />
       </Space>
 
-      <Row className={styles.infoWrap} gutter={30}>
-        <Col lg={{ span: 8 }} md={{ span: 12 }} xs={{ span: 24 }} style={{ marginBottom: 30 }}>
-          <StatsCard title="Yes price" value={yesPriceInUSD} subValue={<span>{yesPrice} <small>{reserve_symbol}</small></span>} />
-        </Col>
-        <Col lg={{ span: 8 }} md={{ span: 12 }} xs={{ span: 24 }} style={{ marginBottom: 30 }}>
-          <StatsCard title="No price" value={noPriceInUSD} subValue={<span>{noPrice} <small>{reserve_symbol}</small></span>} />
-        </Col>
-        {allow_draw && <Col lg={{ span: 8 }} md={{ span: 12 }} xs={{ span: 24 }} style={{ marginBottom: 30 }}>
-          <StatsCard title="Draw price" value={drawPriceInUSD} subValue={<span>{drawPrice} <small>{reserve_symbol}</small></span>} />
-        </Col>}
-        <Col lg={{ span: 8 }} md={{ span: 12 }} xs={{ span: 24 }} style={{ marginBottom: 30 }}>
-          <StatsCard title="Reserve" value={viewReserveInUSD} subValue={<span>{viewReserve} <small>{reserve_symbol}</small></span>} />
-        </Col>
+      <div className={styles.infoWrap}>
+        <Row gutter={30}>
+          <Col lg={{ span: 8 }} md={{ span: 12 }} xs={{ span: 24 }} style={{ marginBottom: 30 }}>
+            <StatsCard title="Yes price" value={yesPriceInUSD} subValue={<span>{yesPrice} <small>{reserve_symbol}</small></span>} />
+          </Col>
+          <Col lg={{ span: 8 }} md={{ span: 12 }} xs={{ span: 24 }} style={{ marginBottom: 30 }}>
+            <StatsCard title="No price" value={noPriceInUSD} subValue={<span>{noPrice} <small>{reserve_symbol}</small></span>} />
+          </Col>
+          {allow_draw && <Col lg={{ span: 8 }} md={{ span: 12 }} xs={{ span: 24 }} style={{ marginBottom: 30 }}>
+            <StatsCard title="Draw price" value={drawPriceInUSD} subValue={<span>{drawPrice} <small>{reserve_symbol}</small></span>} />
+          </Col>}
+          <Col lg={{ span: 8 }} md={{ span: 12 }} xs={{ span: 24 }} style={{ marginBottom: 30 }}>
+            <StatsCard title="Reserve" value={viewReserveInUSD} subValue={<span>{viewReserve} <small>{reserve_symbol}</small></span>} />
+          </Col>
 
-        <Col lg={{ span: 8 }} md={{ span: 12 }} xs={{ span: 24 }} style={{ marginBottom: 30 }}>
-          <StatsCard title="time to expiration" showChart={false} value={tradeTimerExpiry ? <Countdown value={moment.unix(tradeTimerExpiry)} format="DD [days] HH:mm:ss" /> : '-'} subValue={<span>STATUS: <span style={{ color: tradeStatusColor, textTransform: 'uppercase' }}>{tradeStatus}</span></span>} />
-        </Col>
-      </Row>
+          <Col lg={{ span: 8 }} md={{ span: 12 }} xs={{ span: 24 }} style={{ marginBottom: 30 }}>
+            <StatsCard title="time to expiration" showChart={false} value={tradeTimerExpiry ? <Countdown value={moment.unix(tradeTimerExpiry)} format="DD [days] HH:mm:ss" /> : '-'} subValue={<span>STATUS: <span style={{ color: tradeStatusColor, textTransform: 'uppercase' }}>{tradeStatus}</span></span>} />
+          </Col>
+        </Row>
+      </div>
 
       {dataForChart.length > 0 && <div>
         <div style={{ display: 'flex', justifyContent: "flex-end", marginBottom: 10 }}>

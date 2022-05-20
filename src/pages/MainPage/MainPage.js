@@ -19,7 +19,7 @@ export const MainPage = () => {
 
   return <div>
     <Layout>
-      <Row gutter={50} className={styles.headerWrap} >
+      <Row className={styles.headerWrap}>
         <Col xs={{ span: 24 }} md={{ span: 12 }}>
           <h1 className={styles.mainHeader}>
             Decentralized <span className={styles.select}>prediction markets</span> platform
@@ -30,26 +30,11 @@ export const MainPage = () => {
         </Col>
 
         <Col xs={{ span: 0 }} md={{ span: 12 }} style={{ textAlign: "right" }}>
-          <Select style={{ maxWidth: 390 }} />
+          {/* <Select style={{ maxWidth: 390, marginLeft: 10 }} /> */}
         </Col>
       </Row>
+
       <div style={{ margin: "0 auto", marginTop: 40, maxWidth: 780, userSelect: 'none' }}>
-        {/* <Row style={{ marginBottom: 25 }}>
-
-          <Col flex={1}>
-            <Space size={16} style={{ width: "100%" }}>
-              <Button icon={<FilterOutlined />}>Filters</Button>
-              <Input style={{ width: '100%' }} placeholder="Search" />
-            </Space>
-          </Col>
-
-          <Col>
-            <Link to="/create"><Button icon={<PlusOutlined />}>Add market</Button></Link>
-          </Col>
-
-        </Row> */}
-
-        {/* <Typography.Title level={3}>Markets</Typography.Title> */}
         {markets.map((data) => <PredictionItem key={`item-${data.aa_address}`} {...data} />)}
       </div>
     </Layout>

@@ -22,6 +22,7 @@
 .infoWrap {
   padding-top: 25px;
   font-size: 14px;
+  overflow: hidden;
 }
 
 .infoTitle {
