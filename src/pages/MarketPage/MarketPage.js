@@ -206,8 +206,7 @@ export const MarketPage = () => {
         </Col>
       </Row>
 
-      <div>
-        {/* <h2 style={{ marginBottom: 25, marginTop: 35 }}>Comparison chart</h2> */}
+      {dataForChart.length > 0 && <div>
         <div style={{ display: 'flex', justifyContent: "flex-end", marginBottom: 10 }}>
           <Radio.Group value={chartType} onChange={(ev) => setChartType(ev.target.value)}>
             <Radio.Button value="prices">Prices</Radio.Button>
@@ -215,7 +214,7 @@ export const MarketPage = () => {
           </Radio.Group>
         </div>
         <Line {...config} data={dataForChart} />
-      </div>
+      </div>}
       <div>
         <h2 style={{ marginBottom: 25, marginTop: 35 }}>Recent events</h2>
         <RecentEvents data={recentEvents} />
