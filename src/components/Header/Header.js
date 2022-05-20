@@ -1,12 +1,11 @@
-import { Row, Col, Space, Button, Drawer, Typography } from "antd";
+import { useState } from "react";
+import { Row, Col, Button, Drawer, Typography } from "antd";
+import { Link } from "react-router-dom";
+
 import { MainMenu } from "components/MainMenu/MainMenu";
 import { SocialLinks } from "components/SocialLinks/SocialLinks";
 import { useWindowSize } from "hooks/useWindowSize";
 import { WalletModal } from "modals/WalletModal";
-import { useState } from "react";
-import { Link } from "react-router-dom";
-
-import styles from "./Header.module.css";
 
 export const Header = () => {
   const [width] = useWindowSize();

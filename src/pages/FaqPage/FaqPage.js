@@ -1,6 +1,8 @@
 import { DownOutlined } from "@ant-design/icons";
 import { Typography, Collapse } from "antd";
+
 import { Layout } from "components/Layout/Layout";
+
 import styles from "./FaqPage.module.css";
 
 const { Panel } = Collapse;
@@ -38,5 +40,6 @@ export const FaqPage = () => <Layout>
 
     </Collapse>
   </div>
-  <div style={{ marginTop: 20 }}>Other questions? Ask on <a href="https://discord.obyte.org" target="_blank" rel="noopener">Obyte discord</a>.</div>
+  
+  <div className={styles.otherQuestionsWrap}>Other questions? Ask on <a href="https://discord.obyte.org" target="_blank" rel="noopener">Obyte discord</a>.</div>
 </Layout>

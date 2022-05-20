@@ -1,4 +1,4 @@
-import { Form, Input, Row, Col, Select, Switch, DatePicker, Button, Divider, Space } from "antd";
+import { Form, Input, Row, Col, Select, Switch, DatePicker, Button, Divider } from "antd";
 import { useState } from "react";
 import obyte from "obyte";
 import { isNumber, union } from "lodash";
@@ -127,6 +127,8 @@ export const CreateForm = () => {
   const categories = useSelector(selectCategories);
   const extraCategories = useSelector(selectExtraCategories);
 
+  const dispatch = useDispatch();
+
   // handles
   const handleChangeValue = (evOrValue, type) => {
     const value = (type === 'allow_draw' || type === 'reserve_asset' || type === 'comparison' || type === 'end_of_trading_period') ? evOrValue : evOrValue.target.value;
@@ -161,10 +163,6 @@ export const CreateForm = () => {
     }
   }
 
-  // hooks
-  const dispatch = useDispatch();
-
-
   const dateFilter = (date) => {
     return moment.utc(date).startOf("day").unix() <= dateNow
   }
@@ -185,8 +183,11 @@ export const CreateForm = () => {
       waiting_period_length: waitingPeriodLength.value * 24 * 3600,
       issue_fee: issueFee.value / 100,
       redeem_fee: redeemFee.value / 100,
-      arb_profit_tax: arbProfitFee.value / 100,
-      category: category.value
+      arb_profit_tax: arbProfitFee.value / 100
+    }
+
+    if (category.value) {
+      data.category = category.value;
     }
 
     if (allowDraw.value) {
@@ -208,12 +209,7 @@ export const CreateForm = () => {
     setExtraCategory({ value, valid: isValidCategory(value) });
   }
 
-  const saveExtraCategory = (ev) => {
-
-    // if (ev) {
-    //   ev.preventDefault();
-    // }
-
+  const saveExtraCategory = () => {
     const value = String(extraCategory.value).trim().toLowerCase();
 
     if (extraCategory.valid) {
@@ -234,7 +230,6 @@ export const CreateForm = () => {
           <Select
             size="large"
             defaultActiveFirstOption={false}
-            dropdownClassName="firstBigLetter"
             value={category.value}
             className='firstBigLetter'
             onChange={(c) => setCategory({ value: c, valid: true })}

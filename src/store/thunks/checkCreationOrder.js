@@ -3,8 +3,8 @@ import client from "services/obyte";
 
 const tokenRegistry = client.api.getOfficialTokenRegistryAddress();
 
-export const loadCategories = createAsyncThunk(
-  'loadCategories',
+export const checkCreationOrder = createAsyncThunk( // TODO: Not imported
+  'checkCreationOrder',
   async (_, { getState }) => {
     const state = getState();
 
@@ -14,7 +14,7 @@ export const loadCategories = createAsyncThunk(
       let yes_asset = order.yes_asset;
       let no_asset = order.no_asset;
       let draw_asset = order.draw_asset;
-      let updateOrderData = {};
+      // let updateOrderData = {};
 
       if (order.status !== 'created' || order.prediction_address) {
         // TODO: Агент не существует Нужно при запросе сохранять trigger unit

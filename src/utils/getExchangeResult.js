@@ -24,7 +24,7 @@ export const getExchangeResult = (state, params, yes_amount = 0, no_amount = 0, 
   let no_arb_profit_tax = 0;
   let draw_arb_profit_tax = 0;
 
-  if ((supply_yes + supply_no + supply_draw) != 0) {
+  if ((supply_yes + supply_no + supply_draw) !== 0) {
     const old_den = Math.sqrt(supply_yes ** 2 + supply_no ** 2 + supply_draw ** 2);
     const old_yes_price = coef * (supply_yes / old_den);
     const old_no_price = coef * (supply_no / old_den);
@@ -43,7 +43,7 @@ export const getExchangeResult = (state, params, yes_amount = 0, no_amount = 0, 
 
   const total_arb_profit_tax = yes_arb_profit_tax + no_arb_profit_tax + draw_arb_profit_tax;
 
-  const network_fee = (reserve_asset == 'base' ? 10000 : 0);
+  const network_fee = (reserve_asset === 'base' ? 10000 : 0);
   const fee = Math.ceil(reserve_needed * issue_fee + payout * redeem_fee + total_arb_profit_tax);
 
   const next_coef = coef * ((new_reserve + fee) / new_reserve);
@@ -63,9 +63,9 @@ export const getExchangeResult = (state, params, yes_amount = 0, no_amount = 0, 
 
 export const get_token_amount = (state, params, type, reserve_amount) => {
   const { supply_yes = 0, reserve = 0, supply_no = 0, supply_draw = 0, coef = 1 } = state;
-  const { issue_fee, redeem_fee, arb_profit_tax, allow_draw = false, reserve_asset } = params;
+  const { issue_fee, arb_profit_tax, reserve_asset } = params;
 
-  const network_fee = (reserve_asset == 'base' ? 10000 : 0);
+  const network_fee = (reserve_asset === 'base' ? 10000 : 0);
 
   const fee = Math.ceil(reserve_amount - network_fee - ((reserve_amount - network_fee) / (1 + issue_fee)));
 
@@ -79,24 +79,24 @@ export const get_token_amount = (state, params, type, reserve_amount) => {
 
   let prepare_calc;
 
-  if (type == 'yes') {
+  if (type === 'yes') {
     prepare_calc = ratio - supply_no_squared - supply_draw_squared;
-  } else if (type == 'no') {
+  } else if (type === 'no') {
     prepare_calc = ratio - supply_yes_squared - supply_draw_squared;
   } else {
     prepare_calc = ratio - supply_yes_squared - supply_no_squared;
   }
 
-  const supply = type == 'yes' ? supply_yes : type == 'no' ? supply_no : supply_draw;
+  const supply = type === 'yes' ? supply_yes : type === 'no' ? supply_no : supply_draw;
   const amount = Math.floor(Math.sqrt(prepare_calc) - supply);
 
-  if ((supply_yes + supply_no + supply_draw) != 0) {
+  if ((supply_yes + supply_no + supply_draw) !== 0) {
     const old_den = Math.sqrt(supply_yes_squared + supply_no_squared + supply_draw_squared);
     const old_price = coef * (supply / old_den);
     const new_supply = supply + amount;
     const new_supply_squared = new_supply ** 2;
 
-    const new_den = Math.sqrt((type == 'yes' ? new_supply_squared : supply_yes_squared) + (type == 'no' ? new_supply_squared : supply_no_squared) + (type == 'draw' ? new_supply_squared : supply_draw_squared));
+    const new_den = Math.sqrt((type === 'yes' ? new_supply_squared : supply_yes_squared) + (type === 'no' ? new_supply_squared : supply_no_squared) + (type === 'draw' ? new_supply_squared : supply_draw_squared));
     const new_price = coef * (new_supply / new_den);
     const arb_profit_tax_amount = ((Math.abs(old_price - new_price) * amount) / 2) * arb_profit_tax;
 
@@ -107,9 +107,9 @@ export const get_token_amount = (state, params, type, reserve_amount) => {
 
     let prepare_calc_2;
 
-    if (type == 'yes') {
+    if (type === 'yes') {
       prepare_calc_2 = new_ratio - supply_no_squared - supply_draw_squared;
-    } else if (type == 'no') {
+    } else if (type === 'no') {
       prepare_calc_2 = new_ratio - supply_yes_squared - supply_draw_squared;
     } else {
       prepare_calc_2 = new_ratio - supply_yes_squared - supply_no_squared;

@@ -1,0 +1,26 @@
+.wrap {
+  background: #303030;
+  border-radius: 15px;
+  padding: 15px;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  position: relative;
+}
+
+.title {
+  text-transform: uppercase;
+  font-size: 16px;
+}
+
+.value {
+  font-weight: 500;
+  font-size: 28px;
+  min-height: 1.5em;
+}
+
+.tooltipWrap {
+  position: absolute;
+  top: 17px;
+  right: 15px;
+}

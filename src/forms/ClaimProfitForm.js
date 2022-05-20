@@ -1,6 +1,7 @@
-import { Form, Input } from "antd"
-import QRButton from "obyte-qr-button"
-import { useState } from "react"
+import { useState } from "react";
+import { Form, Input } from "antd";
+import QRButton from "obyte-qr-button";
+
 import { generateLink } from "utils/generateLink";
 
 const f = (x) => (~(x + "").indexOf(".") ? (x + "").split(".")[1].length : 0);

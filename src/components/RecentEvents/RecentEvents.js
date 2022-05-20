@@ -1,7 +1,8 @@
 import { Button, List } from "antd";
-import appConfig from "appConfig";
 import moment from "moment";
 import { useEffect, useState } from "react";
+
+import appConfig from "appConfig";
 
 import styles from "./RecentEvents.module.css";
 
@@ -12,9 +13,9 @@ export const RecentEvents = ({ data: notSortedData }) => {
   const [data, setData] = useState([]);
 
   useEffect(() => {
-    // console.log("notSortedData", notSortedData, notSortedData.length)
     setData([...notSortedData].sort((a, b) => b.timestamp - a.timestamp))
   }, [notSortedData]);
+
   const showMoreButton = data.length > limit;
 
   const increaseLimit = () => setLimit((limit) => limit + limitStep);

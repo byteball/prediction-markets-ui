@@ -1,15 +1,16 @@
 import { Button, Form, Input, Modal, Typography } from "antd";
 import { useEffect, useRef, useState } from "react"
 import { useDispatch, useSelector } from "react-redux";
-import { changeWalletAddress, selectWalletAddress } from "store/slices/settingsSlice";
 import obyte from "obyte";
+
+import { changeWalletAddress, selectWalletAddress } from "store/slices/settingsSlice";
 
 export const WalletModal = () => {
   const [visible, setVisible] = useState(false);
-  const currentWalletAddress = useSelector(selectWalletAddress);
-  const changeVisible = () => setVisible((v) => !v);
-
   const [walletAddress, setWalletAddress] = useState({ value: "", valid: false });
+
+  const currentWalletAddress = useSelector(selectWalletAddress);
+
   const buttonRef = useRef(null);
   const inputRef = useRef(null);
 
@@ -24,6 +25,8 @@ export const WalletModal = () => {
     }
   }, [currentWalletAddress, visible])
 
+  const changeVisible = () => setVisible((v) => !v);
+  
   const handleWalletAddress = (ev) => {
     setWalletAddress({
       valid: obyte.utils.isValidAddress(ev.target.value),

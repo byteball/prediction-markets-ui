@@ -1,14 +1,14 @@
 import React, { useState, useEffect, useRef } from "react";
-import { Typography, Steps, Input, Form, Button, Space } from "antd";
+import { Steps, Input, Form, Button, Space } from "antd";
 import client from "services/obyte";
 import { isBoolean } from "lodash";
-import { generateLink } from "utils/generateLink";
-import { useWindowSize } from "hooks/useWindowSize.js";
 import { useDispatch, useSelector } from "react-redux";
 import QRButton from "obyte-qr-button";
+
+import { generateLink } from "utils/generateLink";
+import { useWindowSize } from "hooks/useWindowSize.js";
 import { cancelRegSymbol } from "store/slices/settingsSlice";
 
-const { Text } = Typography;
 const { Step } = Steps;
 
 const reservedTokens = ["GBYTE", "MBYTE", "KBYTE", "BYTE"];
@@ -229,7 +229,6 @@ export const RegisterSymbols = () => {
         </Form.Item>
         {isAvailable && (
           <Form.Item
-            // hasFeedback
             validateStatus={tokenSupport.valid ? undefined : "error"}
             extra={!tokenSupport.valid ? <span style={{ color: 'red' }}>Min amount 0.1 GB</span> : null}
           >

@@ -1,8 +1,9 @@
+import { Col, Row, Spin } from "antd";
+import { useSelector } from "react-redux";
+
 import { PredictionItem } from "./PredictionItem";
 import { Layout } from "components/Layout/Layout";
-import { Col, Row, Spin } from "antd";
 import { ReactComponent as Select } from './img/select.svg';
-import { useSelector } from "react-redux";
 import { selectAllMarkets } from "store/slices/marketsSlice";
 
 import styles from "./MainPage.module.css";

@@ -1,5 +1,6 @@
-import { CreatePage, MainPage, MarketPage, FaqPage } from "pages";
 import { Routes, Route, BrowserRouter } from "react-router-dom";
+
+import { CreatePage, MainPage, MarketPage, FaqPage } from "pages";
 
 const AppRouter = () => {
   return <BrowserRouter>

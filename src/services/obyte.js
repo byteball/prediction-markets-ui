@@ -1,4 +1,5 @@
 import obyte from "obyte";
+
 import { bootstrap } from "bootstrap";
 
 let client = new obyte.Client(

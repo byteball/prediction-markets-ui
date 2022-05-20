@@ -1,5 +1,5 @@
-import { Col, Row } from "antd";
 import { SocialLinks } from "components/SocialLinks/SocialLinks";
+
 import styles from "./Footer.module.css";
 
 export const Footer = () => {
@@ -9,6 +9,6 @@ export const Footer = () => {
     <div>
       &copy; {year} Obyte. All rights reserved
     </div>
-    <div style={{ display: 'flex', justifyContent: 'center' }}><SocialLinks /></div>
+    <div className={styles.socialWrap}><SocialLinks /></div>
   </div>
 }

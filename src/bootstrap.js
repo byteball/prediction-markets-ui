@@ -1,8 +1,10 @@
-import config from "appConfig";
 import { store } from "index";
 import { isEmpty } from "lodash";
+
 import client from "services/obyte";
+
 import { addRecentEvent, updateStateForActualMarket } from "store/slices/activeSlice";
+import { addMarketInList } from "store/slices/marketsSlice";
 import { updateCreationOrder } from "store/slices/settingsSlice";
 import { loadCategories } from "store/thunks/loadCategories";
 import { loadMarkets } from "store/thunks/loadMarkets";
@@ -10,11 +12,12 @@ import { loadReserveAssets } from "store/thunks/loadReserveAssets";
 import { setActiveMarket } from "store/thunks/setActiveMarket";
 import { responseToEvent } from "utils/responseToEvent";
 
+import config from "appConfig";
+
 const getAAPayload = (messages = []) => messages.find(m => m.app === 'data')?.payload || {};
 
 export const bootstrap = async () => {
   console.log("connect");
-
   // load data from backend
   store.dispatch(loadMarkets());
   store.dispatch(loadCategories());
@@ -67,7 +70,7 @@ export const bootstrap = async () => {
     if (!orderData) return null;
 
     if (subject === "light/aa_request") {
-      const { messages, unit } = body.unit;
+      const { messages } = body.unit;
       const payload = getAAPayload(messages);
 
 
@@ -86,7 +89,7 @@ export const bootstrap = async () => {
       const responseVars = body.response?.responseVars;
 
       if (responseVars) {
-        if (order.yes_asset in responseVars || order.no_asset in responseVars || order.draw_asset && (order.draw_asset in responseVars)) {
+        if ((order.yes_asset in responseVars) || (order.no_asset in responseVars) || (order.draw_asset && (order.draw_asset in responseVars))) {
           const type = order.yes_asset in responseVars ? 'yes' : (order.no_asset in responseVars ? 'no' : 'draw');
           const asset = order[`${type}_asset`];
 
@@ -120,19 +123,19 @@ export const bootstrap = async () => {
         // actual order
         store.dispatch(updateCreationOrder({
           status: 'pending',
-          creation_unit: unit
+          creation_unit_id: unit
         }))
       }
 
     } else if (subject === "light/aa_response") {
       const { updatedStateVars, trigger_initial_unit } = body;
 
-      if (!orderData || !updatedStateVars || updatedStateVars && !(config.FACTORY_AA in updatedStateVars) || order.status !== 'pending') return null;
+      if (!orderData || !updatedStateVars || (updatedStateVars && !(config.FACTORY_AA in updatedStateVars)) || order.status !== 'pending') return null;
 
-      if (trigger_initial_unit === order.creation_unit) {
+      if (trigger_initial_unit === order.creation_unit_id) {
         const newFactoryStateVars = updatedStateVars[config.FACTORY_AA];
         const varName = Object.keys(newFactoryStateVars)?.[0];
-
+        
         if (varName && varName.includes('prediction_')) {
           const prediction_address = varName.split("_")[1];
 
@@ -147,9 +150,28 @@ export const bootstrap = async () => {
                 draw_asset: data.draw_asset,
                 prediction_address
               }))
+              const orderData = state.settings.creationOrder.data;
+
+              store.dispatch(addMarketInList({
+                ...orderData,
+                aa_address: prediction_address,
+                yes_asset: data.yes_asset,
+                no_asset: data.no_asset,
+                draw_asset: data.draw_asset,
+                yes_price: 0,
+                no_price: 0,
+                draw_price: 0,
+                yes_decimals: orderData.reserve_decimals,
+                no_decimals: orderData.reserve_decimals,
+                draw_decimals: orderData.reserve_decimals,
+                yes_symbol: data.yes_asset.slice(0, 5),
+                no_symbol: data.no_asset.slice(0, 5),
+                draw_symbol: data.draw_asset ? data.draw_asset.slice(0, 5) : null,
+                //TODO: Добавить резерв символ
+              }))
             }
 
-            //TODO: Добавить в список prediction
+
 
           }
 

@@ -5,3 +5,8 @@
   width: 100%;
   text-align: center;
 }
+
+.socialWrap {
+  display: flex;
+  justify-content: center;
+}

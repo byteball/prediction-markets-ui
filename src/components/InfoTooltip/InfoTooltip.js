@@ -1,5 +1,5 @@
-import { InfoCircleOutlined } from "@ant-design/icons"
-import { Tooltip } from "antd"
+import { InfoCircleOutlined } from "@ant-design/icons";
+import { Tooltip } from "antd";
 
 export const InfoTooltip = ({ title, style = {} }) => {
   return <span onClick={(e) => {

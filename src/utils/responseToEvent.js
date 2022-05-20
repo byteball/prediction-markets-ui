@@ -1,5 +1,3 @@
-import { isEmpty } from "lodash";
-
 export const responseToEvent = (responseObj, params, state) => {
   const responseVars = responseObj?.response?.responseVars || {};
   const { reserve_symbol, yes_symbol, no_symbol, draw_symbol, yes_decimals = 0, no_decimals = 0, draw_decimals = 0, reserve_decimals } = params;
@@ -22,12 +20,7 @@ export const responseToEvent = (responseObj, params, state) => {
     event = `Result has been set: ${responseVars.result}`;
   } else if (state.result && 'Your profit' in responseVars){ // TODO: fix it in new version AA
     event = `${author}... profited ${responseVars['Your profit'] / 10 ** reserve_decimals} ${reserve_symbol}`;
-  }
-
-  if (event === "Undefined"){
-    console.log('responseObj', responseObj, params, state)
-  }
-  
+  }  
 
   return {
     event,

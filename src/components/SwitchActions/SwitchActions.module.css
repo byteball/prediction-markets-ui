@@ -24,7 +24,7 @@
 
 .switchActive {
   background-color: #303030;
-  border: #303030;
+  border: 1px solid #303030;
 }
 
 .switchActive:hover {

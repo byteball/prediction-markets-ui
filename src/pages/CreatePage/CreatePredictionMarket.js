@@ -1,11 +1,12 @@
 import { Button, Result } from "antd";
 import QRButton from "obyte-qr-button";
 import { useDispatch } from "react-redux";
+import { LoadingOutlined } from "@ant-design/icons";
 
 import { removeCreationOrder } from "store/slices/settingsSlice";
 import { generateLink } from "utils/generateLink";
+
 import config from "appConfig";
-import { LoadingOutlined } from "@ant-design/icons";
 
 export const CreatePredictionMarket = ({ data, status }) => {
   const dispatch = useDispatch();

@@ -1,8 +1,7 @@
-import { PageHeader, Typography, Row, Col, Space, Button, Statistic, Tooltip, Radio, Spin, Result } from "antd"
+import { Row, Col, Space, Button, Radio, Spin, Result } from "antd";
 import { Layout } from "components/Layout/Layout";
 import { StatsCard } from "components/StatsCard/StatsCard";
 import styles from './MarketPage.module.css';
-// import { data } from "pages/MainPage/PredictionItem";
 import { Line } from '@ant-design/plots';
 import { TradeModal } from "modals/TradeModal";
 import { Link, useParams } from "react-router-dom";
@@ -51,7 +50,7 @@ export const MarketPage = () => {
   const params = useSelector(selectActiveMarketParams);
   const recentEvents = useSelector(selectActiveRecentEvents);
 
-  const { event, reserve_asset, allow_draw, reserve_symbol, reserve_decimals } = params;
+  const { event, reserve_asset, allow_draw, reserve_symbol, reserve_decimals, yes_decimals, no_decimals, draw_decimals } = params;
 
   const actualReserveSymbol = Object.entries(reserveAssets).find(([_, asset]) => asset === reserve_asset)?.[0];
 
@@ -79,7 +78,8 @@ export const MarketPage = () => {
   let showClaimProfitButton = false;
 
   const [now, setNow] = useState(moment.utc().unix());
-  // const now = 
+  const sevenDaysAlreadyPassed = now > (params.end_of_trading_period + 3600 * 24 * 7);
+
 
   const commitResultLink = generateLink({ aa: address, amount: 1e4, data: { commit: 1 } });
 
@@ -92,23 +92,24 @@ export const MarketPage = () => {
     // },
 
     candles.forEach(({ start_timestamp, yes_price, no_price, draw_price, supply_yes, supply_no, supply_draw }) => {
+      const date = moment.unix(start_timestamp).utc().format(sevenDaysAlreadyPassed ? 'll' : 'LLL')
       if (chartType === 'prices') {
         data.push(
-          { date: start_timestamp, value: yes_price, type: "YES" },
-          { date: start_timestamp, value: no_price, type: "NO" }
+          { date, value: yes_price, type: "YES" },
+          { date, value: no_price, type: "NO" }
         );
 
         if (allow_draw) {
-          data.push({ date: start_timestamp, value: draw_price, type: "DRAW" },)
+          data.push({ date, value: draw_price, type: "DRAW" },)
         }
       } else {
         data.push(
-          { date: start_timestamp, value: supply_yes, type: "YES" },
-          { date: start_timestamp, value: supply_no, type: "NO" }
+          { date, value: +Number(supply_yes / 10 ** yes_decimals).toFixed(yes_decimals), type: "YES" },
+          { date, value: +Number(supply_no / 10 ** no_decimals).toFixed(no_decimals), type: "NO" }
         );
 
         if (allow_draw) {
-          data.push({ date: start_timestamp, value: supply_draw, type: "DRAW" },)
+          data.push({ date, value: +Number(supply_draw / 10 ** draw_decimals).toFixed(draw_decimals), type: "DRAW" },)
         }
       }
     });
@@ -155,7 +156,7 @@ export const MarketPage = () => {
       dispatch(setActiveMarket(address))
     }
   }, [address]);
-  console.log("chartType", chartType)
+
   if (status !== 'loaded') return (<Layout>
     {(status === 'loading' || status === 'not selected')
       ? <div style={{ margin: 20, display: 'flex', justifyContent: 'center' }}><Spin size="large" /></div>

@@ -1,6 +1,7 @@
 import { Button, Drawer, Typography } from "antd";
 import { useState } from "react";
 import moment from "moment";
+
 import { useWindowSize } from "hooks/useWindowSize";
 
 const { Title } = Typography;
@@ -20,7 +21,6 @@ export const ViewParamsModal = ({ event, reserve_asset, allow_draw, oracle, feed
       size="large"
       visible={visible}
       onClose={close}
-    // closeIcon={null}
     >
       <Title level={2}>View params</Title>
       <p><b>Event: </b>{event}</p>

@@ -6,7 +6,7 @@ export const loadReserveAssets = createAsyncThunk(
   'loadReserveAssets',
   async (_, { dispatch }) => {
     const assets = await backend.getReserveAssets();
-    dispatch(updateReserveRate(assets));
-    
+    dispatch(updateReserveRate());
+  
     return assets;
   })

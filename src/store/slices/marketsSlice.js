@@ -8,7 +8,8 @@ export const marketsSlice = createSlice({
     status: 'nothing'
   },
   reducers: {
-    saveCreationOrder: (state, action) => {}
+    saveCreationOrder: (state, action) => { },
+    addMarketInList: (state, action) => { state.data.push(action.payload) },
   },
   extraReducers: {
     [loadMarkets.pending]: (state, action) => {
@@ -25,7 +26,7 @@ export const marketsSlice = createSlice({
 });
 
 export const {
- 
+  addMarketInList
 } = marketsSlice.actions;
 
 export default marketsSlice.reducer;

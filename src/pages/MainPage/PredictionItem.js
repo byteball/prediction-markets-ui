@@ -1,115 +1,18 @@
-import { Line, TinyArea, TinyLine } from '@ant-design/plots';
 import { Fragment, useEffect, useRef, useState } from "react";
+import { TinyLine } from '@ant-design/plots';
 import { Badge, Card, Col, Row, Space, Tooltip } from "antd";
 import { Link } from "react-router-dom";
 import moment from 'moment';
-
-import styles from "./PredictionItemTWO.module.css";
 import { useSelector } from 'react-redux';
-import { selectReserveAssets, selectReservesToUsdRate } from 'store/slices/settingsSlice';
-import { createChart } from 'lightweight-charts';
 import { min } from 'lodash';
 
-export const data = [
-  {
-    "date": "1850",
-    "value": 0,
-    "type": "YES"
-  },
+import { selectReserveAssets, selectReservesToUsdRate } from 'store/slices/settingsSlice';
 
-  {
-    "date": "1850",
-    "value": 0,
-    "type": "NO"
-  },
-  {
-    "date": "1850",
-    "value": 0,
-    "type": "DRAW"
-  },
-
-
-  {
-    "date": "1851",
-    "value": 10,
-    "type": "YES"
-  },
-
-  {
-    "date": "1851",
-    "value": 20,
-    "type": "NO"
-  },
-  {
-    "date": "1851",
-    "value": 15,
-    "type": "DRAW"
-  },
-
-
-
-  {
-    "date": "1852",
-    "value": 19,
-    "type": "YES"
-  },
-
-  {
-    "date": "1852",
-    "value": 18,
-    "type": "NO"
-  },
-  {
-    "date": "1852",
-    "value": 16,
-    "type": "DRAW"
-  },
-
-
-
-
-  {
-    "date": "1853",
-    "value": 29,
-    "type": "YES"
-  },
-
-  {
-    "date": "1853",
-    "value": 28,
-    "type": "NO"
-  },
-  {
-    "date": "1853",
-    "value": 26,
-    "type": "DRAW"
-  },
-
-  {
-    "date": "1854",
-    "value": 39,
-    "type": "YES"
-  },
-
-  {
-    "date": "1854",
-    "value": 48,
-    "type": "NO"
-  },
-  {
-    "date": "1854",
-    "value": 96,
-    "type": "DRAW"
-  },
-];
-
-
-
-// const config = 
+import styles from "./PredictionItem.module.css";
 
 const max_display_decimals = 5;
 
-export const PredictionItem = ({ category, reserve_asset, aa_address, event, reserve = 0, reserve_decimals = 0, yes_decimals = 0, no_decimals = 0, draw_decimals = 0, yes_price = 0, no_price = 0, draw_price = 0, allow_draw, end_of_trading_period, candles, reserve_symbol, yes_symbol, no_symbol, draw_symbol }) => {
+export const PredictionItem = ({ category, reserve_asset = 'base', aa_address, event, reserve = 0, reserve_decimals = 0, yes_decimals = 0, no_decimals = 0, draw_decimals = 0, yes_price = 0, no_price = 0, draw_price = 0, allow_draw, end_of_trading_period, candles, reserve_symbol, yes_symbol }) => {
   const infoWrapRef = useRef();
   const [infoHeight, setInfoHeight] = useState();
   const rates = useSelector(selectReservesToUsdRate);
@@ -127,7 +30,7 @@ export const PredictionItem = ({ category, reserve_asset, aa_address, event, res
     meta: {
       nice: true
     },
-    color: "#1D90FF"
+    color: "#2D72F6"
   });
 
   const currentReserveRate = rates ? rates[actualReserveSymbol]?.[nowHourTimestamp] || rates[actualReserveSymbol]?.[nowHourTimestamp - 3600] || 0 : 0;
@@ -139,14 +42,13 @@ export const PredictionItem = ({ category, reserve_asset, aa_address, event, res
     if (rates[reserve_symbol]) {
       (candles || []).forEach((item, i) => {
         data = [...data,
-        item.yes_price * rates[reserve_symbol][item.start_timestamp],
+        item.price * rates[reserve_symbol][item.timestamp],
         ]
       });
     }
     const minValue = min(data);
     setConfig(c => ({
       ...c,
-      formatter: () => 3,
       tooltip: {
         customContent: (_, data) => {
           if (data && data[0]) {
