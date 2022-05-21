@@ -3,11 +3,11 @@ import axios from "axios"
 
 export const updateReserveDailyRate = createAsyncThunk(
   'updateReserveDailyRate',
-  async (_, { getState }) => {
+  async ({ assets, reserveAssetsHaveBeenChanged }, { getState }) => {
     const state = getState();
 
-    if (state.settings.reserveDailyRatesUpdateTime + 6 * 3600 <= Math.floor(Date.now() / 1000)) {
-      const tokensSymbols = Object.values(state.settings.reserveAssets).map(({ symbol }) => symbol);
+    if (reserveAssetsHaveBeenChanged || (state.settings.dailyRateUpdateTime + 6 * 3600 <= Math.floor(Date.now() / 1000))) {
+      const tokensSymbols = Object.values(assets || state.settings.reserveAssets).map(({ symbol }) => symbol);
 
       const rates = {};
 

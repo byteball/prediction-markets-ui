@@ -1,13 +1,13 @@
 import { createAsyncThunk } from "@reduxjs/toolkit"
 import axios from "axios"
 
-export const updateReserveRate = createAsyncThunk(
-  'updateReserveRate',
-  async (_, { getState }) => {
+export const updateReserveHourlyRate = createAsyncThunk(
+  'updateReserveHourlyRate',
+  async ({ assets, reserveAssetsHaveBeenChanged }, { getState }) => {
     const state = getState();
 
-    if (state.settings.reserveRatesUpdateTime + 1800 <= Math.floor(Date.now() / 1000)) {
-      const tokensSymbols = Object.values(state.settings.reserveAssets).map(({ symbol }) => symbol);
+    if (reserveAssetsHaveBeenChanged || (state.settings.hourlyRateUpdateTime + 1800 <= Math.floor(Date.now() / 1000))) {
+      const tokensSymbols = Object.values(assets || state.settings.reserveAssets).map(({ symbol }) => symbol);
 
       const rates = {};
 

@@ -6,7 +6,7 @@ import moment from 'moment';
 import { useSelector } from 'react-redux';
 import { min } from 'lodash';
 
-import { selectReserveAssets, selectReservesToUsdRate } from 'store/slices/settingsSlice';
+import { selectReserveAssets, selectReservesHourlyRate } from 'store/slices/settingsSlice';
 
 import styles from "./PredictionItem.module.css";
 
@@ -15,12 +15,12 @@ const max_display_decimals = 5;
 export const PredictionItem = ({ category, reserve_asset = 'base', aa_address, event, reserve = 0, reserve_decimals = 0, yes_decimals = 0, no_decimals = 0, draw_decimals = 0, yes_price = 0, no_price = 0, draw_price = 0, allow_draw, end_of_trading_period, candles, reserve_symbol, yes_symbol }) => {
   const infoWrapRef = useRef();
   const [infoHeight, setInfoHeight] = useState();
-  const rates = useSelector(selectReservesToUsdRate);
+  const rates = useSelector(selectReservesHourlyRate);
   const reserveAssets = useSelector(selectReserveAssets);
   const nowHourTimestamp = moment.utc().startOf("hour").unix();
   const now = moment.utc().unix();
 
-  const actualReserveSymbol = reserveAssets[reserve_asset].symbol;
+  const actualReserveSymbol = reserveAssets[reserve_asset]?.symbol;
 
   const [config, setConfig] = useState({
     autoFit: true,

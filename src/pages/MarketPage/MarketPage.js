@@ -11,7 +11,7 @@ import moment from 'moment';
 
 import { selectActiveCategory, selectActiveDailyCandles, selectActiveMarketParams, selectActiveMarketStateVars, selectActiveMarketStatus, selectActiveRecentEvents } from "store/slices/activeSlice";
 import { setActiveMarket } from "store/thunks/setActiveMarket";
-import { selectReserveAssets, selectReservesDailyUsdRate, selectReservesToUsdRate } from "store/slices/settingsSlice";
+import { selectReserveAssets, selectReservesDailyUsdRate, selectReservesHourlyRate } from "store/slices/settingsSlice";
 import { getMarketPriceByType } from "utils/getMarketPrices";
 import { ViewParamsModal } from "modals/ViewParamsModal";
 import Countdown from "antd/lib/statistic/Countdown";
@@ -52,9 +52,9 @@ export const MarketPage = () => {
 
   const { event, reserve_asset = 'base', allow_draw, reserve_symbol, reserve_decimals, yes_decimals, no_decimals, draw_decimals } = params;
 
-  const actualReserveSymbol = reserveAssets[reserve_asset].symbol;
+  const actualReserveSymbol = reserveAssets[reserve_asset]?.symbol;
 
-  const rates = useSelector(selectReservesToUsdRate);
+  const rates = useSelector(selectReservesHourlyRate);
   const dailyRates = useSelector(selectReservesDailyUsdRate);
 
   const nowHourTimestamp = moment.utc().startOf("hour").unix();
@@ -89,8 +89,8 @@ export const MarketPage = () => {
     const data = [];
     const nowByType = moment.utc().startOf(sevenDaysAlreadyPassed ? 'day' : "hour").unix();
     const step = sevenDaysAlreadyPassed ? 24 * 3600 : 3600;
-    const currentReserveHourlyRates = rates[actualReserveSymbol];
-    const currentReserveDailyRates = dailyRates[actualReserveSymbol];
+    const currentReserveHourlyRates = rates[actualReserveSymbol] || {};
+    const currentReserveDailyRates = dailyRates[actualReserveSymbol] || {};
 
     candles.forEach(({ start_timestamp, yes_price, no_price, draw_price, supply_yes, supply_no, supply_draw }) => {
       const date = moment.unix(start_timestamp).utc().format(sevenDaysAlreadyPassed ? 'll' : 'LLL');

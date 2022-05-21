@@ -51,7 +51,7 @@ export const RegisterSymbols = () => {
 
   const currentAsset = order[currentSymbol + "_asset"];
 
-  const currentDecimals = 9; // TODO: Изменить на децималс резерва
+  const currentDecimals = order.reserve_decimals;
 
   useEffect(() => {
     if (!order.yes_symbol && !order.yes_symbol_req) {

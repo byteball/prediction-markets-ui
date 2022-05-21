@@ -2,7 +2,7 @@ import { createSlice } from '@reduxjs/toolkit';
 import { loadCategories } from 'store/thunks/loadCategories';
 import { loadReserveAssets } from 'store/thunks/loadReserveAssets';
 import { updateReserveDailyRate } from 'store/thunks/updateReserveDailyRate';
-import { updateReserveRate } from 'store/thunks/updateReserveRate';
+import { updateReserveHourlyRate } from 'store/thunks/updateReserveHourlyRate';
 
 export const settingsSlice = createSlice({
   name: 'settings',
@@ -11,10 +11,10 @@ export const settingsSlice = createSlice({
     walletAddress: null,
     categories: [],
     extraCategories: [],
-    reserveRates: {},
-    reserveRatesUpdateTime: 0,
+    reserveHourlyRates: {},
+    hourlyRateUpdateTime: 0,
     reserveDailyRates: {},
-    reserveDailyRatesUpdateTime: 0,
+    dailyRateUpdateTime: 0,
     reserveAssets: {}
   },
   reducers: {
@@ -58,16 +58,16 @@ export const settingsSlice = createSlice({
     [loadReserveAssets.fulfilled]: (state, action) => {
       state.reserveAssets = action.payload;
     },
-    [updateReserveRate.fulfilled]: (state, action) => {
+    [updateReserveHourlyRate.fulfilled]: (state, action) => {
       if (action.payload) {
-        state.reserveRates = action.payload;
-        state.reserveRatesUpdateTime = Math.floor(Date.now() / 1000);
+        state.reserveHourlyRates = action.payload;
+        state.hourlyRateUpdateTime = Math.floor(Date.now() / 1000);
       }
     },
     [updateReserveDailyRate.fulfilled]: (state, action) => {
       if (action.payload) {
         state.reserveDailyRates = action.payload;
-        state.reserveDailyRatesUpdateTime = Math.floor(Date.now() / 1000);
+        state.dailyRateUpdateTime = Math.floor(Date.now() / 1000);
       }
     }
   }
@@ -92,6 +92,6 @@ export const selectCreationOrder = state => state.settings.creationOrder;
 export const selectReserveAssets = state => state.settings.reserveAssets;
 export const selectCategories = state => state.settings.categories;
 export const selectExtraCategories = state => state.settings.extraCategories;
-export const selectReservesToUsdRate = state => state.settings.reserveRates;
+export const selectReservesHourlyRate = state => state.settings.reserveHourlyRates;
 export const selectReservesDailyUsdRate = state => state.settings.reserveDailyRates;
 export const selectWalletAddress = state => state.settings.walletAddress;
