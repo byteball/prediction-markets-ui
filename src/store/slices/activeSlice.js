@@ -26,6 +26,13 @@ export const activeSlice = createSlice({
     },
     addRecentEvent: (state, action) => {
       state.recentEvents.push(action.payload);
+    },
+    updateSymbolForActualMarket: (state, action) => {
+      const { type, symbol } = action.payload || {};
+
+      if (type && symbol) {
+        state.params[`${type}_symbol`] = symbol;
+      }
     }
   },
   extraReducers: {
@@ -51,7 +58,8 @@ export const activeSlice = createSlice({
 export const {
   setActiveMarketAddress,
   updateStateForActualMarket,
-  addRecentEvent
+  addRecentEvent,
+  updateSymbolForActualMarket
 } = activeSlice.actions;
 
 export default activeSlice.reducer;

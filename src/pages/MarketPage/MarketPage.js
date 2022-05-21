@@ -11,7 +11,7 @@ import moment from 'moment';
 
 import { selectActiveCategory, selectActiveDailyCandles, selectActiveMarketParams, selectActiveMarketStateVars, selectActiveMarketStatus, selectActiveRecentEvents } from "store/slices/activeSlice";
 import { setActiveMarket } from "store/thunks/setActiveMarket";
-import { selectReserveAssets, selectReservesToUsdRate } from "store/slices/settingsSlice";
+import { selectReserveAssets, selectReservesDailyUsdRate, selectReservesToUsdRate } from "store/slices/settingsSlice";
 import { getMarketPriceByType } from "utils/getMarketPrices";
 import { ViewParamsModal } from "modals/ViewParamsModal";
 import Countdown from "antd/lib/statistic/Countdown";
@@ -52,12 +52,14 @@ export const MarketPage = () => {
 
   const { event, reserve_asset, allow_draw, reserve_symbol, reserve_decimals, yes_decimals, no_decimals, draw_decimals } = params;
 
-  const actualReserveSymbol = Object.entries(reserveAssets).find(([_, asset]) => asset === reserve_asset)?.[0];
+  const actualReserveSymbol = reserveAssets && Object.entries(reserveAssets).find(([_, asset]) => asset === reserve_asset)?.[0];
 
   const rates = useSelector(selectReservesToUsdRate);
+  const dailyRates = useSelector(selectReservesDailyUsdRate);
+
   const nowHourTimestamp = moment.utc().startOf("hour").unix();
 
-  const reserve_rate = rates ? rates[actualReserveSymbol]?.[nowHourTimestamp] || rates[reserve_symbol]?.[nowHourTimestamp - 3600] || 0 : 0;
+  const reserve_rate = (rates && actualReserveSymbol) ? rates[actualReserveSymbol]?.[nowHourTimestamp] || rates[reserve_symbol]?.[nowHourTimestamp - 3600] || 0 : 0;
   const { reserve = 0, result } = stateVars;
   const viewReserve = +Number(reserve / 10 ** 9).toPrecision(5);
   const viewReserveInUSD = '$' + +Number((reserve / 10 ** reserve_decimals) * reserve_rate).toPrecision(2);
@@ -85,22 +87,24 @@ export const MarketPage = () => {
 
   useEffect(() => {
     const data = [];
-    // {
-    //   "date": "1850",
-    //   "value": 0,
-    //   "type": "YES"
-    // },
+    const nowByType = moment.utc().startOf(sevenDaysAlreadyPassed ? 'day' : "hour").unix();
+    const step = sevenDaysAlreadyPassed ? 24 * 3600 : 3600;
+    const currentReserveHourlyRates = rates[actualReserveSymbol];
+    const currentReserveDailyRates = dailyRates[actualReserveSymbol];
 
     candles.forEach(({ start_timestamp, yes_price, no_price, draw_price, supply_yes, supply_no, supply_draw }) => {
-      const date = moment.unix(start_timestamp).utc().format(sevenDaysAlreadyPassed ? 'll' : 'LLL')
+      const date = moment.unix(start_timestamp).utc().format(sevenDaysAlreadyPassed ? 'll' : 'LLL');
+
       if (chartType === 'prices') {
+        const reserveRate = sevenDaysAlreadyPassed ? currentReserveDailyRates[nowByType] || currentReserveDailyRates[nowByType - step] : currentReserveHourlyRates[nowByType] || currentReserveHourlyRates[nowByType - step];
+
         data.push(
-          { date, value: yes_price, type: "YES" },
-          { date, value: no_price, type: "NO" }
+          { date, value: yes_price * reserveRate, type: "YES" },
+          { date, value: no_price * reserveRate, type: "NO" }
         );
 
         if (allow_draw) {
-          data.push({ date, value: draw_price, type: "DRAW" },)
+          data.push({ date, value: draw_price * reserveRate, type: "DRAW" },)
         }
       } else {
         data.push(
@@ -115,15 +119,14 @@ export const MarketPage = () => {
     });
 
     setDataForChart(data);
-    console.log('data', data)
-  }, [candles, chartType, address]);
-  // console.log('time', now + 1000)
+  }, [candles, chartType, address, dailyRates, rates]);
 
   useEffect(() => {
     const intervalId = setInterval(() => setNow(moment.utc().unix()), 10000);
 
     return () => clearInterval(intervalId);
-  })
+  });
+
   useEffect(() => {
     window.scrollTo(0, 0);
   }, [])
@@ -157,8 +160,8 @@ export const MarketPage = () => {
     }
   }, [address]);
 
-  if (status !== 'loaded') return (<Layout>
-    {(status === 'loading' || status === 'not selected')
+  if (status !== 'loaded' || !actualReserveSymbol) return (<Layout>
+    {(status === 'loading' || status === 'not selected' || !actualReserveSymbol)
       ? <div style={{ margin: 20, display: 'flex', justifyContent: 'center' }}><Spin size="large" /></div>
       : <Result
         status="warning"

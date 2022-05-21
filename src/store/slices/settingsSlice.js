@@ -1,6 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { loadCategories } from 'store/thunks/loadCategories';
 import { loadReserveAssets } from 'store/thunks/loadReserveAssets';
+import { updateReserveDailyRate } from 'store/thunks/updateReserveDailyRate';
 import { updateReserveRate } from 'store/thunks/updateReserveRate';
 
 export const settingsSlice = createSlice({
@@ -10,7 +11,11 @@ export const settingsSlice = createSlice({
     walletAddress: null,
     categories: [],
     extraCategories: [],
-    reserveRates: {}
+    reserveRates: {},
+    reserveRatesUpdateTime: 0,
+    reserveDailyRates: {},
+    reserveDailyRatesUpdateTime: 0,
+    reserveAssets: {}
   },
   reducers: {
     saveCreationOrder: (state, action) => {
@@ -54,7 +59,16 @@ export const settingsSlice = createSlice({
       state.reserveAssets = action.payload;
     },
     [updateReserveRate.fulfilled]: (state, action) => {
-      state.reserveRates = action.payload;
+      if (action.payload) {
+        state.reserveRates = action.payload;
+        state.reserveRatesUpdateTime = Math.floor(Date.now() / 1000);
+      }
+    },
+    [updateReserveDailyRate.fulfilled]: (state, action) => {
+      if (action.payload) {
+        state.reserveDailyRates = action.payload;
+        state.reserveDailyRatesUpdateTime = Math.floor(Date.now() / 1000);
+      }
     }
   }
 });
@@ -79,4 +93,5 @@ export const selectReserveAssets = state => state.settings.reserveAssets;
 export const selectCategories = state => state.settings.categories;
 export const selectExtraCategories = state => state.settings.extraCategories;
 export const selectReservesToUsdRate = state => state.settings.reserveRates;
+export const selectReservesDailyUsdRate = state => state.settings.reserveDailyRates;
 export const selectWalletAddress = state => state.settings.walletAddress;

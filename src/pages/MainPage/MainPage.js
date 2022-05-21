@@ -3,7 +3,7 @@ import { useSelector } from "react-redux";
 
 import { PredictionItem } from "./PredictionItem";
 import { Layout } from "components/Layout/Layout";
-import { ReactComponent as Select } from './img/select.svg';
+// import { ReactComponent as Select } from './img/select.svg';
 import { selectAllMarkets } from "store/slices/marketsSlice";
 
 import styles from "./MainPage.module.css";
@@ -29,9 +29,9 @@ export const MainPage = () => {
           </div>
         </Col>
 
-        <Col xs={{ span: 0 }} md={{ span: 12 }} style={{ textAlign: "right" }}>
-          {/* <Select style={{ maxWidth: 390, marginLeft: 10 }} /> */}
-        </Col>
+        {/* <Col xs={{ span: 0 }} md={{ span: 12 }} style={{ textAlign: "right" }}>
+          <Select style={{ maxWidth: 390, marginLeft: 10 }} />
+        </Col> */}
       </Row>
 
       <div style={{ margin: "0 auto", marginTop: 40, maxWidth: 780, userSelect: 'none' }}>

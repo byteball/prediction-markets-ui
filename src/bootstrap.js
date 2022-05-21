@@ -3,7 +3,7 @@ import { isEmpty } from "lodash";
 
 import client from "services/obyte";
 
-import { addRecentEvent, updateStateForActualMarket } from "store/slices/activeSlice";
+import { addRecentEvent, updateStateForActualMarket, updateSymbolForActualMarket } from "store/slices/activeSlice";
 import { addMarketInList } from "store/slices/marketsSlice";
 import { updateCreationOrder } from "store/slices/settingsSlice";
 import { loadCategories } from "store/thunks/loadCategories";
@@ -13,6 +13,7 @@ import { setActiveMarket } from "store/thunks/setActiveMarket";
 import { responseToEvent } from "utils/responseToEvent";
 
 import config from "appConfig";
+import { checkCreationOrder } from "store/thunks/checkCreationOrder";
 
 const getAAPayload = (messages = []) => messages.find(m => m.app === 'data')?.payload || {};
 
@@ -22,6 +23,7 @@ export const bootstrap = async () => {
   store.dispatch(loadMarkets());
   store.dispatch(loadCategories());
   store.dispatch(loadReserveAssets());
+  store.dispatch(checkCreationOrder());
 
   const state = store.getState();
 
@@ -104,6 +106,18 @@ export const bootstrap = async () => {
 
           }
         }
+
+        if (state.active.address) {
+          const { yes_asset, no_asset, draw_asset } = state.active.stateVars;
+
+          if (yes_asset && (yes_asset in responseVars)) {
+            store.dispatch(updateSymbolForActualMarket({ type: 'yes', symbol: responseVars[yes_asset] }));
+          } else if (no_asset && (no_asset in responseVars)) {
+            store.dispatch(updateSymbolForActualMarket({ type: 'no', symbol: responseVars[no_asset] }))
+          } else if (draw_asset && (draw_asset in responseVars)) {
+            store.dispatch(updateSymbolForActualMarket({ type: 'draw', symbol: responseVars[draw_asset] }))
+          }
+        }
       }
     }
   }
@@ -135,7 +149,7 @@ export const bootstrap = async () => {
       if (trigger_initial_unit === order.creation_unit_id) {
         const newFactoryStateVars = updatedStateVars[config.FACTORY_AA];
         const varName = Object.keys(newFactoryStateVars)?.[0];
-        
+
         if (varName && varName.includes('prediction_')) {
           const prediction_address = varName.split("_")[1];
 
@@ -150,7 +164,9 @@ export const bootstrap = async () => {
                 draw_asset: data.draw_asset,
                 prediction_address
               }))
+
               const orderData = state.settings.creationOrder.data;
+              const reserve_symbol = Object.entries(state.settings.reserveAssets).find(([_, asset]) => asset === (orderData.reserve_asset || 'base'))?.[0];
 
               store.dispatch(addMarketInList({
                 ...orderData,
@@ -163,18 +179,14 @@ export const bootstrap = async () => {
                 draw_price: 0,
                 yes_decimals: orderData.reserve_decimals,
                 no_decimals: orderData.reserve_decimals,
-                draw_decimals: orderData.reserve_decimals,
+                draw_decimals: orderData.reserve_decimals, // TODO: там нет reserve_decimals....
                 yes_symbol: data.yes_asset.slice(0, 5),
                 no_symbol: data.no_asset.slice(0, 5),
                 draw_symbol: data.draw_asset ? data.draw_asset.slice(0, 5) : null,
-                //TODO: Добавить резерв символ
+                reserve_symbol
               }))
             }
-
-
-
           }
-
         }
       }
     }
