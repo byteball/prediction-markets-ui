@@ -4,9 +4,9 @@ import { Badge, Card, Col, Row, Space, Tooltip } from "antd";
 import { Link } from "react-router-dom";
 import moment from 'moment';
 import { useSelector } from 'react-redux';
-import { min } from 'lodash';
+import { isEmpty, min } from 'lodash';
 
-import { selectReserveAssets, selectReservesHourlyRate } from 'store/slices/settingsSlice';
+import { selectReservesHourlyRate } from 'store/slices/settingsSlice';
 
 import styles from "./PredictionItem.module.css";
 
@@ -15,13 +15,7 @@ const max_display_decimals = 5;
 export const PredictionItem = ({ category, reserve_asset = 'base', aa_address, event, reserve = 0, reserve_decimals = 0, yes_decimals = 0, no_decimals = 0, draw_decimals = 0, yes_price = 0, no_price = 0, draw_price = 0, allow_draw, end_of_trading_period, candles, reserve_symbol, yes_symbol }) => {
   const infoWrapRef = useRef();
   const [infoHeight, setInfoHeight] = useState();
-  const rates = useSelector(selectReservesHourlyRate);
-  const reserveAssets = useSelector(selectReserveAssets);
-  const nowHourTimestamp = moment.utc().startOf("hour").unix();
-  const now = moment.utc().unix();
-
-  const actualReserveSymbol = reserveAssets[reserve_asset]?.symbol;
-
+  const [dataForChart, setDataForChart] = useState([]);
   const [config, setConfig] = useState({
     autoFit: true,
     smooth: true,
@@ -33,15 +27,19 @@ export const PredictionItem = ({ category, reserve_asset = 'base', aa_address, e
     color: "#2D72F6"
   });
 
-  const currentReserveRate = rates ? rates[actualReserveSymbol]?.[nowHourTimestamp] || rates[actualReserveSymbol]?.[nowHourTimestamp - 3600] || 0 : 0;
-  const [dataForChart, setDataForChart] = useState([]);
+  const hourlyRates = useSelector(selectReservesHourlyRate);
+
+  const nowHourTimestamp = moment.utc().startOf("hour").unix();
+  const now = moment.utc().unix();
+  const hourlyRateByReserveAsset = hourlyRates[reserve_asset] || {};
+  const currentReserveRate = !isEmpty(hourlyRateByReserveAsset) ? hourlyRateByReserveAsset[nowHourTimestamp] || hourlyRateByReserveAsset[nowHourTimestamp - 3600] || 0 : 0;
 
   useEffect(async () => {
     let data = [];
 
-    if (rates[reserve_symbol]) {
+    if (!isEmpty(hourlyRateByReserveAsset)) {
       (candles || []).forEach((item, i) => {
-        data = [...data, item.price * rates[reserve_symbol][item.timestamp]]
+        data = [...data, item.price * hourlyRateByReserveAsset[item.timestamp]]
       });
     }
     const minValue = min(data);
@@ -58,7 +56,7 @@ export const PredictionItem = ({ category, reserve_asset = 'base', aa_address, e
     }));
 
     setDataForChart(data.map((value) => value - minValue));
-  }, [candles, rates, yes_symbol]);
+  }, [candles, hourlyRates, yes_symbol]);
 
   useEffect(() => {
     const height = infoWrapRef.current.clientHeight;

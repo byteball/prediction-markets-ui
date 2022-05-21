@@ -8,6 +8,7 @@ import { Link, useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import moment from 'moment';
+import { isEmpty } from "lodash";
 
 import { selectActiveCategory, selectActiveDailyCandles, selectActiveMarketParams, selectActiveMarketStateVars, selectActiveMarketStatus, selectActiveRecentEvents } from "store/slices/activeSlice";
 import { setActiveMarket } from "store/thunks/setActiveMarket";
@@ -54,12 +55,13 @@ export const MarketPage = () => {
 
   const actualReserveSymbol = reserveAssets[reserve_asset]?.symbol;
 
-  const rates = useSelector(selectReservesHourlyRate);
+  const hourlyRates = useSelector(selectReservesHourlyRate);
   const dailyRates = useSelector(selectReservesDailyUsdRate);
 
   const nowHourTimestamp = moment.utc().startOf("hour").unix();
+  const hourlyRateByReserveAsset = hourlyRates[reserve_asset] || {};
 
-  const reserve_rate = (rates && actualReserveSymbol) ? rates[actualReserveSymbol]?.[nowHourTimestamp] || rates[reserve_symbol]?.[nowHourTimestamp - 3600] || 0 : 0;
+  const reserve_rate = !isEmpty(hourlyRateByReserveAsset) ? hourlyRateByReserveAsset[nowHourTimestamp] || hourlyRateByReserveAsset[nowHourTimestamp - 3600] || 0 : 0;
   const { reserve = 0, result } = stateVars;
   const viewReserve = +Number(reserve / 10 ** 9).toPrecision(5);
   const viewReserveInUSD = '$' + +Number((reserve / 10 ** reserve_decimals) * reserve_rate).toPrecision(2);
@@ -89,14 +91,13 @@ export const MarketPage = () => {
     const data = [];
     const nowByType = moment.utc().startOf(sevenDaysAlreadyPassed ? 'day' : "hour").unix();
     const step = sevenDaysAlreadyPassed ? 24 * 3600 : 3600;
-    const currentReserveHourlyRates = rates[actualReserveSymbol] || {};
     const currentReserveDailyRates = dailyRates[actualReserveSymbol] || {};
 
     candles.forEach(({ start_timestamp, yes_price, no_price, draw_price, supply_yes, supply_no, supply_draw }) => {
       const date = moment.unix(start_timestamp).utc().format(sevenDaysAlreadyPassed ? 'll' : 'LLL');
 
       if (chartType === 'prices') {
-        const reserveRate = sevenDaysAlreadyPassed ? currentReserveDailyRates[nowByType] || currentReserveDailyRates[nowByType - step] : currentReserveHourlyRates[nowByType] || currentReserveHourlyRates[nowByType - step];
+        const reserveRate = sevenDaysAlreadyPassed ? currentReserveDailyRates[nowByType] || currentReserveDailyRates[nowByType - step] : hourlyRateByReserveAsset[nowByType] || hourlyRateByReserveAsset[nowByType - step];
 
         data.push(
           { date, value: yes_price * reserveRate, type: "YES" },
@@ -119,7 +120,7 @@ export const MarketPage = () => {
     });
 
     setDataForChart(data);
-  }, [candles, chartType, address, dailyRates, rates]);
+  }, [candles, chartType, address, dailyRates, hourlyRates]);
 
   useEffect(() => {
     const intervalId = setInterval(() => setNow(moment.utc().unix()), 10000);
