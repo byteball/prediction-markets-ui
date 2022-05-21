@@ -166,7 +166,7 @@ export const bootstrap = async () => {
               }))
 
               const orderData = state.settings.creationOrder.data;
-              const reserve_symbol = Object.entries(state.settings.reserveAssets).find(([_, asset]) => asset === (orderData.reserve_asset || 'base'))?.[0];
+              const reserve_symbol = state.settings.reserveAssets[orderData.reserve_asset || 'base']?.symbol;
 
               store.dispatch(addMarketInList({
                 ...orderData,
@@ -179,7 +179,7 @@ export const bootstrap = async () => {
                 draw_price: 0,
                 yes_decimals: orderData.reserve_decimals,
                 no_decimals: orderData.reserve_decimals,
-                draw_decimals: orderData.reserve_decimals, // TODO: там нет reserve_decimals....
+                draw_decimals: orderData.reserve_decimals,
                 yes_symbol: data.yes_asset.slice(0, 5),
                 no_symbol: data.no_asset.slice(0, 5),
                 draw_symbol: data.draw_asset ? data.draw_asset.slice(0, 5) : null,

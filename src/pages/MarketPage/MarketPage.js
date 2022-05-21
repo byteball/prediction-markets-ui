@@ -50,9 +50,9 @@ export const MarketPage = () => {
   const params = useSelector(selectActiveMarketParams);
   const recentEvents = useSelector(selectActiveRecentEvents);
 
-  const { event, reserve_asset, allow_draw, reserve_symbol, reserve_decimals, yes_decimals, no_decimals, draw_decimals } = params;
+  const { event, reserve_asset = 'base', allow_draw, reserve_symbol, reserve_decimals, yes_decimals, no_decimals, draw_decimals } = params;
 
-  const actualReserveSymbol = reserveAssets && Object.entries(reserveAssets).find(([_, asset]) => asset === reserve_asset)?.[0];
+  const actualReserveSymbol = reserveAssets[reserve_asset].symbol;
 
   const rates = useSelector(selectReservesToUsdRate);
   const dailyRates = useSelector(selectReservesDailyUsdRate);

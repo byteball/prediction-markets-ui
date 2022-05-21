@@ -20,7 +20,7 @@ export const PredictionItem = ({ category, reserve_asset = 'base', aa_address, e
   const nowHourTimestamp = moment.utc().startOf("hour").unix();
   const now = moment.utc().unix();
 
-  const actualReserveSymbol = Object.entries(reserveAssets).find(([_, asset]) => asset === reserve_asset)?.[0];
+  const actualReserveSymbol = reserveAssets[reserve_asset].symbol;
 
   const [config, setConfig] = useState({
     autoFit: true,
@@ -41,9 +41,7 @@ export const PredictionItem = ({ category, reserve_asset = 'base', aa_address, e
 
     if (rates[reserve_symbol]) {
       (candles || []).forEach((item, i) => {
-        data = [...data,
-        item.price * rates[reserve_symbol][item.timestamp],
-        ]
+        data = [...data, item.price * rates[reserve_symbol][item.timestamp]]
       });
     }
     const minValue = min(data);
@@ -80,14 +78,14 @@ export const PredictionItem = ({ category, reserve_asset = 'base', aa_address, e
   const isExpiry = now > end_of_trading_period;
   const Wrapper = false && isExpiry ? Badge.Ribbon : Fragment;
 
-  const wrapperProps = false && isExpiry ? { 
+  const wrapperProps = false && isExpiry ? {
     color: "red",
     text: <div style={{ fontSize: 12 }}>Expiry</div>,
     placement: "start"
   } : {};
 
   return <Wrapper {...wrapperProps}><Link to={`/market/${aa_address}`}>
-    <Card className={styles.itemWrap} style={{color: "#fff"}}>
+    <Card className={styles.itemWrap} style={{ color: "#fff" }}>
       <Row gutter={10}>
         <Col md={{ span: 16 }} xs={{ span: 24 }} sm={{ span: 24 }} ref={infoWrapRef}>
           <Space className={styles.notifyWrap}>

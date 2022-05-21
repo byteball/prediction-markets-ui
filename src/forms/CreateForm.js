@@ -183,7 +183,8 @@ export const CreateForm = () => {
       waiting_period_length: waitingPeriodLength.value * 24 * 3600,
       issue_fee: issueFee.value / 100,
       redeem_fee: redeemFee.value / 100,
-      arb_profit_tax: arbProfitFee.value / 100
+      arb_profit_tax: arbProfitFee.value / 100,
+      reserve_decimals: reserveAssets[reserveAsset.value].decimals
     }
 
     if (category.value) {
@@ -275,7 +276,7 @@ export const CreateForm = () => {
     <Form.Item validateStatus='success' label={<FormLabel info={paramList.reserve_asset.description}>Reserve asset</FormLabel>}>
       <Select onChange={(ev) => handleChangeValue(ev, 'reserve_asset')} size="large" value={reserveAsset.value}>
         {!reserveAssets && <Select.Option value='base'>GBYTE</Select.Option>}
-        {reserveAssets && Object.entries(reserveAssets).map(([name, value]) => <Select.Option key={value} value={value}>{name}</Select.Option>)}
+        {reserveAssets && Object.entries(reserveAssets).map(([asset, { symbol }]) => <Select.Option key={asset} value={asset}>{symbol}</Select.Option>)}
       </Select>
     </Form.Item>
 
