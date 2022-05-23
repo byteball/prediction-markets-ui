@@ -105,7 +105,7 @@ export const PredictionItem = ({ category, reserve_asset = 'base', aa_address, e
             <Col md={{ span: 6 }} xs={{ span: 12 }}>
               <Tooltip title="yes price">
                 <div className={styles.infoTitle}>yes price</div>
-                <div>${+Number(yesPriceView * currentReserveRate).toFixed(2)}</div>
+                <div>${+Number(yes_price * currentReserveRate).toFixed(2)}</div>
                 <div className={styles.infoValueInCrypto}>{yesPriceView} {reserve_symbol}</div>
               </Tooltip>
             </Col>
