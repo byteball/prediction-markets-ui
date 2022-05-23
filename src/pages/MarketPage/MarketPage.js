@@ -29,10 +29,41 @@ const config = {
   animation: false,
   renderer: 'svg',
   smooth: true,
-  antialias: true,
   appendPadding: 0,
   color: ({ type }) => {
     return type === 'NO' ? '#ffa39e' : type === 'YES' ? '#b7eb8f' : '#ffe58f';
+  },
+  tooltip: {
+    customContent: (title, items) => {
+      return (
+        <>
+          <p style={{ marginTop: 16 }}>{title}</p>
+          <ul style={{ paddingLeft: 0 }}>
+            {items?.map((item, index) => {
+              const { color, data: { currencySymbol, chartType, value, symbol } } = item;
+              const valueView = chartType === 'prices' ? `$${value.toPrecision(4)}` : `${value} ${currencySymbol}`;
+
+              return (
+                <li
+                  key={item.data.date}
+                  // className="g2-tooltip-list-item"
+                  data-index={index}
+                  style={{ marginBottom: 12, display: 'flex', alignItems: 'center', }}
+                >
+                  <span className="g2-tooltip-marker" style={{ backgroundColor: color }}></span>
+                  <span
+                    style={{ display: 'inline-flex', flex: 1, justifyContent: 'space-between' }}
+                  >
+                    {chartType === 'prices' && <span className="g2-tooltip-list-item--4"><div style={{ paddingRight: 15 }}>{symbol}</div></span>}
+                    <span className="g2-tooltip-list-item-value">{valueView}</span>
+                  </span>
+                </li>
+              );
+            })}
+          </ul>
+        </>
+      );
+    }
   }
 };
 
@@ -52,7 +83,7 @@ export const MarketPage = () => {
   const params = useSelector(selectActiveMarketParams);
   const recentEvents = useSelector(selectActiveRecentEvents);
 
-  const { event, reserve_asset = 'base', allow_draw, reserve_symbol, reserve_decimals, yes_decimals, no_decimals, draw_decimals } = params;
+  const { event, reserve_asset = 'base', allow_draw, reserve_symbol, reserve_decimals, yes_decimals, no_decimals, draw_decimals, yes_symbol, no_symbol, draw_symbol } = params;
 
   const actualReserveSymbol = reserveAssets[reserve_asset]?.symbol;
 
@@ -71,9 +102,9 @@ export const MarketPage = () => {
   const noPrice = +getMarketPriceByType(stateVars, 'no').toFixed(reserve_decimals);
   const drawPrice = +getMarketPriceByType(stateVars, 'draw').toFixed(reserve_decimals);
 
-  const yesPriceInUSD = '$' + +Number(yesPrice * reserve_rate).toPrecision(2);
-  const noPriceInUSD = '$' + +Number(noPrice * reserve_rate).toPrecision(2);
-  const drawPriceInUSD = '$' + +Number(drawPrice * reserve_rate).toPrecision(2);
+  const yesPriceInUSD = '$' + +Number(yesPrice * reserve_rate).toPrecision(4);
+  const noPriceInUSD = '$' + +Number(noPrice * reserve_rate).toPrecision(4);
+  const drawPriceInUSD = '$' + +Number(drawPrice * reserve_rate).toPrecision(4);
 
   let tradeStatus;
   let tradeStatusColor;
@@ -85,7 +116,6 @@ export const MarketPage = () => {
   const [now, setNow] = useState(moment.utc().unix());
   const sevenDaysAlreadyPassed = now > (params.end_of_trading_period + 3600 * 24 * 7);
 
-
   const commitResultLink = generateLink({ aa: address, amount: 1e4, data: { commit: 1 } });
 
   useEffect(() => {
@@ -95,27 +125,27 @@ export const MarketPage = () => {
     const currentReserveDailyRates = dailyRates[actualReserveSymbol] || {};
 
     candles.forEach(({ start_timestamp, yes_price, no_price, draw_price, supply_yes, supply_no, supply_draw }) => {
-      const date = moment.unix(start_timestamp).format(sevenDaysAlreadyPassed ? 'll' : 'LLL');
+      const date = moment.unix(start_timestamp).format(sevenDaysAlreadyPassed ? 'll' : 'lll');
 
       if (chartType === 'prices') {
         const reserveRate = sevenDaysAlreadyPassed ? currentReserveDailyRates[nowByType] || currentReserveDailyRates[nowByType - step] : hourlyRateByReserveAsset[nowByType] || hourlyRateByReserveAsset[nowByType - step];
 
         data.push(
-          { date, value: yes_price * reserveRate, type: "YES" },
-          { date, value: no_price * reserveRate, type: "NO" }
+          { date, value: yes_price * reserveRate, type: "YES", currencySymbol: reserve_symbol, chartType, symbol: yes_symbol },
+          { date, value: no_price * reserveRate, type: "NO", currencySymbol: reserve_symbol, chartType, symbol: no_symbol }
         );
 
         if (allow_draw) {
-          data.push({ date, value: draw_price * reserveRate, type: "DRAW" },)
+          data.push({ date, value: draw_price * reserveRate, type: "DRAW", currencySymbol: reserve_symbol, chartType, symbol: draw_symbol })
         }
       } else {
         data.push(
-          { date, value: +Number(supply_yes / 10 ** yes_decimals).toFixed(yes_decimals), type: "YES" },
-          { date, value: +Number(supply_no / 10 ** no_decimals).toFixed(no_decimals), type: "NO" }
+          { date, value: +Number(supply_yes / 10 ** yes_decimals).toFixed(yes_decimals), type: "YES", currencySymbol: yes_symbol, chartType },
+          { date, value: +Number(supply_no / 10 ** no_decimals).toFixed(no_decimals), type: "NO", currencySymbol: no_symbol, chartType }
         );
 
         if (allow_draw) {
-          data.push({ date, value: +Number(supply_draw / 10 ** draw_decimals).toFixed(draw_decimals), type: "DRAW" },)
+          data.push({ date, value: +Number(supply_draw / 10 ** draw_decimals).toFixed(draw_decimals), type: "DRAW", currencySymbol: draw_symbol, chartType },)
         }
       }
     });
@@ -220,7 +250,7 @@ export const MarketPage = () => {
             <Radio.Button value="supplies">Supplies</Radio.Button>
           </Radio.Group>
         </div>
-        <Line {...config} data={dataForChart} />
+        <Line {...config} data={dataForChart} title='test21' />
       </div>}
       <div>
         <h2 style={{ marginBottom: 25, marginTop: 35 }}>Recent events</h2>
