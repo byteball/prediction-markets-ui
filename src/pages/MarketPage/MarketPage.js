@@ -8,6 +8,7 @@ import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import moment from 'moment';
 import { isEmpty } from "lodash";
+import QRButton from "obyte-qr-button";
 
 import { selectActiveCategory, selectActiveDailyCandles, selectActiveMarketParams, selectActiveMarketStateVars, selectActiveMarketStatus, selectActiveRecentEvents } from "store/slices/activeSlice";
 import { setActiveMarket } from "store/thunks/setActiveMarket";
@@ -220,7 +221,7 @@ export const MarketPage = () => {
 
       <Space size='large' style={{ marginBottom: 15 }}>
         <TradeModal disabled={!tradeIsActive} />
-        {showCommitResultButton && <Button type="primary" size="large" href={commitResultLink}>Commit result</Button>}
+        {showCommitResultButton && <QRButton type="primary" size="large" href={commitResultLink}>Commit result</QRButton>}
         {showClaimProfitButton && <ClaimProfitModal />}
         <ViewParamsModal {...params} />
       </Space>
