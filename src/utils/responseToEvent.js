@@ -18,8 +18,8 @@ export const responseToEvent = (responseObj, params, state) => {
     event = `${author}... ${action}${yes_amount !== 0 ? ` ${Math.abs(yes_amount)} ${yes_symbol}` : ''}${no_amount !== 0 ? ` ${Math.abs(no_amount)} ${no_symbol}` : ''}${draw_amount !== 0 ? ` ${Math.abs(draw_amount)} ${draw_symbol}` : ''}`;
   } else if ('result' in responseVars) {
     event = `Result has been set: ${responseVars.result}`;
-  } else if (state.result && 'Your profit' in responseVars){ // TODO: fix it in new version AA
-    event = `${author}... profited ${responseVars['Your profit'] / 10 ** reserve_decimals} ${reserve_symbol}`;
+  } else if (state.result && 'profit' in responseVars){
+    event = `${author}... profited ${responseVars['profit'] / 10 ** reserve_decimals} ${reserve_symbol}`;
   }  
 
   return {
