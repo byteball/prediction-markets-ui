@@ -1,7 +1,6 @@
 import { Row, Col, Space, Button, Radio, Spin, Result } from "antd";
 import { Layout } from "components/Layout/Layout";
 import { StatsCard } from "components/StatsCard/StatsCard";
-import styles from './MarketPage.module.css';
 import { Line } from '@ant-design/plots';
 import { TradeModal } from "modals/TradeModal";
 import { Link, useParams } from "react-router-dom";
@@ -19,6 +18,8 @@ import Countdown from "antd/lib/statistic/Countdown";
 import { RecentEvents } from "components/RecentEvents/RecentEvents";
 import { generateLink } from "utils/generateLink";
 import { ClaimProfitModal } from "modals/ClaimProfitModal";
+
+import styles from './MarketPage.module.css';
 
 const config = {
   xField: 'date',
@@ -94,7 +95,7 @@ export const MarketPage = () => {
     const currentReserveDailyRates = dailyRates[actualReserveSymbol] || {};
 
     candles.forEach(({ start_timestamp, yes_price, no_price, draw_price, supply_yes, supply_no, supply_draw }) => {
-      const date = moment.unix(start_timestamp).utc().format(sevenDaysAlreadyPassed ? 'll' : 'LLL');
+      const date = moment.unix(start_timestamp).format(sevenDaysAlreadyPassed ? 'll' : 'LLL');
 
       if (chartType === 'prices') {
         const reserveRate = sevenDaysAlreadyPassed ? currentReserveDailyRates[nowByType] || currentReserveDailyRates[nowByType - step] : hourlyRateByReserveAsset[nowByType] || hourlyRateByReserveAsset[nowByType - step];
