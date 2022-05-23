@@ -30,6 +30,10 @@ const config = {
   renderer: 'svg',
   smooth: true,
   appendPadding: 0,
+  theme: 'dark',
+  map: {
+    style: 'dark',
+  },
   color: ({ type }) => {
     return type === 'NO' ? '#ffa39e' : type === 'YES' ? '#b7eb8f' : '#ffe58f';
   },
@@ -40,13 +44,12 @@ const config = {
           <p style={{ marginTop: 16 }}>{title}</p>
           <ul style={{ paddingLeft: 0 }}>
             {items?.map((item, index) => {
-              const { color, data: { currencySymbol, chartType, value, symbol } } = item;
+              const { color, data: { currencySymbol, chartType, value, symbol, type, date } } = item;
               const valueView = chartType === 'prices' ? `$${value.toPrecision(4)}` : `${value} ${currencySymbol}`;
 
               return (
                 <li
-                  key={item.data.date}
-                  // className="g2-tooltip-list-item"
+                  key={`${chartType}-${type}-${date}`}
                   data-index={index}
                   style={{ marginBottom: 12, display: 'flex', alignItems: 'center', }}
                 >
