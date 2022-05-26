@@ -32,6 +32,11 @@ class Backend {
     const candles = await this.axios.get(`/daily_candles/${address}`);
     return candles?.data;
   }
+
+  getSportsCalendar = async () => {
+    const categories = await this.axios.get('/calendar');
+    return categories?.data;
+  }
 }
 
 export default new Backend();
