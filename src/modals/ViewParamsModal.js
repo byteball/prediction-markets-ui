@@ -4,17 +4,19 @@ import moment from "moment";
 
 import { useWindowSize } from "hooks/useWindowSize";
 
+import appConfig from "appConfig";
+
 const { Title } = Typography;
 
-export const ViewParamsModal = ({ event, reserve_asset, allow_draw, oracle, feed_name, comparison, datafeed_value, datafeed_draw_value, end_of_trading_period, waiting_period_length, issue_fee, redeem_fee, arb_profit_tax }) => {
+export const ViewParamsModal = ({ event, reserve_asset, allow_draw, oracle, feed_name, comparison, datafeed_value, datafeed_draw_value, end_of_trading_period, waiting_period_length, issue_fee, redeem_fee, arb_profit_tax, aa_address }) => {
   const [visible, setVisible] = useState(false);
   const [width] = useWindowSize();
-  
+
   const open = () => setVisible(true);
   const close = () => setVisible(false);
 
   return <>
-    <Button size="large" onClick={open}>View params</Button>
+    <Button size="small" type="link" onClick={open}>View params</Button>
     <Drawer
       width={width > 640 ? 640 : width}
       placement="right"
@@ -22,11 +24,12 @@ export const ViewParamsModal = ({ event, reserve_asset, allow_draw, oracle, feed
       visible={visible}
       onClose={close}
     >
-      <Title level={2}>View params</Title>
+      <Title level={2} style={{ marginBottom: 0 }}>View params</Title>
+      <p><a href={`https://${appConfig.ENVIRONMENT === 'testnet' ? 'testnet' : ''}explorer.obyte.org/#${aa_address}`} target="_blank">View AA on explorer</a></p>
       <p><b>Event: </b>{event}</p>
       <p><b>Reserve asset: </b>{reserve_asset}</p>
       <p><b>Allow draw: </b>{allow_draw ? 'true' : 'false'}</p>
-      <p><b>Oracle: </b>{oracle}</p>
+      <p><b>Oracle: </b><a href={`https://${appConfig.ENVIRONMENT === 'testnet' ? 'testnet' : ''}explorer.obyte.org/#${oracle}`} target="_blank">{oracle}</a></p>
       <p><b>Feed name: </b>{feed_name}</p>
       <p><b>Comparison: </b>{comparison}</p>
       <p><b>Datafeed value: </b>{datafeed_value}</p>

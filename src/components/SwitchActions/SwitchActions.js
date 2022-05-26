@@ -6,6 +6,12 @@ export const SwitchActions = ({ data = [], value, onChange }) => {
   const [currentValue, setCurrentValue] = useState(value || data[0]?.value);
 
   useEffect(() => {
+    if (value !== currentValue) {
+      setCurrentValue(value)
+    }
+  }, [value]);
+
+  useEffect(() => {
     if (onChange) {
       onChange(currentValue);
     }

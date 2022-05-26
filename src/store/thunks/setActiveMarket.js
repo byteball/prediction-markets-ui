@@ -65,17 +65,22 @@ export const setActiveMarket = createAsyncThunk(
 
     const responses = await obyte.api.getAaResponses({ aa: address });
 
-    const recentEvents = responses.filter((res) => !res.response?.error).map((res) => responseToEvent(res, params, stateVars));
+    let recentEvents = responses.filter((res) => !res.response?.error).map((res) => responseToEvent(res, params, stateVars))
+    const firstConfigureEvent = recentEvents.find((ev) => ev.event === 'Configuration');
+    recentEvents = [...recentEvents.filter((ev) => ev.event !== 'Configuration'), firstConfigureEvent];
 
     await obyte.justsaying("light/new_aa_to_watch", {
       aa: address
     });
+
+    const datafeedValue = await obyte.api.getDataFeed({ oracles: [params.oracle], feed_name: params.feed_name, ifnone: 'none' })
 
     return {
       params,
       stateVars,
       category,
       dailyCandles,
-      recentEvents
+      recentEvents,
+      datafeedValue: datafeedValue !== 'none' ? datafeedValue : null
     }
   })

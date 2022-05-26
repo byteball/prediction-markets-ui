@@ -1,4 +1,4 @@
-import { Form, Select, Input, Spin } from "antd";
+import { Form, Select, Input, Spin, Col, Row } from "antd";
 import { isNaN } from "lodash";
 import QRButton from "obyte-qr-button";
 import { useEffect, useRef, useState } from "react";
@@ -12,7 +12,7 @@ import { getExchangeResult } from "utils/getExchangeResult";
 
 const f = (x) => (~(x + "").indexOf(".") ? (x + "").split(".")[1].length : 0);
 
-export const BuyForm = () => {
+export const BuyForm = ({ type }) => {
   const stateVars = useSelector(selectActiveMarketStateVars);
   const address = useSelector(selectActiveAddress);
   const params = useSelector(selectActiveMarketParams);
@@ -32,6 +32,10 @@ export const BuyForm = () => {
 
   const network_fee = reserve_asset === 'base' ? 1e4 : 0;
 
+  useEffect(()=> {
+    setAmount({ value: 1, valid: true });
+  }, []);
+
   useEffect(() => {
     const tokens = [
       { symbol: yes_symbol, asset: yes_asset, type: 'yes', decimals: yes_decimals },
@@ -43,8 +47,10 @@ export const BuyForm = () => {
     }
 
     setTokens(tokens);
-    setCurrentToken(tokens[0]);
-  }, [address]);
+    const tokenIndex = type ? tokens.findIndex((item) => item.type === type) : 0;
+
+    setCurrentToken(tokens[tokenIndex]);
+  }, [address, type]);
 
   const handleChangeAmount = (ev) => {
     const value = ev.target.value;
@@ -83,16 +89,22 @@ export const BuyForm = () => {
   if (!currentToken) return <Spin size="large" />
 
   return <Form size="large">
-    <Form.Item>
-      <Select placeholder="Select a get token" value={currentToken?.asset} onChange={(toAsset) => setCurrentToken(tokens.find(({ asset }) => asset === toAsset))}>
-        {tokens?.map(({ asset, symbol, type }) => (<Select.Option key={`to_${asset}`} value={asset}>
-          {symbol} {(type && type !== 'reserve') ? '(' + type.toUpperCase() + '-token)' : ''}
-        </Select.Option>))}
-      </Select>
-    </Form.Item>
-    <Form.Item>
-      <Input placeholder="Amount" value={amount.value} onChange={handleChangeAmount} onKeyDown={(ev) => ev.key === 'Enter' ? btnRef.current.click() : null} />
-    </Form.Item>
+    <Row gutter={8}>
+      <Col md={{ span: 6 }} xs={{ span: 24 }}>
+        <Form.Item>
+          <Input placeholder="Amount" value={amount.value} onChange={handleChangeAmount} onKeyDown={(ev) => ev.key === 'Enter' ? btnRef.current.click() : null} />
+        </Form.Item>
+      </Col>
+      <Col md={{ span: 18 }} xs={{ span: 24 }}>
+        <Form.Item>
+          <Select disabled={!!type} placeholder="Select a get token" value={currentToken?.asset} onChange={(toAsset) => setCurrentToken(tokens.find(({ asset }) => asset === toAsset))}>
+            {tokens?.map(({ asset, symbol, type }) => (<Select.Option key={`to_${asset}`} value={asset}>
+              {symbol} {(type && type !== 'reserve') ? '(' + type.toUpperCase() + '-token)' : ''}
+            </Select.Option>))}
+          </Select>
+        </Form.Item>
+      </Col>
+    </Row>
     {meta && <Form.Item>
       <div style={{ color: '#ccc' }}>
         {meta?.arb_profit_tax !== 0 && <div><span style={{ fontWeight: 500 }}>Arb profit tax</span>: {+Number(meta.arb_profit_tax / 10 ** reserve_decimals).toFixed(reserve_decimals)} {reserve_symbol}</div>}

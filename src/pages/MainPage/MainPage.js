@@ -3,7 +3,6 @@ import { useSelector } from "react-redux";
 
 import { PredictionItem } from "./PredictionItem";
 import { Layout } from "components/Layout/Layout";
-// import { ReactComponent as Select } from './img/select.svg';
 import { selectAllMarkets } from "store/slices/marketsSlice";
 
 import styles from "./MainPage.module.css";
@@ -20,7 +19,7 @@ export const MainPage = () => {
   return <div>
     <Layout>
       <Row className={styles.headerWrap}>
-        <Col xs={{ span: 24 }} md={{ span: 12 }}>
+        <Col xs={{ span: 24 }} md={{ span: 24 }}>
           <h1 className={styles.mainHeader}>
             Decentralized <span className={styles.select}>prediction markets</span> platform
           </h1>
@@ -28,10 +27,6 @@ export const MainPage = () => {
             <p>We support ETH, BNB, MATIC or any Obyte tokens</p>
           </div>
         </Col>
-
-        {/* <Col xs={{ span: 0 }} md={{ span: 12 }} style={{ textAlign: "right" }}>
-          <Select style={{ maxWidth: 390, marginLeft: 10 }} />
-        </Col> */}
       </Row>
 
       <div style={{ margin: "0 auto", marginTop: 40, maxWidth: 780, userSelect: 'none' }}>

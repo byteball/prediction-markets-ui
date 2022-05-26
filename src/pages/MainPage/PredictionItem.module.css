@@ -31,7 +31,7 @@
   font-size: 12px;
 }
 
-.infoValueInCrypto {
+.infoValueInDollar {
   font-size: 11px;
   margin-bottom: 10px;
 }
@@ -41,7 +41,7 @@
 
 /* Medium devices (tablets, 768px and up) */
 @media (min-width: 768px) {
-  .infoValueInCrypto {
+  .infoValueInDollar {
     margin-bottom: 0;
   }
 }

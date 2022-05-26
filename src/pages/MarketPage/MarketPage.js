@@ -1,8 +1,7 @@
-import { Row, Col, Space, Button, Radio, Spin, Result } from "antd";
+import { Row, Col, Space, Button, Radio, Spin, Result, Tooltip, Typography } from "antd";
 import { Layout } from "components/Layout/Layout";
 import { StatsCard } from "components/StatsCard/StatsCard";
-import { Line } from '@ant-design/plots';
-import { TradeModal } from "modals/TradeModal";
+import { Line, Pie } from '@ant-design/plots';
 import { Link, useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -10,7 +9,8 @@ import moment from 'moment';
 import { isEmpty } from "lodash";
 import QRButton from "obyte-qr-button";
 
-import { selectActiveCategory, selectActiveDailyCandles, selectActiveMarketParams, selectActiveMarketStateVars, selectActiveMarketStatus, selectActiveRecentEvents } from "store/slices/activeSlice";
+import { TradeModal } from "modals/TradeModal";
+import { selectActiveCategory, selectActiveDailyCandles, selectActiveDatafeedValue, selectActiveMarketParams, selectActiveMarketStateVars, selectActiveMarketStatus, selectActiveRecentEvents } from "store/slices/activeSlice";
 import { setActiveMarket } from "store/thunks/setActiveMarket";
 import { selectReserveAssets, selectReservesDailyUsdRate, selectReservesHourlyRate } from "store/slices/settingsSlice";
 import { getMarketPriceByType } from "utils/getMarketPrices";
@@ -19,10 +19,12 @@ import Countdown from "antd/lib/statistic/Countdown";
 import { RecentEvents } from "components/RecentEvents/RecentEvents";
 import { generateLink } from "utils/generateLink";
 import { ClaimProfitModal } from "modals/ClaimProfitModal";
+import { AddLiquidityModal } from "modals/AddLiquidityModal";
 
 import styles from './MarketPage.module.css';
 
-const config = {
+
+const chartConfig = {
   xField: 'date',
   yField: 'value',
   seriesField: 'type',
@@ -36,7 +38,7 @@ const config = {
     style: 'dark',
   },
   color: ({ type }) => {
-    return type === 'NO' ? '#ffa39e' : type === 'YES' ? '#b7eb8f' : '#ffe58f';
+    return type === 'NO' ? '#ff5e57' : type === 'YES' ? '#05c46b' : '#ffc048';
   },
   tooltip: {
     customContent: (title, items) => {
@@ -46,7 +48,7 @@ const config = {
           <ul style={{ paddingLeft: 0 }}>
             {items?.map((item, index) => {
               const { color, data: { currencySymbol, chartType, value, symbol, type, date } } = item;
-              const valueView = chartType === 'prices' ? `$${value.toPrecision(4)}` : `${value} ${currencySymbol}`;
+              const valueView = chartType === 'fee' ? `${+value.toPrecision(4)}%` : `${+value.toPrecision(9)} ${currencySymbol}`; //chartType === 'prices' ? `$${value.toPrecision(4)}` :
 
               return (
                 <li
@@ -75,14 +77,16 @@ export const MarketPage = () => {
   const { address } = useParams();
   const dispatch = useDispatch();
   const [chartType, setChartType] = useState('prices')
+  const [visibleTradeModal, setVisibleTradeModal] = useState(false)
   const [dataForChart, setDataForChart] = useState([]);
+  const [dataForPie, setDataForPie] = useState([]);
 
   const status = useSelector(selectActiveMarketStatus);
-  // const markets = useSelector(selectAllMarkets);
   const reserveAssets = useSelector(selectReserveAssets);
   const stateVars = useSelector(selectActiveMarketStateVars);
   const category = useSelector(selectActiveCategory);
   const candles = useSelector(selectActiveDailyCandles);
+  const datafeedValue = useSelector(selectActiveDatafeedValue);
 
   const params = useSelector(selectActiveMarketParams);
   const recentEvents = useSelector(selectActiveRecentEvents);
@@ -98,7 +102,7 @@ export const MarketPage = () => {
   const hourlyRateByReserveAsset = hourlyRates[reserve_asset] || {};
 
   const reserve_rate = !isEmpty(hourlyRateByReserveAsset) ? hourlyRateByReserveAsset[nowHourTimestamp] || hourlyRateByReserveAsset[nowHourTimestamp - 3600] || 0 : 0;
-  const { reserve = 0, result } = stateVars;
+  const { reserve = 0, result, supply_yes = 0, supply_no = 0, supply_draw = 0 } = stateVars;
   const viewReserve = +Number(reserve / 10 ** 9).toPrecision(5);
   const viewReserveInUSD = '$' + +Number((reserve / 10 ** reserve_decimals) * reserve_rate).toPrecision(2);
 
@@ -122,17 +126,58 @@ export const MarketPage = () => {
 
   const commitResultLink = generateLink({ aa: address, amount: 1e4, data: { commit: 1 } });
 
+  const pieConfig = {
+    angleField: 'value',
+    colorField: 'type',
+    legend: false,
+    animation: false,
+    label: {
+      type: 'inner',
+      content: (item) => `${item.type} tokens
+      ${item.value} ${reserve_symbol}
+      ${Number(item.percent * 100).toPrecision(4)}% 
+      `,
+      style: {
+        fontSize: 13,
+        textAlign: "center",
+        fill: "#fff",
+        fontWeight: 'bold',
+        textStroke: '2px red'
+      },
+      autoHide: true,
+      autoRotate: false
+    },
+    appendPadding: 10,
+    radius: 0.8,
+    renderer: "svg",
+    theme: 'dark',
+    color: (item) => {
+      if (item.type === 'YES') {
+        return "#05c46b"
+      } else if (item.type === 'NO') {
+        return "#ff5e57"
+      } else {
+        return "#ffc048"
+      }
+    },
+    tooltip: {
+      customContent: (_, items) => {
+        return <div style={{ padding: 5, textAlign: 'center' }}>Invested capital in {items[0]?.data.type} tokens:
+          <div style={{ marginTop: 5 }}>{items[0]?.data.value} <small>{reserve_symbol}</small></div></div>
+      }
+    }
+  }
+
   useEffect(() => {
     const data = [];
-    const nowByType = moment.utc().startOf(sevenDaysAlreadyPassed ? 'day' : "hour").unix();
     const step = sevenDaysAlreadyPassed ? 24 * 3600 : 3600;
     const currentReserveDailyRates = dailyRates[actualReserveSymbol] || {};
 
-    candles.forEach(({ start_timestamp, yes_price, no_price, draw_price, supply_yes, supply_no, supply_draw }) => {
+    candles.forEach(({ start_timestamp, yes_price, no_price, draw_price, supply_yes, supply_no, supply_draw, coef }) => {
       const date = moment.unix(start_timestamp).format(sevenDaysAlreadyPassed ? 'll' : 'lll');
 
       if (chartType === 'prices') {
-        const reserveRate = sevenDaysAlreadyPassed ? currentReserveDailyRates[nowByType] || currentReserveDailyRates[nowByType - step] : hourlyRateByReserveAsset[nowByType] || hourlyRateByReserveAsset[nowByType - step];
+        const reserveRate = 1// sevenDaysAlreadyPassed ? currentReserveDailyRates[start_timestamp] || currentReserveDailyRates[start_timestamp - step] : hourlyRateByReserveAsset[start_timestamp] || hourlyRateByReserveAsset[start_timestamp - step];
 
         data.push(
           { date, value: yes_price * reserveRate, type: "YES", currencySymbol: reserve_symbol, chartType, symbol: yes_symbol },
@@ -142,6 +187,10 @@ export const MarketPage = () => {
         if (allow_draw) {
           data.push({ date, value: draw_price * reserveRate, type: "DRAW", currencySymbol: reserve_symbol, chartType, symbol: draw_symbol })
         }
+      } else if (chartType === 'fee') {
+        data.push(
+          { date, value: (coef - 1) * 100, chartType },
+        );
       } else {
         data.push(
           { date, value: +Number(supply_yes / 10 ** yes_decimals).toFixed(yes_decimals), type: "YES", currencySymbol: yes_symbol, chartType },
@@ -167,26 +216,37 @@ export const MarketPage = () => {
     window.scrollTo(0, 0);
   }, [])
 
+  useEffect(() => {
+    const data = [
+      { type: 'YES', token: 'yes', value: +Number((supply_yes * yesPrice) / 10 ** reserve_decimals).toFixed(reserve_decimals) },
+      { type: 'NO', token: 'no', value: +Number((supply_no * noPrice) / 10 ** reserve_decimals).toFixed(reserve_decimals) },
+    ];
+
+    if (allow_draw) {
+      data.push({ type: 'DRAW', token: 'draw', value: +Number((supply_yes * yesPrice) / 10 ** reserve_decimals).toFixed(reserve_decimals) });
+    }
+
+    setDataForPie(data)
+  }, [stateVars, yesPrice, noPrice, drawPrice, supply_yes, supply_no, supply_draw]);
+
   if (params.end_of_trading_period > now) {
-    tradeStatus = "ACTIVE TRADE"
-    tradeStatusColor = 'green'
+    tradeStatus = "TRADING"
+    tradeStatusColor = '#05c46b'
     tradeTimerExpiry = params.end_of_trading_period;
     tradeIsActive = true;
+    showCommitResultButton = false;
   } else if (result) {
-    tradeStatus = "TRADE IS OVER";
+    tradeStatus = "CLAIMING PROFIT";
     showClaimProfitButton = true;
-    tradeStatusColor = 'red';
-  } else if ('result' in stateVars) {
-    tradeStatus = "RESULTS ANNOUNCED";
-    tradeStatusColor = 'red';
+    tradeStatusColor = '#05c46b';
   } else if (params.end_of_trading_period + params.waiting_period_length > now) {
-    tradeStatus = "WAITING PERIOD";
+    tradeStatus = "WAITING FOR RESULTS";
     tradeStatusColor = '#f39c12';
     tradeTimerExpiry = params.end_of_trading_period + params.waiting_period_length;
     showCommitResultButton = true;
   } else {
     tradeStatus = "RESUMED TRADING";
-    tradeStatusColor = 'green';
+    tradeStatusColor = '#05c46b';
     tradeIsActive = true;
   }
 
@@ -215,30 +275,32 @@ export const MarketPage = () => {
   return <Layout>
     <div style={{ marginTop: 50 }}>
       <Space>
-        <a href="#" className={styles.category}>{category}</a>
+        {category}
       </Space>
       <h1 style={{ maxWidth: 800 }}>{event}</h1>
-
-      <Space size='large' style={{ marginBottom: 15 }}>
-        <TradeModal disabled={!tradeIsActive} />
-        {showCommitResultButton && <QRButton type="primary" size="large" href={commitResultLink}>Commit result</QRButton>}
+      <Space size='large' wrap={true} style={{ marginBottom: 15 }}>
+        <TradeModal visible={visibleTradeModal} setVisible={setVisibleTradeModal} disabled={!tradeIsActive} />
+        {showCommitResultButton && (datafeedValue ? <QRButton type="primary" size="large" href={commitResultLink}>Commit result</QRButton> : <Tooltip title="Oracle has not published results yet"><Button size="large" disabled={true}>Commit result</Button></Tooltip>)}
         {showClaimProfitButton && <ClaimProfitModal />}
-        <ViewParamsModal {...params} />
+        <ViewParamsModal {...params} aa_address={address} />
       </Space>
 
       <div className={styles.infoWrap}>
         <Row gutter={30}>
           <Col lg={{ span: 8 }} md={{ span: 12 }} xs={{ span: 24 }} style={{ marginBottom: 30 }}>
-            <StatsCard title="Yes price" value={yesPriceInUSD} subValue={<span>{yesPrice} <small>{reserve_symbol}</small></span>} />
+            <StatsCard title="Yes price" subValue={yesPriceInUSD} color="#05c46b" onAction={(action) => setVisibleTradeModal({ type: 'yes', action })} value={<span>{yesPrice} <small>{reserve_symbol}</small></span>} />
           </Col>
+
           <Col lg={{ span: 8 }} md={{ span: 12 }} xs={{ span: 24 }} style={{ marginBottom: 30 }}>
-            <StatsCard title="No price" value={noPriceInUSD} subValue={<span>{noPrice} <small>{reserve_symbol}</small></span>} />
+            <StatsCard title="No price" subValue={noPriceInUSD} color="#ff5e57" onAction={(action) => setVisibleTradeModal({ type: 'no', action })} value={<span>{noPrice} <small>{reserve_symbol}</small></span>} />
           </Col>
+
           {allow_draw && <Col lg={{ span: 8 }} md={{ span: 12 }} xs={{ span: 24 }} style={{ marginBottom: 30 }}>
-            <StatsCard title="Draw price" value={drawPriceInUSD} subValue={<span>{drawPrice} <small>{reserve_symbol}</small></span>} />
+            <StatsCard title="Draw price" subValue={drawPriceInUSD} color="#ffc048" onAction={(action) => setVisibleTradeModal({ type: 'draw', action })} value={<span>{drawPrice} <small>{reserve_symbol}</small></span>} />
           </Col>}
+
           <Col lg={{ span: 8 }} md={{ span: 12 }} xs={{ span: 24 }} style={{ marginBottom: 30 }}>
-            <StatsCard title="Reserve" value={viewReserveInUSD} subValue={<span>{viewReserve} <small>{reserve_symbol}</small></span>} />
+            <StatsCard title="Reserve" subValue={viewReserveInUSD} value={<span>{viewReserve} <small>{reserve_symbol}</small></span>} />
           </Col>
 
           <Col lg={{ span: 8 }} md={{ span: 12 }} xs={{ span: 24 }} style={{ marginBottom: 30 }}>
@@ -252,12 +314,30 @@ export const MarketPage = () => {
           <Radio.Group value={chartType} onChange={(ev) => setChartType(ev.target.value)}>
             <Radio.Button value="prices">Prices</Radio.Button>
             <Radio.Button value="supplies">Supplies</Radio.Button>
+            <Radio.Button value="fee">Fee accumulation</Radio.Button>
           </Radio.Group>
         </div>
-        <Line {...config} data={dataForChart} title='test21' />
+        <Line {...chartConfig} data={dataForChart} />
       </div>}
+
+      {((supply_yes + supply_no + supply_draw) !== 0) && <div style={{ marginTop: 50 }}>
+        <Row gutter={10} align="middle" justify="space-between">
+          <Col md={{ span: 12 }} xs={{ span: 24 }}>
+            <h2 style={{ fontSize: 28 }}>Make money from liquidity provision</h2>
+            <Typography.Paragraph>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.</Typography.Paragraph>
+            <AddLiquidityModal disabled={!tradeIsActive} />
+          </Col>
+
+          <Col md={{ span: 8 }} xs={{ span: 24 }}>
+            <div style={{ width: '100%' }}>
+              <Pie data={dataForPie} {...pieConfig} />
+            </div>
+          </Col>
+        </Row>
+      </div>}
+
       <div>
-        <h2 style={{ marginBottom: 25, marginTop: 35 }}>Recent events</h2>
+        <h2 style={{ marginBottom: 15, marginTop: 50, fontSize: 28 }}>Recent events</h2>
         <RecentEvents data={recentEvents} />
       </div>
     </div>

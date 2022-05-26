@@ -10,7 +10,7 @@ module.exports = {
             modifyVars: {
               '@primary-color': '#2D72F6',
               '@border-radius-base': '8px',
-              // '@text-color': '#333333',
+              '@text-color': '#dcdde1',
               '@font-size-base': '16px'
             },
             javascriptEnabled: true,

@@ -11,9 +11,10 @@ import { loadMarkets } from "store/thunks/loadMarkets";
 import { loadReserveAssets } from "store/thunks/loadReserveAssets";
 import { setActiveMarket } from "store/thunks/setActiveMarket";
 import { responseToEvent } from "utils/responseToEvent";
+import { checkCreationOrder } from "store/thunks/checkCreationOrder";
+import { checkDataFeed } from "store/thunks/checkDataFeed";
 
 import config from "appConfig";
-import { checkCreationOrder } from "store/thunks/checkCreationOrder";
 
 const getAAPayload = (messages = []) => messages.find(m => m.app === 'data')?.payload || {};
 
@@ -38,6 +39,10 @@ export const bootstrap = async () => {
   const heartbeat = setInterval(() => {
     client.api.heartbeat();
   }, 10 * 1000);
+
+  const checkOracleData = setInterval(()=> {
+    store.dispatch(checkDataFeed());
+  }, 10000)
 
   const tokenRegistry = client.api.getOfficialTokenRegistryAddress();
 
@@ -221,5 +226,6 @@ export const bootstrap = async () => {
   client.client.ws.addEventListener("close", () => {
     clearInterval(updateMarkets);
     clearInterval(heartbeat);
+    clearInterval(checkOracleData);
   });
 }

@@ -10,7 +10,8 @@ export const activeSlice = createSlice({
     category: null,
     params: {},
     recentEvents: [],
-    dailyCandles: []
+    dailyCandles: [],
+    datafeedValue: null
   },
   reducers: {
     setActiveMarketAddress: (state, action) => {
@@ -33,20 +34,21 @@ export const activeSlice = createSlice({
       if (type && symbol) {
         state.params[`${type}_symbol`] = symbol;
       }
+    },
+    updateDataFeedValue: (state, action) => {
+      state.datafeedValue = action.payload;
     }
   },
   extraReducers: {
-    // [loadMarkets.pending]: (state, action) => {
-    //   state.status = 'loading';
-    // },
     [setActiveMarket.fulfilled]: (state, action) => {
-      const { params, stateVars, category, recentEvents, dailyCandles } = action.payload;
+      const { params, stateVars, category, recentEvents, dailyCandles, datafeedValue } = action.payload;
 
       state.params = params;
       state.stateVars = stateVars;
       state.category = category;
       state.recentEvents = recentEvents;
       state.dailyCandles = dailyCandles;
+      state.datafeedValue = datafeedValue;
       state.status = 'loaded';
     },
     [setActiveMarket.rejected]: (state, action) => {
@@ -59,7 +61,8 @@ export const {
   setActiveMarketAddress,
   updateStateForActualMarket,
   addRecentEvent,
-  updateSymbolForActualMarket
+  updateSymbolForActualMarket,
+  updateDataFeedValue
 } = activeSlice.actions;
 
 export default activeSlice.reducer;
@@ -75,3 +78,4 @@ export const selectActiveCategory = state => state.active.category || 'No catego
 export const selectActiveAddress = state => state.active.address;
 export const selectActiveRecentEvents = state => state.active.recentEvents;
 export const selectActiveDailyCandles = state => state.active.dailyCandles;
+export const selectActiveDatafeedValue = state => state.active.datafeedValue;
