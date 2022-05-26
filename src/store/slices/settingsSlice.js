@@ -1,20 +1,18 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { loadCategories } from 'store/thunks/loadCategories';
 import { loadReserveAssets } from 'store/thunks/loadReserveAssets';
-import { updateReserveDailyRate } from 'store/thunks/updateReserveDailyRate';
-import { updateReserveHourlyRate } from 'store/thunks/updateReserveHourlyRate';
+import { updateReserveRate } from 'store/thunks/updateReserveRate';
 
 export const settingsSlice = createSlice({
   name: 'settings',
   initialState: {
     creationOrder: null,
+    cancelRegSymbol: false,
     walletAddress: null,
     categories: [],
     extraCategories: [],
-    reserveHourlyRates: {},
-    hourlyRateUpdateTime: 0,
-    reserveDailyRates: {},
-    dailyRateUpdateTime: 0,
+    reserveRates: {},
+    reserveRateUpdateTime: 0,
     reserveAssets: {}
   },
   reducers: {
@@ -58,16 +56,10 @@ export const settingsSlice = createSlice({
     [loadReserveAssets.fulfilled]: (state, action) => {
       state.reserveAssets = action.payload;
     },
-    [updateReserveHourlyRate.fulfilled]: (state, action) => {
+    [updateReserveRate.fulfilled]: (state, action) => {
       if (action.payload) {
-        state.reserveHourlyRates = action.payload;
-        state.hourlyRateUpdateTime = Math.floor(Date.now() / 1000);
-      }
-    },
-    [updateReserveDailyRate.fulfilled]: (state, action) => {
-      if (action.payload) {
-        state.reserveDailyRates = action.payload;
-        state.dailyRateUpdateTime = Math.floor(Date.now() / 1000);
+        state.reserveRates = action.payload;
+        state.reserveRateUpdateTime = Math.floor(Date.now() / 1000);
       }
     }
   }
@@ -92,6 +84,5 @@ export const selectCreationOrder = state => state.settings.creationOrder;
 export const selectReserveAssets = state => state.settings.reserveAssets;
 export const selectCategories = state => state.settings.categories;
 export const selectExtraCategories = state => state.settings.extraCategories;
-export const selectReservesHourlyRate = state => state.settings.reserveHourlyRates;
-export const selectReservesDailyUsdRate = state => state.settings.reserveDailyRates;
+export const selectReservesRate = state => state.settings.reserveRates;
 export const selectWalletAddress = state => state.settings.walletAddress;

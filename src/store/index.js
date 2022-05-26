@@ -24,8 +24,8 @@ const rootReducer = combineReducers({
 });
 
 const persistConfig = {
-  key: `prediction${config.ENVIRONMENT === "testnet" ? "-tn" : ""}2-`,
-  version: 3,
+  key: `prediction${config.ENVIRONMENT === "testnet" ? "-tn" : ""}3`,
+  version: 1,
   storage,
   whitelist: ['settings'],
 }

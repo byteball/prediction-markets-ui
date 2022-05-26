@@ -6,13 +6,12 @@ import { Link, useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import moment from 'moment';
-import { isEmpty } from "lodash";
 import QRButton from "obyte-qr-button";
 
 import { TradeModal } from "modals/TradeModal";
 import { selectActiveCategory, selectActiveDailyCandles, selectActiveDatafeedValue, selectActiveMarketParams, selectActiveMarketStateVars, selectActiveMarketStatus, selectActiveRecentEvents } from "store/slices/activeSlice";
 import { setActiveMarket } from "store/thunks/setActiveMarket";
-import { selectReserveAssets, selectReservesDailyUsdRate, selectReservesHourlyRate } from "store/slices/settingsSlice";
+import { selectReserveAssets, selectReservesRate } from "store/slices/settingsSlice";
 import { getMarketPriceByType } from "utils/getMarketPrices";
 import { ViewParamsModal } from "modals/ViewParamsModal";
 import Countdown from "antd/lib/statistic/Countdown";
@@ -95,13 +94,10 @@ export const MarketPage = () => {
 
   const actualReserveSymbol = reserveAssets[reserve_asset]?.symbol;
 
-  const hourlyRates = useSelector(selectReservesHourlyRate);
-  const dailyRates = useSelector(selectReservesDailyUsdRate);
+  const reservesRate = useSelector(selectReservesRate);
 
-  const nowHourTimestamp = moment.utc().startOf("hour").unix();
-  const hourlyRateByReserveAsset = hourlyRates[reserve_asset] || {};
+  const reserve_rate = reservesRate[reserve_asset];
 
-  const reserve_rate = !isEmpty(hourlyRateByReserveAsset) ? hourlyRateByReserveAsset[nowHourTimestamp] || hourlyRateByReserveAsset[nowHourTimestamp - 3600] || 0 : 0;
   const { reserve = 0, result, supply_yes = 0, supply_no = 0, supply_draw = 0 } = stateVars;
   const viewReserve = +Number(reserve / 10 ** 9).toPrecision(5);
   const viewReserveInUSD = '$' + +Number((reserve / 10 ** reserve_decimals) * reserve_rate).toPrecision(2);
@@ -170,22 +166,18 @@ export const MarketPage = () => {
 
   useEffect(() => {
     const data = [];
-    const step = sevenDaysAlreadyPassed ? 24 * 3600 : 3600;
-    const currentReserveDailyRates = dailyRates[actualReserveSymbol] || {};
 
     candles.forEach(({ start_timestamp, yes_price, no_price, draw_price, supply_yes, supply_no, supply_draw, coef }) => {
       const date = moment.unix(start_timestamp).format(sevenDaysAlreadyPassed ? 'll' : 'lll');
 
       if (chartType === 'prices') {
-        const reserveRate = 1// sevenDaysAlreadyPassed ? currentReserveDailyRates[start_timestamp] || currentReserveDailyRates[start_timestamp - step] : hourlyRateByReserveAsset[start_timestamp] || hourlyRateByReserveAsset[start_timestamp - step];
-
         data.push(
-          { date, value: yes_price * reserveRate, type: "YES", currencySymbol: reserve_symbol, chartType, symbol: yes_symbol },
-          { date, value: no_price * reserveRate, type: "NO", currencySymbol: reserve_symbol, chartType, symbol: no_symbol }
+          { date, value: yes_price, type: "YES", currencySymbol: reserve_symbol, chartType, symbol: yes_symbol },
+          { date, value: no_price, type: "NO", currencySymbol: reserve_symbol, chartType, symbol: no_symbol }
         );
 
         if (allow_draw) {
-          data.push({ date, value: draw_price * reserveRate, type: "DRAW", currencySymbol: reserve_symbol, chartType, symbol: draw_symbol })
+          data.push({ date, value: draw_price, type: "DRAW", currencySymbol: reserve_symbol, chartType, symbol: draw_symbol })
         }
       } else if (chartType === 'fee') {
         data.push(
@@ -204,7 +196,7 @@ export const MarketPage = () => {
     });
 
     setDataForChart(data);
-  }, [candles, chartType, address, dailyRates, hourlyRates]);
+  }, [candles, chartType, address, reservesRate]);
 
   useEffect(() => {
     const intervalId = setInterval(() => setNow(moment.utc().unix()), 10000);

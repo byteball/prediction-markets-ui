@@ -4,9 +4,9 @@ import { Badge, Card, Col, Row, Space, Tooltip } from "antd";
 import { Link } from "react-router-dom";
 import moment from 'moment';
 import { useSelector } from 'react-redux';
-import { isEmpty, min } from 'lodash';
+import { min } from 'lodash';
 
-import { selectReservesHourlyRate } from 'store/slices/settingsSlice';
+import { selectReservesRate } from 'store/slices/settingsSlice';
 
 import styles from "./PredictionItem.module.css";
 
@@ -30,22 +30,15 @@ export const PredictionItem = ({ category, reserve_asset = 'base', aa_address, e
     color: "#2D72F6"
   });
 
-  const hourlyRates = useSelector(selectReservesHourlyRate);
-
-  const nowHourTimestamp = moment.utc().startOf("hour").unix();
+  const reservesRates = useSelector(selectReservesRate);
   const now = moment.utc().unix();
-  const hourlyRateByReserveAsset = hourlyRates[reserve_asset] || {};
-  const currentReserveRate = !isEmpty(hourlyRateByReserveAsset) ? hourlyRateByReserveAsset[nowHourTimestamp] || hourlyRateByReserveAsset[nowHourTimestamp - 3600] || 0 : 0;
+  const currentReserveRate = reservesRates[reserve_asset] || {};
 
   useEffect(async () => {
-    let data = [];
+    const data = (candles || []).map(({ price }) => price);
 
-    if (!isEmpty(hourlyRateByReserveAsset)) {
-      (candles || []).forEach((item, i) => {
-        data = [...data, item.price] // * hourlyRateByReserveAsset[item.timestamp]
-      });
-    }
     const minValue = min(data);
+
     setConfig(c => ({
       ...c,
       tooltip: {
@@ -59,7 +52,7 @@ export const PredictionItem = ({ category, reserve_asset = 'base', aa_address, e
     }));
 
     setDataForChart(data.map((value) => value - minValue));
-  }, [candles, hourlyRates, yes_symbol]);
+  }, [candles, yes_symbol]);
 
   useEffect(() => {
     const height = infoWrapRef.current.clientHeight;
@@ -97,8 +90,7 @@ export const PredictionItem = ({ category, reserve_asset = 'base', aa_address, e
   const wrapperProps = isExpiry ? {
     color,
     text: <div style={{ fontSize: 12 }}>{status}</div>,
-    placement: "start",
-    // style: {  }
+    placement: "start"
   } : {};
 
   return <Wrapper {...wrapperProps}><Link to={`/market/${aa_address}`}>

@@ -2,8 +2,7 @@ import { createAsyncThunk } from "@reduxjs/toolkit";
 import { isEqual } from "lodash";
 
 import backend from "services/backend";
-import { updateReserveDailyRate } from "./updateReserveDailyRate";
-import { updateReserveHourlyRate } from "./updateReserveHourlyRate";
+import { updateReserveRate } from "./updateReserveRate";
 
 export const loadReserveAssets = createAsyncThunk(
   'loadReserveAssets',
@@ -13,8 +12,7 @@ export const loadReserveAssets = createAsyncThunk(
 
     const reserveAssetsHaveBeenChanged = !isEqual(assets, state.settings.reserveAssets);
 
-    dispatch(updateReserveHourlyRate({ assets, reserveAssetsHaveBeenChanged}));
-    dispatch(updateReserveDailyRate({ assets, reserveAssetsHaveBeenChanged}));
+    dispatch(updateReserveRate({ assets, reserveAssetsHaveBeenChanged }));
 
     return assets;
   })
