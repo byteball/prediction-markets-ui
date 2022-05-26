@@ -9,18 +9,14 @@ import moment from 'moment';
 import QRButton from "obyte-qr-button";
 import Countdown from "antd/lib/statistic/Countdown";
 
-import { TradeModal } from "modals/TradeModal";
 import { selectActiveCategory, selectActiveDailyCandles, selectActiveDatafeedValue, selectActiveMarketParams, selectActiveMarketStateVars, selectActiveMarketStatus, selectActiveRecentEvents } from "store/slices/activeSlice";
 import { setActiveMarket } from "store/thunks/setActiveMarket";
 import { selectReserveAssets, selectReservesRate } from "store/slices/settingsSlice";
 import { getMarketPriceByType, generateLink } from "utils";
-import { ViewParamsModal } from "modals/ViewParamsModal";
 import { RecentEvents } from "components/RecentEvents/RecentEvents";
-import { ClaimProfitModal } from "modals/ClaimProfitModal";
-import { AddLiquidityModal } from "modals/AddLiquidityModal";
+import { AddLiquidityModal, ClaimProfitModal, ViewParamsModal, TradeModal } from "modals";
 
 import styles from './MarketPage.module.css';
-
 
 const chartConfig = {
   xField: 'date',

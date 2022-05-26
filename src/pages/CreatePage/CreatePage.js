@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 
 import { Layout } from "components/Layout/Layout"
-import { CreateForm } from "forms/CreateForm";
+import { CreateForm } from "forms";
 import { removeCreationOrder, selectCreationOrder } from "store/slices/settingsSlice";
 import { CreatePredictionMarket } from "./CreatePredictionMarket";
 import { RegisterSymbols } from "./RegSymbol";

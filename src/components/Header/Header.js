@@ -5,7 +5,7 @@ import { Link } from "react-router-dom";
 import { MainMenu } from "components/MainMenu/MainMenu";
 import { SocialLinks } from "components/SocialLinks/SocialLinks";
 import { useWindowSize } from "hooks/useWindowSize";
-import { WalletModal } from "modals/WalletModal";
+import { WalletModal } from "modals";
 
 export const Header = () => {
   const [width] = useWindowSize();

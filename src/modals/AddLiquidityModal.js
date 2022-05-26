@@ -4,7 +4,7 @@ import { useSelector } from "react-redux";
 
 import { useWindowSize } from "hooks/useWindowSize";
 import { selectActiveMarketStatus } from "store/slices/activeSlice";
-import { AddLiquidityForm } from "forms/AddLiquidityForm";
+import { AddLiquidityForm } from "forms";
 
 const { Title } = Typography;
 

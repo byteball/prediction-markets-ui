@@ -4,8 +4,7 @@ import { useSelector } from "react-redux";
 import { isBoolean } from "lodash";
 
 import { SwitchActions } from "components/SwitchActions/SwitchActions";
-import { BuyForm } from "forms/BuyForm";
-import { RedeemForm } from "forms/RedeemForm";
+import { BuyForm, RedeemForm } from "forms";
 import { useWindowSize } from "hooks/useWindowSize";
 import { selectActiveMarketStatus } from "store/slices/activeSlice";
 
