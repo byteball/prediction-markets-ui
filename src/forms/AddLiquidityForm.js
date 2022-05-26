@@ -152,10 +152,10 @@ export const AddLiquidityForm = () => {
       <Input placeholder={`Amount ${type}-tokens`} disabled={disabled} value={amountByType?.[type]?.value} onChange={(e) => handleChangeAmount(e.target.value, type)} suffix={symbol} />
     </Form.Item>)}
     {meta && <Form.Item>
-      <div style={{ color: '#ccc' }}>
-        {meta?.issue_fee !== 0 && <div><span style={{ fontWeight: 500 }}>Issue fee</span>: {+Number(meta.issue_fee / 10 ** reserve_decimals).toFixed(reserve_decimals)} {reserve_symbol}</div>}
-        {meta?.redeem_fee !== 0 && <div><span style={{ fontWeight: 500 }}>Redeem fee</span>: {+Number(meta.redeem_fee / 10 ** reserve_decimals).toFixed(reserve_decimals)} {reserve_symbol}</div>}
-        {meta?.fee !== 0 && <div><span style={{ fontWeight: 500 }}>Total fee</span>: {+Number((meta.fee + network_fee) / 10 ** reserve_decimals).toFixed(reserve_decimals)} {reserve_symbol}</div>}
+      <div className="metaWrap">
+        {meta?.issue_fee !== 0 && <div><span className="metaLabel">Issue fee</span>: {+Number(meta.issue_fee / 10 ** reserve_decimals).toFixed(reserve_decimals)} {reserve_symbol}</div>}
+        {meta?.redeem_fee !== 0 && <div><span className="metaLabel">Redeem fee</span>: {+Number(meta.redeem_fee / 10 ** reserve_decimals).toFixed(reserve_decimals)} {reserve_symbol}</div>}
+        {meta?.fee !== 0 && <div><span className="metaLabel">Total fee</span>: {+Number((meta.fee + network_fee) / 10 ** reserve_decimals).toFixed(reserve_decimals)} {reserve_symbol}</div>}
       </div>
     </Form.Item>}
     <Form.Item>

@@ -36,3 +36,11 @@ body {
 body {
   background-color: #141413 !important;
 }
+
+.metaLabel {
+  font-weight: 500 !important;
+}
+
+.metaWrap {
+  color: #ccc !important;
+}

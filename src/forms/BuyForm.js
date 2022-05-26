@@ -30,7 +30,7 @@ export const BuyForm = ({ type }) => {
 
   const network_fee = reserve_asset === 'base' ? 1e4 : 0;
 
-  useEffect(()=> {
+  useEffect(() => {
     setAmount({ value: 1, valid: true });
   }, []);
 
@@ -104,11 +104,11 @@ export const BuyForm = ({ type }) => {
       </Col>
     </Row>
     {meta && <Form.Item>
-      <div style={{ color: '#ccc' }}>
-        {meta?.arb_profit_tax !== 0 && <div><span style={{ fontWeight: 500 }}>Arb profit tax</span>: {+Number(meta.arb_profit_tax / 10 ** reserve_decimals).toFixed(reserve_decimals)} {reserve_symbol}</div>}
-        {meta?.issue_fee !== 0 && <div><span style={{ fontWeight: 500 }}>Issue fee</span>: {+Number(meta.issue_fee / 10 ** reserve_decimals).toFixed(reserve_decimals)} {reserve_symbol}</div>}
-        {meta?.redeem_fee !== 0 && <div><span style={{ fontWeight: 500 }}>Redeem fee</span>: {+Number(meta.redeem_fee / 10 ** reserve_decimals).toFixed(reserve_decimals)} {reserve_symbol}</div>}
-        {meta?.fee !== 0 && <div><span style={{ fontWeight: 500 }}>Total fee</span>: {+Number((meta.fee + network_fee) / 10 ** reserve_decimals).toFixed(reserve_decimals)} {reserve_symbol}</div>}
+      <div className="metaWrap">
+        {meta?.arb_profit_tax !== 0 && <div><span className="metaLabel">Arb profit tax</span>: {+Number(meta.arb_profit_tax / 10 ** reserve_decimals).toFixed(reserve_decimals)} {reserve_symbol}</div>}
+        {meta?.issue_fee !== 0 && <div><span className="metaLabel">Issue fee</span>: {+Number(meta.issue_fee / 10 ** reserve_decimals).toFixed(reserve_decimals)} {reserve_symbol}</div>}
+        {meta?.redeem_fee !== 0 && <div><span className="metaLabel">Redeem fee</span>: {+Number(meta.redeem_fee / 10 ** reserve_decimals).toFixed(reserve_decimals)} {reserve_symbol}</div>}
+        {meta?.fee !== 0 && <div><span className="metaLabel">Total fee</span>: {+Number((meta.fee + network_fee) / 10 ** reserve_decimals).toFixed(reserve_decimals)} {reserve_symbol}</div>}
       </div>
     </Form.Item>}
     <Form.Item>

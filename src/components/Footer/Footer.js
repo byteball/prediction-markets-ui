@@ -9,6 +9,8 @@ export const Footer = () => {
     <div>
       &copy; {year} Obyte. All rights reserved
     </div>
-    <div className={styles.socialWrap}><SocialLinks /></div>
+    <div className={styles.socialWrap}>
+      <SocialLinks />
+    </div>
   </div>
 }
