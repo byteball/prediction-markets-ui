@@ -7,16 +7,15 @@ import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import moment from 'moment';
 import QRButton from "obyte-qr-button";
+import Countdown from "antd/lib/statistic/Countdown";
 
 import { TradeModal } from "modals/TradeModal";
 import { selectActiveCategory, selectActiveDailyCandles, selectActiveDatafeedValue, selectActiveMarketParams, selectActiveMarketStateVars, selectActiveMarketStatus, selectActiveRecentEvents } from "store/slices/activeSlice";
 import { setActiveMarket } from "store/thunks/setActiveMarket";
 import { selectReserveAssets, selectReservesRate } from "store/slices/settingsSlice";
-import { getMarketPriceByType } from "utils/getMarketPrices";
+import { getMarketPriceByType, generateLink } from "utils";
 import { ViewParamsModal } from "modals/ViewParamsModal";
-import Countdown from "antd/lib/statistic/Countdown";
 import { RecentEvents } from "components/RecentEvents/RecentEvents";
-import { generateLink } from "utils/generateLink";
 import { ClaimProfitModal } from "modals/ClaimProfitModal";
 import { AddLiquidityModal } from "modals/AddLiquidityModal";
 

@@ -4,7 +4,7 @@ import { useDispatch } from "react-redux";
 import { LoadingOutlined } from "@ant-design/icons";
 
 import { removeCreationOrder } from "store/slices/settingsSlice";
-import { generateLink } from "utils/generateLink";
+import { generateLink } from "utils";
 
 import config from "appConfig";
 

@@ -5,8 +5,7 @@ import { useSelector } from "react-redux";
 
 import { selectActiveAddress, selectActiveMarketParams, selectActiveMarketStateVars } from "store/slices/activeSlice";
 import { selectWalletAddress } from "store/slices/settingsSlice";
-import { generateLink } from "utils/generateLink";
-import { getExchangeResult } from "utils/getExchangeResult";
+import { generateLink, getExchangeResult } from "utils";
 
 const f = (x) => (~(x + "").indexOf(".") ? (x + "").split(".")[1].length : 0);
 

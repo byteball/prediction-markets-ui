@@ -5,7 +5,7 @@ import { isBoolean } from "lodash";
 import { useDispatch, useSelector } from "react-redux";
 import QRButton from "obyte-qr-button";
 
-import { generateLink } from "utils/generateLink";
+import { generateLink } from "utils";
 import { useWindowSize } from "hooks/useWindowSize.js";
 import { cancelRegSymbol } from "store/slices/settingsSlice";
 
