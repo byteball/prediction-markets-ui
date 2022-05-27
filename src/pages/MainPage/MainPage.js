@@ -1,8 +1,8 @@
 import { Col, Row, Spin } from "antd";
 import { useSelector } from "react-redux";
 
-import { PredictionItem } from "./PredictionItem";
 import { Layout } from "components/Layout/Layout";
+import { PredictionList } from "components/PredictionList/PredictionList";
 import { selectAllMarkets } from "store/slices/marketsSlice";
 
 import styles from "./MainPage.module.css";
@@ -30,7 +30,7 @@ export const MainPage = () => {
       </Row>
 
       <div style={{ margin: "0 auto", marginTop: 40, maxWidth: 780, userSelect: 'none' }}>
-        {markets.map((data) => <PredictionItem key={`item-${data.aa_address}`} {...data} />)}
+        <PredictionList data={markets} />
       </div>
     </Layout>
   </div>
