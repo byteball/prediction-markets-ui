@@ -8,9 +8,33 @@ class Backend {
     });
   }
 
-  getMarkets = async () => {
-    const markets = await this.axios.get('/markets');
+  getAllMarkets = async (page = 1) => {
+    const markets = await this.axios.get(`/markets/${page}`);
     return markets?.data;
+  }
+
+  getChampionships = async () => {
+    const championships = await this.axios.get('/championships');
+    return championships?.data;
+  }
+
+  getCurrencyMarkets = async (page = 1) => {
+    const markets = await this.axios.get(`/markets/${page}?&type=currency`);
+    return markets?.data;
+  }
+
+  getMarketsByType = async ({ type, page = 1, championship }) => {
+    let query = `/markets/${page}?type=${type}`;
+
+    if (championship) query += `&championship=${championship}`;
+
+    const markets = await this.axios.get(query);
+    return markets?.data;
+  }
+
+  getTeam = async (sport, abbreviation) => {
+    const team = await this.axios.get(`/team/${sport}/${abbreviation}`);
+    return team?.data;
   }
 
   getCategories = async () => {
@@ -18,7 +42,7 @@ class Backend {
     return categories?.data;
   }
 
-  getReserveAssets = async() => {
+  getReserveAssets = async () => {
     const categories = await this.axios.get('/reserve_assets');
     return categories?.data;
   }
@@ -33,9 +57,9 @@ class Backend {
     return candles?.data;
   }
 
-  getSportsCalendar = async () => {
-    const categories = await this.axios.get('/calendar');
-    return categories?.data;
+  getSportsCalendar = async (sport, championship, page = 1) => {
+    const calendar = await this.axios.get(`/calendar/${sport}/${championship}/${page}`);
+    return calendar?.data;
   }
 }
 

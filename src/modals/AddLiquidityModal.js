@@ -8,7 +8,7 @@ import { AddLiquidityForm } from "forms";
 
 const { Title } = Typography;
 
-export const AddLiquidityModal = ({ disabled }) => {
+export const AddLiquidityModal = ({ disabled, yes_team, no_team }) => {
   const [visible, setVisible] = useState(false);
 
   const status = useSelector(selectActiveMarketStatus);
@@ -29,7 +29,7 @@ export const AddLiquidityModal = ({ disabled }) => {
     >
 
       <Title level={2}>Add liquidity</Title>
-      <AddLiquidityForm />
+      <AddLiquidityForm yes_team={yes_team} no_team={no_team} />
     </Drawer>}
   </>
 }

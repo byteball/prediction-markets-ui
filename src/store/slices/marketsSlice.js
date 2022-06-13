@@ -4,11 +4,14 @@ import { loadMarkets } from 'store/thunks/loadMarkets';
 export const marketsSlice = createSlice({
   name: 'markets',
   initialState: {
-    data: [],
+    allMarkets: [],
+    allMarketsCount: 0,
+    currencyMarkets: [],
+    currencyMarketsCount: 0,
+    championships: [],
     status: 'nothing'
   },
   reducers: {
-    saveCreationOrder: (state, action) => { },
     addMarketInList: (state, action) => { state.data.push(action.payload) },
   },
   extraReducers: {
@@ -16,7 +19,13 @@ export const marketsSlice = createSlice({
       state.status = 'loading';
     },
     [loadMarkets.fulfilled]: (state, action) => {
-      state.data = action.payload;
+      const { markets, currencyMarkets, championships, marketsCount, currencyMarketsCount } = action.payload;
+
+      state.allMarkets = markets;
+      state.allMarketsCount = marketsCount;
+      state.currencyMarkets = currencyMarkets;
+      state.currencyMarketsCount = currencyMarketsCount;
+      state.championships = championships;
       state.status = 'loaded';
     },
     [loadMarkets.rejected]: (state, action) => {
@@ -35,5 +44,10 @@ export default marketsSlice.reducer;
 // the state. Selectors can also be defined inline where they're used instead of
 // in the slice file. For example: `useSelector((state) => state.auth.value)`
 
-export const selectAllMarkets = state => state.markets.data;
-export const selectMarketsStatus = state => state.markets.status;
+export const selectAllMarkets = state => state.markets.allMarkets;
+export const selectCurrencyMarkets = state => state.markets.currencyMarkets;
+export const selectChampionships = state => state.markets.championships;
+export const selectAllMarketsCount = state => state.markets.allMarketsCount;
+export const selectCurrencyMarketsCount = state => state.markets.currencyMarketsCount;
+
+// export const selectMarketsStatus = state => state.markets.status;

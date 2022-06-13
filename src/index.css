@@ -43,4 +43,9 @@ body {
 
 .metaWrap {
   color: #ccc !important;
+  font-size: 14px;
+}
+
+.ant-ribbon {
+  top: -5px !important;
 }

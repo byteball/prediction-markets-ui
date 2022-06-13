@@ -1,7 +1,6 @@
 import { Button, Drawer, Typography } from "antd";
-import { useEffect, useState } from "react";
+import { memo, useEffect, useState } from "react";
 import { useSelector } from "react-redux";
-import { isBoolean } from "lodash";
 
 import { SwitchActions } from "components/SwitchActions/SwitchActions";
 import { BuyForm, RedeemForm } from "forms";
@@ -10,30 +9,26 @@ import { selectActiveMarketStatus } from "store/slices/activeSlice";
 
 const { Title } = Typography;
 
-export const TradeModal = ({ disabled, visible, setVisible }) => {
+export const TradeModal = memo(({ disabled, visible, setVisible, yes_team, no_team }) => {
   const [action, setAction] = useState('buy'); // buy or redeem
 
   const status = useSelector(selectActiveMarketStatus);
   const [width] = useWindowSize();
+  const [buyAmount, setBuyAmount] = useState({ value: '', valid: true });
+  const [redeemAmount, setRedeemAmount] = useState({ value: '', valid: true });
 
   const open = () => setVisible(true);
   const close = () => setVisible(false);
-  let type;
-  let customAction;
-
-  if (!isBoolean(visible)) {
-    type = visible.type;
-    customAction = visible.action
-  }
 
   useEffect(() => {
-    if (customAction) {
-      setAction(customAction)
-    } else {
-      setAction('buy')
+    if (visible) {
+      if (visible.action) {
+        setAction(visible.action)
+      } else {
+        setAction('buy')
+      }
     }
   }, [visible]);
-
 
   return <>
     <Button type="primary" size="large" disabled={disabled} onClick={open}>Trade</Button>
@@ -47,9 +42,11 @@ export const TradeModal = ({ disabled, visible, setVisible }) => {
     >
 
       <Title level={2}>Trade</Title>
-      <SwitchActions data={[{ value: 'buy', text: 'Buy' }, { value: 'redeem', text: 'Redeem' }]} onChange={(action) => setAction(action)} value={action} />
+      <SwitchActions data={[{ value: 'buy', text: 'Buy' }, { value: 'redeem', text: 'Sell', disabled: true }]} onChange={(action) => setAction(action)} value={action} />
 
-      {action === 'buy' ? <BuyForm type={type} /> : <RedeemForm type={type} />}
+      {action === 'buy' && <BuyForm amount={buyAmount} setAmount={setBuyAmount} type={visible.type} yes_team={yes_team} no_team={no_team} />}
+      
+      {action === 'redeem' && <RedeemForm amount={redeemAmount} setAmount={setRedeemAmount} type={visible.type} yes_team={yes_team} no_team={no_team} />}
     </Drawer>}
   </>
-}
+})

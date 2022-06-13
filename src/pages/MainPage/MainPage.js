@@ -1,14 +1,28 @@
+import { useState } from "react";
 import { Col, Row, Spin } from "antd";
 import { useSelector } from "react-redux";
 
 import { Layout } from "components/Layout/Layout";
 import { PredictionList } from "components/PredictionList/PredictionList";
-import { selectAllMarkets } from "store/slices/marketsSlice";
+import { SwitchActions } from "components/SwitchActions/SwitchActions";
+
+import { selectAllMarkets, selectChampionships } from "store/slices/marketsSlice";
+
+import { getTabNameByType } from "utils/getTabNameByType";
 
 import styles from "./MainPage.module.css";
 
 export const MainPage = () => {
   const markets = useSelector(selectAllMarkets);
+  const championships = useSelector(selectChampionships);
+
+  const [marketType, setMarketType] = useState('all');
+
+  const sportTypes = Object.keys(championships);
+
+  const switchActionsData = [{ value: 'all', text: 'All' }, { value: 'currency', text: '📈 Currency' }];
+
+  sportTypes.forEach((type) => switchActionsData.push(({ value: type, text: getTabNameByType(type) })))
 
   if (!markets || markets.length === 0) return (
     <div style={{ width: '100vw', height: '100vh', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
@@ -30,7 +44,11 @@ export const MainPage = () => {
       </Row>
 
       <div style={{ margin: "0 auto", marginTop: 40, maxWidth: 780, userSelect: 'none' }}>
-        <PredictionList data={markets} />
+        <SwitchActions value={marketType} data={switchActionsData} onChange={(action) => setMarketType(action)} />
+
+        <div style={{ marginTop: 10 }}>
+          <PredictionList type={marketType} />
+        </div>
       </div>
     </Layout>
   </div>

@@ -13,7 +13,9 @@ export const settingsSlice = createSlice({
     extraCategories: [],
     reserveRates: {},
     reserveRateUpdateTime: 0,
-    reserveAssets: {}
+    reserveAssets: {},
+    sportsCalendar: [],
+    priceOrCoef: 'coef'
   },
   reducers: {
     saveCreationOrder: (state, action) => {
@@ -47,6 +49,13 @@ export const settingsSlice = createSlice({
     },
     changeWalletAddress: (state, action) => {
       state.walletAddress = action.payload;
+    },
+    changeViewType: (state) => {
+      if (state.priceOrCoef === 'coef') {
+        state.priceOrCoef = 'price';
+      } else {
+        state.priceOrCoef = 'coef';
+      }
     }
   },
   extraReducers: {
@@ -54,7 +63,9 @@ export const settingsSlice = createSlice({
       state.categories = action.payload;
     },
     [loadReserveAssets.fulfilled]: (state, action) => {
-      state.reserveAssets = action.payload;
+      if (action.payload) {
+        state.reserveAssets = action.payload;
+      }
     },
     [updateReserveRate.fulfilled]: (state, action) => {
       if (action.payload) {
@@ -71,7 +82,8 @@ export const {
   updateCreationOrder,
   cancelRegSymbol,
   addExtraCategory,
-  changeWalletAddress
+  changeWalletAddress,
+  changeViewType
 } = settingsSlice.actions;
 
 export default settingsSlice.reducer;
@@ -86,3 +98,5 @@ export const selectCategories = state => state.settings.categories;
 export const selectExtraCategories = state => state.settings.extraCategories;
 export const selectReservesRate = state => state.settings.reserveRates;
 export const selectWalletAddress = state => state.settings.walletAddress;
+export const selectPriceOrCoef = state => state.settings.priceOrCoef;
+// export const selectSportsCalendar = state => state.settings.sportsCalendar.calendar;

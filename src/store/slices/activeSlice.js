@@ -11,7 +11,8 @@ export const activeSlice = createSlice({
     params: {},
     recentEvents: [],
     dailyCandles: [],
-    datafeedValue: null
+    datafeedValue: null,
+    teams: { yes: null, no: null }
   },
   reducers: {
     setActiveMarketAddress: (state, action) => {
@@ -41,7 +42,7 @@ export const activeSlice = createSlice({
   },
   extraReducers: {
     [setActiveMarket.fulfilled]: (state, action) => {
-      const { params, stateVars, category, recentEvents, dailyCandles, datafeedValue } = action.payload;
+      const { params, stateVars, category, recentEvents, dailyCandles, datafeedValue, yesTeam, noTeam } = action.payload;
 
       state.params = params;
       state.stateVars = stateVars;
@@ -49,6 +50,8 @@ export const activeSlice = createSlice({
       state.recentEvents = recentEvents;
       state.dailyCandles = dailyCandles;
       state.datafeedValue = datafeedValue;
+      state.teams = { yes: yesTeam || null, no: noTeam || null };
+
       state.status = 'loaded';
     },
     [setActiveMarket.rejected]: (state, action) => {
@@ -79,3 +82,4 @@ export const selectActiveAddress = state => state.active.address;
 export const selectActiveRecentEvents = state => state.active.recentEvents;
 export const selectActiveDailyCandles = state => state.active.dailyCandles;
 export const selectActiveDatafeedValue = state => state.active.datafeedValue;
+export const selectActiveTeams = state => state.active.teams;

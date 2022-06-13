@@ -1,7 +1,7 @@
 .itemWrap {
   color: #333;
   border-radius: 7px;
-  margin-bottom: 30px;
+  margin-bottom: 20px;
   border: 1px solid #424342;
   position: relative;
 }
@@ -10,6 +10,16 @@
   font-size: 12px;
   font-weight: 300;
   margin-bottom: 5px;
+}
+
+.league {
+  position: absolute;
+  width: 30px;
+  right: 15px;
+  top: 15px;
+  background-color: #fff;
+  cursor: normal;
+  cursor: initial;
 }
 
 .eventDesc {
@@ -32,6 +42,11 @@
 .infoValueInDollar {
   font-size: 11px;
   margin-bottom: 10px;
+}
+
+.teamWrap{
+  padding-top: 10px;
+  line-height: 1;
 }
 
 /* Small devices (landscape phones, 576px and up) */

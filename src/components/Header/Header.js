@@ -1,11 +1,12 @@
 import { useState } from "react";
-import { Row, Col, Button, Drawer, Typography } from "antd";
+import { Row, Col, Button, Drawer, Typography, Space } from "antd";
 import { Link } from "react-router-dom";
 
 import { MainMenu } from "components/MainMenu/MainMenu";
 import { SocialLinks } from "components/SocialLinks/SocialLinks";
 import { useWindowSize } from "hooks/useWindowSize";
 import { WalletModal } from "modals";
+import { ViewPriceSwitcher } from "components/ViewPriceSwitcher/ViewPriceSwitcher";
 
 export const Header = () => {
   const [width] = useWindowSize();
@@ -28,7 +29,13 @@ export const Header = () => {
             </div>
           </Col>
           <Col>
-            <WalletModal />
+            <Space size="large">
+              <WalletModal />
+
+              <div style={{ width: 80, display: 'flex', justifyContent: 'flex-end' }}>
+                <ViewPriceSwitcher />
+              </div>
+            </Space>
           </Col>
         </> : <>
           <Button onClick={changeVisible} size="large">Menu</Button>
@@ -39,6 +46,9 @@ export const Header = () => {
             </div>
             <div style={{ marginTop: 20 }}>
               <WalletModal />
+            </div>
+            <div style={{ marginTop: 20 }}>
+              <ViewPriceSwitcher />
             </div>
             <div style={{ marginTop: 15 }}>
               <SocialLinks size="small" />

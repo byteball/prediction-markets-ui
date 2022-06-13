@@ -250,7 +250,7 @@ export const CreateForm = () => {
 
             {(!categorySearchQuery || categorySearchQuery.includes('No category')) && <Select.Option value={null}>No category</Select.Option>}
 
-            {union(categories, extraCategories || []).filter((category) => !categorySearchQuery || category.includes(categorySearchQuery)).map(category => <Select.Option value={category}>{category}</Select.Option>)}
+            {union(categories, extraCategories || []).filter((category) => !categorySearchQuery || category.includes(categorySearchQuery)).map(category => <Select.Option key={category} value={category}>{category}</Select.Option>)}
           </Select>
         </Form.Item>
       </Col>

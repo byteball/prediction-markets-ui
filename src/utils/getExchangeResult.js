@@ -9,6 +9,7 @@ export const getExchangeResult = (state, params, yes_amount = 0, no_amount = 0, 
   const { issue_fee, redeem_fee, arb_profit_tax, allow_draw = false, reserve_asset = 'base' } = params;
 
   if (yes_amount === 0 && no_amount === 0 && draw_amount === 0) return null;
+  
   const new_supply_yes = supply_yes + (yes_amount ? yes_amount : 0);
   const new_supply_no = supply_no + (no_amount ? no_amount : 0);
   const new_supply_draw = supply_draw + (draw_amount ? draw_amount : 0);
@@ -24,17 +25,26 @@ export const getExchangeResult = (state, params, yes_amount = 0, no_amount = 0, 
   let no_arb_profit_tax = 0;
   let draw_arb_profit_tax = 0;
 
+  let old_yes_price = 0;
+  let old_no_price = 0;
+  let old_draw_price = 0;
+
+  let new_yes_price = 0;
+  let new_no_price = 0;
+  let new_draw_price = 0;
+
   if ((supply_yes + supply_no + supply_draw) !== 0) {
     const old_den = Math.sqrt(supply_yes ** 2 + supply_no ** 2 + supply_draw ** 2);
-    const old_yes_price = coef * (supply_yes / old_den);
-    const old_no_price = coef * (supply_no / old_den);
-    const old_draw_price = coef * (supply_draw / old_den);
+
+    old_yes_price = coef * (supply_yes / old_den);
+    old_no_price = coef * (supply_no / old_den);
+    old_draw_price = coef * (supply_draw / old_den);
 
     const new_den = Math.sqrt(new_supply_yes ** 2 + new_supply_no ** 2 + new_supply_draw ** 2);
 
-    const new_yes_price = coef * (new_supply_yes / new_den);
-    const new_no_price = coef * (new_supply_no / new_den);
-    const new_draw_price = coef * (new_supply_draw / new_den);
+    new_yes_price = coef * (new_supply_yes / new_den);
+    new_no_price = coef * (new_supply_no / new_den);
+    new_draw_price = coef * (new_supply_draw / new_den);
 
     yes_arb_profit_tax = (Math.abs((old_yes_price - new_yes_price) * yes_amount) / 2) * arb_profit_tax;
     no_arb_profit_tax = (Math.abs((old_no_price - new_no_price) * no_amount) / 2) * arb_profit_tax;
@@ -58,6 +68,12 @@ export const getExchangeResult = (state, params, yes_amount = 0, no_amount = 0, 
     network_fee: network_fee,
     issue_fee: reserve_needed * issue_fee,
     redeem_fee: payout * redeem_fee,
+    new_yes_price,
+    new_no_price,
+    new_draw_price,
+    old_yes_price,
+    old_no_price,
+    old_draw_price
   }
 }
 

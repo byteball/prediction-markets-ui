@@ -16,16 +16,18 @@ import marketsSlice from './slices/marketsSlice';
 
 import config from "appConfig";
 import activeSlice from './slices/activeSlice';
+import cacheSlice from './slices/cacheSlice';
 
 const rootReducer = combineReducers({
   settings: settingsSlice,
   markets: marketsSlice,
-  active: activeSlice
+  active: activeSlice,
+  cache: cacheSlice
 });
 
 const persistConfig = {
-  key: `prediction${config.ENVIRONMENT === "testnet" ? "-tn" : ""}3`,
-  version: 1,
+  key: `prediction${config.ENVIRONMENT === "testnet" ? "-tn" : ""}314`,
+  version: 3,
   storage,
   whitelist: ['settings'],
 }

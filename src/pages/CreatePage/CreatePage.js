@@ -7,10 +7,15 @@ import { CreateForm } from "forms";
 import { removeCreationOrder, selectCreationOrder } from "store/slices/settingsSlice";
 import { CreatePredictionMarket } from "./CreatePredictionMarket";
 import { RegisterSymbols } from "./RegSymbol";
+import { useEffect } from "react";
 
 export const CreatePage = () => {
   const creationOrder = useSelector(selectCreationOrder);
   const dispatch = useDispatch();
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [])
 
   const symbolsAlreadyReg = creationOrder ? (creationOrder.yes_symbol && creationOrder.no_symbol && (!creationOrder.data.allow_draw || creationOrder.draw_symbol)) || creationOrder.cancelRegSymbol : false;
 

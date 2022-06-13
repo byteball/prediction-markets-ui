@@ -4,7 +4,6 @@ import { isEmpty } from "lodash";
 import client from "services/obyte";
 
 import { addRecentEvent, updateStateForActualMarket, updateSymbolForActualMarket } from "store/slices/activeSlice";
-import { addMarketInList } from "store/slices/marketsSlice";
 import { updateCreationOrder } from "store/slices/settingsSlice";
 import { loadCategories } from "store/thunks/loadCategories";
 import { loadMarkets } from "store/thunks/loadMarkets";
@@ -13,6 +12,7 @@ import { setActiveMarket } from "store/thunks/setActiveMarket";
 import { responseToEvent } from "utils/responseToEvent";
 import { checkCreationOrder } from "store/thunks/checkCreationOrder";
 import { checkDataFeed } from "store/thunks/checkDataFeed";
+import { historyInstance } from "historyInstance";
 
 import config from "appConfig";
 
@@ -40,9 +40,9 @@ export const bootstrap = async () => {
     client.api.heartbeat();
   }, 10 * 1000);
 
-  const checkOracleData = setInterval(()=> {
+  const checkOracleData = setInterval(() => {
     store.dispatch(checkDataFeed());
-  }, 10000)
+  }, 10 * 60 * 1000)
 
   const tokenRegistry = client.api.getOfficialTokenRegistryAddress();
 
@@ -108,7 +108,6 @@ export const bootstrap = async () => {
                 [`${type}_symbol`]: symbol
               }))
             }
-
           }
         }
 
@@ -143,7 +142,9 @@ export const bootstrap = async () => {
         store.dispatch(updateCreationOrder({
           status: 'pending',
           creation_unit_id: unit
-        }))
+        }));
+
+        historyInstance.push('/create')
       }
 
     } else if (subject === "light/aa_response") {
@@ -168,27 +169,6 @@ export const bootstrap = async () => {
                 no_asset: data.no_asset,
                 draw_asset: data.draw_asset,
                 prediction_address
-              }))
-
-              const orderData = state.settings.creationOrder.data;
-              const reserve_symbol = state.settings.reserveAssets[orderData.reserve_asset || 'base']?.symbol;
-
-              store.dispatch(addMarketInList({
-                ...orderData,
-                aa_address: prediction_address,
-                yes_asset: data.yes_asset,
-                no_asset: data.no_asset,
-                draw_asset: data.draw_asset,
-                yes_price: 0,
-                no_price: 0,
-                draw_price: 0,
-                yes_decimals: orderData.reserve_decimals,
-                no_decimals: orderData.reserve_decimals,
-                draw_decimals: orderData.reserve_decimals,
-                yes_symbol: data.yes_asset.slice(0, 5),
-                no_symbol: data.no_asset.slice(0, 5),
-                draw_symbol: data.draw_asset ? data.draw_asset.slice(0, 5) : null,
-                reserve_symbol
               }))
             }
           }
@@ -218,8 +198,6 @@ export const bootstrap = async () => {
 
       store.dispatch(addRecentEvent(recentEventObject));
 
-    } else {
-      console.log('handle req')
     }
   }
 

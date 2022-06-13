@@ -7,6 +7,7 @@ import { setActiveMarketAddress } from "store/slices/activeSlice";
 import { responseToEvent } from "utils/responseToEvent";
 
 import appConfig from "appConfig";
+import { isEmpty } from "lodash";
 
 const initialParams = {
   allow_draw: false,
@@ -21,8 +22,9 @@ const initialParams = {
 
 export const setActiveMarket = createAsyncThunk(
   'setActiveMarket',
-  async (address, { dispatch }) => {
+  async (address, { dispatch, getState }) => {
     dispatch(setActiveMarketAddress(address))
+    const state = getState();
 
     const aa = await obyte.api.getDefinition(address);
     const stateVars = await obyte.api.getAaStateVars({ address })
@@ -75,12 +77,39 @@ export const setActiveMarket = createAsyncThunk(
 
     const datafeedValue = await obyte.api.getDataFeed({ oracles: [params.oracle], feed_name: params.feed_name, ifnone: 'none' })
 
+    const isSportMarket = params.oracle === appConfig.SPORT_ORACLE;
+
+    let yesTeam;
+    let noTeam;
+
+    if (isSportMarket) {
+      const [championship, yes_abbreviation, no_abbreviation] = params.feed_name.split("_");
+      let championships = state.markets.championships;
+
+      if (isEmpty(championships)) {
+        championships = await backend.getChampionships();
+      }
+
+      const sport = Object.entries(championships).find(([_, cs]) => cs.find(({ code }) => code === championship))?.[0];
+
+      if (sport) {
+        try {
+          yesTeam = await backend.getTeam(sport, yes_abbreviation);
+          noTeam = await backend.getTeam(sport, no_abbreviation);
+        } catch (e) {
+          console.error('error get teams id');
+        }
+      }
+    }
+
     return {
       params,
       stateVars,
       category,
       dailyCandles,
       recentEvents,
-      datafeedValue: datafeedValue !== 'none' ? datafeedValue : null
+      datafeedValue: datafeedValue !== 'none' ? datafeedValue : null,
+      yesTeam,
+      noTeam
     }
   })
