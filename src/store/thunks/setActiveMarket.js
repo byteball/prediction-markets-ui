@@ -1,4 +1,6 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
+import { isEmpty } from "lodash";
+import axios from "axios";
 
 import backend from "services/backend";
 import obyte from "services/obyte";
@@ -7,7 +9,6 @@ import { setActiveMarketAddress } from "store/slices/activeSlice";
 import { responseToEvent } from "utils/responseToEvent";
 
 import appConfig from "appConfig";
-import { isEmpty } from "lodash";
 
 const initialParams = {
   allow_draw: false,
@@ -78,9 +79,12 @@ export const setActiveMarket = createAsyncThunk(
     const datafeedValue = await obyte.api.getDataFeed({ oracles: [params.oracle], feed_name: params.feed_name, ifnone: 'none' })
 
     const isSportMarket = params.oracle === appConfig.SPORT_ORACLE;
+    const isCurrencyMarket = params.oracle === appConfig.CURRENCY_ORACLE;
 
     let yesTeam;
     let noTeam;
+    let currencyCandles = [];
+    let currencyCurrentValue = 0;
 
     if (isSportMarket) {
       const [championship, yes_abbreviation, no_abbreviation] = params.feed_name.split("_");
@@ -100,6 +104,15 @@ export const setActiveMarket = createAsyncThunk(
           console.error('error get teams id');
         }
       }
+    } else if (isCurrencyMarket) {
+      const [from, to] = params.feed_name.split("_");
+
+      try {
+        currencyCandles = await axios.get(`https://min-api.cryptocompare.com/data/v2/histoday?fsym=${from}&tsym=${to}&limit=30`).then(({ data }) => data?.Data?.Data);
+        currencyCurrentValue = await axios.get(`https://min-api.cryptocompare.com/data/price?fsym=${from}&tsyms=${to}`).then(({ data }) => data?.[to]);
+      } catch {
+        console.log(`no candles for ${from}->${to}`)
+      }
     }
 
     return {
@@ -110,6 +123,8 @@ export const setActiveMarket = createAsyncThunk(
       recentEvents,
       datafeedValue: datafeedValue !== 'none' ? datafeedValue : null,
       yesTeam,
-      noTeam
+      noTeam,
+      currencyCandles,
+      currencyCurrentValue
     }
   })

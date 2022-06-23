@@ -12,6 +12,8 @@ export const activeSlice = createSlice({
     recentEvents: [],
     dailyCandles: [],
     datafeedValue: null,
+    currencyCandles: [],
+    currencyCurrentValue: 0,
     teams: { yes: null, no: null }
   },
   reducers: {
@@ -42,7 +44,7 @@ export const activeSlice = createSlice({
   },
   extraReducers: {
     [setActiveMarket.fulfilled]: (state, action) => {
-      const { params, stateVars, category, recentEvents, dailyCandles, datafeedValue, yesTeam, noTeam } = action.payload;
+      const { params, stateVars, category, recentEvents, dailyCandles, datafeedValue, yesTeam, noTeam, currencyCandles, currencyCurrentValue } = action.payload;
 
       state.params = params;
       state.stateVars = stateVars;
@@ -50,6 +52,8 @@ export const activeSlice = createSlice({
       state.recentEvents = recentEvents;
       state.dailyCandles = dailyCandles;
       state.datafeedValue = datafeedValue;
+      state.currencyCandles = currencyCandles || [];
+      state.currencyCurrentValue = currencyCurrentValue || 0;
       state.teams = { yes: yesTeam || null, no: noTeam || null };
 
       state.status = 'loaded';
@@ -83,3 +87,5 @@ export const selectActiveRecentEvents = state => state.active.recentEvents;
 export const selectActiveDailyCandles = state => state.active.dailyCandles;
 export const selectActiveDatafeedValue = state => state.active.datafeedValue;
 export const selectActiveTeams = state => state.active.teams;
+export const selectActiveCurrencyCandles = state => state.active.currencyCandles;
+export const selectActiveCurrencyCurrentValue = state => state.active.currencyCurrentValue;

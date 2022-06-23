@@ -10,11 +10,12 @@ import QRButton from "obyte-qr-button";
 import Countdown from "antd/lib/statistic/Countdown";
 import { Img } from 'react-image';
 
-import { selectActiveDailyCandles, selectActiveDatafeedValue, selectActiveMarketParams, selectActiveMarketStateVars, selectActiveMarketStatus, selectActiveRecentEvents, selectActiveTeams } from "store/slices/activeSlice";
+import { selectActiveCurrencyCandles, selectActiveCurrencyCurrentValue, selectActiveDailyCandles, selectActiveDatafeedValue, selectActiveMarketParams, selectActiveMarketStateVars, selectActiveMarketStatus, selectActiveRecentEvents, selectActiveTeams } from "store/slices/activeSlice";
 import { setActiveMarket } from "store/thunks/setActiveMarket";
 import { selectPriceOrCoef, selectReserveAssets, selectReservesRate } from "store/slices/settingsSlice";
 import { getMarketPriceByType, generateLink } from "utils";
 import { RecentEvents } from "components/RecentEvents/RecentEvents";
+import { CurrencyChart } from "components/CurrencyChart/CurrencyChart";
 import { AddLiquidityModal, ClaimProfitModal, ViewParamsModal, TradeModal } from "modals";
 
 import styles from './MarketPage.module.css';
@@ -73,7 +74,7 @@ export const MarketPage = () => {
   const { address } = useParams();
   const dispatch = useDispatch();
   const [chartType, setChartType] = useState('prices')
-  const [visibleTradeModal, setVisibleTradeModal] = useState(false)
+  const [visibleTradeModal, setVisibleTradeModal] = useState(false);
   const [dataForChart, setDataForChart] = useState([]);
   const [dataForPie, setDataForPie] = useState([]);
 
@@ -83,7 +84,10 @@ export const MarketPage = () => {
 
   const candles = useSelector(selectActiveDailyCandles);
   const datafeedValue = useSelector(selectActiveDatafeedValue);
+
   const teams = useSelector(selectActiveTeams);
+  const currencyCandles = useSelector(selectActiveCurrencyCandles);
+  const currencyCurrentValue = useSelector(selectActiveCurrencyCurrentValue);
 
   const params = useSelector(selectActiveMarketParams);
   const recentEvents = useSelector(selectActiveRecentEvents);
@@ -110,6 +114,7 @@ export const MarketPage = () => {
   const drawPriceInUSD = +Number(drawPrice * reserve_rate).toPrecision(4);
 
   const isSportMarket = params.oracle === appConfig.SPORT_ORACLE;
+  const isCurrencyMarket = params.oracle === appConfig.CURRENCY_ORACLE;
 
   let tradeStatus;
   let tradeStatusColor;
@@ -312,6 +317,8 @@ export const MarketPage = () => {
         </Space>
       </Row>
 
+      {isCurrencyMarket && currencyCandles.length > 0 && <CurrencyChart data={currencyCandles} params={params} />}
+
       <div className={styles.infoWrap}>
         <Row gutter={30}>
           <Col lg={{ span: 8 }} md={{ span: 12 }} xs={{ span: 24 }} style={{ marginBottom: 30 }}>
@@ -340,6 +347,12 @@ export const MarketPage = () => {
               subValue={viewReserveInUSD}
               value={<span>{viewReserve} <small>{reserve_symbol}</small></span>} />
           </Col>
+
+          {isCurrencyMarket && currencyCurrentValue && <Col lg={{ span: 8 }} md={{ span: 12 }} xs={{ span: 24 }} style={{ marginBottom: 30 }}>
+            <StatsCard
+              title="Current value"
+              value={+currencyCurrentValue.toFixed(9)} />
+          </Col>}
 
           <Col lg={{ span: 8 }} md={{ span: 12 }} xs={{ span: 24 }} style={{ marginBottom: 30 }}>
             <StatsCard

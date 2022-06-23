@@ -15,6 +15,7 @@ import { checkDataFeed } from "store/thunks/checkDataFeed";
 import { historyInstance } from "historyInstance";
 
 import config from "appConfig";
+import { loadEVMTokens } from "store/thunks/loadEVMTokens";
 
 const getAAPayload = (messages = []) => messages.find(m => m.app === 'data')?.payload || {};
 
@@ -25,7 +26,7 @@ export const bootstrap = async () => {
   store.dispatch(loadCategories());
   store.dispatch(loadReserveAssets());
   store.dispatch(checkCreationOrder());
-
+  store.dispatch(loadEVMTokens());
   const state = store.getState();
 
   if (state.active.address) { // reload data for active market

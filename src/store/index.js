@@ -13,16 +13,18 @@ import storage from "redux-persist/lib/storage";
 
 import settingsSlice from './slices/settingsSlice';
 import marketsSlice from './slices/marketsSlice';
-
-import config from "appConfig";
 import activeSlice from './slices/activeSlice';
 import cacheSlice from './slices/cacheSlice';
+import bridgesSlice from './slices/bridgesSlice';
+
+import config from "appConfig";
 
 const rootReducer = combineReducers({
   settings: settingsSlice,
   markets: marketsSlice,
   active: activeSlice,
-  cache: cacheSlice
+  cache: cacheSlice,
+  bridges: bridgesSlice
 });
 
 const persistConfig = {
