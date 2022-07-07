@@ -2,12 +2,14 @@ import React, { useState, useEffect, useRef } from "react";
 import { Steps, Input, Form, Button, Space } from "antd";
 import client from "services/obyte";
 import { isBoolean } from "lodash";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import QRButton from "obyte-qr-button";
+import moment from "moment";
 
-import { generateLink } from "utils";
+import { generateLink, generateTextEvent } from "utils";
 import { useWindowSize } from "hooks/useWindowSize.js";
-import { cancelRegSymbol } from "store/slices/settingsSlice";
+
+import appConfig from "appConfig";
 
 const { Step } = Steps;
 
@@ -47,11 +49,22 @@ export const RegisterSymbols = () => {
   const checkRef = useRef(null);
   const regRef = useRef(null);
   const symbolInputRef = useRef(null);
-  const dispatch = useDispatch();
+  // const dispatch = useDispatch();
+
+  const isSportMarket = !!appConfig.CATEGORIES.sport.oracles.find(({ address }) => address === order.data.oracle);
 
   const currentAsset = order[currentSymbol + "_asset"];
 
-  const currentDecimals = order.reserve_decimals;
+  let actual_team;
+  let yes_team;
+  let no_team;
+
+  if (isSportMarket) {
+    const split = order.data.feed_name.split("_");
+    yes_team = split[1];
+    no_team = split[2];
+    actual_team = currentStep === 0 ? yes_team : (currentStep === 1 ? no_team : 'DRAW');
+  }
 
   useEffect(() => {
     if (!order.yes_symbol && !order.yes_symbol_req) {
@@ -65,9 +78,33 @@ export const RegisterSymbols = () => {
 
   useEffect(() => {
     setIsAvailable(undefined);
-    setToken(initStateValue);
+    let symbol;
+    const feed_name = order.data.feed_name;
+    const type = String(currentStep === 0 ? 'yes' : (currentStep === 1 ? 'no' : 'draw')).toUpperCase();
+    const date = moment.unix(order.data.end_of_trading_period).format("YYYY-MM-DD");
+
+    if (appConfig.CATEGORIES.sport.oracles.find(({ address }) => address === order.data.oracle)) {
+
+      // eslint-disable-next-line no-unused-vars
+      const [_, yes_team, no_team] = feed_name.split("_");
+      const actual_team = currentStep === 0 ? yes_team : (currentStep === 1 ? no_team : 'DRAW');
+
+      symbol = String(`${feed_name}_${actual_team}`).toUpperCase();
+    } else if (isSportMarket) {
+
+      symbol = `${feed_name}_${order.data.datafeed_value}_${date}_${type}`
+    } else {
+      symbol = `${feed_name}_${date}_${type}`
+    }
+
+    setToken({
+      value: symbol,
+      valid: true
+    });
+
     setTokenSupport(initStateValue);
     setDescr(initStateValue);
+
     (async () => {
       const symbol = await client.api.getSymbolByAsset(
         tokenRegistry,
@@ -78,6 +115,7 @@ export const RegisterSymbols = () => {
       } else {
         setSymbolByCurrentAsset(null);
       }
+      setIsAvailable(null);
     })();
   }, [currentStep, setSymbolByCurrentAsset, currentAsset]);
 
@@ -89,10 +127,33 @@ export const RegisterSymbols = () => {
           token.value
         );
         if (!!asset) {
-          setIsAvailable(false);
+          setIsAvailable(undefined);
+          const name = token.value;
+          const split = name.split("#");
+          const number = split.length >= 2 ? Number(split[split.length - 1]) + 1 : 2;
+
+          setToken({ value: split[0] + "#" + number, valid: true })
         } else {
+
           setIsAvailable(true);
-          const value = `${String(currentSymbol).toUpperCase()}-token for event: «${order.data.event}»`
+
+          let value;
+
+          if (isSportMarket) {
+            const { yes_team, no_team } = order.data;
+
+            const actual_team = currentStep === 0 ? yes_team : (currentStep === 1 ? no_team : 'DRAW');
+            const date = moment.unix(order.data.end_of_trading_period).format("lll");
+
+            if (actual_team !== 'DRAW') {
+              value = `${yes_team} will win the match against ${no_team} on ${date}`
+            } else {
+              value = `The match between ${yes_team} and ${no_team} on ${date} will end with a draw`;
+            }
+
+          } else {
+            value = `${String(currentSymbol).toUpperCase()}-token for event: «${generateTextEvent({ ...order.data })}»`;
+          }
 
           setDescr({
             value,
@@ -113,8 +174,7 @@ export const RegisterSymbols = () => {
   const data = {
     asset: currentAsset,
     symbol: token.value,
-    decimals:
-      (isAvailable && !symbolByCurrentAsset && currentDecimals) || undefined,
+    decimals: order.data.reserve_decimals,
     description:
       (isAvailable && descr.valid && !symbolByCurrentAsset && descr.value) ||
       undefined,
@@ -197,8 +257,8 @@ export const RegisterSymbols = () => {
         style={{ marginTop: 20 }}
         direction={width > 800 ? "horizontal" : "vertical"}
       >
-        <Step title="Symbol for YES-token" />
-        <Step title="Symbol for NO-token" />
+        <Step title={`Symbol for ${yes_team ? yes_team : "YES"}-token`} />
+        <Step title={`Symbol for ${no_team ? no_team : "NO"}-token`} />
         {order.draw_asset && <Step title="Symbol for DRAW-token" />}
       </Steps>
 
@@ -214,6 +274,7 @@ export const RegisterSymbols = () => {
             placeholder="Symbol"
             allowClear
             autoFocus={true}
+            disabled={true}
             ref={symbolInputRef}
             autoComplete="off"
             value={token.value}
@@ -236,6 +297,7 @@ export const RegisterSymbols = () => {
               placeholder="Support (Min amount 0.1 GB)"
               suffix="GB"
               autoComplete="off"
+              disabled={isSportMarket}
               value={tokenSupport.value}
               onChange={handleChangeSupport}
               autoFocus={isBoolean(isAvailable)}
@@ -254,6 +316,7 @@ export const RegisterSymbols = () => {
               rows={5}
               value={descr.value}
               onChange={handleChangeDescr}
+              disabled={isSportMarket}
               placeholder="Description of an asset (up to 140 characters)"
             />
           </Form.Item>
@@ -290,9 +353,9 @@ export const RegisterSymbols = () => {
           </Space>
         </Form.Item>
       </Form>
-      <div style={{ display: 'flex', justifyContent: 'center' }}>
-        <Button type="link" danger onClick={() => dispatch(cancelRegSymbol())}>Unregister symbols</Button>
-      </div>
+      {/* <div style={{ display: 'flex', justifyContent: 'center' }}>
+        <Button type="link" danger onClick={() => dispatch(cancelRegSymbol())}>skip registering symbols</Button>
+      </div> */}
     </div>
   );
 };

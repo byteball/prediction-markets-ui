@@ -1,6 +1,7 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import { isEmpty } from "lodash";
 import axios from "axios";
+import moment from "moment";
 
 import backend from "services/backend";
 import obyte from "services/obyte";
@@ -62,8 +63,6 @@ export const setActiveMarket = createAsyncThunk(
     if (!params.no_decimals) params.no_decimals = params.reserve_decimals
     if (!params.draw_decimals) params.draw_decimals = params.reserve_decimals
 
-    const category = await backend.getCategory(address);
-
     const dailyCandles = await backend.getDailyCandles(address);
 
     const responses = await obyte.api.getAaResponses({ aa: address });
@@ -78,13 +77,16 @@ export const setActiveMarket = createAsyncThunk(
 
     const datafeedValue = await obyte.api.getDataFeed({ oracles: [params.oracle], feed_name: params.feed_name, ifnone: 'none' })
 
-    const isSportMarket = params.oracle === appConfig.SPORT_ORACLE;
-    const isCurrencyMarket = params.oracle === appConfig.CURRENCY_ORACLE;
+    const isSportMarket = !!appConfig.CATEGORIES.sport.oracles.find(({ address }) => address === params.oracle);
+    const isCurrencyMarket = !!appConfig.CATEGORIES.currency.oracles.find(({ address }) => address === params.oracle);
 
     let yesTeam;
     let noTeam;
     let currencyCandles = [];
     let currencyCurrentValue = 0;
+    let isHourlyChart = params.end_of_trading_period + params.waiting_period_length - moment.utc().unix() <= 7 * 24 * 3600;
+    let league_emblem = null;
+    let league = null;
 
     if (isSportMarket) {
       const [championship, yes_abbreviation, no_abbreviation] = params.feed_name.split("_");
@@ -94,12 +96,16 @@ export const setActiveMarket = createAsyncThunk(
         championships = await backend.getChampionships();
       }
 
-      const sport = Object.entries(championships).find(([_, cs]) => cs.find(({ code }) => code === championship))?.[0];
+      const sport = Object.entries(championships).find(([_, cs]) => cs.find(({ code }) => code === championship))//?.[0];
 
       if (sport) {
+        const championshipData = championships[sport[0]].find(({ code }) => code === championship);
+        league_emblem = championshipData?.emblem;
+        league = championshipData?.name;
+
         try {
-          yesTeam = await backend.getTeam(sport, yes_abbreviation);
-          noTeam = await backend.getTeam(sport, no_abbreviation);
+          yesTeam = await backend.getTeam(sport[0], yes_abbreviation);
+          noTeam = await backend.getTeam(sport[0], no_abbreviation);
         } catch (e) {
           console.error('error get teams id');
         }
@@ -108,23 +114,30 @@ export const setActiveMarket = createAsyncThunk(
       const [from, to] = params.feed_name.split("_");
 
       try {
-        currencyCandles = await axios.get(`https://min-api.cryptocompare.com/data/v2/histoday?fsym=${from}&tsym=${to}&limit=30`).then(({ data }) => data?.Data?.Data);
+        currencyCandles = await axios.get(`https://min-api.cryptocompare.com/data/v2/${isHourlyChart ? 'histohour' : 'histoday'}?fsym=${from}&tsym=${to}&limit=${isHourlyChart ? 168 : 30}`).then(({ data }) => data?.Data?.Data);
         currencyCurrentValue = await axios.get(`https://min-api.cryptocompare.com/data/price?fsym=${from}&tsyms=${to}`).then(({ data }) => data?.[to]);
       } catch {
         console.log(`no candles for ${from}->${to}`)
       }
     }
 
+    const created_at = await obyte.api.getAaStateVars({ address: appConfig.FACTORY_AA, var_prefix: `prediction_${address}` }).then((data)=> data?.[`prediction_${address}`]?.created_at)
+
     return {
       params,
       stateVars,
-      category,
       dailyCandles,
       recentEvents,
       datafeedValue: datafeedValue !== 'none' ? datafeedValue : null,
       yesTeam,
       noTeam,
       currencyCandles,
-      currencyCurrentValue
+      currencyCurrentValue,
+      isHourlyChart,
+      created_at,
+      league: {
+        league_emblem,
+        league
+      }
     }
   })

@@ -1,5 +1,7 @@
+import { truncate } from "lodash";
 import { encodeData } from "./encodeData";
 import { generateLink } from "./generateLink";
+import { generateTextEvent } from "./generateTextEvent";
 import { getExchangeResult } from "./getExchangeResult";
 import { getMarketPriceByType } from "./getMarketPriceByType";
 import { getEmojiByType } from "./getTabNameByType";
@@ -11,5 +13,7 @@ export {
   getExchangeResult,
   getMarketPriceByType,
   responseToEvent,
-  getEmojiByType
+  getEmojiByType,
+  generateTextEvent,
+  truncate
 }

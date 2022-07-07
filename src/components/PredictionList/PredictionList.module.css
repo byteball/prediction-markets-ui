@@ -1,0 +1,22 @@
+.calendarHeader {
+    text-transform: uppercase;
+    font-size: 16px !important;
+}
+
+.spinWrap {
+    display: flex;
+    justify-content: center;
+    padding: 30px 10px;
+}
+
+.loadMoreWrap {
+    display: flex;
+    justify-content: center;
+}
+
+@media (min-width: 576px) {
+    .calendarHeader {
+        font-size: 24px !important;
+        word-wrap: break-word;
+    }
+}

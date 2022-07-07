@@ -23,6 +23,11 @@ class Backend {
     return markets?.data;
   }
 
+  getMiscMarkets = async (page = 1) => {
+    const markets = await this.axios.get(`/markets/${page}?&type=misc`);
+    return markets?.data;
+  }
+
   getMarketsByType = async ({ type, page = 1, championship }) => {
     let query = `/markets/${page}?type=${type}`;
 
@@ -45,11 +50,6 @@ class Backend {
   getReserveAssets = async () => {
     const categories = await this.axios.get('/reserve_assets');
     return categories?.data;
-  }
-
-  getCategory = async (address) => {
-    const category = await this.axios.get(`/category/${address}`);
-    return category?.data;
   }
 
   getDailyCandles = async (address) => {

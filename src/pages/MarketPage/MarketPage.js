@@ -1,7 +1,7 @@
 import { Row, Col, Space, Button, Radio, Spin, Tooltip, Typography } from "antd";
 import { Layout } from "components/Layout/Layout";
 import { StatsCard } from "components/StatsCard/StatsCard";
-import { Line, Pie } from '@ant-design/plots';
+import { Line } from '@ant-design/plots';
 import { useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -13,9 +13,10 @@ import { Img } from 'react-image';
 import { selectActiveCurrencyCandles, selectActiveCurrencyCurrentValue, selectActiveDailyCandles, selectActiveDatafeedValue, selectActiveMarketParams, selectActiveMarketStateVars, selectActiveMarketStatus, selectActiveRecentEvents, selectActiveTeams } from "store/slices/activeSlice";
 import { setActiveMarket } from "store/thunks/setActiveMarket";
 import { selectPriceOrCoef, selectReserveAssets, selectReservesRate } from "store/slices/settingsSlice";
-import { getMarketPriceByType, generateLink } from "utils";
+import { getMarketPriceByType, generateLink, generateTextEvent } from "utils";
 import { RecentEvents } from "components/RecentEvents/RecentEvents";
 import { CurrencyChart } from "components/CurrencyChart/CurrencyChart";
+import { MarketSizePie } from "components/MarketSizePie/MarketSizePie";
 import { AddLiquidityModal, ClaimProfitModal, ViewParamsModal, TradeModal } from "modals";
 
 import styles from './MarketPage.module.css';
@@ -76,7 +77,6 @@ export const MarketPage = () => {
   const [chartType, setChartType] = useState('prices')
   const [visibleTradeModal, setVisibleTradeModal] = useState(false);
   const [dataForChart, setDataForChart] = useState([]);
-  const [dataForPie, setDataForPie] = useState([]);
 
   const status = useSelector(selectActiveMarketStatus);
   const reserveAssets = useSelector(selectReserveAssets);
@@ -93,7 +93,7 @@ export const MarketPage = () => {
   const recentEvents = useSelector(selectActiveRecentEvents);
   const priceOrCoef = useSelector(selectPriceOrCoef);
 
-  const { event, reserve_asset = 'base', allow_draw, reserve_symbol, reserve_decimals, yes_decimals, no_decimals, draw_decimals, yes_symbol, no_symbol, draw_symbol, end_of_trading_period } = params;
+  const { reserve_asset = 'base', allow_draw, reserve_symbol, reserve_decimals, yes_decimals, no_decimals, draw_decimals, yes_symbol, no_symbol, draw_symbol, end_of_trading_period, league, league_emblem, created_at } = params;
 
   const actualReserveSymbol = reserveAssets[reserve_asset]?.symbol;
 
@@ -101,7 +101,9 @@ export const MarketPage = () => {
 
   const reserve_rate = reservesRate[reserve_asset];
 
-  const { reserve = 0, result, supply_yes = 0, supply_no = 0, supply_draw = 0 } = stateVars;
+  const event = generateTextEvent(params);
+
+  const { reserve = 0, result, supply_yes = 0, supply_no = 0, supply_draw = 0, coef = 1 } = stateVars;
   const viewReserve = +Number(reserve / 10 ** 9).toPrecision(5);
   const viewReserveInUSD = '$' + +Number((reserve / 10 ** reserve_decimals) * reserve_rate).toPrecision(2);
 
@@ -113,8 +115,8 @@ export const MarketPage = () => {
   const noPriceInUSD = +Number(noPrice * reserve_rate).toPrecision(4);
   const drawPriceInUSD = +Number(drawPrice * reserve_rate).toPrecision(4);
 
-  const isSportMarket = params.oracle === appConfig.SPORT_ORACLE;
-  const isCurrencyMarket = params.oracle === appConfig.CURRENCY_ORACLE;
+  const isSportMarket = !!appConfig.CATEGORIES.sport.oracles.find(({ address }) => address === params.oracle);
+  const isCurrencyMarket = !!appConfig.CATEGORIES.currency.oracles.find(({ address }) => address === params.oracle);
 
   let tradeStatus;
   let tradeStatusColor;
@@ -128,55 +130,16 @@ export const MarketPage = () => {
 
   const commitResultLink = generateLink({ aa: address, amount: 1e4, data: { commit: 1 } });
 
-  const pieConfig = {
-    angleField: 'value',
-    colorField: 'type',
-    legend: false,
-    animation: false,
-    label: {
-      type: 'inner',
-      content: (item) => item.percent > 0.1 ? `${haveTeamNames ? (item.type === 'YES' ? teams.yes.name : (item.type === 'NO' ? teams.no.name : 'DRAW')) : item.type + ' tokens'}
-      ${item.value} ${reserve_symbol}
-      ${Number(item.percent * 100).toPrecision(4)}% 
-      ` : '',
-      style: {
-        fontSize: 13,
-        textAlign: "center",
-        fill: "#fff",
-        fontWeight: 'bold',
-        textStroke: '2px red'
-      },
-      autoHide: true,
-      autoRotate: false
-    },
-    appendPadding: 10,
-    radius: 0.8,
-    renderer: "svg",
-    theme: 'dark',
-    color: (item) => {
-      if (item.type === 'YES') {
-        return appConfig.YES_COLOR;
-      } else if (item.type === 'NO') {
-        return appConfig.NO_COLOR;
-      } else {
-        return appConfig.DRAW_COLOR
-      }
-    },
-    tooltip: {
-      customContent: (_, items) => {
-        return <div style={{ padding: 5, textAlign: 'center' }}>Invested capital in {haveTeamNames ? (items[0]?.data.type === 'YES' ? teams.yes.name : (items[0]?.data.type === 'NO' ? teams.no.name : 'DRAW')) : items[0]?.data.type + ' tokens'}:
-          <div style={{ marginTop: 5 }}>{items[0]?.data.value} <small>{reserve_symbol}</small></div></div>
-      }
-    },
-    pieStyle: {
-      stroke: "#141412",
-    }
-  }
-
   useEffect(() => {
+    let candlesData = candles;
+
     const data = [];
 
-    candles.forEach(({ start_timestamp, yes_price, no_price, draw_price, supply_yes, supply_no, supply_draw, coef }) => {
+    if (candlesData.length === 1) {
+      candlesData = [candles[0], { ...candlesData[0], start_timestamp: candlesData[0].start_timestamp - 3600 }];
+    }
+
+    candlesData.forEach(({ start_timestamp, yes_price, no_price, draw_price, supply_yes, supply_no, supply_draw, coef }) => {
       const date = moment.unix(start_timestamp).format(sevenDaysAlreadyPassed ? 'll' : 'lll');
 
       if (chartType === 'prices') {
@@ -216,19 +179,6 @@ export const MarketPage = () => {
   useEffect(() => {
     window.scrollTo(0, 0);
   }, [])
-
-  useEffect(() => {
-    const data = [
-      { type: 'YES', token: 'yes', value: +Number((supply_yes * yesPrice) / 10 ** reserve_decimals).toFixed(reserve_decimals) },
-      { type: 'NO', token: 'no', value: +Number((supply_no * noPrice) / 10 ** reserve_decimals).toFixed(reserve_decimals) },
-    ];
-
-    if (allow_draw) {
-      data.push({ type: 'DRAW', token: 'draw', value: +Number((supply_draw * drawPrice) / 10 ** reserve_decimals).toFixed(reserve_decimals) });
-    }
-
-    setDataForPie(data);
-  }, [stateVars, yesPrice, noPrice, drawPrice, supply_yes, supply_no, supply_draw]);
 
   if (params.end_of_trading_period > now) {
     tradeStatus = "TRADING"
@@ -271,6 +221,39 @@ export const MarketPage = () => {
 
   const haveTeamNames = isSportMarket && teams?.yes?.name && teams?.no?.name;
 
+  const elapsed_seconds = moment.utc().unix() - created_at;
+  const apy = Number(((coef * (1 - params.issue_fee)) ** (31536000 / elapsed_seconds) - 1) * 100).toFixed(2);
+
+  let yesTooltip = '';
+  let noTooltip = '';
+  let drawTooltip = '';
+
+  if (haveTeamNames) {
+    const yes_team_name = teams.yes.name;
+    const no_team_name = teams.no.name;
+
+    if (priceOrCoef === 'price') {
+      yesTooltip = `The price of the ${yes_team_name} token. If ${yes_team_name} wins, all funds paid by buyers of all tokens will be divided among ${yes_team_name} token holders.`;
+      noTooltip = `The price of the ${no_team_name} token. If ${no_team_name} wins, all funds paid by buyers of all tokens will be divided among ${no_team_name} token holders.`;
+      drawTooltip = `The price of the draw token. If will be draw, all funds paid by buyers of all tokens will be divided among draw token holders.`;
+    } else {
+      yesTooltip = `The multiple you receive if you bet on ${yes_team_name} and it wins, assuming the odds don’t change.`;
+      noTooltip = `The multiple you receive if you bet on ${no_team_name} and it wins, assuming the odds don’t change.`;
+      drawTooltip = "The multiple you receive if you bet on draw and your bet wins, assuming the odds don’t change.";
+    }
+
+  } else {
+    if (priceOrCoef === 'price') {
+      yesTooltip = "The price of the token that represents the “Yes” outcome. If this outcome wins, all funds paid by buyers of all tokens will be divided among “Yes” token holders.";
+      noTooltip = "The price of the token that represents the “No” outcome. If this outcome wins, all funds paid by buyers of all tokens will be divided among “No” token holders.";
+      drawTooltip = "The price of the token that represents the “Draw” outcome. If this outcome wins, all funds paid by buyers of all tokens will be divided among “Draw” token holders.";
+    } else {
+      yesTooltip = "The multiple you receive if you bet on “Yes” outcome and it wins, assuming the odds don’t change.";
+      noTooltip = "The multiple you receive if you bet on “Yes” outcome and it wins, assuming the odds don’t change.";
+      drawTooltip = "The multiple you receive if you bet on “Draw” outcome and it wins, assuming the odds don’t change.";
+    }
+  }
+
   return <Layout>
     <div style={{ marginTop: 50 }}>
       {(teams.yes === null || teams.no === null) ? <h1 style={{ maxWidth: 800 }}>{event}</h1> : <div style={{ margin: '30px 0', width: '100%' }}>
@@ -283,10 +266,11 @@ export const MarketPage = () => {
           </Col>
 
           <Col md={{ span: 8 }} xs={{ span: 8 }} style={{ textAlign: 'center' }}>
-            <b style={{ fontSize: 36 }}>VS</b>
+            <b className={styles.vs}>VS</b>
             <div>
-              {moment.unix(end_of_trading_period).format('ll')}
+              {moment.unix(end_of_trading_period).format('lll')}
             </div>
+            {league && league_emblem && <div><Tooltip title={league}><img className={styles.league} src={league_emblem} alt={league} /></Tooltip></div>}
           </Col>
 
           <Col md={{ span: 8 }} xs={{ span: 8 }} style={{ textAlign: 'center' }}>
@@ -323,40 +307,47 @@ export const MarketPage = () => {
         <Row gutter={30}>
           <Col lg={{ span: 8 }} md={{ span: 12 }} xs={{ span: 24 }} style={{ marginBottom: 30 }}>
             <StatsCard
-              title={`${haveTeamNames ? teams.yes.name : 'Yes'} ${priceOrCoef}`}
-              subValue={priceOrCoef === 'price' ? `$${yesPriceInUSD}` : (yesPriceInUSD && yes_coef ? `$${+Number(yesPriceInUSD * yes_coef).toFixed(2)}` : '-')} color={appConfig.YES_COLOR} onAction={tradeIsActive ? (action) => setVisibleTradeModal({ type: 'yes', action }) : undefined}
+              title={`${haveTeamNames ? teams.yes.name : 'Yes'}`}
+              tooltip={yesTooltip}
+              subValue={priceOrCoef === 'price' ? `$${yesPriceInUSD}` : ''} color={appConfig.YES_COLOR} onAction={tradeIsActive ? (action) => setVisibleTradeModal({ type: 'yes', action }) : undefined}
               value={priceOrCoef === 'price' ? <span>{yesPrice} <small>{reserve_symbol}</small></span> : (yes_coef ? <span>x{yes_coef}</span> : '-')} />
           </Col>
 
           <Col lg={{ span: 8 }} md={{ span: 12 }} xs={{ span: 24 }} style={{ marginBottom: 30 }}>
             <StatsCard
-              title={`${haveTeamNames ? teams.no.name : 'No'} ${priceOrCoef}`}
-              subValue={priceOrCoef === 'price' ? `$${noPriceInUSD}` : (noPriceInUSD && no_coef ? `$${+Number(noPriceInUSD * no_coef).toFixed(2)}` : '-')} color={appConfig.NO_COLOR} onAction={tradeIsActive ? (action) => setVisibleTradeModal({ type: 'no', action }) : undefined}
+              title={`${haveTeamNames ? teams.no.name : 'No'}`}
+              tooltip={noTooltip}
+              subValue={priceOrCoef === 'price' ? `$${noPriceInUSD}` : ''} color={appConfig.NO_COLOR} onAction={tradeIsActive ? (action) => setVisibleTradeModal({ type: 'no', action }) : undefined}
               value={priceOrCoef === 'price' ? <span>{noPrice} <small>{reserve_symbol}</small></span> : (no_coef ? <span>x{no_coef}</span> : '-')} />
           </Col>
 
           {allow_draw && <Col lg={{ span: 8 }} md={{ span: 12 }} xs={{ span: 24 }} style={{ marginBottom: 30 }}>
             <StatsCard
-              title={`Draw ${isSportMarket ? priceOrCoef : 'price'}`} s
-              subValue={priceOrCoef === 'price' ? `$${drawPriceInUSD}` : (drawPriceInUSD && draw_coef ? `$${+Number(drawPriceInUSD * draw_coef).toFixed(2)}` : '-')} color={appConfig.DRAW_COLOR} onAction={tradeIsActive ? (action) => setVisibleTradeModal({ type: 'draw', action }) : undefined} value={priceOrCoef === 'price' || !isSportMarket ? <span>{drawPrice} <small>{reserve_symbol}</small></span> : (draw_coef ? <span>x{draw_coef}</span> : '-')} />
+              title="Draw"
+              tooltip={drawTooltip}
+              subValue={priceOrCoef === 'price' ? `$${drawPriceInUSD}` : ''} color={appConfig.DRAW_COLOR} onAction={tradeIsActive ? (action) => setVisibleTradeModal({ type: 'draw', action }) : undefined}
+              value={priceOrCoef === 'price' ? <span>{drawPrice} <small>{reserve_symbol}</small></span> : (draw_coef ? <span>x{draw_coef}</span> : '-')} />
           </Col>}
 
           <Col lg={{ span: 8 }} md={{ span: 12 }} xs={{ span: 24 }} style={{ marginBottom: 30 }}>
             <StatsCard
               title="Reserve"
               subValue={viewReserveInUSD}
+              tooltip="Total amount invested in all outcomes"
               value={<span>{viewReserve} <small>{reserve_symbol}</small></span>} />
           </Col>
 
           {isCurrencyMarket && currencyCurrentValue && <Col lg={{ span: 8 }} md={{ span: 12 }} xs={{ span: 24 }} style={{ marginBottom: 30 }}>
             <StatsCard
               title="Current value"
+              tooltip={`The latest value of the data feed ${params.feed_name}`}
               value={+currencyCurrentValue.toFixed(9)} />
           </Col>}
 
           <Col lg={{ span: 8 }} md={{ span: 12 }} xs={{ span: 24 }} style={{ marginBottom: 30 }}>
             <StatsCard
-              title="time to expiration" showChart={false}
+              title="time to expiration"
+              tooltip="The period while you can make your bets, or exit them if you changed your mind"
               value={tradeTimerExpiry ? <Countdown
                 value={moment.unix(tradeTimerExpiry)}
                 format="DD [days] HH:mm:ss" /> : '-'}
@@ -378,17 +369,33 @@ export const MarketPage = () => {
 
       <div style={{ marginTop: 50 }}>
         <Row gutter={10} align="middle" justify="space-between">
-          <Col md={{ span: 12 }} xs={{ span: 24 }}>
+          <Col md={{ span: reserve !== 0 ? 12 : 24 }} xs={{ span: 24 }}>
             <h2 style={{ fontSize: 28 }}>Make money from liquidity provision</h2>
-            <Typography.Paragraph>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.</Typography.Paragraph>
+            <Typography.Paragraph>
+              {reserve !== 0 && <span>Every trade is charged a fee which is added to the market’s pool (see the fee accumulation chart above).</span>} Earn a share of these fees by buying all tokens in the same proportions they are already issued. One of the tokens will win, and you’ll get a share of the trading fees collected after you invested.
+            </Typography.Paragraph>
+            <Typography.Paragraph>
+              By buying all tokens without changing their proportions you are not betting on any outcome but taking a market-neutral position instead and adding liquidity to the market. This is safe if the current proportions reflect the true probabilities.
+            </Typography.Paragraph>
+            <Typography.Paragraph>
+              <b>Liquidity provision APY since the pool was started: {+apy}%</b>
+
+            </Typography.Paragraph>
             <AddLiquidityModal disabled={!tradeIsActive} yes_team={teams?.yes?.name} no_team={teams?.no?.name} />
           </Col>
 
-          <Col md={{ span: 8 }} xs={{ span: 24 }}>
-            {(supply_yes + supply_no + supply_draw) !== 0 && <div style={{ width: '100%' }}>
-              <Pie data={dataForPie} {...pieConfig} />
-            </div>}
-          </Col>
+          {reserve !== 0 && <Col md={{ span: 8 }} xs={{ span: 24 }}>
+            <div style={{ width: '100%' }}>
+              <MarketSizePie
+                teams={teams}
+                reserve_decimals={reserve_decimals}
+                stateVars={stateVars}
+                reserve_symbol={reserve_symbol}
+                allow_draw={allow_draw}
+                oracle={params.oracle}
+              />
+            </div>
+          </Col>}
         </Row>
       </div>
 

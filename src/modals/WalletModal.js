@@ -5,7 +5,7 @@ import obyte from "obyte";
 
 import { changeWalletAddress, selectWalletAddress } from "store/slices/settingsSlice";
 
-export const WalletModal = () => {
+export const WalletModal = ({ children = "WALLET", type = "default", styles = {} }) => {
   const [visible, setVisible] = useState(false);
   const [walletAddress, setWalletAddress] = useState({ value: "", valid: false });
 
@@ -26,7 +26,7 @@ export const WalletModal = () => {
   }, [currentWalletAddress, visible])
 
   const changeVisible = () => setVisible((v) => !v);
-  
+
   const handleWalletAddress = (ev) => {
     setWalletAddress({
       valid: obyte.utils.isValidAddress(ev.target.value),
@@ -47,8 +47,10 @@ export const WalletModal = () => {
     }
   }
 
+  const btnStyles = type === "link" ? { padding: 0, ...styles } : { ...styles };
+
   return <>
-    <Button onClick={changeVisible} size="large">{currentWalletAddress ? `${currentWalletAddress.slice(0, 7)}...` : "WALLET"}</Button>
+    <Button onClick={changeVisible} size="large" type={type} style={btnStyles}>{currentWalletAddress ? `${currentWalletAddress.slice(0, 7)}...` : children}</Button>
 
     <Modal
       visible={visible}

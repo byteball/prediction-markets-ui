@@ -12,6 +12,7 @@ import { selectActiveAddress, selectActiveMarketParams, selectActiveMarketStateV
 import { selectTokensByNetwork } from "store/slices/bridgesSlice";
 import { selectWalletAddress } from "store/slices/settingsSlice";
 import { generateLink, getExchangeResult, getMarketPriceByType } from "utils";
+import { WalletModal } from "modals";
 
 const f = (x) => (~(x + "").indexOf(".") ? (x + "").split(".")[1].length : 0);
 
@@ -47,6 +48,7 @@ export const AddLiquidityForm = ({ yes_team, no_team }) => {
     amountInPennies = Math.ceil((fromToken.network === "Obyte" ? reserveAmount.value : estimate) * 10 ** reserve_decimals);
     amountInPenniesWithoutFee = amountInPennies * (1 - params.issue_fee) - network_fee;
   }
+  console.log('estimate', estimate)
 
   const drawPercent = probabilities.yes.valid && probabilities.no.valid && ((Number(probabilities.no.value) + Number(probabilities.yes.value)) < 100) ? 100 - probabilities.no.value - probabilities.yes.value : 0;
   const percentSum = Number(probabilities.no.value || 0) + Number(probabilities.yes.value || 0) + (allow_draw ? drawPercent : 0);
@@ -83,27 +85,54 @@ export const AddLiquidityForm = ({ yes_team, no_team }) => {
       }))
     } else {
       if (f(value) <= 2) {
-        setProbabilities((p) => ({
-          ...p, [type]: {
-            value,
-            valid: isNumber(Number(value)) && Number(value) > 0 && Number(value) <= 100
+
+        if (allow_draw) {
+          setProbabilities((p) => ({
+            ...p, [type]: {
+              value,
+              valid: isNumber(Number(value)) && Number(value) >= 0 && Number(value) <= 100
+            }
+          }))
+        } else {
+          if (type === 'yes') {
+            setProbabilities((p) => ({
+              ...p, [type]: {
+                value,
+                valid: isNumber(Number(value)) && Number(value) >= 0 && Number(value) <= 100
+              },
+              'no': {
+                value: value < 100 ? 100 - value : 0,
+                valid: true
+              }
+            }))
+          } else if (type === 'no') {
+            setProbabilities((p) => ({
+              ...p, [type]: {
+                value,
+                valid: isNumber(Number(value)) && Number(value) >= 0 && Number(value) <= 100
+              },
+              'yes': {
+                value: value < 100 ? 100 - value : 0,
+                valid: true
+              }
+            }))
           }
-        }))
+        }
       }
     }
   }
 
   useEffect(() => {
-    setFromToken({ asset: reserve_asset, decimals: reserve_decimals, symbol: reserve_symbol, network: "Obyte" })
+    setFromToken({ asset: reserve_asset, decimals: reserve_decimals, symbol: reserve_symbol, network: "Obyte", foreign_asset: 'no' })
   }, [address, reserve_asset]);
 
   const handleChangeFromToken = (strValue) => {
-    const [network, asset, decimals, ...symbol] = strValue.split("__");
+    const [network, asset, decimals, foreign_asset, ...symbol] = strValue.split("__");
 
-    setFromToken({ asset, decimals: Number(decimals || 0), symbol: symbol.join("__"), network });
+    setFromToken({ asset, decimals: Number(decimals || 0), symbol: symbol.join("__"), network, foreign_asset });
 
     // if (amount.valid && amount.value) 
-    // TODO fix it
+    // TODO fix it decimals
     // setAmount((a) => ({ ...a, value: +Number(a.value).toFixed(decimals) }))
     // }
   }
@@ -171,10 +200,15 @@ export const AddLiquidityForm = ({ yes_team, no_team }) => {
     }
   }, [stateVars, supply_yes, supply_no, supply_draw, amountInPenniesWithoutFee, reserveAmount, meta, probabilities]);
 
-  const data = { yes_amount: yesAmount, no_amount: noAmount };
+  let data = { add_liquidity: 1 };
 
-  if (allow_draw) {
-    data.draw_amount = drawAmount;
+  if (isFirstIssue) {
+    data.yes_amount_ratio = probabilities.yes.value / 100;
+    data.no_amount_ratio = probabilities.no.value / 100;
+
+    // if (allow_draw) {
+    //   data.draw_amount_ratio = probabilities.draw.value / 100;
+    // }
   }
 
   const link = generateLink({
@@ -190,7 +224,7 @@ export const AddLiquidityForm = ({ yes_team, no_team }) => {
     if (value === "") {
       setReserveAmount({ value: undefined, valid: true });
     } else {
-      if (f(value) <= reserve_decimals) {
+      if (f(value) <= reserve_decimals && value <= 9e9) {
         setReserveAmount({ value, valid: !isNaN(Number(value)) && Number(value) > minAmount });
       }
     }
@@ -217,8 +251,8 @@ export const AddLiquidityForm = ({ yes_team, no_team }) => {
       autoHide: true,
       autoRotate: false
     },
-    appendPadding: 0,
-    radius: 1,
+    appendPadding: 10,
+    radius: 0.8,
     renderer: "svg",
     // theme: 'dark',
     color: (item) => {
@@ -250,20 +284,26 @@ export const AddLiquidityForm = ({ yes_team, no_team }) => {
 
 
   const buyViaEVM = async () => {
-    await transferEVM2Obyte({
-      amount: Number(reserveAmount.value),
-      src_network: fromToken.network,
-      src_asset: fromToken.asset,
-      dst_network: 'Obyte',
-      dst_asset: reserve_asset,
-      recipient_address: address,
-      data: { ...data, to: walletAddress },
-      assistant_reward_percent: 1,
-      testnet: appConfig.ENVIRONMENT === 'testnet',
-      obyteClient: client,
-      oswap_change_address: walletAddress
-    });
+    try {
+      await transferEVM2Obyte({
+        amount: Number(reserveAmount.value),
+        src_network: fromToken.network,
+        src_asset: fromToken.asset,
+        dst_network: 'Obyte',
+        dst_asset: reserve_asset,
+        recipient_address: address,
+        data: { ...data, to: walletAddress },
+        assistant_reward_percent: 1,
+        testnet: appConfig.ENVIRONMENT === 'testnet',
+        obyteClient: client,
+        oswap_change_address: walletAddress
+      });
+    } catch (e) {
+      console.error(e);
+    }
   }
+
+  const probabilitiesAreValid = !isFirstIssue || (probabilities.yes.value && (!allow_draw || probabilities.no.value));
 
   return <Form size="small" layout="vertical">
     <Row gutter={8}>
@@ -275,13 +315,13 @@ export const AddLiquidityForm = ({ yes_team, no_team }) => {
 
       <Col md={{ span: 16 }} xs={{ span: 24 }}>
         <Form.Item>
-          <Select size="large" showSearch value={`${fromToken.network}__${fromToken.asset}__${fromToken.decimals}__${fromToken.symbol}`} onChange={handleChangeFromToken}>
+          <Select size="large" showSearch value={`${fromToken.network}__${fromToken.asset}__${fromToken.decimals}__${fromToken.foreign_asset}__${fromToken.symbol}`} onChange={handleChangeFromToken}>
             <Select.OptGroup label="Obyte">
-              <Select.Option value={`Obyte__${reserve_asset}__${reserve_decimals}__${reserve_symbol}`}>{reserve_symbol}</Select.Option>
+              <Select.Option value={`Obyte__${reserve_asset}__${reserve_decimals}__no__${reserve_symbol}`}>{reserve_symbol}</Select.Option>
             </Select.OptGroup>
             {Object.entries(tokensByNetwork).map(([network, items]) => (
-              <Select.OptGroup label={network}>
-                {items.map((item) => <Select.Option value={`${network}__${item.home_asset}__${item.home_asset_decimals}__${item.home_symbol}`} key={`${item.home_network} ${item.home_asset} ${item.bridge_id}`}>
+              <Select.OptGroup label={network} key={`network-${network}`}>
+                {items.map((item) => <Select.Option value={`${network}__${item.home_asset}__${item.home_asset_decimals}__${item.foreign_asset}__${item.home_symbol}`} key={`${item.home_network} ${item.home_asset} ${item.bridge_id}`}>
                   {item.home_symbol}
                 </Select.Option>)}
               </Select.OptGroup>))}
@@ -294,19 +334,19 @@ export const AddLiquidityForm = ({ yes_team, no_team }) => {
       <p>Outcome probability</p>
       <Row gutter={8}>
         <Col md={{ span: allow_draw ? 8 : 12 }} xs={{ span: 24 }}>
-          <Form.Item label={haveTeamNames ? `${yes_team}` : 'YES'}>
+          <Form.Item label={<small>{haveTeamNames ? `${yes_team}` : 'YES'}</small>}>
             <Input size="large" value={probabilities.yes.value} placeholder="ex. 65" suffix='%' onChange={(ev) => handleChangeProbability(ev, 'yes')} />
           </Form.Item>
         </Col>
 
         <Col md={{ span: allow_draw ? 8 : 12 }} xs={{ span: 24 }}>
-          <Form.Item label={haveTeamNames ? `${no_team}` : 'NO'} >
+          <Form.Item label={<small>{haveTeamNames ? `${no_team}` : 'NO'}</small>}>
             <Input size="large" value={probabilities.no.value} placeholder={`ex. ${allow_draw ? 15 : 35}`} suffix='%' onChange={(ev) => handleChangeProbability(ev, 'no')} />
           </Form.Item>
         </Col>
 
         {allow_draw && <Col md={{ span: 8 }} xs={{ span: 24 }}>
-          <Form.Item label="DRAW">
+          <Form.Item label={<small>DRAW</small>}>
             <Input size="large" disabled={true} value={drawPercent} placeholder="ex. 20" suffix='%' />
           </Form.Item>
         </Col>}
@@ -316,6 +356,7 @@ export const AddLiquidityForm = ({ yes_team, no_team }) => {
 
     {meta && <Form.Item>
       {!isFirstIssue && <div style={{ marginBottom: 15 }}>
+        <b>Net added amounts: </b>
         <div style={{ color: appConfig.YES_COLOR }}>
           {haveTeamNames ? yes_team : 'YES'}: {Number(isFirstIssue ? amountInPenniesWithoutFee * probabilities.yes.value / 100 / 10 ** reserve_decimals : yesReserveAmount / 10 ** reserve_decimals).toFixed(reserve_decimals)} {reserve_symbol} {!isFirstIssue && <>({Number((yesReserveAmount / amountInPenniesWithoutFee) * 100).toFixed(2)}%)</>}
         </div>
@@ -335,7 +376,7 @@ export const AddLiquidityForm = ({ yes_team, no_team }) => {
         {meta?.fee !== 0 && <div><span className="metaLabel">Total fee</span>: {+Number((meta.fee + network_fee) / 10 ** reserve_decimals).toFixed(reserve_decimals)} {reserve_symbol}</div>}
         {(fromToken.network !== "Obyte" && estimate) ? <div style={{ marginTop: 20 }}>
           {counterstake_assistant_fee ? <div><span className="metaLabel"><a href="https://counterstake.org" target="_blank">Counterstake</a> fee</span>: {+Number(counterstake_assistant_fee).toFixed(fromToken.decimals)} {fromToken.symbol}</div> : null}
-          {(fromToken.network !== "Obyte" && estimate) ? <div><span className="metaLabel"><a href="https://oswap.io" target="_blank">Oswap</a> rate</span>: 1 {fromToken.symbol} ≈ {+Number(estimate / reserveAmount.value).toFixed(reserve_decimals)} {reserve_symbol}</div> : null}
+          {(fromToken.network !== "Obyte" && estimate && fromToken.foreign_asset !== reserve_asset) ? <div><span className="metaLabel"><a href="https://oswap.io" target="_blank">Oswap</a> rate</span>: 1 {fromToken.symbol} ≈ {+Number(estimate / (reserveAmount.value * 0.99)).toFixed(reserve_decimals)} {reserve_symbol}</div> : null}
         </div> : null}
       </div>
 
@@ -355,7 +396,7 @@ export const AddLiquidityForm = ({ yes_team, no_team }) => {
       <Alert
         type="error"
         message="You have not added your Obyte wallet to the site!"
-        description={<span>If you don't have it yet, please <a href="https://obyte.org/#download" target="_blank">install</a> it. It is to this wallet that the purchased assets will come.</span>}
+        description={<span>If you don't have it yet, please <a href="https://obyte.org/#download" target="_blank">install</a> and <WalletModal type="link" styles={{ fontSize: 16 }}>add</WalletModal> it. It is to this wallet that the purchased assets will come.</span>}
       />
     </Form.Item>}
 
@@ -368,12 +409,12 @@ export const AddLiquidityForm = ({ yes_team, no_team }) => {
 
     <Form.Item>
       {fromToken.network === "Obyte"
-        ? <QRButton size="large" type="primary" disabled={!valid} href={link}>Send{(reserveAmount.valid && reserveAmount.value) ? ` ${reserveAmount.value} ${reserve_symbol}` : ''}</QRButton>
-        : <Button size="large" type="primary" onClick={buyViaEVM} disabled={!metamaskInstalled || !walletAddress || !reserveAmount.valid || !Number(reserveAmount.value) || estimateError}>Send{(reserveAmount.valid && reserveAmount.value) ? ` ${reserveAmount.value}` : ''} {fromToken.symbol}</Button>}
+        ? <QRButton size="large" type="primary" disabled={!valid || !probabilitiesAreValid} href={link}>Send{(reserveAmount.valid && reserveAmount.value) ? ` ${reserveAmount.value} ${reserve_symbol}` : ''}</QRButton>
+        : <Button size="large" type="primary" onClick={buyViaEVM} disabled={!metamaskInstalled || !walletAddress || !reserveAmount.valid || !Number(reserveAmount.value) || estimateError || !probabilitiesAreValid}>Send{(reserveAmount.valid && reserveAmount.value) ? ` ${reserveAmount.value}` : ''} {fromToken.symbol}</Button>}
     </Form.Item>
 
     {isFirstIssue && valid && <div style={{ display: 'flex', justifyContent: 'center' }}>
-      <div style={{ width: 280, height: 280 }}>
+      <div style={{ width: '90%' }}>
         <Pie data={dataForPie} {...pieConfig} />
       </div>
     </div>}

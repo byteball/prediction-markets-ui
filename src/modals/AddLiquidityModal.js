@@ -9,7 +9,7 @@ import { AddLiquidityForm } from "forms";
 const { Title } = Typography;
 
 export const AddLiquidityModal = ({ disabled, yes_team, no_team }) => {
-  const [visible, setVisible] = useState(true);
+  const [visible, setVisible] = useState(false);
 
   const status = useSelector(selectActiveMarketStatus);
   const [width] = useWindowSize();

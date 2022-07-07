@@ -12,16 +12,6 @@
   margin-bottom: 5px;
 }
 
-.league {
-  position: absolute;
-  width: 30px;
-  right: 15px;
-  top: 15px;
-  background-color: #fff;
-  cursor: normal;
-  cursor: initial;
-}
-
 .eventDesc {
   margin-bottom: 5px;
   font-weight: 500;
@@ -44,19 +34,46 @@
   margin-bottom: 10px;
 }
 
-.teamWrap{
+.teamWrap {
   padding-top: 10px;
   line-height: 1;
 }
 
+.crests {
+  width: 50%;
+  max-width: 180px;
+}
+
+.createNowWrap {
+  text-align: right;
+}
+
+
 /* Small devices (landscape phones, 576px and up) */
-@media (min-width: 576px) {}
+@media (max-width: 576px) {
+  .draw {
+    margin-top: 20px;
+    margin-bottom: 20px;
+  }
+
+  .crests {
+    width: 40%;
+    max-width: 120px;
+  }
+
+  .itemWrap :global(.ant-card-body) {
+    padding: 12px;
+  }
+}
+
+
 
 /* Medium devices (tablets, 768px and up) */
 @media (min-width: 768px) {
   .infoValueInDollar {
     margin-bottom: 0;
   }
+  
 }
 
 /* Large devices (desktops, 992px and up) */
@@ -64,3 +81,17 @@
 
 /* Extra large devices (large desktops, 1200px and up) */
 @media (min-width: 1200px) {}
+
+@media (max-width: 400px) {
+  .crests {
+    width: 30%;
+    max-width: 100px;
+  }
+}
+
+@media (max-width: 767px) {
+  .createNowWrap {
+    text-align: center;
+    margin-top: 20px;
+  }
+}

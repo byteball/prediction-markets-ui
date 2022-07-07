@@ -55,7 +55,7 @@ export const BuyForm = ({ type, yes_team, no_team, amount, setAmount }) => {
   const minAmount = reserve_asset === 'base' ? network_fee / 1e9 : 1 / 10 ** reserve_decimals
 
   useEffect(() => {
-    setFromToken({ asset: reserve_asset, decimals: reserve_decimals, symbol: reserve_symbol, network: "Obyte" })
+    setFromToken({ asset: reserve_asset, decimals: reserve_decimals, symbol: reserve_symbol, foreign_asset: 'no', network: "Obyte" })
   }, [address, reserve_asset]);
 
   useEffect(() => {
@@ -80,7 +80,7 @@ export const BuyForm = ({ type, yes_team, no_team, amount, setAmount }) => {
     if (value === "") {
       setAmount({ value: undefined, valid: true });
     } else {
-      if (f(value) <= fromToken.decimals) {
+      if (f(value) <= fromToken.decimals && value <= 9e9) {
         setAmount({ value, valid: !isNaN(Number(value)) && Number(value) > minAmount });
       }
     }
@@ -91,9 +91,11 @@ export const BuyForm = ({ type, yes_team, no_team, amount, setAmount }) => {
       const reserveAmount = amount.value * 10 ** reserve_decimals;
 
       const tokenAmount = get_token_amount(stateVars, params, currentToken?.type, fromToken.network === "Obyte" ? reserveAmount : Math.ceil((estimate * 10 ** reserve_decimals) || 0))
+      
+      console.log('tokenAmount', tokenAmount)
 
       const result = getExchangeResult(stateVars, params, currentToken.type === 'yes' ? tokenAmount : 0, currentToken.type === 'no' ? tokenAmount : 0, currentToken.type === 'draw' ? tokenAmount : 0);
-
+      console.log('result', reserveAmount - result?.reserve_needed - result?.fee - 1e4)
       setGetAmount({ value: tokenAmount, valid: true })
       setMeta(result);
     } else {
@@ -111,11 +113,16 @@ export const BuyForm = ({ type, yes_team, no_team, amount, setAmount }) => {
 
   const percentageDifference = new_price !== 0 && old_price !== 0 ? 100 * (new_price - old_price) / old_price : 0;
   const percentageArbProfitTax = Number(100 * (meta?.arb_profit_tax / (amount.value * 10 ** reserve_decimals)));
+  const totalFee = meta?.arb_profit_tax + network_fee + meta?.issue_fee;
+  const percentageTotalFee = Number(100 * (totalFee / (amount.value * 10 ** reserve_decimals)));
+  const change = amount.value * 10 ** reserve_decimals - meta?.reserve_needed - meta?.fee - network_fee;
+
+  console.log("meta?.reserve_needed", meta?.reserve_needed)
 
   const handleChangeFromToken = (strValue) => {
-    const [network, asset, decimals, ...symbol] = strValue.split("__");
+    const [network, asset, decimals, foreign_asset, ...symbol] = strValue.split("__");
 
-    setFromToken({ asset, decimals: Number(decimals || 0), symbol: symbol.join("__"), network });
+    setFromToken({ asset, decimals: Number(decimals || 0), symbol: symbol.join("__"), network, foreign_asset });
 
     if (amount.valid && amount.value) {
       setAmount((a) => ({ ...a, value: +Number(a.value).toFixed(decimals) }))
@@ -147,15 +154,13 @@ export const BuyForm = ({ type, yes_team, no_team, amount, setAmount }) => {
       } catch (e) {
         setEstimate(0);
         setEstimateError(e.message)
-        console.log('estimateOutput error',)
+        console.log('estimateOutput error')
       }
 
     } else if (estimate) {
       setEstimate(0);
     }
   }, [fromToken, amount])
-
-  console.log('est', estimate);
 
   const buyViaEVM = async () => {
     await transferEVM2Obyte({
@@ -180,7 +185,7 @@ export const BuyForm = ({ type, yes_team, no_team, amount, setAmount }) => {
   const metamaskInstalled = window.ethereum;
 
   const counterstake_assistant_fee = fromToken.network !== "Obyte" ? amount.value * 0.01 : 0;
-
+  
   return <Form size="small" layout="vertical">
     <Row gutter={8}>
       <Col md={{ span: 8 }} xs={{ span: 24 }}>
@@ -190,13 +195,13 @@ export const BuyForm = ({ type, yes_team, no_team, amount, setAmount }) => {
       </Col>
       <Col md={{ span: 16 }} xs={{ span: 24 }}>
         <Form.Item>
-          <Select size="large" showSearch value={`${fromToken.network}__${fromToken.asset}__${fromToken.decimals}__${fromToken.symbol}`} onChange={handleChangeFromToken}>
+          <Select size="large" showSearch value={`${fromToken.network}__${fromToken.asset}__${fromToken.decimals}__${fromToken.foreign_asset}__${fromToken.symbol}`} onChange={handleChangeFromToken}>
             <Select.OptGroup label="Obyte">
-              <Select.Option value={`Obyte__${reserve_asset}__${reserve_decimals}__${reserve_symbol}`}>{reserve_symbol}</Select.Option>
+              <Select.Option value={`Obyte__${reserve_asset}__${reserve_decimals}__no__${reserve_symbol}`}>{reserve_symbol}</Select.Option>
             </Select.OptGroup>
             {Object.entries(tokensByNetwork).map(([network, items]) => (
               <Select.OptGroup label={network}>
-                {items.map((item) => <Select.Option value={`${network}__${item.home_asset}__${item.home_asset_decimals}__${item.home_symbol}`} key={`${item.home_network} ${item.home_asset} ${item.bridge_id}`}>
+                {items.map((item) => <Select.Option value={`${network}__${item.home_asset}__${item.home_asset_decimals}__${item.foreign_asset}__${item.home_symbol}`} key={`${item.home_network} ${item.home_asset} ${item.bridge_id}`}>
                   {item.home_symbol}
                 </Select.Option>)}
               </Select.OptGroup>))}
@@ -204,16 +209,15 @@ export const BuyForm = ({ type, yes_team, no_team, amount, setAmount }) => {
         </Form.Item>
       </Col>
     </Row>
-
     <Row gutter={8}>
       {!type ? <>
         <Col md={{ span: 8 }} xs={{ span: 24 }}>
           <Form.Item>
-            <span className="ant-form-text" style={{ display: 'flex', alignItems: 'center', height: 40, verticalAlign: 'middle', fontSize: 18 }}>{fromToken.network !== "Obyte" ? '≈' : ''}{getAmount.value / 10 ** currentToken?.decimals}</span>
+            <span className="ant-form-text" style={{ display: 'flex', alignItems: 'center', height: 40, verticalAlign: 'middle', fontSize: 18, justifyContent: 'space-between', flexWrap: 'wrap' }}><span>You get:</span> {fromToken.network !== "Obyte" ? '≈' : ''}{+Number(getAmount.value / 10 ** currentToken?.decimals).toPrecision(currentToken?.decimals)}</span>
           </Form.Item>
         </Col>
         <Col md={{ span: 16 }} xs={{ span: 24 }}>
-          <Form.Item style={{ margin: 0 }}>
+          <Form.Item>
             <Select size="large" placeholder="Select a get token" value={currentToken?.asset} onChange={(toAsset) => setCurrentToken(tokens.find(({ asset }) => asset === toAsset))}>
               {tokens?.map(({ asset, symbol, type }) => (<Select.Option key={`to_${asset}`} value={asset}>
                 {(yes_team && no_team) ? <>{(type === 'draw' ? 'Draw' : (type === 'yes' ? yes_team : no_team))} ({symbol})</> : <>{symbol} {(type && type !== 'reserve') ? '(' + type.toUpperCase() + '-token)' : ''}</>}
@@ -226,17 +230,16 @@ export const BuyForm = ({ type, yes_team, no_team, amount, setAmount }) => {
       </div> : '')}
     </Row>
 
-    {meta && <Form.Item label="" tooltip="text">
-      <div className="metaWrap">
-        {percentageDifference !== 0 && <div><span className="metaLabel">New price</span>: <span style={{ color: getColorByValue(percentageDifference) }}>{+Number(new_price).toPrecision(8)} {reserve_symbol} (<span>{percentageDifference > 0 ? "+" : ''}{Number(percentageDifference).toFixed(2)}%)</span></span></div>}
-        {meta?.arb_profit_tax !== 0 && <div><span className="metaLabel">Arb profit tax</span>:  <span style={{ color: getColorByValue(percentageArbProfitTax) }}>{Number(percentageArbProfitTax).toFixed(2)}% {percentageArbProfitTax > 5 && <FormLabel info="The more you change the price, the more commissions you pay." />}</span></div>}
-        {meta?.issue_fee !== 0 && <div><span className="metaLabel">Issue fee</span>: {+Number(meta.issue_fee / 10 ** reserve_decimals).toFixed(reserve_decimals)} {reserve_symbol}</div>}
-        {meta?.fee !== 0 && <div><span className="metaLabel">Total AA fee</span>: {+Number((meta.fee + network_fee) / 10 ** reserve_decimals).toFixed(reserve_decimals)} {reserve_symbol}</div>}
-        {(fromToken.network !== "Obyte" && estimate) ? <div style={{ marginTop: 20 }}>
-          {counterstake_assistant_fee ? <div><span className="metaLabel"><a href="https://counterstake.org" target="_blank">Counterstake</a> fee</span>: {+Number(counterstake_assistant_fee).toFixed(fromToken.decimals)} {fromToken.symbol}</div> : null}
-          {(fromToken.network !== "Obyte" && estimate) ? <div><span className="metaLabel"><a href="https://oswap.io" target="_blank">Oswap</a> rate</span>: 1 {fromToken.symbol} ≈ {+Number(estimate / amount.value).toFixed(reserve_decimals)} {reserve_symbol}</div> : null}
-        </div> : null}
-      </div>
+    {meta && <Form.Item className="metaWrap">
+      {percentageDifference !== 0 && <div><span className="metaLabel">New price</span>: <span style={{ color: getColorByValue(percentageDifference) }}>{+Number(new_price).toPrecision(8)} {reserve_symbol} (<span>{percentageDifference > 0 ? "+" : ''}{Number(percentageDifference).toFixed(2)}%)</span></span></div>}
+      {meta?.arb_profit_tax !== 0 && <div><span className="metaLabel">Arb profit tax</span>:  <span style={{ color: getColorByValue(percentageArbProfitTax) }}>{+Number(meta.arb_profit_tax / 10 ** reserve_decimals).toFixed(reserve_decimals)} {reserve_symbol} ({Number(percentageArbProfitTax).toFixed(2)}%) {percentageArbProfitTax > 5 && <FormLabel info="The more you change the price, the more commissions you pay." />}</span></div>}
+      {meta?.issue_fee !== 0 && <div><span className="metaLabel">Issue fee</span>: {+Number((meta.issue_fee) / 10 ** reserve_decimals).toFixed(reserve_decimals)} {reserve_symbol} ({params.issue_fee * 100}%)</div>}
+      {meta?.fee !== 0 && <div><span className="metaLabel">Total fee</span>: {+Number((totalFee) / 10 ** reserve_decimals).toFixed(reserve_decimals)} {reserve_symbol} ({percentageTotalFee.toFixed(2)}%)</div>}
+      {change !== 0 && <div><span className="metaLabel">Change</span>: {+Number(change / 10 ** reserve_decimals).toFixed(reserve_decimals)} {reserve_symbol}</div>}
+      {(fromToken.network !== "Obyte" && estimate) ? <div style={{ marginTop: 20 }}>
+        {counterstake_assistant_fee ? <div><span className="metaLabel"><a href="https://counterstake.org" target="_blank">Counterstake</a> fee</span>: {+Number(counterstake_assistant_fee).toFixed(fromToken.decimals)} {fromToken.symbol}</div> : null}
+        {(fromToken.network !== "Obyte" && estimate && fromToken.foreign_asset !== reserve_asset) ? <div><span className="metaLabel"><a href="https://oswap.io" target="_blank">Oswap</a> rate</span>: 1 {fromToken.symbol} ≈ {+Number(estimate / amount.value).toFixed(reserve_decimals)} {reserve_symbol}</div> : null}
+      </div> : <div />}
     </Form.Item>}
 
     {!metamaskInstalled && fromToken.network !== "Obyte" && <Form.Item>

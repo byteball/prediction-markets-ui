@@ -7,7 +7,7 @@ import { useSelector } from "react-redux";
 
 import { selectActiveAddress, selectActiveMarketParams, selectActiveMarketStateVars } from "store/slices/activeSlice";
 import { selectWalletAddress } from "store/slices/settingsSlice";
-import { generateLink, getExchangeResult } from "utils";
+import { generateLink, getExchangeResult, truncate } from "utils";
 
 const f = (x) => (~(x + "").indexOf(".") ? (x + "").split(".")[1].length : 0);
 
@@ -51,7 +51,7 @@ export const RedeemForm = memo(({ type, yes_team, no_team, amount, setAmount }) 
     if (allow_draw) {
       tokens.push({ symbol: draw_symbol, asset: draw_asset, decimals: draw_decimals, type: 'draw' });
     }
-    
+
     setTokens(tokens);
 
     const tokenIndex = type ? tokens.findIndex((item) => item.type === type) : 0;
@@ -64,7 +64,7 @@ export const RedeemForm = memo(({ type, yes_team, no_team, amount, setAmount }) 
     if (value === "") {
       setAmount({ value: undefined, valid: true });
     } else {
-      if (f(value) <= currentToken.decimals) {
+      if (f(value) <= currentToken.decimals && value <= 9e9) {
         setAmount({ value, valid: !isNaN(Number(value)) && Number(value) > 0 });
       }
     }
@@ -98,13 +98,16 @@ export const RedeemForm = memo(({ type, yes_team, no_team, amount, setAmount }) 
   const percentageDifference = new_price !== 0 && old_price !== 0 ? 100 * (new_price - old_price) / old_price : 0;
   const percentageArbProfitTax = Number(100 * (meta?.arb_profit_tax / (amount.value * 10 ** reserve_decimals)));
 
+  const totalFee = meta?.fee //+ meta?.arb_profit_tax; //TODO: add network_fee
+  const percentageTotalFee = Number(100 * (totalFee / (amount.value * 10 ** reserve_decimals)));
+
   if (!currentToken) return <Spin size="large" />
 
   return <Form size="large">
     <Row gutter={8}>
       <Col md={{ span: type ? 24 : 6 }} xs={{ span: 24 }}>
         <Form.Item>
-          <Input placeholder="Amount" suffix={type ? (yes_team && no_team) ? `${(currentToken?.type === 'draw' ? 'Draw' : (currentToken?.type === 'yes' ? yes_team : no_team))} (${currentToken?.symbol})` : `${currentToken?.symbol} ${(currentToken?.type && currentToken?.type !== 'reserve') ? '(' + currentToken?.type.toUpperCase() + '-token)' : ''}` : ""}  value={amount.value} onChange={handleChangeAmount} onKeyDown={(ev) => ev.key === 'Enter' ? btnRef.current.click() : null} />
+          <Input placeholder="Amount" suffix={<span style={{ maxWidth: '100%', overflow: 'hidden' }}>{truncate(type ? (yes_team && no_team) ? `${(currentToken?.type === 'draw' ? 'Draw' : (currentToken?.type === 'yes' ? yes_team : no_team))} (${currentToken?.symbol})` : `${currentToken?.symbol} ${(currentToken?.type && currentToken?.type !== 'reserve') ? '(' + currentToken?.type.toUpperCase() + '-token)' : ''}` : "", { length: 18 })}</span>} value={amount.value} onChange={handleChangeAmount} onKeyDown={(ev) => ev.key === 'Enter' ? btnRef.current.click() : null} />
         </Form.Item>
       </Col>
 
@@ -118,14 +121,14 @@ export const RedeemForm = memo(({ type, yes_team, no_team, amount, setAmount }) 
         </Form.Item>
       </Col> : null}
     </Row>
+    
     {meta && <Form.Item>
       {payoutAmount.value > 0 && <div style={{ fontSize: 18, paddingBottom: 10 }}>You get {+Number((payoutAmount.value) / 10 ** reserve_decimals).toFixed(reserve_decimals)} {reserve_symbol}</div>}
       <div className="metaWrap">
         {percentageDifference !== 0 && <div><span className="metaLabel">New price</span>: <span style={{ color: getColorByValue(percentageDifference) }}>{+Number(new_price).toPrecision(8)} {reserve_symbol} (<span>{percentageDifference > 0 ? "+" : ''}{Number(percentageDifference).toFixed(2)}%)</span></span></div>}
-        {meta?.arb_profit_tax !== 0 && <div><span className="metaLabel">Arb profit tax</span>: <span style={{ color: getColorByValue(percentageArbProfitTax) }}>{Number(percentageArbProfitTax).toFixed(2)}% {percentageArbProfitTax > 5 && <FormLabel info="The more you change the price, the more commissions you pay." />}</span></div>}
-        {meta?.issue_fee !== 0 && <div><span className="metaLabel">Issue fee</span>: {+Number(meta.issue_fee / 10 ** reserve_decimals).toFixed(reserve_decimals)} {reserve_symbol}</div>}
-        {meta?.redeem_fee !== 0 && <div><span className="metaLabel">Redeem fee</span>: {+Number(meta.redeem_fee / 10 ** reserve_decimals).toFixed(reserve_decimals)} {reserve_symbol}</div>}
-        {meta?.fee !== 0 && <div><span className="metaLabel">Total fee</span>: {+Number((meta.fee + network_fee) / 10 ** reserve_decimals).toFixed(reserve_decimals)} {reserve_symbol}</div>}
+        {meta?.arb_profit_tax !== 0 && <div><span className="metaLabel">Arb profit tax</span>: <span style={{ color: getColorByValue(percentageArbProfitTax) }}>{+Number(meta.arb_profit_tax / 10 ** reserve_decimals).toFixed(reserve_decimals)} {reserve_symbol} ({Number(percentageArbProfitTax).toFixed(2)}%) {percentageArbProfitTax > 5 && <FormLabel info="The more you change the price, the more commissions you pay." />}</span></div>}
+        {meta?.redeem_fee !== 0 && <div><span className="metaLabel">Redeem fee</span>: {+Number(meta.redeem_fee / 10 ** reserve_decimals).toFixed(reserve_decimals)} {reserve_symbol} ({params.redeem_fee * 100}%)</div>}
+        {meta?.fee !== 0 && <div><span className="metaLabel">Total fee</span>: {+Number((totalFee) / 10 ** reserve_decimals).toFixed(reserve_decimals)} {reserve_symbol} ({+percentageTotalFee.toFixed(2)}%)</div>}
       </div>
     </Form.Item>}
 
@@ -137,7 +140,7 @@ export const RedeemForm = memo(({ type, yes_team, no_team, amount, setAmount }) 
     </Form.Item> : null}
 
     <Form.Item>
-      <QRButton ref={btnRef} href={link} disabled={!amount.valid || !Number(amount.value) || payoutAmount.value <= 0} type="primary">Send {amount.valid && Number(amount.value) ? Number(amount.value) : ''} {currentToken.symbol}</QRButton>
+      <QRButton ref={btnRef} href={link} disabled={!amount.valid || !Number(amount.value) || payoutAmount.value <= 0} type="primary">Send {amount.valid && Number(amount.value) ? Number(amount.value) : ''} {truncate(currentToken.symbol, { length: 14 })}</QRButton>
     </Form.Item>
   </Form>
 })

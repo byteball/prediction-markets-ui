@@ -8,6 +8,8 @@ export const marketsSlice = createSlice({
     allMarketsCount: 0,
     currencyMarkets: [],
     currencyMarketsCount: 0,
+    miscMarkets: [],
+    miscMarketsCount: 0,
     championships: [],
     status: 'nothing'
   },
@@ -19,13 +21,15 @@ export const marketsSlice = createSlice({
       state.status = 'loading';
     },
     [loadMarkets.fulfilled]: (state, action) => {
-      const { markets, currencyMarkets, championships, marketsCount, currencyMarketsCount } = action.payload;
+      const { markets, currencyMarkets, championships, marketsCount, currencyMarketsCount, miscMarkets, miscMarketsCount } = action.payload;
 
       state.allMarkets = markets;
       state.allMarketsCount = marketsCount;
       state.currencyMarkets = currencyMarkets;
       state.currencyMarketsCount = currencyMarketsCount;
       state.championships = championships;
+      state.miscMarkets = miscMarkets;
+      state.miscMarketsCount = miscMarketsCount;
       state.status = 'loaded';
     },
     [loadMarkets.rejected]: (state, action) => {
@@ -46,8 +50,11 @@ export default marketsSlice.reducer;
 
 export const selectAllMarkets = state => state.markets.allMarkets;
 export const selectCurrencyMarkets = state => state.markets.currencyMarkets;
-export const selectChampionships = state => state.markets.championships;
-export const selectAllMarketsCount = state => state.markets.allMarketsCount;
 export const selectCurrencyMarketsCount = state => state.markets.currencyMarketsCount;
 
-// export const selectMarketsStatus = state => state.markets.status;
+export const selectMiscMarkets = state => state.markets.miscMarkets;
+export const selectMiscMarketsCount = state => state.markets.miscMarketsCount;
+
+export const selectChampionships = state => state.markets.championships;
+export const selectAllMarketsCount = state => state.markets.allMarketsCount;
+export const selectAllMarketsStatus = state => state.markets.status;

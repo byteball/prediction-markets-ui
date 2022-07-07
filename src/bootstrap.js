@@ -5,7 +5,6 @@ import client from "services/obyte";
 
 import { addRecentEvent, updateStateForActualMarket, updateSymbolForActualMarket } from "store/slices/activeSlice";
 import { updateCreationOrder } from "store/slices/settingsSlice";
-import { loadCategories } from "store/thunks/loadCategories";
 import { loadMarkets } from "store/thunks/loadMarkets";
 import { loadReserveAssets } from "store/thunks/loadReserveAssets";
 import { setActiveMarket } from "store/thunks/setActiveMarket";
@@ -23,10 +22,10 @@ export const bootstrap = async () => {
   console.log("connect");
   // load data from backend
   store.dispatch(loadMarkets());
-  store.dispatch(loadCategories());
   store.dispatch(loadReserveAssets());
   store.dispatch(checkCreationOrder());
   store.dispatch(loadEVMTokens());
+
   const state = store.getState();
 
   if (state.active.address) { // reload data for active market
@@ -138,7 +137,7 @@ export const bootstrap = async () => {
       const { messages, unit } = body.unit;
       const payload = getAAPayload(messages);
 
-      if (order.status === 'order' && payload.event && orderData.event === payload.event && (String(orderData.end_of_trading_period) === String(payload.end_of_trading_period)) && orderData.oracle === payload.oracle) {
+      if (order.status === 'order' && (String(orderData.end_of_trading_period) === String(payload.end_of_trading_period)) && orderData.oracle === payload.oracle && orderData.feed_name === payload.feed_name) {
         // actual order
         store.dispatch(updateCreationOrder({
           status: 'pending',
@@ -183,7 +182,7 @@ export const bootstrap = async () => {
     const { subject, body } = result[1];
     const { aa_address, updatedStateVars } = body;
 
-    if (subject === "light/aa_response" && aa_address === state.active.address) {
+    if (subject === "light/aa_response") {
       let diff = {};
       if (updatedStateVars) {
         for (let var_name in updatedStateVars[aa_address]) {
@@ -198,7 +197,6 @@ export const bootstrap = async () => {
       const recentEventObject = responseToEvent(body, state.active.params, state.active.stateVars);
 
       store.dispatch(addRecentEvent(recentEventObject));
-
     }
   }
 
