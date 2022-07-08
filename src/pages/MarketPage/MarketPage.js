@@ -222,7 +222,7 @@ export const MarketPage = () => {
   const haveTeamNames = isSportMarket && teams?.yes?.name && teams?.no?.name;
 
   const elapsed_seconds = moment.utc().unix() - created_at;
-  const apy = Number(((coef * (1 - params.issue_fee)) ** (31536000 / elapsed_seconds) - 1) * 100).toFixed(2);
+  const apy = coef !== 1 ? Number(((coef * (1 - params.issue_fee)) ** (31536000 / elapsed_seconds) - 1) * 100).toFixed(2) : 0;
 
   let yesTooltip = '';
   let noTooltip = '';

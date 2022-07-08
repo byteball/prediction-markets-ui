@@ -6,7 +6,7 @@ import { useEffect } from "react";
 import { Layout } from "components/Layout/Layout"
 import { CreateForm } from "forms";
 import { removeCreationOrder, selectCreationOrder } from "store/slices/settingsSlice";
-import { CreatePredictionMarket } from "./CreatePredictionMarket";
+import { WaitingPredictionMarket } from "./WaitingPredictionMarket";
 import { RegisterSymbols } from "./RegSymbol";
 
 export const CreatePage = () => {
@@ -22,8 +22,8 @@ export const CreatePage = () => {
   return <Layout>
     <Typography.Title level={1}>Create new market</Typography.Title>
 
-    {!creationOrder ? <CreateForm /> : <div>
-      {(creationOrder.status === 'order' || creationOrder.status === 'pending') && <CreatePredictionMarket data={creationOrder.data} status={creationOrder.status} />}
+    {(!creationOrder || creationOrder.status === 'order') ? <CreateForm /> : <div>
+      {(creationOrder.status === 'pending') && <WaitingPredictionMarket />}
       {creationOrder.status === 'created' && !symbolsAlreadyReg && <RegisterSymbols />}
       {creationOrder.status === 'created' && symbolsAlreadyReg && <Result status="success" title="Prediction market created successfully" extra={
         <Link to={`/market/${creationOrder.prediction_address}`}>

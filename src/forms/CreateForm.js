@@ -9,6 +9,7 @@ import { FormLabel } from "components/FormLabel/FormLabel";
 import { saveCreationOrder, selectReserveAssets } from "store/slices/settingsSlice";
 import appConfig from "appConfig";
 import { PredictionItem } from "components/PredictionList/PredictionItem";
+import { generateLink } from "utils";
 
 export const paramList = {
   allow_draw: {
@@ -155,27 +156,27 @@ export const CreateForm = () => {
 
   const isValidForm = oracle.valid && feedName.valid && datafeedValue.valid && endOfTradingPeriod.valid && waitingPeriodLength.valid && issueFee.valid && redeemFee.valid && (allowDraw.value ? datafeedDrawValue.valid : 1) && arbProfitFee.valid;
 
+  const data = {
+    oracle: oracle.value,
+    feed_name: feedName.value,
+    reserve_asset: reserveAsset.value,
+    comparison: comparison.value,
+    datafeed_value: datafeedValue.value,
+    end_of_trading_period: moment.utc(endOfTradingPeriod.value).unix(),
+    waiting_period_length: waitingPeriodLength.value * 24 * 3600,
+    issue_fee: issueFee.value / 100,
+    redeem_fee: redeemFee.value / 100,
+    arb_profit_tax: arbProfitFee.value / 100,
+    reserve_decimals: reserveAssets[reserveAsset.value].decimals
+  }
+
+  if (allowDraw.value) {
+    data.allow_draw = 1;
+    data.datafeed_draw_value = datafeedDrawValue.value;
+  }
+
   const save = () => {
     if (!isValidForm) return null;
-
-    const data = {
-      oracle: oracle.value,
-      feed_name: feedName.value,
-      reserve_asset: reserveAsset.value,
-      comparison: comparison.value,
-      datafeed_value: datafeedValue.value,
-      end_of_trading_period: moment.utc(endOfTradingPeriod.value).unix(),
-      waiting_period_length: waitingPeriodLength.value * 24 * 3600,
-      issue_fee: issueFee.value / 100,
-      redeem_fee: redeemFee.value / 100,
-      arb_profit_tax: arbProfitFee.value / 100,
-      reserve_decimals: reserveAssets[reserveAsset.value].decimals
-    }
-
-    if (allowDraw.value) {
-      data.allow_draw = 1;
-      data.datafeed_draw_value = datafeedDrawValue.value;
-    }
 
     dispatch(saveCreationOrder(data));
   }
@@ -189,8 +190,8 @@ export const CreateForm = () => {
       setOracle({ value: '', valid: false })
     } else if (value === 'currency') {
       setFeedName({ value: '', valid: false });
-    } 
-    
+    }
+
     if (value !== 'misc' && !isEmpty(infoByCurrentCategory.oracles)) {
       const value = infoByCurrentCategory.oracles[0].address;
       setOracle({ value, valid: true })
@@ -200,6 +201,8 @@ export const CreateForm = () => {
   }
 
   const feedNames = infoByCurrentCategory?.oracles?.find(({ address }) => address === oracle.value)?.feedNames;
+
+  const link = generateLink({ amount: 2e4, data, aa: appConfig.FACTORY_AA });
 
   return <Form layout="vertical">
     <Row gutter={16}>
@@ -286,7 +289,7 @@ export const CreateForm = () => {
       <Row gutter={16}>
         <Col xs={{ span: 24 }} md={{ span: 12 }}>
           <Form.Item help={endOfTradingPeriod.value !== '' && !endOfTradingPeriod.valid ? paramList.end_of_trading_period.errorMessage : ''} validateStatus={endOfTradingPeriod.value !== '' ? (endOfTradingPeriod.valid ? 'success' : 'error') : undefined} label={<FormLabel info={paramList.end_of_trading_period.description}>Date of the event (UTC)</FormLabel>}>
-            <DatePicker allowClear={false} showTime={{defaultValue: moment('00:00:00', 'HH:mm:ss')}} disabledDate={dateFilter} size="large" format="YYYY-MM-DD HH:mm" showToday={false} showNow={false} value={endOfTradingPeriod.value} onChange={(ev) => handleChangeValue(ev, 'end_of_trading_period')} style={{ width: '100%' }} placeholder={paramList.end_of_trading_period.placeholder} />
+            <DatePicker allowClear={false} showTime={{ defaultValue: moment('00:00:00', 'HH:mm:ss') }} disabledDate={dateFilter} size="large" format="YYYY-MM-DD HH:mm" showToday={false} showNow={false} value={endOfTradingPeriod.value} onChange={(ev) => handleChangeValue(ev, 'end_of_trading_period')} style={{ width: '100%' }} placeholder={paramList.end_of_trading_period.placeholder} />
           </Form.Item>
         </Col>
         <Col xs={{ span: 24 }} md={{ span: 12 }}>
@@ -344,7 +347,7 @@ export const CreateForm = () => {
 
     <Row>
       <Form.Item>
-        <Button disabled={!isValidForm || category.value === 'sport'} size="large" onClick={save} type="primary">Continue</Button>
+        <Button disabled={!isValidForm || category.value === 'sport'} size="large" onClick={save} href={link} type="primary">Create</Button>
       </Form.Item>
     </Row>
   </Form>
