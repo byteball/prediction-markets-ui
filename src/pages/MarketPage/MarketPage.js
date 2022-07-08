@@ -99,7 +99,7 @@ export const MarketPage = () => {
 
   const reservesRate = useSelector(selectReservesRate);
 
-  const reserve_rate = reservesRate[reserve_asset];
+  const reserve_rate = reservesRate[reserve_asset] || 0;
 
   const event = generateTextEvent(params);
 
@@ -309,7 +309,7 @@ export const MarketPage = () => {
             <StatsCard
               title={`${haveTeamNames ? teams.yes.name : 'Yes'}`}
               tooltip={yesTooltip}
-              subValue={priceOrCoef === 'price' ? `$${yesPriceInUSD}` : ''} color={appConfig.YES_COLOR} onAction={tradeIsActive ? (action) => setVisibleTradeModal({ type: 'yes', action }) : undefined}
+              subValue={(priceOrCoef === 'price' && reserve_rate) ? `$${yesPriceInUSD}` : ''} color={appConfig.YES_COLOR} onAction={tradeIsActive ? (action) => setVisibleTradeModal({ type: 'yes', action }) : undefined}
               value={priceOrCoef === 'price' ? <span>{yesPrice} <small>{reserve_symbol}</small></span> : (yes_coef ? <span>x{yes_coef}</span> : '-')} />
           </Col>
 
@@ -317,7 +317,7 @@ export const MarketPage = () => {
             <StatsCard
               title={`${haveTeamNames ? teams.no.name : 'No'}`}
               tooltip={noTooltip}
-              subValue={priceOrCoef === 'price' ? `$${noPriceInUSD}` : ''} color={appConfig.NO_COLOR} onAction={tradeIsActive ? (action) => setVisibleTradeModal({ type: 'no', action }) : undefined}
+              subValue={(priceOrCoef === 'price' && reserve_rate) ? `$${noPriceInUSD}` : ''} color={appConfig.NO_COLOR} onAction={tradeIsActive ? (action) => setVisibleTradeModal({ type: 'no', action }) : undefined}
               value={priceOrCoef === 'price' ? <span>{noPrice} <small>{reserve_symbol}</small></span> : (no_coef ? <span>x{no_coef}</span> : '-')} />
           </Col>
 
@@ -325,14 +325,14 @@ export const MarketPage = () => {
             <StatsCard
               title="Draw"
               tooltip={drawTooltip}
-              subValue={priceOrCoef === 'price' ? `$${drawPriceInUSD}` : ''} color={appConfig.DRAW_COLOR} onAction={tradeIsActive ? (action) => setVisibleTradeModal({ type: 'draw', action }) : undefined}
+              subValue={(priceOrCoef === 'price' && reserve_rate) ? `$${drawPriceInUSD}` : ''} color={appConfig.DRAW_COLOR} onAction={tradeIsActive ? (action) => setVisibleTradeModal({ type: 'draw', action }) : undefined}
               value={priceOrCoef === 'price' ? <span>{drawPrice} <small>{reserve_symbol}</small></span> : (draw_coef ? <span>x{draw_coef}</span> : '-')} />
           </Col>}
 
           <Col lg={{ span: 8 }} md={{ span: 12 }} xs={{ span: 24 }} style={{ marginBottom: 30 }}>
             <StatsCard
               title="Reserve"
-              subValue={viewReserveInUSD}
+              subValue={reserve_rate ? viewReserveInUSD : undefined}
               tooltip="Total amount invested in all outcomes"
               value={<span>{viewReserve} <small>{reserve_symbol}</small></span>} />
           </Col>

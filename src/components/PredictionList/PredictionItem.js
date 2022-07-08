@@ -40,7 +40,7 @@ export const PredictionItem = ({ reserve_asset = 'base', aa_address, reserve = 0
   const reservesRates = useSelector(selectReservesRate);
   const priceOrCoef = useSelector(selectPriceOrCoef);
   const now = moment.utc().unix();
-  const currentReserveRate = reservesRates[reserve_asset] || {};
+  const currentReserveRate = reservesRates[reserve_asset] || 0;
 
   const [width] = useWindowSize();
 
@@ -134,15 +134,12 @@ export const PredictionItem = ({ reserve_asset = 'base', aa_address, reserve = 0
       <Card className={styles.itemWrap} style={{ color: "#fff", opacity: isExpiry ? 0.5 : 1 }}>
         <Row gutter={10} align="middle">
           <Col md={{ span: 16 }} xs={{ span: 24 }} sm={{ span: 24 }} ref={infoWrapRef}>
-            {/* {!isSportMarket && <Space className={styles.notifyWrap}>
-              <span>Expiration {expirationDateView} ({afterExpirationDateView})</span>
-            </Space>} */}
             {!marketHasCrests ? <div className={styles.eventDesc}>
               {event}
             </div> : <div style={{ marginTop: 5 }}>
               <Row gutter={8} align={(exists && allow_draw && draw_coef) ? "bottom" : 'middle'}>
                 <Col sm={{ span: 8 }} xs={{ span: 24 }} style={{ textAlign: 'center' }}>
-                  <Img unloader={<div/>} src={[`https://crests.football-data.org/${yes_team_id}.png`, `https://crests.football-data.org/${yes_team_id}.svg`]} className={styles.crests} />
+                  <Img unloader={<div />} src={[`https://crests.football-data.org/${yes_team_id}.png`, `https://crests.football-data.org/${yes_team_id}.svg`]} className={styles.crests} />
                   <div className={styles.teamWrap}>
                     <Typography.Text style={{ color: appConfig.YES_COLOR, textOverflow: 'ellipsis', display: 'block' }} ellipsis={true}><small>{yes_team}</small></Typography.Text>
                   </div>
@@ -165,7 +162,7 @@ export const PredictionItem = ({ reserve_asset = 'base', aa_address, reserve = 0
                   <Img
                     src={[`https://crests.football-data.org/${no_team_id}.png`, `https://crests.football-data.org/${no_team_id}.svg`]}
                     className={styles.crests}
-                    unloader={<div/>}
+                    unloader={<div />}
                   />
                   <div className={styles.teamWrap}>
                     <Typography.Text style={{ color: appConfig.NO_COLOR, textOverflow: 'ellipsis', display: 'block' }} ellipsis={true}><small>{no_team}</small></Typography.Text>
@@ -183,21 +180,21 @@ export const PredictionItem = ({ reserve_asset = 'base', aa_address, reserve = 0
                 <div>
                   <div className={styles.infoTitle}>reserve</div>
                   <div>{reserveView} <small>{reserve_symbol}</small></div>
-                  {priceOrCoef === 'price' && <div className={styles.infoValueInDollar}>${+Number(reserveView * currentReserveRate).toFixed(2)}</div>}
+                  {(priceOrCoef === 'price' && currentReserveRate) ? <div className={styles.infoValueInDollar}>${+Number(reserveView * currentReserveRate).toFixed(2)}</div> : null}
                 </div>
               </Col>
               <Col md={{ span: 6 }} xs={{ span: 12 }}>
                 <div style={{ color: appConfig.YES_COLOR }}>
                   <div className={styles.infoTitle}>yes price</div>
                   <div style={{ fontSize: 13 }}>{<div>{priceOrCoef === 'price' ? `${yesPriceView} ${reserve_symbol}` : yes_coef ? `x${yes_coef}` : '-'}</div>}</div>
-                  {priceOrCoef === 'price' && <div className={styles.infoValueInDollar}>${+Number(yes_price * currentReserveRate).toFixed(2)}</div>}
+                  {(priceOrCoef === 'price' && currentReserveRate) ? <div className={styles.infoValueInDollar}>${+Number(yes_price * currentReserveRate).toFixed(2)}</div> : null}
                 </div>
               </Col>
               <Col md={{ span: 6 }} xs={{ span: 12 }}>
                 <div style={{ color: appConfig.NO_COLOR }}>
                   <div className={styles.infoTitle}>no price</div>
                   <div style={{ fontSize: 13 }}>{<div>{priceOrCoef === 'price' ? `${noPriceView} ${reserve_symbol}` : (no_coef ? `x${no_coef}` : '-')}</div>}</div>
-                  {priceOrCoef === 'price' && <div className={styles.infoValueInDollar}> ${+Number(no_price * currentReserveRate).toFixed(2)}</div>}
+                  {(priceOrCoef === 'price' && currentReserveRate) ? <div className={styles.infoValueInDollar}> ${+Number(no_price * currentReserveRate).toFixed(2)}</div> : null}
                 </div>
               </Col>
               <Col md={{ span: 6 }} xs={{ span: 12 }}>
@@ -205,7 +202,7 @@ export const PredictionItem = ({ reserve_asset = 'base', aa_address, reserve = 0
                   <div className={styles.infoTitle}>draw price</div>
                   <div style={{ color: appConfig.DRAW_COLOR }}>
                     <div style={{ fontSize: 13 }}>{<div>{priceOrCoef === 'price' ? `${drawPriceView} ${reserve_symbol}` : draw_coef ? `x${draw_coef}` : '-'}</div>}</div>
-                    {priceOrCoef === 'price' && <div className={styles.infoValueInDollar}> ${+Number(draw_price * currentReserveRate).toFixed(2)}</div>}
+                    {(priceOrCoef === 'price' && currentReserveRate) ? <div className={styles.infoValueInDollar}> ${+Number(draw_price * currentReserveRate).toFixed(2)}</div> : null}
                   </div>
                 </div> : null}
               </Col>
