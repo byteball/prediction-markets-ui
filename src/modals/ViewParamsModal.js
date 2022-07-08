@@ -2,7 +2,7 @@ import { Button, Drawer, Typography } from "antd";
 import { useState } from "react";
 import moment from "moment";
 
-import { useWindowSize } from "hooks/useWindowSize";
+import { useWindowSize } from "hooks";
 
 import appConfig from "appConfig";
 

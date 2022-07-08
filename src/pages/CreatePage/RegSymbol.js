@@ -7,7 +7,7 @@ import QRButton from "obyte-qr-button";
 import moment from "moment";
 
 import { generateLink, generateTextEvent } from "utils";
-import { useWindowSize } from "hooks/useWindowSize.js";
+import { useWindowSize } from "hooks";
 
 import appConfig from "appConfig";
 
@@ -55,7 +55,7 @@ export const RegisterSymbols = () => {
 
   const currentAsset = order[currentSymbol + "_asset"];
 
-  let actual_team;
+  // let actual_team;
   let yes_team;
   let no_team;
 
@@ -63,7 +63,7 @@ export const RegisterSymbols = () => {
     const split = order.data.feed_name.split("_");
     yes_team = split[1];
     no_team = split[2];
-    actual_team = currentStep === 0 ? yes_team : (currentStep === 1 ? no_team : 'DRAW');
+    // actual_team = currentStep === 0 ? yes_team : (currentStep === 1 ? no_team : 'DRAW');
   }
 
   useEffect(() => {

@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 
 import { MainMenu } from "components/MainMenu/MainMenu";
 import { SocialLinks } from "components/SocialLinks/SocialLinks";
-import { useWindowSize } from "hooks/useWindowSize";
+import { useWindowSize } from "hooks";
 import { WalletModal } from "modals";
 import { ViewPriceSwitcher } from "components/ViewPriceSwitcher/ViewPriceSwitcher";
 

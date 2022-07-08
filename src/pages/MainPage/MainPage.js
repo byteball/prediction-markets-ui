@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { Col, Empty, Row, Spin } from "antd";
 import { useSelector } from "react-redux";
+import { useNavigate, useParams } from "react-router-dom";
 
 import { Layout } from "components/Layout/Layout";
 import { PredictionList } from "components/PredictionList/PredictionList";
@@ -11,7 +12,6 @@ import { selectAllMarkets, selectAllMarketsStatus, selectChampionships } from "s
 import { getTabNameByType } from "utils/getTabNameByType";
 
 import styles from "./MainPage.module.css";
-import { useNavigate, useParams } from "react-router-dom";
 
 export const MainPage = () => {
 	const markets = useSelector(selectAllMarkets);

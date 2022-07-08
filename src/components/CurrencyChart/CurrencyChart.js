@@ -1,7 +1,8 @@
 import { Stock } from '@ant-design/plots';
-import appConfig from 'appConfig';
 import moment from 'moment';
 import { useSelector } from 'react-redux';
+
+import appConfig from 'appConfig';
 import { selectIsHourlyChart } from 'store/slices/activeSlice';
 
 export const CurrencyChart = ({ data, params }) => {

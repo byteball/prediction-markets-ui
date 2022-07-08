@@ -3,7 +3,7 @@ import { useState } from "react";
 import { useSelector } from "react-redux";
 
 import { ClaimProfitForm } from "forms";
-import { useWindowSize } from "hooks/useWindowSize";
+import { useWindowSize } from "hooks";
 import { selectActiveAddress, selectActiveMarketParams, selectActiveMarketStateVars, selectActiveMarketStatus } from "store/slices/activeSlice";
 import { selectWalletAddress } from "store/slices/settingsSlice";
 

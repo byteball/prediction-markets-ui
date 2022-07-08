@@ -37,10 +37,10 @@ export const RedeemForm = memo(({ type, yes_team, no_team, amount, setAmount }) 
 
   const btnRef = useRef();
 
-  const { reserve_asset, yes_symbol, no_symbol, draw_symbol, allow_draw, reserve_symbol, reserve_decimals, yes_decimals, no_decimals, draw_decimals } = params;
+  const { yes_symbol, no_symbol, draw_symbol, allow_draw, reserve_symbol, reserve_decimals, yes_decimals, no_decimals, draw_decimals } = params;
   const { yes_asset, no_asset, draw_asset } = stateVars;
 
-  const network_fee = reserve_asset === 'base' ? 1e4 : 0;
+  // const network_fee = reserve_asset === 'base' ? 1e4 : 0;
 
   useEffect(() => {
     const tokens = [
@@ -121,7 +121,7 @@ export const RedeemForm = memo(({ type, yes_team, no_team, amount, setAmount }) 
         </Form.Item>
       </Col> : null}
     </Row>
-    
+
     {meta && <Form.Item>
       {payoutAmount.value > 0 && <div style={{ fontSize: 18, paddingBottom: 10 }}>You get {+Number((payoutAmount.value) / 10 ** reserve_decimals).toFixed(reserve_decimals)} {reserve_symbol}</div>}
       <div className="metaWrap">

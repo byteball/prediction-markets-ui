@@ -2,6 +2,7 @@ import { useCallback, useEffect, useState } from "react";
 import { Button, Divider, List, Spin } from "antd";
 import { isEmpty } from "lodash";
 import { useDispatch, useSelector } from "react-redux";
+import { useNavigate, useParams } from "react-router-dom";
 
 import { PredictionItem } from "./PredictionItem";
 import { SwitchActions } from "components/SwitchActions/SwitchActions";
@@ -14,7 +15,6 @@ import { getEmojiByType } from "utils";
 import backend from "services/backend";
 
 import styles from "./PredictionList.module.css";
-import { useNavigate, useParams } from "react-router-dom";
 
 export const PredictionList = ({ type = 'all' }) => {
   const [marketsDataSource, setMarketsDataSource] = useState([]);
@@ -23,7 +23,6 @@ export const PredictionList = ({ type = 'all' }) => {
   const [maxCount, setMaxCount] = useState(0);
   const [loading, setLoading] = useState(true);
   const [inited, setInited] = useState(false);
-  const [isFirstLoad, setIsFirstLoad] = useState(true);
 
   const currencyMarkets = useSelector(selectCurrencyMarkets);
   const currencyMarketsCount = useSelector(selectCurrencyMarketsCount);

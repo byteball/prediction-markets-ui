@@ -1,13 +1,13 @@
 import { Button, Result, Typography } from "antd";
 import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
+import { useEffect } from "react";
 
 import { Layout } from "components/Layout/Layout"
 import { CreateForm } from "forms";
 import { removeCreationOrder, selectCreationOrder } from "store/slices/settingsSlice";
 import { CreatePredictionMarket } from "./CreatePredictionMarket";
 import { RegisterSymbols } from "./RegSymbol";
-import { useEffect } from "react";
 
 export const CreatePage = () => {
   const creationOrder = useSelector(selectCreationOrder);

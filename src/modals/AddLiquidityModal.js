@@ -2,9 +2,9 @@ import { Button, Drawer, Typography } from "antd";
 import { useState } from "react";
 import { useSelector } from "react-redux";
 
-import { useWindowSize } from "hooks/useWindowSize";
-import { selectActiveMarketStatus } from "store/slices/activeSlice";
+import { useWindowSize } from "hooks";
 import { AddLiquidityForm } from "forms";
+import { selectActiveMarketStatus } from "store/slices/activeSlice";
 
 const { Title } = Typography;
 

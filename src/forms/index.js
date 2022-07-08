@@ -2,6 +2,7 @@ import { AddLiquidityForm } from "./AddLiquidityForm";
 import { BuyForm } from "./BuyForm";
 import { ClaimProfitForm } from "./ClaimProfitForm";
 import { CreateForm } from "./CreateForm";
+import { CreateNowForm } from "./CreateNowForm";
 import { RedeemForm } from "./RedeemForm";
 
 export {
@@ -9,5 +10,6 @@ export {
   BuyForm,
   ClaimProfitForm,
   CreateForm,
-  RedeemForm
+  RedeemForm,
+  CreateNowForm
 }

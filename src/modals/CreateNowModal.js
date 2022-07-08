@@ -2,8 +2,8 @@ import { Button, Drawer, Typography } from "antd";
 import { useState } from "react";
 import { Outlet } from "react-router-dom";
 
-import { useWindowSize } from "hooks/useWindowSize";
-import { CreateNowForm } from "forms/CreateNowForm";
+import { useWindowSize } from "hooks";
+import { CreateNowForm } from "forms";
 
 const { Title } = Typography;
 

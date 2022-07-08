@@ -1,6 +1,6 @@
 import { Fragment, useEffect, useRef, useState } from "react";
 import { TinyLine } from '@ant-design/plots';
-import { Badge, Card, Col, Row, Space, Typography } from "antd";
+import { Badge, Card, Col, Row, Typography } from "antd";
 import { Link } from "react-router-dom";
 import moment from 'moment';
 import { useSelector } from 'react-redux';
@@ -76,8 +76,6 @@ export const PredictionItem = ({ reserve_asset = 'base', aa_address, reserve = 0
   const yesPriceView = +Number(yes_price).toPrecision(max_display_decimals);
   const noPriceView = +Number(no_price).toPrecision(max_display_decimals);
   const drawPriceView = +Number(draw_price).toPrecision(max_display_decimals);
-  const expirationDateView = moment.unix(end_of_trading_period).format('lll')
-  const afterExpirationDateView = moment.unix(end_of_trading_period).fromNow();
 
   const event = generateTextEvent({
     end_of_trading_period,
@@ -213,7 +211,6 @@ export const PredictionItem = ({ reserve_asset = 'base', aa_address, reserve = 0
               </Col>
             </Row>}
           </Col>
-          {/* && width >= 992 */}
           {(exists || preview) ? (infoHeight && dataForChart.length > 0 && <Col md={{ span: 8 }} xs={{ span: 24 }} sm={{ span: 24 }} style={{ display: 'flex', alignItems: 'center' }}>
             {width >= 768 && <div style={{ height: infoHeight * 0.7, width: '100%', boxSizing: 'border-box' }}>
               <TinyLine {...config} data={dataForChart} />
