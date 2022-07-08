@@ -73,9 +73,9 @@ export const PredictionItem = ({ reserve_asset = 'base', aa_address, reserve = 0
   }, [infoWrapRef.current]);
 
   const reserveView = +Number(reserve / 10 ** reserve_decimals).toPrecision(max_display_decimals);
-  const yesPriceView = +Number(yes_price / 10 ** yes_decimals).toPrecision(max_display_decimals);
-  const noPriceView = +Number(no_price / 10 ** no_decimals).toPrecision(max_display_decimals);
-  const drawPriceView = +Number(draw_price / 10 ** draw_decimals).toPrecision(max_display_decimals);
+  const yesPriceView = +Number(yes_price).toPrecision(max_display_decimals);
+  const noPriceView = +Number(no_price).toPrecision(max_display_decimals);
+  const drawPriceView = +Number(draw_price).toPrecision(max_display_decimals);
   const expirationDateView = moment.unix(end_of_trading_period).format('lll')
   const afterExpirationDateView = moment.unix(end_of_trading_period).fromNow();
 
