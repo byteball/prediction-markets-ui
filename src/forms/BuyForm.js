@@ -1,4 +1,4 @@
-import { Form, Select, Input, Spin, Col, Row, Button, Alert } from "antd";
+import { Form, Select, Input, Spin, Col, Row, Button, Alert, notification } from "antd";
 import { isNaN } from "lodash";
 import QRButton from "obyte-qr-button";
 import { useEffect, useRef, useState } from "react";
@@ -91,11 +91,9 @@ export const BuyForm = ({ type, yes_team, no_team, amount, setAmount }) => {
       const reserveAmount = amount.value * 10 ** reserve_decimals;
 
       const tokenAmount = get_token_amount(stateVars, params, currentToken?.type, fromToken.network === "Obyte" ? reserveAmount : Math.ceil((estimate * 10 ** reserve_decimals) || 0))
-      
-      console.log('tokenAmount', tokenAmount)
 
       const result = getExchangeResult(stateVars, params, currentToken.type === 'yes' ? tokenAmount : 0, currentToken.type === 'no' ? tokenAmount : 0, currentToken.type === 'draw' ? tokenAmount : 0);
-      console.log('result', reserveAmount - result?.reserve_needed - result?.fee - 1e4)
+
       setGetAmount({ value: tokenAmount, valid: true })
       setMeta(result);
     } else {
@@ -116,8 +114,6 @@ export const BuyForm = ({ type, yes_team, no_team, amount, setAmount }) => {
   const totalFee = meta?.arb_profit_tax + network_fee + meta?.issue_fee;
   const percentageTotalFee = Number(100 * (totalFee / (amount.value * 10 ** reserve_decimals)));
   const change = amount.value * 10 ** reserve_decimals - meta?.reserve_needed - meta?.fee - network_fee;
-
-  console.log("meta?.reserve_needed", meta?.reserve_needed)
 
   const handleChangeFromToken = (strValue) => {
     const [network, asset, decimals, foreign_asset, ...symbol] = strValue.split("__");
@@ -163,19 +159,26 @@ export const BuyForm = ({ type, yes_team, no_team, amount, setAmount }) => {
   }, [fromToken, amount])
 
   const buyViaEVM = async () => {
-    await transferEVM2Obyte({
-      amount: Number(amount.value),
-      src_network: fromToken.network,
-      src_asset: fromToken.asset,
-      dst_network: 'Obyte',
-      dst_asset: reserve_asset,
-      recipient_address: address,
-      data: { type: currentToken?.type, to: walletAddress },
-      assistant_reward_percent: 1,
-      testnet: appConfig.ENVIRONMENT === 'testnet',
-      obyteClient: client,
-      oswap_change_address: walletAddress
-    });
+    try {
+      await transferEVM2Obyte({
+        amount: Number(amount.value),
+        src_network: fromToken.network,
+        src_asset: fromToken.asset,
+        dst_network: 'Obyte',
+        dst_asset: reserve_asset,
+        recipient_address: address,
+        data: { type: currentToken?.type, to: walletAddress },
+        assistant_reward_percent: 1,
+        testnet: appConfig.ENVIRONMENT === 'testnet',
+        obyteClient: client,
+        oswap_change_address: walletAddress
+      });
+    } catch {
+      notification.error({
+        message: "The transaction would fail. Please check that you have sufficient balance",
+        placement: "top"
+      })
+    }
   }
 
   if (!currentToken || !fromToken) return <div style={{ display: 'flex', justifyContent: 'center', padding: 20 }}>

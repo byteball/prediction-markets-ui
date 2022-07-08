@@ -1,5 +1,5 @@
-import { createAsyncThunk } from "@reduxjs/toolkit"
-import axios from "axios"
+import { createAsyncThunk } from "@reduxjs/toolkit";
+import axios from "axios";
 import { isEmpty } from "lodash";
 
 export const updateReserveRate = createAsyncThunk(

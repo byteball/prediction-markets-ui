@@ -1,5 +1,5 @@
 import { Pie } from "@ant-design/plots";
-import { Alert, Button, Col, Form, Input, Row, Select, Spin } from "antd";
+import { Alert, Button, Col, Form, Input, Row, Select, Spin, notification } from "antd";
 import appConfig from "appConfig";
 import { estimateOutput, transferEVM2Obyte } from "counterstake-sdk";
 import { isNumber } from "lodash";
@@ -254,7 +254,6 @@ export const AddLiquidityForm = ({ yes_team, no_team }) => {
     appendPadding: 10,
     radius: 0.8,
     renderer: "svg",
-    // theme: 'dark',
     color: (item) => {
       if (item.type === 'YES') {
         return appConfig.YES_COLOR;
@@ -300,6 +299,11 @@ export const AddLiquidityForm = ({ yes_team, no_team }) => {
       });
     } catch (e) {
       console.error(e);
+
+      notification.error({
+        message: "The transaction would fail. Please check that you have sufficient balance",
+        placement: "top"
+      })
     }
   }
 

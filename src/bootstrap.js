@@ -1,5 +1,6 @@
 import { store } from "index";
 import { isEmpty } from "lodash";
+import { notification } from "antd";
 
 import client from "services/obyte";
 
@@ -180,7 +181,9 @@ export const bootstrap = async () => {
   const handleActivePredictionMarket = (result) => {
     const state = store.getState();
     const { subject, body } = result[1];
-    const { aa_address, updatedStateVars } = body;
+    const { aa_address, updatedStateVars, unit } = body;
+
+    const author = unit?.authors?.[0]?.address;
 
     if (subject === "light/aa_response") {
       let diff = {};
@@ -197,6 +200,11 @@ export const bootstrap = async () => {
       const recentEventObject = responseToEvent(body, state.active.params, state.active.stateVars);
 
       store.dispatch(addRecentEvent(recentEventObject));
+    } else if (subject === "light/aa_request" && state.settings.walletAddress && author === state.settings.walletAddress) {
+      notification.info({
+        message: "Received your request. The interface will update after the transaction stabilizes.",
+        placement: 'top'
+      })
     }
   }
 
