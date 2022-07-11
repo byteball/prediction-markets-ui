@@ -48,6 +48,13 @@
   text-align: right;
 }
 
+.team {
+  line-height: 1;
+}
+
+.time {
+  line-height: 1.2;
+}
 
 /* Small devices (landscape phones, 576px and up) */
 @media (max-width: 576px) {
@@ -85,6 +92,7 @@
 @media (max-width: 400px) {
   .crests {
     width: 30%;
+    min-width: 50px;
     max-width: 100px;
   }
 }
@@ -93,5 +101,16 @@
   .createNowWrap {
     text-align: center;
     margin-top: 20px;
+  }
+}
+
+@media (max-width: 576px) {
+  .price {
+    font-size: 12px;
+    /* line-height: 1 !important; */
+  }
+
+  .team{
+    /* line-height: 1 !important; */
   }
 }

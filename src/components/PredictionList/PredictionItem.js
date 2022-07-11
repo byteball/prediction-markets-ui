@@ -137,39 +137,39 @@ export const PredictionItem = ({ reserve_asset = 'base', aa_address, reserve = 0
             {!marketHasCrests ? <div className={styles.eventDesc}>
               {event}
             </div> : <div style={{ marginTop: 5 }}>
-              <Row gutter={8} align={(exists && allow_draw && draw_coef) ? "bottom" : 'middle'}>
-                <Col sm={{ span: 8 }} xs={{ span: 24 }} style={{ textAlign: 'center' }}>
+              <Row gutter={8} align={(exists && allow_draw && draw_coef && width >= 576) ? "bottom" : 'middle'}>
+                <Col sm={{ span: 8 }} xs={{ span: 8 }} style={{ textAlign: 'center' }}>
                   <Img unloader={<div />} src={[`https://crests.football-data.org/${yes_team_id}.png`, `https://crests.football-data.org/${yes_team_id}.svg`]} className={styles.crests} />
                   <div className={styles.teamWrap}>
-                    <Typography.Text style={{ color: appConfig.YES_COLOR, textOverflow: 'ellipsis', display: 'block' }} ellipsis={true}><small>{yes_team}</small></Typography.Text>
+                    <Typography.Text style={{ color: appConfig.YES_COLOR }} className={styles.team} ellipsis={true}><small>{yes_team}</small></Typography.Text>
                   </div>
 
-                  {exists && yes_coef && no_coef ? <div style={{ color: appConfig.YES_COLOR }}> {priceOrCoef === 'price' ? `${yesPriceView} ${reserve_symbol}` : `x${yes_coef}`}</div> : null}
+                  {exists && yes_coef && no_coef ? <div style={{ color: appConfig.YES_COLOR }}><span className={styles.price}>{priceOrCoef === 'price' ? <>{yesPriceView} <small>{reserve_symbol}</small></> : `x${yes_coef}`}</span></div> : null}
                 </Col>
 
-                <Col sm={{ span: 8 }} xs={{ span: 24 }} style={{ textAlign: 'center' }} className={styles.draw}>
+                <Col sm={{ span: 8 }} xs={{ span: 8 }} style={{ textAlign: 'center' }} className={styles.draw}>
                   <b style={{ fontSize: 24 }}>VS</b>
-                  <div>
+                  <div className={styles.time}>
                     <small>{moment.unix(end_of_trading_period).format('lll')}</small>
                   </div>
-                  {exists && allow_draw && draw_coef ? <div style={{ color: appConfig.DRAW_COLOR }}>
-                    <div style={{ lineHeight: 1 }}><small>draw</small></div>
-                    <div>{priceOrCoef === 'price' ? `${drawPriceView} ${reserve_symbol}` : `x${draw_coef}`}</div>
+                  {(exists && allow_draw && draw_coef && width >= 576) ? <div style={{ color: appConfig.DRAW_COLOR }}>
+                    <div className={styles.team}><small>draw</small></div>
+                    <span className={styles.price}>{priceOrCoef === 'price' ? <>{drawPriceView} <small>{reserve_symbol}</small></> : `x${draw_coef}`}</span>
                   </div> : null}
                 </Col>
 
-                <Col sm={{ span: 8 }} xs={{ span: 24 }} style={{ textAlign: 'center' }}>
+                <Col sm={{ span: 8 }} xs={{ span: 8 }} style={{ textAlign: 'center' }}>
                   <Img
                     src={[`https://crests.football-data.org/${no_team_id}.png`, `https://crests.football-data.org/${no_team_id}.svg`]}
                     className={styles.crests}
                     unloader={<div />}
                   />
                   <div className={styles.teamWrap}>
-                    <Typography.Text style={{ color: appConfig.NO_COLOR, textOverflow: 'ellipsis', display: 'block' }} ellipsis={true}><small>{no_team}</small></Typography.Text>
+                    <Typography.Text style={{ color: appConfig.NO_COLOR }} className={styles.team} ellipsis={true}><small>{no_team}</small></Typography.Text>
                   </div>
 
                   {exists && no_coef && yes_coef ? <div style={{ color: appConfig.NO_COLOR }}>
-                    {priceOrCoef === 'price' ? `${noPriceView} ${reserve_symbol}` : `x${no_coef}`}
+                    <span className={styles.price}>{priceOrCoef === 'price' ? <>{noPriceView} <small>{reserve_symbol}</small></> : `x${no_coef}`}</span>
                   </div> : null}
                 </Col>
               </Row>
