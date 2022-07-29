@@ -10,7 +10,7 @@ export const Footer = () => {
 
   return <div className={styles.wrap}>
     <div className={styles.timeZoneWrap}>
-      <small style={{ fontWeight: 300 }}> All dates are in your local timezone (GMT{timeZone >= 0 ? '+' : '-'}{timeZone}) unless indicated otherwise</small>
+      <small> All dates are in your local timezone (GMT{timeZone >= 0 ? '+' : '-'}{timeZone}) unless indicated otherwise</small>
     </div>
     <div>
       &copy; {year} Obyte. All rights reserved

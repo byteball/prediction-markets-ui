@@ -42,7 +42,7 @@ export const Header = () => {
 				</> : <>
 					<Button onClick={changeVisible} size="large">Menu</Button>
 					<Drawer width={width >= 320 ? 320 : width} visible={showMenu} onClose={changeVisible} bodyStyle={{ width: '100%', textAlign: 'center', display: 'flex', flexDirection: 'column', maxHeight: 'calc(100vh - 50px)' }}>
-						<div>
+						<div className={styles.mainMenuWrap}>
 							<MainMenu direction="vertical" />
 						</div>
 						<div className={styles.walletWrap}>
