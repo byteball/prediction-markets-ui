@@ -1,17 +1,13 @@
 import { Stock } from '@ant-design/plots';
 import moment from 'moment';
-import { useSelector } from 'react-redux';
-
-import { selectIsHourlyChart } from 'store/slices/activeSlice';
 
 import appConfig from 'appConfig';
 
 export const CurrencyChart = ({ data, params }) => {
-  const { datafeed_value } = params;
-  const isHourlyChart = useSelector(selectIsHourlyChart);
+  const { datafeed_value, waiting_period_length, event_date } = params;
 
   const transformedData = data.map(({ time, open, close, high, low }) => ({
-    time: moment.unix(time).format(isHourlyChart ? 'lll' : 'll'),
+    time: moment.unix(time).format((event_date + waiting_period_length - moment.utc().unix() <= 7 * 24 * 3600) ? 'lll' : 'll'),
     open: +Number(open).toPrecision(6),
     close: +Number(close).toPrecision(6),
     high: +Number(high).toPrecision(6),

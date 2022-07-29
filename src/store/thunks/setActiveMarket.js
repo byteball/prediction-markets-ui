@@ -80,11 +80,12 @@ export const setActiveMarket = createAsyncThunk(
     const isSportMarket = !!appConfig.CATEGORIES.sport.oracles.find(({ address }) => address === params.oracle);
     const isCurrencyMarket = !!appConfig.CATEGORIES.currency.oracles.find(({ address }) => address === params.oracle);
 
+    const isHourlyChart = params.event_date + params.waiting_period_length - moment.utc().unix() <= 7 * 24 * 3600;
+
     let yesTeam;
     let noTeam;
     let currencyCandles = [];
     let currencyCurrentValue = 0;
-    let isHourlyChart = params.event_date + params.waiting_period_length - moment.utc().unix() <= 7 * 24 * 3600;
     let league_emblem = null;
     let league = null;
 
@@ -133,7 +134,6 @@ export const setActiveMarket = createAsyncThunk(
       noTeam,
       currencyCandles,
       currencyCurrentValue,
-      isHourlyChart,
       created_at,
       league: {
         league_emblem,
