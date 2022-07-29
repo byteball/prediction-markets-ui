@@ -19,7 +19,7 @@ export const marketsSlice = createSlice({
     addMarketInList: (state, action) => { state.data.push(action.payload) },
   },
   extraReducers: {
-    [loadMarkets.pending]: (state, action) => {
+    [loadMarkets.pending]: (state) => {
       state.status = 'loading';
     },
     [loadMarkets.fulfilled]: (state, action) => {
@@ -35,7 +35,7 @@ export const marketsSlice = createSlice({
       state.miscMarketsCount = miscMarketsCount;
       state.status = 'loaded';
     },
-    [loadMarkets.rejected]: (state, action) => {
+    [loadMarkets.rejected]: (state) => {
       state.status = 'error';
     },
   }

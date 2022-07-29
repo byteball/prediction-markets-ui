@@ -71,7 +71,7 @@ export const MainPage = () => {
 	}, [location.pathname]);
 
 	if (!markets || allMarketsStatus !== 'loaded' || !inited) return (
-		<div style={{ width: '100vw', height: '100vh', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+		<div className={styles.spinWrap}>
 			<Spin size="large" />
 		</div>
 	)
@@ -118,7 +118,7 @@ export const MainPage = () => {
 				</Col>
 			</Row>
 
-			{(markets.length > 0) ? <div style={{ margin: "0 auto", marginTop: 40, maxWidth: 780 }}>
+			{(markets.length > 0) ? <div className={styles.listWrap}>
 				<SwitchActions value={marketType} data={switchActionsData} onChange={handleMarketType} />
 
 				<div style={{ marginTop: 10 }}>

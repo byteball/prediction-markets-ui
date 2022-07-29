@@ -4,7 +4,6 @@ import appConfig from "appConfig";
 
 export const generateTextEvent = ({ oracle, event_date, feed_name, datafeed_value, comparison }) => { // params
     const expiry_date = moment.unix(event_date).format("LLL");
-    // const timeZone = moment().utcOffset() / 60;
     const comparisonText = getComparisonText(comparison);
 
     if (appConfig.CATEGORIES.currency.oracles.find(({ address }) => address === oracle)) {

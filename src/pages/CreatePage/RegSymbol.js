@@ -13,8 +13,6 @@ import appConfig from "appConfig";
 
 const { Step } = Steps;
 
-const reservedTokens = ["GBYTE", "MBYTE", "KBYTE", "BYTE"];
-
 const initStateValue = {
   value: "",
   valid: false,
@@ -48,13 +46,10 @@ export const RegisterSymbols = () => {
 
   const checkRef = useRef(null);
   const regRef = useRef(null);
-  const symbolInputRef = useRef(null);
-  // const dispatch = useDispatch();
 
   const isSportMarket = !!appConfig.CATEGORIES.sport.oracles.find(({ address }) => address === order.data.oracle);
   const currentAsset = order[currentSymbol + "_asset"];
 
-  // let actual_team;
   let yes_team;
   let no_team;
 
@@ -62,7 +57,6 @@ export const RegisterSymbols = () => {
     const split = order.data.feed_name.split("_");
     yes_team = split[1];
     no_team = split[2];
-    // actual_team = currentStep === 0 ? yes_team : (currentStep === 1 ? no_team : 'DRAW');
   }
 
   useEffect(() => {
@@ -162,11 +156,6 @@ export const RegisterSymbols = () => {
           setTokenSupport({ value: "0.1", valid: true })
         }
       })();
-      symbolInputRef?.current.blur();
-    } else if (isAvailable === undefined) {
-      symbolInputRef?.current.focus({
-        cursor: 'end',
-      });
     }
   }, [isAvailable, currentSymbol]);
 
@@ -179,33 +168,6 @@ export const RegisterSymbols = () => {
       undefined,
   };
 
-  const handleChangeSymbol = (ev) => {
-    const targetToken = ev.target.value.toUpperCase();
-    // eslint-disable-next-line no-useless-escape
-    const reg = /^[0-9A-Z_\-]+$/;
-    if (reg.test(targetToken) || !targetToken) {
-      if (targetToken.length > 0) {
-        if (targetToken.length <= 40) {
-          if (reservedTokens.find((t) => targetToken === t)) {
-            setToken({ ...token, value: targetToken, valid: false });
-          } else {
-            setToken({ ...token, value: targetToken, valid: true });
-          }
-        } else {
-          setToken({
-            ...token,
-            value: targetToken,
-            valid: false,
-          });
-        }
-      } else {
-        setToken({ ...token, value: targetToken, valid: false });
-      }
-      setIsAvailable(undefined);
-      setTokenSupport(initStateValue);
-      setDescr(initStateValue);
-    }
-  };
   const handleChangeSupport = (ev) => {
     const support = ev.target.value;
     const reg = /^[0-9.]+$/;
@@ -221,14 +183,6 @@ export const RegisterSymbols = () => {
       }
     } else {
       setTokenSupport({ ...token, value: "", valid: false });
-    }
-  };
-  const handleChangeDescr = (ev) => {
-    const { value } = ev.target;
-    if (value.length < 140) {
-      setDescr({ value, valid: true });
-    } else {
-      setDescr({ value, valid: false });
     }
   };
 
@@ -271,20 +225,10 @@ export const RegisterSymbols = () => {
         >
           <Input
             placeholder="Symbol"
-            allowClear
             autoFocus={true}
             disabled={true}
-            ref={symbolInputRef}
             autoComplete="off"
             value={token.value}
-            onChange={handleChangeSymbol}
-            onKeyPress={(ev) => {
-              if (ev.key === "Enter") {
-                if (token.valid) {
-                  checkRef.current.click();
-                }
-              }
-            }}
           />
         </Form.Item>
         {isAvailable && (
@@ -304,8 +248,8 @@ export const RegisterSymbols = () => {
             />
           </Form.Item>
         )}
-        {isAvailable === true && !symbolByCurrentAsset && (
 
+        {isAvailable === true && !symbolByCurrentAsset && (
           <Form.Item
             validateStatus={descr.valid ? undefined : "error"}
             extra={!descr.valid ? <span style={{ color: 'red' }}>Maximum number of characters 140</span> : null}
@@ -314,12 +258,12 @@ export const RegisterSymbols = () => {
               style={{ fontSize: 16 }}
               rows={5}
               value={descr.value}
-              onChange={handleChangeDescr}
               disabled={true}
               placeholder="Description of an asset (up to 140 characters)"
             />
           </Form.Item>
         )}
+
         <Form.Item>
           <Space>
             {isAvailable === undefined || isAvailable === null ? (
@@ -352,9 +296,6 @@ export const RegisterSymbols = () => {
           </Space>
         </Form.Item>
       </Form>
-      {/* <div style={{ display: 'flex', justifyContent: 'center' }}>
-        <Button type="link" danger onClick={() => dispatch(cancelRegSymbol())}>skip registering symbols</Button>
-      </div> */}
     </div>
   );
 };

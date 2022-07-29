@@ -6,9 +6,7 @@ import { loadSportsCalendarCache } from 'store/thunks/loadSportsCalendarCache';
 export const cacheSlice = createSlice({
   name: 'cache',
   initialState: {
-    calendar: {
-
-    }
+    calendar: {}
   },
   reducers: {},
   extraReducers: {
@@ -22,7 +20,7 @@ export const cacheSlice = createSlice({
         count: count
       };
 
-      state.calendar[sport][championship].data.push(...data);// = [...state.calendar[sport][championship], ...data]
+      state.calendar[sport][championship].data.push(...data);
       state.calendar[sport][championship].count = count;
     },
     [loadMarketsInCache.fulfilled]: (state, action) => {
@@ -57,7 +55,7 @@ export const cacheSlice = createSlice({
       const { data, count, currency } = action.payload;
 
       if (!("currency" in state.calendar)) state.calendar.currency = {};
-      
+
 
       if (!(currency in state.calendar.currency)) state.calendar.currency[currency] = {
         data: [],
@@ -66,21 +64,9 @@ export const cacheSlice = createSlice({
 
       state.calendar.currency[currency].data.push(...data);
       state.calendar.currency[currency].count = count;
-
-      // if (!('currency' in state.calendar)){
-      //   state.calendar.currency = {
-      //     data,
-      //     count
-      //   }
-      // } else {
-      //   state.calendar.currency.data.push(...data);
-      //   state.calendar.currency.count = count;
-      // }
-    }    
+    }
   }
 });
-
-// export const { } = cacheSlice.actions;
 
 export default cacheSlice.reducer;
 

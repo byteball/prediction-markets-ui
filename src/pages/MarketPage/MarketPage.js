@@ -10,7 +10,17 @@ import QRButton from "obyte-qr-button";
 import Countdown from "antd/lib/statistic/Countdown";
 import { Img } from 'react-image';
 
-import { selectActiveCurrencyCandles, selectActiveCurrencyCurrentValue, selectActiveDailyCloses, selectActiveDatafeedValue, selectActiveMarketParams, selectActiveMarketStateVars, selectActiveMarketStatus, selectActiveRecentEvents, selectActiveTeams } from "store/slices/activeSlice";
+import {
+  selectActiveCurrencyCandles,
+  selectActiveCurrencyCurrentValue,
+  selectActiveDailyCloses,
+  selectActiveDatafeedValue,
+  selectActiveMarketParams,
+  selectActiveMarketStateVars,
+  selectActiveMarketStatus,
+  selectActiveRecentEvents,
+  selectActiveTeams
+} from "store/slices/activeSlice";
 import { setActiveMarket } from "store/thunks/setActiveMarket";
 import { selectPriceOrCoef, selectReserveAssets, selectReservesRate } from "store/slices/settingsSlice";
 import { getMarketPriceByType, generateLink, generateTextEvent } from "utils";
