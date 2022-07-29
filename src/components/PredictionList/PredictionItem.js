@@ -19,7 +19,7 @@ import styles from "./PredictionItem.module.css";
 
 const max_display_decimals = 5;
 
-export const PredictionItem = ({ reserve_asset = 'base', aa_address, reserve = 0, reserve_decimals = 0, yes_price = 0, no_price = 0, draw_price = 0, allow_draw, event_date, candles, reserve_symbol, yes_symbol, result, waiting_period_length, feed_name, expect_datafeed_value, datafeed_value, oracle, comparison, yes_team_id, no_team_id, yes_team, no_team, supply_yes = 0, supply_no = 0, supply_draw = 0, preview, apy = 0, quiet_period }) => {
+export const PredictionItem = ({ reserve_asset = 'base', aa_address, reserve = 0, reserve_decimals = 0, yes_price = 0, no_price = 0, draw_price = 0, allow_draw, event_date, candles, reserve_symbol, yes_symbol, result, waiting_period_length, feed_name, expect_datafeed_value, datafeed_value, oracle, comparison, yes_team_id, no_team_id, yes_team, no_team, supply_yes = 0, supply_no = 0, supply_draw = 0, preview, apy = 0, quiet_period = 0 }) => {
   const infoWrapRef = useRef();
   const [width] = useWindowSize();
 
@@ -119,7 +119,6 @@ export const PredictionItem = ({ reserve_asset = 'base', aa_address, reserve = 0
   const SecondWrapper = exists && !preview ? Link : Fragment
   const secondWrapperProps = exists ? { to: `/market/${aa_address}` } : {};
 
-
   // calc coef
   let yes_coef = 0;
   let draw_coef = 0;
@@ -133,7 +132,7 @@ export const PredictionItem = ({ reserve_asset = 'base', aa_address, reserve = 0
 
   return <Wrapper {...wrapperProps}>
     <SecondWrapper {...secondWrapperProps}>
-      <Card className={styles.itemWrap} style={{ color: "#fff", opacity: isExpiry ? 0.5 : 1 }}>
+      <Card className={styles.itemWrap} style={{ opacity: isExpiry ? 0.5 : 1 }}>
         <Row gutter={10} align="middle">
           <Col md={{ span: 16 }} xs={{ span: 24 }} sm={{ span: 24 }} ref={infoWrapRef}>
             {!marketHasCrests ? <div className={styles.eventDesc}>
@@ -167,7 +166,9 @@ export const PredictionItem = ({ reserve_asset = 'base', aa_address, reserve = 0
                     unloader={<div />}
                   />
                   <div className={styles.teamWrap}>
-                    <Typography.Text style={{ color: appConfig.NO_COLOR }} className={styles.team} ellipsis={true}><small>{no_team}</small></Typography.Text>
+                    <Typography.Text style={{ color: appConfig.NO_COLOR }} className={styles.team} ellipsis={true}>
+                      <small>{no_team}</small>
+                    </Typography.Text>
                   </div>
 
                   {exists && no_coef && yes_coef ? <div style={{ color: appConfig.NO_COLOR }}>

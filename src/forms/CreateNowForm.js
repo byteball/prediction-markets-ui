@@ -6,14 +6,15 @@ import { saveCreationOrder, selectReserveAssets } from "store/slices/settingsSli
 import QRButton from "obyte-qr-button";
 import { Img } from "react-image";
 import moment from "moment";
+import { debounce, isNaN } from "lodash";
 
-import appConfig from "appConfig";
 import { paramList } from "./CreateForm";
 import { generateLink, generateTextEvent } from "utils";
 
 import styles from "components/PredictionList/PredictionItem.module.css";
-import { debounce, isNaN } from "lodash";
 import client from "services/obyte";
+
+import appConfig from "appConfig";
 
 const f = (x) => (~(x + "").indexOf(".") ? (x + "").split(".")[1].length : 0);
 
@@ -39,15 +40,12 @@ export const CreateNowForm = ({ feed_name, event_date, expect_datafeed_value, ye
   }
 
   const reserveAssets = useSelector(selectReserveAssets);
-  // const popularCurrencyPairs = useSelector(selectPopularCurrencyPairs);
-  // const popularCurrencyPairsByOracle = useSelector(selectPopularCurrencyPairsByOracle);
 
   const dispatch = useDispatch();
 
   useEffect(() => {
     handleChangeFeedName(feed_name);
   }, [feed_name]);
-
 
   const handleChangeValue = (evOrValue, type) => {
     let value;
@@ -212,10 +210,6 @@ export const CreateNowForm = ({ feed_name, event_date, expect_datafeed_value, ye
 
             <Col flex="auto">
               <Form.Item extra={currentFeedValue.loading ? 'Loading rate...' : <span style={{ color: currentFeedValue.value ? 'green' : 'red' }}>{currentFeedValue.value ? `Current rate: ${currentFeedValue.value} ${dataFeedCurrency}` : 'Pair not found'}</span>} validateStatus={feedName.value !== '' ? (feedName.valid ? 'success' : 'error') : undefined}>
-                {/* <Select placeholder={paramList.feed_name.placeholder} value={feedName.value} size="large" onChange={(value) => handleChangeValue(value, 'feed_name')}>
-              {popularCurrencyPairs.map(feed_name => <Select.Option value={feed_name}>{feed_name}</Select.Option>)}
-            </Select> */}
-
                 <AutoComplete
                   autoComplete="off"
                   placeholder={paramList.feed_name.placeholder}
@@ -231,20 +225,6 @@ export const CreateNowForm = ({ feed_name, event_date, expect_datafeed_value, ye
           </Row>
         </Col>
 
-        {/* <Col xs={{ span: 24 }} md={{ span: 24 }}>
-          <Form.Item style={{ textAlign: 'center', fontSize: 18 }}>to be above</Form.Item>
-        </Col> */}
-        {/* <div style={{ textAlign: 'center', fontSize: 18, width: '100%' }}><p>to be above</p></div> */}
-
-        {/* <Col xs={{ span: 24 }} md={{ span: 24 }}>
-          <Form.Item validateStatus={comparison.value !== '' ? (comparison.valid ? 'success' : 'error') : undefined} label={<FormLabel info={paramList.comparison.description}>Comparison</FormLabel>}>
-            <Select onChange={(ev) => handleChangeValue(ev, 'comparison')} size="large" value={comparison.value}>
-              <Select.Option value=">">above</Select.Option>
-              <Select.Option value="<">below</Select.Option>
-            </Select>
-          </Form.Item>
-        </Col> */}
-        {/* label={<FormLabel info={paramList.datafeed_value.description}>Exchange rate</FormLabel>} */}
         <Col xs={{ span: 24 }} md={{ span: 24 }}>
           <Row gutter={8}>
             <Col flex="150px" style={{ fontSize: 18 }}>
@@ -257,10 +237,6 @@ export const CreateNowForm = ({ feed_name, event_date, expect_datafeed_value, ye
             </Col>
           </Row>
         </Col>
-
-        {/* <Col xs={{ span: 24 }} md={{ span: 24 }}>
-          <Form.Item style={{ textAlign: 'center', fontSize: 18 }}>on</Form.Item>
-        </Col> */}
 
         <Col xs={{ span: 24 }} md={{ span: 24 }}>
           <Row gutter={8}>
@@ -303,19 +279,11 @@ export const CreateNowForm = ({ feed_name, event_date, expect_datafeed_value, ye
         </Form.Item>
       </Col>
 
-      {type !== 'sport' && <>
-        {/* <Col xs={{ span: 24 }} md={{ span: 24 }}>
-          <Form.Item validateStatus={waitingPeriodLength.value !== '' ? (waitingPeriodLength.valid ? 'success' : 'error') : undefined} label={<FormLabel info={paramList.waiting_period_length.description}>Duration of the waiting period (in days)</FormLabel>}>
-            <Input size="large" placeholder={paramList.waiting_period_length.placeholder} onChange={(ev) => handleChangeValue(ev, 'waiting_period_length')} value={waitingPeriodLength.value} />
-          </Form.Item>
-        </Col> */}
-
-        <Col xs={{ span: 24 }} md={{ span: 24 }}>
+      {type !== 'sport' && <Col xs={{ span: 24 }} md={{ span: 24 }}>
           <Form.Item validateStatus={quietPeriod.value !== '' ? (quietPeriod.valid ? 'success' : 'error') : undefined} label={<FormLabel value={quietPeriod.valid ? quietPeriod.value : 0} info={paramList.quiet_period.description}>Quiet period (in hours)</FormLabel>}>
             <Input size="large" placeholder={paramList.quiet_period.placeholder} onChange={(ev) => handleChangeValue(ev, 'quiet_period')} value={quietPeriod.value} />
           </Form.Item>
-        </Col>
-      </>}
+        </Col>}
     </Row>
 
     <QRButton href={link} type="primary" disabled={!issueFee.valid || !redeemFee.valid || !arbProfitFee.valid || (type === 'currency' && (!eventDate.valid || !datafeedValue.valid || !customOracle.valid || currentFeedValue.loading))} onClick={create} size="large">Create</QRButton>

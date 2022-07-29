@@ -4,7 +4,12 @@ import { useSelector } from "react-redux";
 
 import { ClaimProfitForm } from "forms";
 import { useWindowSize } from "hooks";
-import { selectActiveAddress, selectActiveMarketParams, selectActiveMarketStateVars, selectActiveMarketStatus } from "store/slices/activeSlice";
+import {
+  selectActiveAddress,
+  selectActiveMarketParams,
+  selectActiveMarketStateVars,
+  selectActiveMarketStatus
+} from "store/slices/activeSlice";
 import { selectWalletAddress } from "store/slices/settingsSlice";
 
 const { Title } = Typography;
@@ -15,9 +20,11 @@ export const ClaimProfitModal = ({ disabled }) => {
   const address = useSelector(selectActiveAddress);
   const stateVars = useSelector(selectActiveMarketStateVars);
   const walletAddress = useSelector(selectWalletAddress);
+
   const { yes_decimals, no_decimals, draw_decimals, yes_symbol, no_symbol, draw_symbol, reserve_decimals, reserve_symbol } = useSelector(selectActiveMarketParams);
 
   const { result: winner, supply_yes, supply_no, supply_draw, reserve, yes_asset, no_asset, draw_asset } = stateVars;
+
   const supply = (winner === 'yes' ? supply_yes : (winner === 'no' ? supply_no : supply_draw) || 0);
   const decimals = (winner === 'yes' ? yes_decimals : (winner === 'no' ? no_decimals : draw_decimals) || 0);
   const asset = (winner === 'yes' ? yes_asset : (winner === 'no' ? no_asset : draw_asset) || 0);
@@ -37,9 +44,12 @@ export const ClaimProfitModal = ({ disabled }) => {
       visible={visible}
       onClose={close}
     >
-
       <Title level={2}>Claim profit</Title>
-      <Typography.Paragraph type="secondary">YES was the right choice and you can collect your winnings</Typography.Paragraph>
+
+      <Typography.Paragraph type="secondary">
+        YES was the right choice and you can collect your winnings
+      </Typography.Paragraph>
+
       <ClaimProfitForm
         address={address}
         supply={supply}

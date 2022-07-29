@@ -20,6 +20,20 @@
   text-align: center;
 }
 
+.listWrap {
+  margin: 0 auto;
+  margin-top: 40px;
+  max-width: 780px;
+}
+
+.spinWrap {
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
 @media (max-width: 580px) {
   .mainHeader {
     font-size: 32px;

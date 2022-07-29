@@ -25,10 +25,10 @@ export const ViewParamsModal = ({ event, reserve_asset, allow_draw, oracle, feed
       onClose={close}
     >
       <Title level={2} style={{ marginBottom: 0 }}>View params</Title>
-      <p><a href={`https://${appConfig.ENVIRONMENT === 'testnet' ? 'testnet' : ''}explorer.obyte.org/#${aa_address}`} target="_blank">View AA on explorer</a></p>
+      <p><a href={`https://${appConfig.ENVIRONMENT === 'testnet' ? 'testnet' : ''}explorer.obyte.org/#${aa_address}`} target="_blank" rel="noopener">View AA on explorer</a></p>
       <p><b>Reserve asset: </b>{reserve_asset}</p>
       <p><b>Allow draw: </b>{allow_draw ? 'yes' : 'no'}</p>
-      <p><b>Oracle: </b><a href={`https://${appConfig.ENVIRONMENT === 'testnet' ? 'testnet' : ''}explorer.obyte.org/#${oracle}`} target="_blank">{oracle}</a></p>
+      <p><b>Oracle: </b><a href={`https://${appConfig.ENVIRONMENT === 'testnet' ? 'testnet' : ''}explorer.obyte.org/#${oracle}`} target="_blank" rel="noopener">{oracle}</a></p>
       <p><b>Feed name: </b>{feed_name}</p>
       <p><b>Comparison: </b>{comparison}</p>
       <p><b>Datafeed value: </b>{datafeed_value}</p>

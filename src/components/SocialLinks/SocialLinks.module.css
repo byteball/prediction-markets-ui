@@ -1,0 +1,16 @@
+.wrap {
+    text-align: center;
+    font-size: 14px;
+}
+
+.list {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    font-size: 18px;
+}
+
+.item {
+    margin: 5px 10px;
+    color: #2D72F6;
+}

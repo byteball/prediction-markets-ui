@@ -44,9 +44,21 @@ export const TradeModal = memo(({ disabled, visible, setVisible, yes_team, no_te
       <Title level={2}>Trade</Title>
       <SwitchActions data={[{ value: 'buy', text: 'Buy' }, { value: 'redeem', text: 'Sell', disabled: true }]} onChange={(action) => setAction(action)} value={action} />
 
-      {action === 'buy' && <BuyForm amount={buyAmount} setAmount={setBuyAmount} type={visible.type} yes_team={yes_team} no_team={no_team} />}
-      
-      {action === 'redeem' && <RedeemForm amount={redeemAmount} setAmount={setRedeemAmount} type={visible.type} yes_team={yes_team} no_team={no_team} />}
+      {action === 'buy' && <BuyForm
+        amount={buyAmount}
+        setAmount={setBuyAmount}
+        type={visible.type}
+        yes_team={yes_team}
+        no_team={no_team}
+      />}
+
+      {action === 'redeem' && <RedeemForm
+        amount={redeemAmount}
+        setAmount={setRedeemAmount}
+        type={visible.type}
+        yes_team={yes_team}
+        no_team={no_team}
+      />}
     </Drawer>}
   </>
 })

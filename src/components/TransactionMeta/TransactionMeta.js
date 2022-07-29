@@ -5,6 +5,8 @@ import { useSelector } from "react-redux";
 
 import { selectPriceOrCoef } from "store/slices/settingsSlice";
 
+import styles from "./TransactionMeta.module.css";
+
 export const TransactionMeta = ({ meta, params, tokenType }) => {
     const { reserve_symbol, reserve_decimals, issue_fee } = params;
     const [visibleFee, setVisibleFee] = useState(false);
@@ -25,7 +27,7 @@ export const TransactionMeta = ({ meta, params, tokenType }) => {
 
     const percentageCoefDifference = 100 * (new_coef - coef) / coef;
 
-    return <div style={{ fontSize: 16 }}>
+    return <div className={styles.wrap}>
         {percentagePriceDifference !== 0 && <div>
             {priceOrCoef === 'price'
                 ? <><span className="metaLabel">New price</span>: <span style={{ color: getColorByValue(percentagePriceDifference) }}>{+Number(new_price).toPrecision(8)} {reserve_symbol} (<span>{percentagePriceDifference > 0 ? "+" : ''}{Number(percentagePriceDifference).toFixed(2)}%)</span></span></>
@@ -34,9 +36,9 @@ export const TransactionMeta = ({ meta, params, tokenType }) => {
         <div>
             <Space>
                 <span>Total fee: <span style={{ color: getColorByValue(meta.percentage_total_fee) }}>{+Number((meta.total_fee) / 10 ** reserve_decimals).toFixed(reserve_decimals)} {reserve_symbol} ({Number(meta.percentage_total_fee).toFixed(2)}%)</span></span>
-                <span onClick={() => setVisibleFee((v) => !v)} style={{ borderBottom: '1px dotted #fff', cursor: 'pointer', fontWeight: 300, color: "#ccc" }}>show details</span>
+                <span onClick={() => setVisibleFee((v) => !v)} className={styles.detailsBtn}>show details</span>
             </Space>
-            {visibleFee && <div style={{ fontSize: 14, marginTop: 2 }} onClick={() => setVisibleFee((v) => !v)}>
+            {visibleFee && <div className={styles.detailsWrap} onClick={() => setVisibleFee((v) => !v)}>
                 {meta.arb_profit_tax !== 0 && <div><span className="metaLabel">Arb profit tax</span>:  <span style={{ color: getColorByValue(meta.percentage_arb_profit_tax) }}>{+Number(meta.arb_profit_tax / 10 ** reserve_decimals).toFixed(reserve_decimals)} {reserve_symbol} ({Number(meta.percentage_arb_profit_tax).toFixed(2)}%) {meta.percentage_arb_profit_tax > 5 && <FormLabel info="The more you change the price, the more commissions you pay." />}</span></div>}
                 {meta.issue_fee !== 0 && <div><span className="metaLabel">Issue fee</span>: {+Number((meta.issue_fee) / 10 ** reserve_decimals).toFixed(reserve_decimals)} {reserve_symbol} ({issue_fee * 100}%)</div>}
                 {meta.redeem_fee !== 0 && <div><span className="metaLabel">Sell fee</span>: {+Number((meta.redeem_fee) / 10 ** reserve_decimals).toFixed(reserve_decimals)} {reserve_symbol} ({meta.percentage_redeem_fee}%)</div>}

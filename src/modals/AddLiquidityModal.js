@@ -29,7 +29,10 @@ export const AddLiquidityModal = ({ disabled, yes_team, no_team }) => {
     >
 
       <Title level={2}>Add liquidity</Title>
-      <AddLiquidityForm yes_team={yes_team} no_team={no_team} />
+      <AddLiquidityForm
+        yes_team={yes_team}
+        no_team={no_team}
+      />
     </Drawer>}
   </>
 }
