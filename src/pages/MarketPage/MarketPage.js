@@ -308,7 +308,7 @@ export const MarketPage = () => {
         </Space>
       </Row>
 
-      {!appConfig.KNOWN_ORACLES.includes(oracle) && <Alert showIcon message={<span>This market uses an oracle <a style={{ color: '#fff' }} href={`https://${appConfig.ENVIRONMENT === 'testnet' ? 'testnet' : ''}explorer.obyte.org/#${oracle}`} target="_blank">{oracle}</a> that is unknown to this website, trade with care.</span>} type="warning" />}
+      {!appConfig.KNOWN_ORACLES.includes(oracle) && <Alert showIcon message={<span>This market uses an oracle <a style={{ color: '#fff' }} href={`https://${appConfig.ENVIRONMENT === 'testnet' ? 'testnet' : ''}explorer.obyte.org/#${oracle}`} target="_blank" rel="noopener">{oracle}</a> that is unknown to this website, trade with care.</span>} type="warning" />}
 
       {isCurrencyMarket && currencyCandles.length > 0 && <CurrencyChart data={currencyCandles} params={params} />}
 

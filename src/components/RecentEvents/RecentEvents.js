@@ -33,6 +33,6 @@ export const RecentEvents = ({ data: notSortedData }) => {
 const RecentEventItem = ({ Event, trigger_unit, timestamp }) => {
   return (<div className={styles.eventWrap}>
     <div key={`ev-${timestamp}`}>{Event || 'test'}</div>
-    <a href={`https://${appConfig.ENVIRONMENT === 'testnet' ? 'testnet' : ''}explorer.obyte.org/#${trigger_unit}`} target="_blank" className={styles.timestamp}>{moment.unix(timestamp).format("LLL")}</a>
+    <a href={`https://${appConfig.ENVIRONMENT === 'testnet' ? 'testnet' : ''}explorer.obyte.org/#${trigger_unit}`} target="_blank" rel="noopener" className={styles.timestamp}>{moment.unix(timestamp).format("LLL")}</a>
   </div>)
 }

@@ -226,8 +226,8 @@ export const BuyForm = ({ type, yes_team, no_team, amount, setAmount }) => {
         tokenType={currentToken?.type}
       />
       {(fromToken.network !== "Obyte" && estimate) ? <div style={{ marginTop: 20 }}>
-        {counterstake_assistant_fee ? <div><span className="metaLabel"><a href="https://counterstake.org" target="_blank">Counterstake</a> fee</span>: {+Number(counterstake_assistant_fee).toFixed(fromToken.decimals)} {fromToken.symbol}</div> : null}
-        {(fromToken.network !== "Obyte" && estimate && fromToken.foreign_asset !== reserve_asset) ? <div><span className="metaLabel"><a href="https://oswap.io" target="_blank">Oswap</a> rate</span>: 1 {fromToken.symbol} ≈ {+Number(estimate / amount.value).toFixed(reserve_decimals)} {reserve_symbol}</div> : null}
+        {counterstake_assistant_fee ? <div><span className="metaLabel"><a href="https://counterstake.org" target="_blank" rel="noopener">Counterstake</a> fee</span>: {+Number(counterstake_assistant_fee).toFixed(fromToken.decimals)} {fromToken.symbol}</div> : null}
+        {(fromToken.network !== "Obyte" && estimate && fromToken.foreign_asset !== reserve_asset) ? <div><span className="metaLabel"><a href="https://oswap.io" target="_blank" rel="noopener">Oswap</a> rate</span>: 1 {fromToken.symbol} ≈ {+Number(estimate / amount.value).toFixed(reserve_decimals)} {reserve_symbol}</div> : null}
       </div> : <div />}
     </Form.Item>}
 
@@ -235,7 +235,7 @@ export const BuyForm = ({ type, yes_team, no_team, amount, setAmount }) => {
       <Alert
         type="error"
         message="MetaMask not installed!"
-        description={<span>Please <a href="https://metamask.io/download/" style={{ color: "#fff", textDecoration: 'underline' }} target="_blank">install</a> it in your browser.</span>}
+        description={<span>Please <a href="https://metamask.io/download/" style={{ color: "#fff", textDecoration: 'underline' }} target="_blank" rel="noopener">install</a> it in your browser.</span>}
       />
     </Form.Item>}
 
