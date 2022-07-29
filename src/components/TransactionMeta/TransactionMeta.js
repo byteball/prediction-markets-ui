@@ -5,6 +5,8 @@ import { useSelector } from "react-redux";
 
 import { selectPriceOrCoef } from "store/slices/settingsSlice";
 
+import styles from "./TransactionMeta.module.css";
+
 export const TransactionMeta = ({ meta, params, tokenType }) => {
     const { reserve_symbol, reserve_decimals, issue_fee } = params;
     const [visibleFee, setVisibleFee] = useState(false);

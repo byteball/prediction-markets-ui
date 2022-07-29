@@ -6,9 +6,14 @@ import { isNumber } from "lodash";
 import QRButton from "obyte-qr-button";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
+
 import client from "services/obyte";
 
-import { selectActiveAddress, selectActiveMarketParams, selectActiveMarketStateVars } from "store/slices/activeSlice";
+import {
+  selectActiveAddress,
+  selectActiveMarketParams,
+  selectActiveMarketStateVars
+} from "store/slices/activeSlice";
 import { selectTokensByNetwork } from "store/slices/bridgesSlice";
 import { selectWalletAddress } from "store/slices/settingsSlice";
 import { generateLink, getExchangeResult, getMarketPriceByType } from "utils";
@@ -48,7 +53,6 @@ export const AddLiquidityForm = ({ yes_team, no_team }) => {
     amountInPennies = Math.ceil((fromToken.network === "Obyte" ? reserveAmount.value : estimate) * 10 ** reserve_decimals);
     amountInPenniesWithoutFee = amountInPennies * (1 - params.issue_fee) - network_fee;
   }
-  console.log('estimate', estimate)
 
   const drawPercent = probabilities.yes.valid && probabilities.no.valid && ((Number(probabilities.no.value) + Number(probabilities.yes.value)) < 100) ? 100 - probabilities.no.value - probabilities.yes.value : 0;
   const percentSum = Number(probabilities.no.value || 0) + Number(probabilities.yes.value || 0) + (allow_draw ? drawPercent : 0);
@@ -131,10 +135,9 @@ export const AddLiquidityForm = ({ yes_team, no_team }) => {
 
     setFromToken({ asset, decimals: Number(decimals || 0), symbol: symbol.join("__"), network, foreign_asset });
 
-    // if (amount.valid && amount.value) 
-    // TODO fix it decimals
-    // setAmount((a) => ({ ...a, value: +Number(a.value).toFixed(decimals) }))
-    // }
+    if (reserveAmount.valid && reserveAmount.value) {
+      setReserveAmount((a) => ({ ...a, value: +Number(a.value).toFixed(decimals) }))
+    }
   }
 
   useEffect(async () => {
@@ -205,10 +208,6 @@ export const AddLiquidityForm = ({ yes_team, no_team }) => {
   if (isFirstIssue) {
     data.yes_amount_ratio = probabilities.yes.value / 100;
     data.no_amount_ratio = probabilities.no.value / 100;
-
-    // if (allow_draw) {
-    //   data.draw_amount_ratio = probabilities.draw.value / 100;
-    // }
   }
 
   const link = generateLink({
@@ -224,7 +223,7 @@ export const AddLiquidityForm = ({ yes_team, no_team }) => {
     if (value === "") {
       setReserveAmount({ value: undefined, valid: true });
     } else {
-      if (f(value) <= reserve_decimals && value <= 9e9) {
+      if (f(value) <= fromToken.decimals && value <= 1e9) {
         setReserveAmount({ value, valid: !isNaN(Number(value)) && Number(value) > minAmount });
       }
     }
@@ -280,7 +279,6 @@ export const AddLiquidityForm = ({ yes_team, no_team }) => {
 
   const counterstake_assistant_fee = fromToken.network !== "Obyte" ? reserveAmount.value * 0.01 : 0;
   const metamaskInstalled = window.ethereum;
-
 
   const buyViaEVM = async () => {
     try {
