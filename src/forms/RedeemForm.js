@@ -1,11 +1,15 @@
 import { Form, Select, Input, Alert, Spin, Row, Col } from "antd";
-import { TransactionMeta } from "components/TransactionMeta/TransactionMeta";
 import { isNaN } from "lodash";
 import QRButton from "obyte-qr-button";
 import { memo, useEffect, useRef, useState } from "react";
 import { useSelector } from "react-redux";
 
-import { selectActiveAddress, selectActiveMarketParams, selectActiveMarketStateVars } from "store/slices/activeSlice";
+import { TransactionMeta } from "components/TransactionMeta/TransactionMeta";
+import {
+  selectActiveAddress,
+  selectActiveMarketParams,
+  selectActiveMarketStateVars
+} from "store/slices/activeSlice";
 import { selectWalletAddress } from "store/slices/settingsSlice";
 import { generateLink, getExchangeResult, truncate } from "utils";
 
@@ -27,8 +31,6 @@ export const RedeemForm = memo(({ type, yes_team, no_team, amount, setAmount }) 
 
   const { yes_symbol, no_symbol, draw_symbol, allow_draw, reserve_symbol, reserve_decimals, yes_decimals, no_decimals, draw_decimals } = params;
   const { yes_asset, no_asset, draw_asset } = stateVars;
-
-  // const network_fee = reserve_asset === 'base' ? 1e4 : 0;
 
   useEffect(() => {
     const tokens = [
@@ -79,15 +81,6 @@ export const RedeemForm = memo(({ type, yes_team, no_team, amount, setAmount }) 
   if (currentToken?.type === 'draw') data.draw_amount = Number(amount.value * 10 ** draw_decimals).toFixed(0);
 
   const link = generateLink({ aa: address, asset: currentToken?.asset, is_single: true, amount: Math.ceil(amount.value * 10 ** currentToken?.decimals), from_address: walletAddress || undefined })
-
-  // const new_price = meta && currentToken ? currentToken.type === 'yes' ? meta.new_yes_price : (currentToken.type === 'no' ? meta.new_no_price : meta.new_draw_price) : 0;
-  // const old_price = meta && currentToken ? currentToken.type === 'yes' ? meta.old_yes_price : (currentToken.type === 'no' ? meta.old_no_price : meta.old_draw_price) : 0;
-
-  // const percentageDifference = new_price !== 0 && old_price !== 0 ? 100 * (new_price - old_price) / old_price : 0;
-  // const percentageArbProfitTax = Number(100 * (meta?.arb_profit_tax / (amount.value * 10 ** reserve_decimals)));
-
-  // const totalFee = meta?.fee //+ meta?.arb_profit_tax; //TODO: add network_fee
-  // const percentageTotalFee = Number(100 * (totalFee / (amount.value * 10 ** reserve_decimals)));
 
   if (!currentToken) return <Spin size="large" />
 

@@ -3,16 +3,22 @@ import { isNaN } from "lodash";
 import QRButton from "obyte-qr-button";
 import { useEffect, useRef, useState } from "react";
 import { useSelector } from "react-redux";
+import { estimateOutput, transferEVM2Obyte } from "counterstake-sdk";
 
-import { selectActiveAddress, selectActiveMarketParams, selectActiveMarketStateVars } from "store/slices/activeSlice";
+import {
+  selectActiveAddress,
+  selectActiveMarketParams,
+  selectActiveMarketStateVars
+} from "store/slices/activeSlice";
 import { selectWalletAddress } from "store/slices/settingsSlice";
-import { generateLink } from "utils";
 import { get_result_for_buying_by_type } from "utils/getExchangeResult";
 import { selectTokensByNetwork } from "store/slices/bridgesSlice";
+import { generateLink } from "utils";
+
+import { TransactionMeta } from "components/TransactionMeta/TransactionMeta";
+
 import appConfig from "appConfig";
 import client from "services/obyte";
-import { estimateOutput, transferEVM2Obyte } from "counterstake-sdk";
-import { TransactionMeta } from "components/TransactionMeta/TransactionMeta";
 
 const f = (x) => (~(x + "").indexOf(".") ? (x + "").split(".")[1].length : 0);
 
@@ -77,7 +83,7 @@ export const BuyForm = ({ type, yes_team, no_team, amount, setAmount }) => {
   useEffect(() => {
     if (currentToken && amount.valid && !isNaN(Number(amount.value)) && Number(amount.value) > 0) {
       const reserveAmount = (fromToken.network !== "Obyte" ? estimate : amount.value) * 10 ** reserve_decimals;
-      console.log('estimate', estimate)
+
       const result = get_result_for_buying_by_type(stateVars, params, currentToken.type, reserveAmount);
 
       setGetAmount({ value: result.amount, valid: true })
@@ -90,16 +96,7 @@ export const BuyForm = ({ type, yes_team, no_team, amount, setAmount }) => {
 
   let data = { type: currentToken?.type };
 
-  const link = generateLink({ aa: address, asset: reserve_asset, is_single: true, amount: Math.ceil(amount.value * 10 ** reserve_decimals), data, from_address: walletAddress || undefined })
-
-  // const new_price = meta && currentToken ? currentToken.type === 'yes' ? meta.new_yes_price : (currentToken.type === 'no' ? meta.new_no_price : meta.new_draw_price) : 0;
-  // const old_price = meta && currentToken ? currentToken.type === 'yes' ? meta.old_yes_price : (currentToken.type === 'no' ? meta.old_no_price : meta.old_draw_price) : 0;
-
-  // const percentageDifference = new_price !== 0 && old_price !== 0 ? 100 * (new_price - old_price) / old_price : 0;
-  // const percentageArbProfitTax = Number(100 * (meta?.arb_profit_tax / (amount.value * 10 ** reserve_decimals)));
-  // const totalFee = meta?.arb_profit_tax + network_fee + meta?.issue_fee;
-  // const percentageTotalFee = Number(100 * (totalFee / (amount.value * 10 ** reserve_decimals)));
-  // const change = amount.value * 10 ** reserve_decimals - meta?.reserve_needed - meta?.fee - network_fee;
+  const link = generateLink({ aa: address, asset: reserve_asset, is_single: true, amount: Math.ceil(amount.value * 10 ** reserve_decimals), data, from_address: walletAddress || undefined });
 
   const handleChangeFromToken = (strValue) => {
     const [network, asset, decimals, foreign_asset, ...symbol] = strValue.split("__");
@@ -107,7 +104,7 @@ export const BuyForm = ({ type, yes_team, no_team, amount, setAmount }) => {
     setFromToken({ asset, decimals: Number(decimals || 0), symbol: symbol.join("__"), network, foreign_asset });
 
     if (amount.valid && amount.value) {
-      setAmount((a) => ({ ...a, value: +Number(a.value).toFixed(decimals) }))
+      setAmount((a) => ({ ...a, value: +Number(a.value).toFixed(decimals) }));
     }
   }
 
@@ -132,17 +129,17 @@ export const BuyForm = ({ type, yes_team, no_team, amount, setAmount }) => {
           setEstimate(0);
         }
 
-        setEstimateError(undefined)
+        setEstimateError(undefined);
       } catch (e) {
         setEstimate(0);
-        setEstimateError(e.message)
+        setEstimateError(e.message);
         console.log('estimateOutput error')
       }
 
     } else if (estimate) {
       setEstimate(0);
     }
-  }, [fromToken, amount])
+  }, [fromToken, amount]);
 
   const buyViaEVM = async () => {
     try {
@@ -163,8 +160,8 @@ export const BuyForm = ({ type, yes_team, no_team, amount, setAmount }) => {
       notification.error({
         message: "The transaction would fail. Please check that you have sufficient balance",
         placement: "top"
-      })
-    }
+      });
+    };
   }
 
   if (!currentToken || !fromToken) return <div style={{ display: 'flex', justifyContent: 'center', padding: 20 }}>
