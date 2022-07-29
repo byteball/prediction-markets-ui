@@ -1,3 +1,5 @@
+import appConfig from "appConfig";
+
 export const responseToEvent = (responseObj, params, state) => {
   const responseVars = responseObj?.response?.responseVars || {};
   const { reserve_symbol, yes_symbol, no_symbol, draw_symbol, yes_decimals = 0, no_decimals = 0, draw_decimals = 0, reserve_decimals } = params;
@@ -9,21 +11,21 @@ export const responseToEvent = (responseObj, params, state) => {
   const no_amount = responseVars.no_amount / 10 ** no_decimals || 0;
   const draw_amount = responseVars.draw_amount / 10 ** draw_decimals || 0;
 
-  let event = "Undefined";
-
+  let Event = "Undefined";
+  
   if ("yes_asset" in responseVars || "no_asset" in responseVars || "draw_asset" in responseVars) {
-    event = 'Configuration';
+    Event = 'Configuration';
   } else if ('yes_amount' in responseVars && 'no_amount' in responseVars && 'draw_amount' in responseVars) {
     const action = "arb_profit_tax" in responseVars ? (yes_amount >= 0 && no_amount >= 0 && draw_amount >= 0 ? 'buy' : 'redeem') : 'add liquidity';
-    event = `${author}... ${action}${yes_amount !== 0 ? ` ${Math.abs(yes_amount)} ${yes_symbol}` : ''}${no_amount !== 0 ? ` ${Math.abs(no_amount)} ${no_symbol}` : ''}${draw_amount !== 0 ? ` ${Math.abs(draw_amount)} ${draw_symbol}` : ''}`;
+    Event = <span> {author}... {action}{yes_amount !== 0 ? <span style={{color: appConfig.YES_COLOR}}>{` ${Math.abs(yes_amount)} ${yes_symbol}`}</span> : ''} {no_amount !== 0 ? <span style={{color: appConfig.NO_COLOR}}>{` ${Math.abs(no_amount)} ${no_symbol}`}</span> : ''}{draw_amount !== 0 ? <span style={{color: appConfig.DRAW_COLOR}}>{` ${Math.abs(draw_amount)} ${draw_symbol}`}</span> : ''}</span>;
   } else if ('result' in responseVars) {
-    event = `Result has been set: ${responseVars.result}`;
+    Event = <span>Result has been set: {responseVars.result}</span>
   } else if (state.result && 'profit' in responseVars) {
-    event = `${author}... profited ${responseVars['profit'] / 10 ** reserve_decimals} ${reserve_symbol}`;
+    Event = <span>{author}... profited {responseVars['profit'] / 10 ** reserve_decimals} {reserve_symbol}</span>
   }
 
   return {
-    event,
+    Event,
     timestamp,
     trigger_unit
   }

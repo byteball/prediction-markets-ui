@@ -20,19 +20,22 @@ export const RecentEvents = ({ data: notSortedData }) => {
 
   const increaseLimit = () => setLimit((limit) => limit + limitStep);
 
+  console.log('dataSource', data)
+
   return <List
     dataSource={data.slice(0, limit)}
     renderItem={RecentEventItem}
     className={styles.eventList}
     loadMore={showMoreButton ? <div className={styles.moreButtonWrap}><Button onClick={increaseLimit}>Show more</Button></div> : null}
     locale={{ emptyText: 'No events' }}
+    // rowKey={({ timestamp }) => timestamp}
     size="large"
   />
 }
 
-const RecentEventItem = ({ event, trigger_unit, timestamp }) => {
+const RecentEventItem = ({ Event, trigger_unit, timestamp }) => {
   return (<div className={styles.eventWrap}>
-    <div>{event}</div>
-    <a href={`https://${appConfig.ENVIRONMENT === 'testnet' ? 'testnet' : ''}explorer.obyte.org/#${trigger_unit}`} target="_blank" className={styles.timestamp}>{moment.unix(timestamp).format("LLL")}</a> 
+    <div key={`ev-${timestamp}`}>{Event || 'test'}</div>
+    <a href={`https://${appConfig.ENVIRONMENT === 'testnet' ? 'testnet' : ''}explorer.obyte.org/#${trigger_unit}`} target="_blank" className={styles.timestamp}>{moment.unix(timestamp).format("LLL")}</a>
   </div>)
 }

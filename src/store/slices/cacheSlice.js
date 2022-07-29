@@ -1,11 +1,14 @@
 import { createSlice } from '@reduxjs/toolkit';
+import { loadCurrencyCalendarCache } from 'store/thunks/loadCurrencyCalendarCache';
 import { loadMarketsInCache } from 'store/thunks/loadMarketsInCache';
 import { loadSportsCalendarCache } from 'store/thunks/loadSportsCalendarCache';
 
 export const cacheSlice = createSlice({
   name: 'cache',
   initialState: {
-    calendar: {}
+    calendar: {
+
+    }
   },
   reducers: {},
   extraReducers: {
@@ -48,7 +51,32 @@ export const cacheSlice = createSlice({
         state[type].data.push(...data);
         state[type].count = count;
       }
-    }
+    },
+
+    [loadCurrencyCalendarCache.fulfilled]: (state, action) => {
+      const { data, count, currency } = action.payload;
+
+      if (!("currency" in state.calendar)) state.calendar.currency = {};
+      
+
+      if (!(currency in state.calendar.currency)) state.calendar.currency[currency] = {
+        data: [],
+        count: count
+      };
+
+      state.calendar.currency[currency].data.push(...data);
+      state.calendar.currency[currency].count = count;
+
+      // if (!('currency' in state.calendar)){
+      //   state.calendar.currency = {
+      //     data,
+      //     count
+      //   }
+      // } else {
+      //   state.calendar.currency.data.push(...data);
+      //   state.calendar.currency.count = count;
+      // }
+    }    
   }
 });
 

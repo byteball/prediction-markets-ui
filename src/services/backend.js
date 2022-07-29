@@ -18,6 +18,11 @@ class Backend {
     return championships?.data;
   }
 
+  getPopularCurrencyPairsByOracle = async () => {
+    const popularPairs = await this.axios.get('/popular_oracle_pairs');
+    return popularPairs?.data;
+  }
+
   getCurrencyMarkets = async (page = 1) => {
     const markets = await this.axios.get(`/markets/${page}?&type=currency`);
     return markets?.data;
@@ -52,13 +57,18 @@ class Backend {
     return categories?.data;
   }
 
-  getDailyCandles = async (address) => {
-    const candles = await this.axios.get(`/daily_candles/${address}`);
+  getDailyCloses = async (address) => {
+    const candles = await this.axios.get(`/daily_closes/${address}`);
     return candles?.data;
   }
 
   getSportsCalendar = async (sport, championship, page = 1) => {
     const calendar = await this.axios.get(`/calendar/${sport}/${championship}/${page}`);
+    return calendar?.data;
+  }
+
+  getCurrencyCalendar = async (currency = "GBYTE", page = 1) => {
+    const calendar = await this.axios.get(`/calendar/currency/${currency}/${page}`);
     return calendar?.data;
   }
 }

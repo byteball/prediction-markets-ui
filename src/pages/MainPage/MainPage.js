@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { Col, Empty, Row, Spin } from "antd";
 import { useSelector } from "react-redux";
-import { useNavigate, useParams } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 
 import { Layout } from "components/Layout/Layout";
 import { PredictionList } from "components/PredictionList/PredictionList";
@@ -17,10 +17,12 @@ export const MainPage = () => {
 	const markets = useSelector(selectAllMarkets);
 	const allMarketsStatus = useSelector(selectAllMarketsStatus);
 	const championships = useSelector(selectChampionships);
-	const { category } = useParams();
-
+	const { category, particle: particleFromUrl } = useParams();
 	const navigate = useNavigate();
+	const location = useLocation();
+
 	const [marketType, setMarketType] = useState('all');
+	const [particle, setParticle] = useState('all');
 	const [inited, setInited] = useState(false);
 
 	const sportTypes = Object.keys(championships);
@@ -31,30 +33,75 @@ export const MainPage = () => {
 
 	switchActionsData.push({ value: 'misc', text: 'Misc' })
 
+	console.log('particle', particle, marketType)
+
 	useEffect(() => {
-		if (!markets || allMarketsStatus !== 'loaded') {
+		// init params from url
+		if (!inited) {
 			if (category) {
 				setMarketType(category);
 			} else {
-				navigate('/all');
+				setMarketType('all');
+			}
+
+			if (particleFromUrl) {
+				setParticle(particleFromUrl);
+			} else if (category === 'currency') {
+				setParticle('GBYTE')
+			}
+
+			setInited(true);
+		}
+
+	}, [inited, particleFromUrl, category]);
+
+
+	useEffect(() => {
+		// update when changing url
+		if (inited) {
+			if (category !== marketType) {
+				setMarketType(category);
+			}
+
+			if (particle !== particleFromUrl) {
+				setParticle(particleFromUrl || 'all')
 			}
 		}
-	}, [markets, allMarketsStatus])
 
+	}, [location.pathname]);
 
-	if (!markets || allMarketsStatus !== 'loaded') return (
+	if (!markets || allMarketsStatus !== 'loaded' || !inited) return (
 		<div style={{ width: '100vw', height: '100vh', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
 			<Spin size="large" />
 		</div>
 	)
 
-	const handleAction = (action) => {
-		setMarketType(action);
-		
+	const handleMarketType = (type) => {
+		if (inited && marketType !== type) {
+			setMarketType(type);
+			if (type === 'currency') {
+				setParticle('GBYTE');
+			} else {
+				setParticle('all');
+			}
+
+			if (type === 'all' || !type) {
+				navigate('/');
+
+			} else if (['all', 'misc', 'currency'].includes(type)) {
+				navigate(`/${type}`);
+
+			} else {
+				navigate(`/${type}/all`)
+			}
+		}
+
+	}
+
+	const handleParticle = (particle) => {
 		if (inited) {
-			navigate(`/${action}`);
-		} else {
-			setInited(true);
+			setParticle(particle);
+			navigate(`/${marketType}/${particle}`)
 		}
 	}
 
@@ -71,11 +118,11 @@ export const MainPage = () => {
 				</Col>
 			</Row>
 
-			{markets.length > 0 ? <div style={{ margin: "0 auto", marginTop: 40, maxWidth: 780, userSelect: 'none' }}>
-				<SwitchActions value={marketType} data={switchActionsData} onChange={handleAction} />
+			{(markets.length > 0) ? <div style={{ margin: "0 auto", marginTop: 40, maxWidth: 780 }}>
+				<SwitchActions value={marketType} data={switchActionsData} onChange={handleMarketType} />
 
 				<div style={{ marginTop: 10 }}>
-					<PredictionList type={marketType} />
+					<PredictionList type={marketType} particle={particle} setParticle={handleParticle} />
 				</div>
 			</div> : <div>
 				<Empty image={Empty.PRESENTED_IMAGE_SIMPLE} description="There are no markets" />

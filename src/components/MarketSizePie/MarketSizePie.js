@@ -28,7 +28,7 @@ export const MarketSizePie = ({ teams, reserve_decimals, stateVars = {}, reserve
           ${Number(item.percent * 100).toPrecision(4)}% 
           ` : '',
             style: {
-                fontSize: 13,
+                fontSize: 12,
                 textAlign: "center",
                 fill: "#fff",
                 fontWeight: 'bold',

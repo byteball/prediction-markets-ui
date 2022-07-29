@@ -15,6 +15,11 @@ export default {
           address: process.env.REACT_APP_CURRENCY_ORACLE,
           name: 'Cryptocurrency prices oracle',
           feedNames: feedNamesCurrencyOracle
+        },
+        {
+          address: "H74QL4ZCDD5KTFOGGZQ37YJSOO3N34JI",
+          name: 'Twoogi oracle',
+          feedNames: ['TWOOGI_TEST', 'TESTNET_VALUE']
         }
       ]
     },
@@ -29,5 +34,9 @@ export default {
   } : { // TODO: fill for mainnet
     'currency': {},
     'sport': {}
-  }
+  },
+  KNOWN_ORACLES: [
+    process.env.REACT_APP_CURRENCY_ORACLE,
+    process.env.REACT_APP_SPORT_ORACLE
+  ]
 }

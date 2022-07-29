@@ -56,6 +56,16 @@
   line-height: 1.2;
 }
 
+.apyWrap {
+  position: absolute;
+  right: 10px;
+  top: 10px;
+  background-color: #303030;
+  padding: 2px 7px;
+  border-radius: 10px;
+  font-size: 14px;
+}
+
 /* Small devices (landscape phones, 576px and up) */
 @media (max-width: 576px) {
   .draw {

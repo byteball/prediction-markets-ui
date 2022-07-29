@@ -1,15 +1,17 @@
-import { Form, Input, Row, Col, Select, Switch, DatePicker, Button, Alert } from "antd";
+import { Form, Input, Row, Col, Select, Switch, DatePicker, Alert } from "antd";
 import { useState } from "react";
 import obyte from "obyte";
 import { isEmpty, isNumber } from "lodash";
 import moment from "moment";
 import { useDispatch, useSelector } from "react-redux";
+import QRButton from "obyte-qr-button";
 
 import { FormLabel } from "components/FormLabel/FormLabel";
 import { saveCreationOrder, selectReserveAssets } from "store/slices/settingsSlice";
 import appConfig from "appConfig";
 import { PredictionItem } from "components/PredictionList/PredictionItem";
 import { generateLink } from "utils";
+import { Link } from "react-router-dom";
 
 export const paramList = {
   allow_draw: {
@@ -52,12 +54,11 @@ export const paramList = {
       return value && value.trim().length > 0
     }
   },
-  end_of_trading_period: {
+  event_date: {
     description: 'The future date when the event (such as a sports event, elections, or a measurement of a currency exchange rate) is supposed to happen. Trading stops at this date and hour.',
     placeholder: "Select a date",
     validator: (value) => {
-      const timestamp = moment.utc(value).startOf("day").unix();
-      return timestamp > dateNow
+      return value > moment().unix();
     },
     errorMessage: "You have chosen the past or present day."
   },
@@ -93,9 +94,15 @@ export const paramList = {
       return value && isNumber(Number(value)) && Number(value) >= 0 && Number(value) < 100
     }
   },
+  quiet_period: {
+    initValue: 0,
+    description: (value) => `Trading stops ${value} hours before the event`,
+    placeholder: "0",
+    validator: (value) => {
+      return value && isNumber(Number(value)) && Number(value) >= 0
+    }
+  },
 }
-
-const dateNow = moment.utc().startOf("day").unix();
 
 export const CreateForm = () => {
   // states
@@ -106,12 +113,13 @@ export const CreateForm = () => {
   const [comparison, setComparison] = useState({ value: paramList.comparison.initValue !== undefined ? paramList.comparison.initValue : '', valid: true });
   const [datafeedValue, setDataFeedValue] = useState({ value: paramList.datafeed_value.initValue !== undefined ? paramList.datafeed_value.initValue : '', valid: paramList.datafeed_value.initValue !== undefined });
   const [datafeedDrawValue, setDataFeedDrawValue] = useState({ value: paramList.datafeed_draw_value.initValue !== undefined ? paramList.datafeed_draw_value.initValue : '', valid: paramList.datafeed_draw_value.initValue !== undefined });
-  const [endOfTradingPeriod, setEndOfTradingPeriod] = useState({ value: paramList.end_of_trading_period.initValue !== undefined ? paramList.end_of_trading_period.initValue : '', valid: paramList.end_of_trading_period.initValue !== undefined });
+  const [eventDate, setEventDate] = useState({ value: paramList.event_date.initValue !== undefined ? paramList.event_date.initValue : '', valid: paramList.event_date.initValue !== undefined });
   const [waitingPeriodLength, setWaitingPeriodLength] = useState({ value: paramList.waiting_period_length.initValue !== undefined ? paramList.waiting_period_length.initValue : '', valid: paramList.waiting_period_length.initValue !== undefined });
   const [issueFee, setIssueFee] = useState({ value: paramList.issue_fee.initValue !== undefined ? paramList.issue_fee.initValue : '', valid: paramList.issue_fee.initValue !== undefined });
   const [redeemFee, setRedeemFee] = useState({ value: paramList.redeem_fee.initValue !== undefined ? paramList.redeem_fee.initValue : '', valid: paramList.redeem_fee.initValue !== undefined });
   const [arbProfitFee, setArbProfitFee] = useState({ value: paramList.arb_profit_fee.initValue !== undefined ? paramList.arb_profit_fee.initValue : '', valid: paramList.arb_profit_fee.initValue !== undefined });
   const [category, setCategory] = useState({ value: 'misc', valid: true });
+  const [quietPeriod, setQuietPeriod] = useState({ value: paramList.quiet_period.initValue !== undefined ? paramList.quiet_period.initValue : '', valid: paramList.quiet_period.initValue !== undefined });
 
   const reserveAssets = useSelector(selectReserveAssets);
 
@@ -119,8 +127,16 @@ export const CreateForm = () => {
 
   // handles
   const handleChangeValue = (evOrValue, type) => {
-    // TODO: transform to inclueds
-    const value = (type === 'allow_draw' || type === 'reserve_asset' || type === 'comparison' || type === 'end_of_trading_period' || type === 'oracle' || type === 'feed_name') ? evOrValue : evOrValue.target.value;
+    let value;
+
+    if (['allow_draw', 'reserve_asset', 'comparison', 'oracle', 'feed_name'].includes(type)) {
+      value = evOrValue;
+    } else if (type === 'event_date') {
+      value = evOrValue.unix();
+    } else {
+      value = evOrValue.target.value;
+    }
+
     const valid = paramList[type].validator ? paramList[type].validator(value) : true;
 
     if (type === 'allow_draw') {
@@ -137,8 +153,10 @@ export const CreateForm = () => {
       setDataFeedValue({ value, valid });
     } else if (type === 'datafeed_draw_value') {
       setDataFeedDrawValue({ value, valid });
-    } else if (type === 'end_of_trading_period') {
-      setEndOfTradingPeriod({ value, valid });
+    } else if (type === 'event_date') {
+      setEventDate({ value, valid });
+    } else if (type === 'quiet_period') {
+      setQuietPeriod({ value, valid });
     } else if (type === 'waiting_period_length') {
       setWaitingPeriodLength({ value, valid });
     } else if (type === 'issue_fee') {
@@ -151,10 +169,10 @@ export const CreateForm = () => {
   }
 
   const dateFilter = (date) => {
-    return moment.utc(date).startOf("day").unix() <= dateNow
+    return date.unix() < moment().hours(0).minutes(0).seconds(0).milliseconds(0).unix()
   }
 
-  const isValidForm = oracle.valid && feedName.valid && datafeedValue.valid && endOfTradingPeriod.valid && waitingPeriodLength.valid && issueFee.valid && redeemFee.valid && (allowDraw.value ? datafeedDrawValue.valid : 1) && arbProfitFee.valid;
+  const isValidForm = oracle.valid && feedName.valid && datafeedValue.valid && eventDate.valid && waitingPeriodLength.valid && issueFee.valid && redeemFee.valid && quietPeriod.valid && (allowDraw.value ? datafeedDrawValue.valid : 1) && arbProfitFee.valid;
 
   const data = {
     oracle: oracle.value,
@@ -162,12 +180,13 @@ export const CreateForm = () => {
     reserve_asset: reserveAsset.value,
     comparison: comparison.value,
     datafeed_value: datafeedValue.value,
-    end_of_trading_period: moment.utc(endOfTradingPeriod.value).unix(),
+    event_date: eventDate.value,
     waiting_period_length: waitingPeriodLength.value * 24 * 3600,
     issue_fee: issueFee.value / 100,
     redeem_fee: redeemFee.value / 100,
     arb_profit_tax: arbProfitFee.value / 100,
-    reserve_decimals: reserveAssets[reserveAsset.value].decimals
+    reserve_decimals: reserveAssets[reserveAsset.value]?.decimals,
+    quiet_period: quietPeriod.value * 3600
   }
 
   if (allowDraw.value) {
@@ -202,12 +221,15 @@ export const CreateForm = () => {
 
   const feedNames = infoByCurrentCategory?.oracles?.find(({ address }) => address === oracle.value)?.feedNames;
 
-  const link = generateLink({ amount: 2e4, data, aa: appConfig.FACTORY_AA });
+  const link = generateLink({ amount: 2e4, data: { ...data, reserve_decimals: undefined }, aa: appConfig.FACTORY_AA });
+
+  const timeZone = moment().utcOffset() / 60;
 
   return <Form layout="vertical">
     <Row gutter={16}>
       <Col xs={{ span: 24 }} md={{ span: 8 }}>
-        <Form.Item label={<FormLabel info="Type of the market. There are custom interfaces for sport and currencies.">Category</FormLabel>}>
+        <Form.Item
+          label={<FormLabel info="Type of the market. There are custom interfaces for sport and currencies.">Category</FormLabel>}>
           <Select
             size="large"
             defaultActiveFirstOption={false}
@@ -221,6 +243,13 @@ export const CreateForm = () => {
         </Form.Item>
       </Col>
     </Row>
+
+    {category.value === 'currency' && <Form.Item>
+      <Alert
+        type="warning"
+        message={<span>Creating markets for currency events is easier by finding them in the <Link to="/currency#calendar">calendar</Link> on the main page</span>}
+      />
+    </Form.Item>}
 
     {category.value !== 'sport' && <>
       <Form.Item>
@@ -287,12 +316,19 @@ export const CreateForm = () => {
       </Form.Item>
 
       <Row gutter={16}>
-        <Col xs={{ span: 24 }} md={{ span: 12 }}>
-          <Form.Item help={endOfTradingPeriod.value !== '' && !endOfTradingPeriod.valid ? paramList.end_of_trading_period.errorMessage : ''} validateStatus={endOfTradingPeriod.value !== '' ? (endOfTradingPeriod.valid ? 'success' : 'error') : undefined} label={<FormLabel info={paramList.end_of_trading_period.description}>Date of the event (UTC)</FormLabel>}>
-            <DatePicker allowClear={false} showTime={{ defaultValue: moment('00:00:00', 'HH:mm:ss') }} disabledDate={dateFilter} size="large" format="YYYY-MM-DD HH:mm" showToday={false} showNow={false} value={endOfTradingPeriod.value} onChange={(ev) => handleChangeValue(ev, 'end_of_trading_period')} style={{ width: '100%' }} placeholder={paramList.end_of_trading_period.placeholder} />
+        <Col xs={{ span: 24 }} md={{ span: 8 }}>
+          <Form.Item help={eventDate.value !== '' && !eventDate.valid ? paramList.event_date.errorMessage : ''} validateStatus={eventDate.value !== '' ? (eventDate.valid ? 'success' : 'error') : undefined} label={<FormLabel info={paramList.event_date.description}>Date of the event (GMT{timeZone >= 0 ? '+' : '-'}{timeZone})</FormLabel>}>
+            <DatePicker allowClear={false} disabledDate={dateFilter} size="large" format="YYYY-MM-DD HH:mm" showToday={false} showTime={true} showNow={false} value={eventDate.value ? moment.unix(eventDate.value) : undefined} onChange={(ev) => handleChangeValue(ev, 'event_date')} style={{ width: '100%' }} placeholder={paramList.event_date.placeholder} />
           </Form.Item>
         </Col>
-        <Col xs={{ span: 24 }} md={{ span: 12 }}>
+
+        <Col xs={{ span: 24 }} md={{ span: 8 }}>
+          <Form.Item validateStatus={quietPeriod.value !== '' ? (quietPeriod.valid ? 'success' : 'error') : undefined} label={<FormLabel value={quietPeriod.valid ? quietPeriod.value : 0} info={paramList.quiet_period.description}>Quiet period (in hours)</FormLabel>}>
+            <Input size="large" placeholder={paramList.quiet_period.placeholder} onChange={(ev) => handleChangeValue(ev, 'quiet_period')} value={quietPeriod.value} />
+          </Form.Item>
+        </Col>
+
+        <Col xs={{ span: 24 }} md={{ span: 8 }}>
           <Form.Item validateStatus={waitingPeriodLength.value !== '' ? (waitingPeriodLength.valid ? 'success' : 'error') : undefined} label={<FormLabel info={paramList.waiting_period_length.description}>Duration of the waiting period (in days)</FormLabel>}>
             <Input size="large" placeholder={paramList.waiting_period_length.placeholder} onChange={(ev) => handleChangeValue(ev, 'waiting_period_length')} value={waitingPeriodLength.value} />
           </Form.Item>
@@ -323,16 +359,18 @@ export const CreateForm = () => {
         <div style={{ marginBottom: 10 }}>
           <FormLabel info="This is how the market you want to create will look like">Preview</FormLabel>
         </div>
+
         <PredictionItem
           preview
           oracle={oracle.value}
           feed_name={feedName.value}
-          end_of_trading_period={moment.utc(endOfTradingPeriod.value).unix()}
+          event_date={eventDate.value}
           waiting_period_length={waitingPeriodLength.value}
           allow_draw={allowDraw.value}
           comparison={comparison.value}
           reserve_symbol={reserveAssets[reserveAsset.value].symbol}
           datafeed_value={datafeedValue.value}
+          quiet_period={quietPeriod.value}
           candles={[0, 3, 5, 6.6, 7.8, 8.62]}
         />
       </div>}
@@ -341,14 +379,21 @@ export const CreateForm = () => {
     {category.value === 'sport' && <Form.Item>
       <Alert
         type="warning"
-        message="Creating markets for sports events is easier by finding them in the calendar on the main page"
+        message={<span>To create markets for sports events find them in the <Link to="/soccer/all#calendar">calendar</Link> on the main page</span>}
       />
     </Form.Item>}
 
-    <Row>
+    {category.value !== 'sport' && <Row>
       <Form.Item>
-        <Button disabled={!isValidForm || category.value === 'sport'} size="large" onClick={save} href={link} type="primary">Create</Button>
+        <QRButton
+          disabled={!isValidForm || category.value === 'sport'}
+          size="large"
+          onClick={save}
+          href={link}
+          type="primary">
+          Create
+        </QRButton>
       </Form.Item>
-    </Row>
+    </Row>}
   </Form>
 }

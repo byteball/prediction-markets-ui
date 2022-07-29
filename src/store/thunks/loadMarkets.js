@@ -7,6 +7,7 @@ export const loadMarkets = createAsyncThunk(
   async () => {
     const { data: markets, max_count: marketsCount } = await backend.getAllMarkets();
     const championships = await backend.getChampionships();
+    const popularCurrencyPairsByOracle = await backend.getPopularCurrencyPairsByOracle();
     const { data: currencyMarkets, max_count: currencyMarketsCount } = await backend.getCurrencyMarkets();
     const { data: miscMarkets, max_count: miscMarketsCount } = await backend.getMiscMarkets();
     
@@ -17,6 +18,7 @@ export const loadMarkets = createAsyncThunk(
       currencyMarketsCount,
       miscMarkets,
       miscMarketsCount,
-      championships
+      championships,
+      popularCurrencyPairsByOracle
     }
   })

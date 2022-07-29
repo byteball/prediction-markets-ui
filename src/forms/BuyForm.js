@@ -4,29 +4,17 @@ import QRButton from "obyte-qr-button";
 import { useEffect, useRef, useState } from "react";
 import { useSelector } from "react-redux";
 
-import { FormLabel } from "components/FormLabel/FormLabel";
 import { selectActiveAddress, selectActiveMarketParams, selectActiveMarketStateVars } from "store/slices/activeSlice";
 import { selectWalletAddress } from "store/slices/settingsSlice";
-import { generateLink, getExchangeResult } from "utils";
-import { get_token_amount } from "utils/getExchangeResult";
+import { generateLink } from "utils";
+import { get_result_for_buying_by_type } from "utils/getExchangeResult";
 import { selectTokensByNetwork } from "store/slices/bridgesSlice";
 import appConfig from "appConfig";
 import client from "services/obyte";
 import { estimateOutput, transferEVM2Obyte } from "counterstake-sdk";
+import { TransactionMeta } from "components/TransactionMeta/TransactionMeta";
 
 const f = (x) => (~(x + "").indexOf(".") ? (x + "").split(".")[1].length : 0);
-
-const getColorByValue = (v) => {
-  const value = Math.abs(Number(v));
-
-  if (value < 5) {
-    return '#ccc'
-  } else if (value >= 5 && value < 15) {
-    return "#FFC148"
-  } else {
-    return "#FD5E56"
-  }
-}
 
 export const BuyForm = ({ type, yes_team, no_team, amount, setAmount }) => {
   const stateVars = useSelector(selectActiveMarketStateVars);
@@ -87,14 +75,12 @@ export const BuyForm = ({ type, yes_team, no_team, amount, setAmount }) => {
   }
 
   useEffect(() => {
-    if (currentToken && amount.valid && !isNaN(Number(amount.value)) && Number(amount.value) > 0 && (fromToken.network === "Obyte" || estimate)) {
-      const reserveAmount = amount.value * 10 ** reserve_decimals;
+    if (currentToken && amount.valid && !isNaN(Number(amount.value)) && Number(amount.value) > 0) {
+      const reserveAmount = (fromToken.network !== "Obyte" ? estimate : amount.value) * 10 ** reserve_decimals;
+      console.log('estimate', estimate)
+      const result = get_result_for_buying_by_type(stateVars, params, currentToken.type, reserveAmount);
 
-      const tokenAmount = get_token_amount(stateVars, params, currentToken?.type, fromToken.network === "Obyte" ? reserveAmount : Math.ceil((estimate * 10 ** reserve_decimals) || 0))
-
-      const result = getExchangeResult(stateVars, params, currentToken.type === 'yes' ? tokenAmount : 0, currentToken.type === 'no' ? tokenAmount : 0, currentToken.type === 'draw' ? tokenAmount : 0);
-
-      setGetAmount({ value: tokenAmount, valid: true })
+      setGetAmount({ value: result.amount, valid: true })
       setMeta(result);
     } else {
       setMeta(null);
@@ -106,14 +92,14 @@ export const BuyForm = ({ type, yes_team, no_team, amount, setAmount }) => {
 
   const link = generateLink({ aa: address, asset: reserve_asset, is_single: true, amount: Math.ceil(amount.value * 10 ** reserve_decimals), data, from_address: walletAddress || undefined })
 
-  const new_price = meta && currentToken ? currentToken.type === 'yes' ? meta.new_yes_price : (currentToken.type === 'no' ? meta.new_no_price : meta.new_draw_price) : 0;
-  const old_price = meta && currentToken ? currentToken.type === 'yes' ? meta.old_yes_price : (currentToken.type === 'no' ? meta.old_no_price : meta.old_draw_price) : 0;
+  // const new_price = meta && currentToken ? currentToken.type === 'yes' ? meta.new_yes_price : (currentToken.type === 'no' ? meta.new_no_price : meta.new_draw_price) : 0;
+  // const old_price = meta && currentToken ? currentToken.type === 'yes' ? meta.old_yes_price : (currentToken.type === 'no' ? meta.old_no_price : meta.old_draw_price) : 0;
 
-  const percentageDifference = new_price !== 0 && old_price !== 0 ? 100 * (new_price - old_price) / old_price : 0;
-  const percentageArbProfitTax = Number(100 * (meta?.arb_profit_tax / (amount.value * 10 ** reserve_decimals)));
-  const totalFee = meta?.arb_profit_tax + network_fee + meta?.issue_fee;
-  const percentageTotalFee = Number(100 * (totalFee / (amount.value * 10 ** reserve_decimals)));
-  const change = amount.value * 10 ** reserve_decimals - meta?.reserve_needed - meta?.fee - network_fee;
+  // const percentageDifference = new_price !== 0 && old_price !== 0 ? 100 * (new_price - old_price) / old_price : 0;
+  // const percentageArbProfitTax = Number(100 * (meta?.arb_profit_tax / (amount.value * 10 ** reserve_decimals)));
+  // const totalFee = meta?.arb_profit_tax + network_fee + meta?.issue_fee;
+  // const percentageTotalFee = Number(100 * (totalFee / (amount.value * 10 ** reserve_decimals)));
+  // const change = amount.value * 10 ** reserve_decimals - meta?.reserve_needed - meta?.fee - network_fee;
 
   const handleChangeFromToken = (strValue) => {
     const [network, asset, decimals, foreign_asset, ...symbol] = strValue.split("__");
@@ -188,12 +174,12 @@ export const BuyForm = ({ type, yes_team, no_team, amount, setAmount }) => {
   const metamaskInstalled = window.ethereum;
 
   const counterstake_assistant_fee = fromToken.network !== "Obyte" ? amount.value * 0.01 : 0;
-  
+
   return <Form size="small" layout="vertical">
     <Row gutter={8}>
       <Col md={{ span: 8 }} xs={{ span: 24 }}>
         <Form.Item>
-          <Input size="large" placeholder="Reserve amount" value={amount.value} onChange={handleChangeAmount} onKeyDown={(ev) => ev.key === 'Enter' ? btnRef.current.click() : null} />
+          <Input size="large" placeholder="Stake amount" value={amount.value} onChange={handleChangeAmount} onKeyDown={(ev) => ev.key === 'Enter' ? btnRef.current.click() : null} />
         </Form.Item>
       </Col>
       <Col md={{ span: 16 }} xs={{ span: 24 }}>
@@ -234,11 +220,11 @@ export const BuyForm = ({ type, yes_team, no_team, amount, setAmount }) => {
     </Row>
 
     {meta && <Form.Item className="metaWrap">
-      {percentageDifference !== 0 && <div><span className="metaLabel">New price</span>: <span style={{ color: getColorByValue(percentageDifference) }}>{+Number(new_price).toPrecision(8)} {reserve_symbol} (<span>{percentageDifference > 0 ? "+" : ''}{Number(percentageDifference).toFixed(2)}%)</span></span></div>}
-      {meta?.arb_profit_tax !== 0 && <div><span className="metaLabel">Arb profit tax</span>:  <span style={{ color: getColorByValue(percentageArbProfitTax) }}>{+Number(meta.arb_profit_tax / 10 ** reserve_decimals).toFixed(reserve_decimals)} {reserve_symbol} ({Number(percentageArbProfitTax).toFixed(2)}%) {percentageArbProfitTax > 5 && <FormLabel info="The more you change the price, the more commissions you pay." />}</span></div>}
-      {meta?.issue_fee !== 0 && <div><span className="metaLabel">Issue fee</span>: {+Number((meta.issue_fee) / 10 ** reserve_decimals).toFixed(reserve_decimals)} {reserve_symbol} ({params.issue_fee * 100}%)</div>}
-      {meta?.fee !== 0 && <div><span className="metaLabel">Total fee</span>: {+Number((totalFee) / 10 ** reserve_decimals).toFixed(reserve_decimals)} {reserve_symbol} ({percentageTotalFee.toFixed(2)}%)</div>}
-      {change !== 0 && <div><span className="metaLabel">Change</span>: {+Number(change / 10 ** reserve_decimals).toFixed(reserve_decimals)} {reserve_symbol}</div>}
+      <TransactionMeta
+        meta={meta}
+        params={params}
+        tokenType={currentToken?.type}
+      />
       {(fromToken.network !== "Obyte" && estimate) ? <div style={{ marginTop: 20 }}>
         {counterstake_assistant_fee ? <div><span className="metaLabel"><a href="https://counterstake.org" target="_blank">Counterstake</a> fee</span>: {+Number(counterstake_assistant_fee).toFixed(fromToken.decimals)} {fromToken.symbol}</div> : null}
         {(fromToken.network !== "Obyte" && estimate && fromToken.foreign_asset !== reserve_asset) ? <div><span className="metaLabel"><a href="https://oswap.io" target="_blank">Oswap</a> rate</span>: 1 {fromToken.symbol} ≈ {+Number(estimate / amount.value).toFixed(reserve_decimals)} {reserve_symbol}</div> : null}

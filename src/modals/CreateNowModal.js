@@ -15,7 +15,7 @@ export const CreateNowModal = (props) => {
   const close = () => setVisible(false);
 
   return <>
-    <Button size="large" type="primary" onClick={open}>Create now</Button>
+    <Button size="large" type="primary" onClick={open}>Create market</Button>
     <Drawer
       width={width > 640 ? 640 : width}
       placement="right"

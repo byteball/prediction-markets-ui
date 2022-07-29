@@ -1,5 +1,5 @@
 import { Form, Select, Input, Alert, Spin, Row, Col } from "antd";
-import { FormLabel } from "components/FormLabel/FormLabel";
+import { TransactionMeta } from "components/TransactionMeta/TransactionMeta";
 import { isNaN } from "lodash";
 import QRButton from "obyte-qr-button";
 import { memo, useEffect, useRef, useState } from "react";
@@ -10,18 +10,6 @@ import { selectWalletAddress } from "store/slices/settingsSlice";
 import { generateLink, getExchangeResult, truncate } from "utils";
 
 const f = (x) => (~(x + "").indexOf(".") ? (x + "").split(".")[1].length : 0);
-
-const getColorByValue = (v) => {
-  const value = Math.abs(Number(v));
-
-  if (value < 5) {
-    return '#ccc'
-  } else if (value >= 5 && value < 15) {
-    return "#FFC148"
-  } else {
-    return "#FD5E56"
-  }
-}
 
 export const RedeemForm = memo(({ type, yes_team, no_team, amount, setAmount }) => {
   const stateVars = useSelector(selectActiveMarketStateVars);
@@ -92,14 +80,14 @@ export const RedeemForm = memo(({ type, yes_team, no_team, amount, setAmount }) 
 
   const link = generateLink({ aa: address, asset: currentToken?.asset, is_single: true, amount: Math.ceil(amount.value * 10 ** currentToken?.decimals), from_address: walletAddress || undefined })
 
-  const new_price = meta && currentToken ? currentToken.type === 'yes' ? meta.new_yes_price : (currentToken.type === 'no' ? meta.new_no_price : meta.new_draw_price) : 0;
-  const old_price = meta && currentToken ? currentToken.type === 'yes' ? meta.old_yes_price : (currentToken.type === 'no' ? meta.old_no_price : meta.old_draw_price) : 0;
+  // const new_price = meta && currentToken ? currentToken.type === 'yes' ? meta.new_yes_price : (currentToken.type === 'no' ? meta.new_no_price : meta.new_draw_price) : 0;
+  // const old_price = meta && currentToken ? currentToken.type === 'yes' ? meta.old_yes_price : (currentToken.type === 'no' ? meta.old_no_price : meta.old_draw_price) : 0;
 
-  const percentageDifference = new_price !== 0 && old_price !== 0 ? 100 * (new_price - old_price) / old_price : 0;
-  const percentageArbProfitTax = Number(100 * (meta?.arb_profit_tax / (amount.value * 10 ** reserve_decimals)));
+  // const percentageDifference = new_price !== 0 && old_price !== 0 ? 100 * (new_price - old_price) / old_price : 0;
+  // const percentageArbProfitTax = Number(100 * (meta?.arb_profit_tax / (amount.value * 10 ** reserve_decimals)));
 
-  const totalFee = meta?.fee //+ meta?.arb_profit_tax; //TODO: add network_fee
-  const percentageTotalFee = Number(100 * (totalFee / (amount.value * 10 ** reserve_decimals)));
+  // const totalFee = meta?.fee //+ meta?.arb_profit_tax; //TODO: add network_fee
+  // const percentageTotalFee = Number(100 * (totalFee / (amount.value * 10 ** reserve_decimals)));
 
   if (!currentToken) return <Spin size="large" />
 
@@ -122,14 +110,15 @@ export const RedeemForm = memo(({ type, yes_team, no_team, amount, setAmount }) 
       </Col> : null}
     </Row>
 
-    {meta && <Form.Item>
-      {payoutAmount.value > 0 && <div style={{ fontSize: 18, paddingBottom: 10 }}>You get {+Number((payoutAmount.value) / 10 ** reserve_decimals).toFixed(reserve_decimals)} {reserve_symbol}</div>}
-      <div className="metaWrap">
-        {percentageDifference !== 0 && <div><span className="metaLabel">New price</span>: <span style={{ color: getColorByValue(percentageDifference) }}>{+Number(new_price).toPrecision(8)} {reserve_symbol} (<span>{percentageDifference > 0 ? "+" : ''}{Number(percentageDifference).toFixed(2)}%)</span></span></div>}
-        {meta?.arb_profit_tax !== 0 && <div><span className="metaLabel">Arb profit tax</span>: <span style={{ color: getColorByValue(percentageArbProfitTax) }}>{+Number(meta.arb_profit_tax / 10 ** reserve_decimals).toFixed(reserve_decimals)} {reserve_symbol} ({Number(percentageArbProfitTax).toFixed(2)}%) {percentageArbProfitTax > 5 && <FormLabel info="The more you change the price, the more commissions you pay." />}</span></div>}
-        {meta?.redeem_fee !== 0 && <div><span className="metaLabel">Redeem fee</span>: {+Number(meta.redeem_fee / 10 ** reserve_decimals).toFixed(reserve_decimals)} {reserve_symbol} ({params.redeem_fee * 100}%)</div>}
-        {meta?.fee !== 0 && <div><span className="metaLabel">Total fee</span>: {+Number((totalFee) / 10 ** reserve_decimals).toFixed(reserve_decimals)} {reserve_symbol} ({+percentageTotalFee.toFixed(2)}%)</div>}
-      </div>
+    {meta && payoutAmount.value > 0 && <Form.Item>
+      <div style={{ fontSize: 18, paddingBottom: 10 }}>You get {+Number((payoutAmount.value) / 10 ** reserve_decimals).toFixed(reserve_decimals)} {reserve_symbol}</div>
+
+      <TransactionMeta
+        meta={meta}
+        params={params}
+        tokenType={currentToken?.type}
+      />
+
     </Form.Item>}
 
     {(meta && payoutAmount.value <= 0) ? <Form.Item>

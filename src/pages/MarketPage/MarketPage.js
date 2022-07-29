@@ -1,4 +1,4 @@
-import { Row, Col, Space, Button, Radio, Spin, Tooltip, Typography } from "antd";
+import { Row, Col, Space, Button, Radio, Spin, Tooltip, Typography, Alert } from "antd";
 import { Layout } from "components/Layout/Layout";
 import { StatsCard } from "components/StatsCard/StatsCard";
 import { Line } from '@ant-design/plots';
@@ -10,7 +10,7 @@ import QRButton from "obyte-qr-button";
 import Countdown from "antd/lib/statistic/Countdown";
 import { Img } from 'react-image';
 
-import { selectActiveCurrencyCandles, selectActiveCurrencyCurrentValue, selectActiveDailyCandles, selectActiveDatafeedValue, selectActiveMarketParams, selectActiveMarketStateVars, selectActiveMarketStatus, selectActiveRecentEvents, selectActiveTeams } from "store/slices/activeSlice";
+import { selectActiveCurrencyCandles, selectActiveCurrencyCurrentValue, selectActiveDailyCloses, selectActiveDatafeedValue, selectActiveMarketParams, selectActiveMarketStateVars, selectActiveMarketStatus, selectActiveRecentEvents, selectActiveTeams } from "store/slices/activeSlice";
 import { setActiveMarket } from "store/thunks/setActiveMarket";
 import { selectPriceOrCoef, selectReserveAssets, selectReservesRate } from "store/slices/settingsSlice";
 import { getMarketPriceByType, generateLink, generateTextEvent } from "utils";
@@ -82,7 +82,7 @@ export const MarketPage = () => {
   const reserveAssets = useSelector(selectReserveAssets);
   const stateVars = useSelector(selectActiveMarketStateVars);
 
-  const candles = useSelector(selectActiveDailyCandles);
+  const candles = useSelector(selectActiveDailyCloses);
   const datafeedValue = useSelector(selectActiveDatafeedValue);
 
   const teams = useSelector(selectActiveTeams);
@@ -93,7 +93,7 @@ export const MarketPage = () => {
   const recentEvents = useSelector(selectActiveRecentEvents);
   const priceOrCoef = useSelector(selectPriceOrCoef);
 
-  const { reserve_asset = 'base', allow_draw, reserve_symbol, reserve_decimals, yes_decimals, no_decimals, draw_decimals, yes_symbol, no_symbol, draw_symbol, end_of_trading_period, league, league_emblem, created_at } = params;
+  const { reserve_asset = 'base', allow_draw, quiet_period = 0, reserve_symbol, reserve_decimals, yes_decimals, no_decimals, draw_decimals, yes_symbol, no_symbol, draw_symbol, event_date, league, league_emblem, created_at, oracle } = params;
 
   const actualReserveSymbol = reserveAssets[reserve_asset]?.symbol;
 
@@ -104,7 +104,7 @@ export const MarketPage = () => {
   const event = generateTextEvent(params);
 
   const { reserve = 0, result, supply_yes = 0, supply_no = 0, supply_draw = 0, coef = 1 } = stateVars;
-  const viewReserve = +Number(reserve / 10 ** 9).toPrecision(5);
+  const viewReserve = +Number(reserve / 10 ** reserve_decimals).toPrecision(5);
   const viewReserveInUSD = '$' + +Number((reserve / 10 ** reserve_decimals) * reserve_rate).toPrecision(2);
 
   const yesPrice = +getMarketPriceByType(stateVars, 'yes').toFixed(reserve_decimals);
@@ -126,7 +126,7 @@ export const MarketPage = () => {
   let showClaimProfitButton = false;
 
   const [now, setNow] = useState(moment.utc().unix());
-  const sevenDaysAlreadyPassed = now > (params.end_of_trading_period + 3600 * 24 * 7);
+  const sevenDaysAlreadyPassed = now > (params.event_date + 3600 * 24 * 7);
 
   const commitResultLink = generateLink({ aa: address, amount: 1e4, data: { commit: 1 } });
 
@@ -137,6 +137,10 @@ export const MarketPage = () => {
 
     if (candlesData.length === 1) {
       candlesData = [candles[0], { ...candlesData[0], start_timestamp: candlesData[0].start_timestamp - 3600 }];
+    }
+
+    if (candlesData.length > 0 && chartType === 'fee') {
+      data.push({ date: moment.unix(created_at).format(sevenDaysAlreadyPassed ? 'll' : 'lll'), value: 0, chartType });
     }
 
     candlesData.forEach(({ start_timestamp, yes_price, no_price, draw_price, supply_yes, supply_no, supply_draw, coef }) => {
@@ -180,20 +184,23 @@ export const MarketPage = () => {
     window.scrollTo(0, 0);
   }, [])
 
-  if (params.end_of_trading_period > now) {
+  if (params.event_date - quiet_period > now) {
     tradeStatus = "TRADING"
     tradeStatusColor = appConfig.YES_COLOR;
-    tradeTimerExpiry = params.end_of_trading_period;
+    tradeTimerExpiry = params.event_date;
     tradeIsActive = true;
     showCommitResultButton = false;
+  } else if (params.event_date > now) {
+    tradeStatus = "QUIET PERIOD";
+    tradeStatusColor = '#e58e26';
   } else if (result) {
     tradeStatus = "CLAIMING PROFIT";
     showClaimProfitButton = true;
     tradeStatusColor = appConfig.YES_COLOR;
-  } else if (params.end_of_trading_period + params.waiting_period_length > now) {
+  } else if (params.event_date + params.waiting_period_length > now) {
     tradeStatus = "WAITING FOR RESULTS";
-    tradeStatusColor = '#f39c12';
-    tradeTimerExpiry = params.end_of_trading_period + params.waiting_period_length;
+    tradeStatusColor = '#e58e26';
+    tradeTimerExpiry = params.event_date + params.waiting_period_length;
     showCommitResultButton = true;
   } else {
     tradeStatus = "RESUMED TRADING";
@@ -268,7 +275,7 @@ export const MarketPage = () => {
           <Col md={{ span: 8 }} xs={{ span: 8 }} style={{ textAlign: 'center' }}>
             <b className={styles.vs}>VS</b>
             <div>
-              {moment.unix(end_of_trading_period).format('lll')}
+              {moment.unix(event_date).format('lll')}
             </div>
             {league && league_emblem && <div><Tooltip title={league}><img className={styles.league} src={league_emblem} alt={league} /></Tooltip></div>}
           </Col>
@@ -287,7 +294,7 @@ export const MarketPage = () => {
       </div>}
 
       <Row justify="space-between" align="middle">
-        <Space size='large' wrap={true} style={{ marginBottom: 15 }}>
+        <Space size='large' wrap={true} style={{ marginBottom: 20 }}>
           <TradeModal
             visible={visibleTradeModal}
             setVisible={setVisibleTradeModal}
@@ -300,6 +307,8 @@ export const MarketPage = () => {
           <ViewParamsModal {...params} aa_address={address} />
         </Space>
       </Row>
+
+      {!appConfig.KNOWN_ORACLES.includes(oracle) && <Alert showIcon message={<span>This market uses an oracle <a style={{ color: '#fff' }} href={`https://${appConfig.ENVIRONMENT === 'testnet' ? 'testnet' : ''}explorer.obyte.org/#${oracle}`} target="_blank">{oracle}</a> that is unknown to this website, trade with care.</span>} type="warning" />}
 
       {isCurrencyMarket && currencyCandles.length > 0 && <CurrencyChart data={currencyCandles} params={params} />}
 

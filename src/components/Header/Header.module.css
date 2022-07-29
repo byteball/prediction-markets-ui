@@ -1,0 +1,47 @@
+.header {
+    padding: 20px 0;
+    font-style: 16px;
+}
+
+.logoWrap {
+    color: #fff !important;
+    display: flex;
+    align-items: center;
+}
+
+.logo {
+    width: 49px;
+    height: 49px;
+    margin-right: 10px;
+}
+
+.name {
+    font-weight: 500;
+    font-size: 18px;
+    line-height: 1em;
+}
+
+.desc {
+    line-height: 1em;
+}
+
+.priceSwitcherWrap {
+    width: 80px;
+    display: flex;
+    justify-content: flex-end;
+}
+
+.socialLinksWrap {
+    margin-top: 15px;
+    display: flex;
+    justify-content: center;
+}
+
+.walletWrap {
+    margin-top: 20;
+}
+
+.switcherWrap {
+    margin-top: 20px;
+    flex: 1;
+}

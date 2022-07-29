@@ -52,7 +52,6 @@ export const RegisterSymbols = () => {
   // const dispatch = useDispatch();
 
   const isSportMarket = !!appConfig.CATEGORIES.sport.oracles.find(({ address }) => address === order.data.oracle);
-
   const currentAsset = order[currentSymbol + "_asset"];
 
   // let actual_team;
@@ -81,7 +80,7 @@ export const RegisterSymbols = () => {
     let symbol;
     const feed_name = order.data.feed_name;
     const type = String(currentStep === 0 ? 'yes' : (currentStep === 1 ? 'no' : 'draw')).toUpperCase();
-    const date = moment.unix(order.data.end_of_trading_period).format("YYYY-MM-DD");
+    const date = moment.unix(order.data.event_date).format("YYYY-MM-DD");
 
     if (appConfig.CATEGORIES.sport.oracles.find(({ address }) => address === order.data.oracle)) {
 
@@ -143,7 +142,7 @@ export const RegisterSymbols = () => {
             const { yes_team, no_team } = order.data;
 
             const actual_team = currentStep === 0 ? yes_team : (currentStep === 1 ? no_team : 'DRAW');
-            const date = moment.unix(order.data.end_of_trading_period).format("lll");
+            const date = moment.unix(order.data.event_date).format("lll");
 
             if (actual_team !== 'DRAW') {
               value = `${yes_team} will win the match against ${no_team} on ${date}`
@@ -152,7 +151,7 @@ export const RegisterSymbols = () => {
             }
 
           } else {
-            value = `${String(currentSymbol).toUpperCase()}-token for event: «${generateTextEvent({ ...order.data })}»`;
+            value = `${String(currentSymbol).toUpperCase()}-token for event: "${generateTextEvent({ ...order.data })}"`;
           }
 
           setDescr({
@@ -297,7 +296,7 @@ export const RegisterSymbols = () => {
               placeholder="Support (Min amount 0.1 GB)"
               suffix="GB"
               autoComplete="off"
-              disabled={isSportMarket}
+              disabled={true}
               value={tokenSupport.value}
               onChange={handleChangeSupport}
               autoFocus={isBoolean(isAvailable)}
@@ -316,7 +315,7 @@ export const RegisterSymbols = () => {
               rows={5}
               value={descr.value}
               onChange={handleChangeDescr}
-              disabled={isSportMarket}
+              disabled={true}
               placeholder="Description of an asset (up to 140 characters)"
             />
           </Form.Item>

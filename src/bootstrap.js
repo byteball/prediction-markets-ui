@@ -138,7 +138,7 @@ export const bootstrap = async () => {
       const { messages, unit } = body.unit;
       const payload = getAAPayload(messages);
 
-      if (order.status === 'order' && (String(orderData.end_of_trading_period) === String(payload.end_of_trading_period)) && orderData.oracle === payload.oracle && orderData.feed_name === payload.feed_name) {
+      if (order.status === 'order' && (String(orderData.event_date) === String(payload.event_date)) && orderData.oracle === payload.oracle && orderData.feed_name === payload.feed_name) {
         // actual order
         store.dispatch(updateCreationOrder({
           status: 'pending',
@@ -205,6 +205,8 @@ export const bootstrap = async () => {
         message: "Received your request. The interface will update after the transaction stabilizes.",
         placement: 'top'
       })
+
+      // TODO: Not working
     }
   }
 

@@ -11,16 +11,18 @@ import { selectPriceOrCoef, selectReservesRate } from 'store/slices/settingsSlic
 
 import { CreateNowModal } from "modals";
 import { generateTextEvent } from "utils";
+import { useWindowSize } from "hooks";
 
 import appConfig from "appConfig";
 
 import styles from "./PredictionItem.module.css";
-import { useWindowSize } from "hooks/useWindowSize";
 
 const max_display_decimals = 5;
 
-export const PredictionItem = ({ reserve_asset = 'base', aa_address, reserve = 0, reserve_decimals = 0, yes_decimals = 0, no_decimals = 0, draw_decimals = 0, yes_price = 0, no_price = 0, draw_price = 0, allow_draw, end_of_trading_period, candles, reserve_symbol, yes_symbol, result, waiting_period_length, feed_name, expect_datafeed_value, datafeed_value, oracle, comparison, yes_team_id, no_team_id, yes_team, no_team, supply_yes = 0, supply_no = 0, supply_draw = 0, league_emblem, league, actualChampionship, type, preview }) => {
+export const PredictionItem = ({ reserve_asset = 'base', aa_address, reserve = 0, reserve_decimals = 0, yes_price = 0, no_price = 0, draw_price = 0, allow_draw, event_date, candles, reserve_symbol, yes_symbol, result, waiting_period_length, feed_name, expect_datafeed_value, datafeed_value, oracle, comparison, yes_team_id, no_team_id, yes_team, no_team, supply_yes = 0, supply_no = 0, supply_draw = 0, preview, apy = 0, quiet_period }) => {
   const infoWrapRef = useRef();
+  const [width] = useWindowSize();
+
   const [infoHeight, setInfoHeight] = useState();
   const [dataForChart, setDataForChart] = useState([]);
   const [config, setConfig] = useState({
@@ -39,10 +41,11 @@ export const PredictionItem = ({ reserve_asset = 'base', aa_address, reserve = 0
 
   const reservesRates = useSelector(selectReservesRate);
   const priceOrCoef = useSelector(selectPriceOrCoef);
-  const now = moment.utc().unix();
-  const currentReserveRate = reservesRates[reserve_asset] || 0;
 
-  const [width] = useWindowSize();
+  const now = moment.utc().unix();
+  const isExpiry = now > event_date;
+  const exists = !!aa_address || preview;
+  const currentReserveRate = reservesRates[reserve_asset] || 0;
 
   useEffect(async () => {
     const data = preview ? candles : (candles ? (candles.length === 1 ? [...candles, ...candles] : candles) : []).map(({ price }) => price);
@@ -72,22 +75,22 @@ export const PredictionItem = ({ reserve_asset = 'base', aa_address, reserve = 0
     }
   }, [infoWrapRef.current]);
 
+  // views
   const reserveView = +Number(reserve / 10 ** reserve_decimals).toPrecision(max_display_decimals);
   const yesPriceView = +Number(yes_price).toPrecision(max_display_decimals);
   const noPriceView = +Number(no_price).toPrecision(max_display_decimals);
   const drawPriceView = +Number(draw_price).toPrecision(max_display_decimals);
-
-  const event = generateTextEvent({
-    end_of_trading_period,
+  const apyView = apy ? (apy < 500 ? `Liquidity provider APY: ${Number(apy).toFixed(2)}%` : 'APY not shown') : 'APY not available yet';
+  const eventView = generateTextEvent({
+    event_date,
     feed_name,
-    datafeed_value,
+    datafeed_value: expect_datafeed_value || datafeed_value,
     oracle,
     comparison
   });
 
-  const isExpiry = now > end_of_trading_period;
+  // wrappers configure
   const Wrapper = isExpiry ? Badge.Ribbon : Fragment;
-
   let status = '';
   let color = 'red'
 
@@ -96,11 +99,11 @@ export const PredictionItem = ({ reserve_asset = 'base', aa_address, reserve = 0
       status = 'Claiming profit';
       color = appConfig.YES_COLOR
     } else {
-      if (now > (end_of_trading_period + waiting_period_length)) {
-        status = 'Resume trading';
+      if (now > (event_date + waiting_period_length)) {
+        status = 'Resumed trading';
       } else {
         status = 'Waiting for results';
-        color = '#f39c12'
+        color = '#e58e26'
       }
     }
   }
@@ -111,14 +114,13 @@ export const PredictionItem = ({ reserve_asset = 'base', aa_address, reserve = 0
     placement: "start"
   } : {};
 
-  const exists = !!aa_address || preview;
-
   const isSportMarket = !!appConfig.CATEGORIES.sport.oracles.find(({ address }) => address === oracle);
   const marketHasCrests = isSportMarket ? yes_team_id !== undefined && no_team_id !== undefined : false;
-
   const SecondWrapper = exists && !preview ? Link : Fragment
   const secondWrapperProps = exists ? { to: `/market/${aa_address}` } : {};
 
+
+  // calc coef
   let yes_coef = 0;
   let draw_coef = 0;
   let no_coef = 0;
@@ -135,7 +137,7 @@ export const PredictionItem = ({ reserve_asset = 'base', aa_address, reserve = 0
         <Row gutter={10} align="middle">
           <Col md={{ span: 16 }} xs={{ span: 24 }} sm={{ span: 24 }} ref={infoWrapRef}>
             {!marketHasCrests ? <div className={styles.eventDesc}>
-              {event}
+              {eventView}
             </div> : <div style={{ marginTop: 5 }}>
               <Row gutter={8} align={(exists && allow_draw && draw_coef && width >= 576) ? "bottom" : 'middle'}>
                 <Col sm={{ span: 8 }} xs={{ span: 8 }} style={{ textAlign: 'center' }}>
@@ -150,7 +152,7 @@ export const PredictionItem = ({ reserve_asset = 'base', aa_address, reserve = 0
                 <Col sm={{ span: 8 }} xs={{ span: 8 }} style={{ textAlign: 'center' }} className={styles.draw}>
                   <b style={{ fontSize: 24 }}>VS</b>
                   <div className={styles.time}>
-                    <small>{moment.unix(end_of_trading_period).format('lll')}</small>
+                    <small>{moment.unix(event_date).format('lll')}</small>
                   </div>
                   {(exists && allow_draw && draw_coef && width >= 576) ? <div style={{ color: appConfig.DRAW_COLOR }}>
                     <div className={styles.team}><small>draw</small></div>
@@ -208,6 +210,9 @@ export const PredictionItem = ({ reserve_asset = 'base', aa_address, reserve = 0
               </Col>
             </Row>}
           </Col>
+          {width >= 768 && aa_address && <div className={styles.apyWrap}>
+            {apyView}
+          </div>}
           {(exists || preview) ? (infoHeight && dataForChart.length > 0 && <Col md={{ span: 8 }} xs={{ span: 24 }} sm={{ span: 24 }} style={{ display: 'flex', alignItems: 'center' }}>
             {width >= 768 && <div style={{ height: infoHeight * 0.7, width: '100%', boxSizing: 'border-box' }}>
               <TinyLine {...config} data={dataForChart} />
@@ -216,13 +221,17 @@ export const PredictionItem = ({ reserve_asset = 'base', aa_address, reserve = 0
             <div className={styles.createNowWrap}>
               <CreateNowModal
                 feed_name={feed_name}
-                end_of_trading_period={end_of_trading_period}
-                event={event}
+                oracle={oracle}
+                event_date={event_date}
+                event={eventView}
                 expect_datafeed_value={expect_datafeed_value}
+                waiting_period_length={waiting_period_length}
                 no_team_id={no_team_id}
                 no_team={no_team}
                 yes_team_id={yes_team_id}
                 yes_team={yes_team}
+                quiet_period={quiet_period}
+                comparison={comparison}
               />
             </div>
           </Col>}

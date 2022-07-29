@@ -4,9 +4,11 @@ import { Link } from "react-router-dom";
 
 import { MainMenu } from "components/MainMenu/MainMenu";
 import { SocialLinks } from "components/SocialLinks/SocialLinks";
+import { ViewPriceSwitcher } from "components/ViewPriceSwitcher/ViewPriceSwitcher";
 import { useWindowSize } from "hooks";
 import { WalletModal } from "modals";
-import { ViewPriceSwitcher } from "components/ViewPriceSwitcher/ViewPriceSwitcher";
+
+import styles from "./Header.module.css";
 
 export const Header = () => {
 	const [width] = useWindowSize();
@@ -14,15 +16,15 @@ export const Header = () => {
 
 	const changeVisible = () => setShowMenu((v) => !v);
 
-	return <div style={{ padding: "20px 0", fontSize: 16 }}>
+	return <div className={styles.header}>
 		<div>
 			<Row align="middle" justify="space-between">
 				<Col>
-					<Link to="/" style={{ color: "#fff", display: 'flex', alignItems: 'center' }}>
-						<img style={{ width: 49, height: 49, marginRight: 10 }} src="/logo.svg" alt="Prophet" />
+					<Link to="/" className={styles.logoWrap}>
+						<img className={styles.logo} src="/logo.svg" alt="Prophet" />
 						<div>
-							<div style={{ fontWeight: 500, fontSize: 18, lineHeight: '1em' }}>Prophet</div>
-							<small style={{ lineHeight: '1em' }}>Prediction markets</small>
+							<div className={styles.name}>Prophet</div>
+							<small className={styles.desc}>Prediction markets</small>
 						</div>
 					</Link>
 				</Col>
@@ -32,7 +34,7 @@ export const Header = () => {
 							<MainMenu />
 							<WalletModal />
 
-							<div style={{ width: 80, display: 'flex', justifyContent: 'flex-end' }}>
+							<div className={styles.priceSwitcherWrap}>
 								<ViewPriceSwitcher />
 							</div>
 						</Space>
@@ -43,13 +45,13 @@ export const Header = () => {
 						<div>
 							<MainMenu direction="vertical" />
 						</div>
-						<div style={{ marginTop: 20 }}>
+						<div className={styles.walletWrap}>
 							<WalletModal />
 						</div>
-						<div style={{ marginTop: 20, flex: 1 }}>
+						<div className={styles.switcherWrap}>
 							<ViewPriceSwitcher />
 						</div>
-						<div style={{ marginTop: 15, display: 'flex', justifyContent: 'center' }}>
+						<div className={styles.socialLinksWrap}>
 							<SocialLinks size="small" />
 						</div>
 					</Drawer>

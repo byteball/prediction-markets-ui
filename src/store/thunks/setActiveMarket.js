@@ -63,13 +63,13 @@ export const setActiveMarket = createAsyncThunk(
     if (!params.no_decimals) params.no_decimals = params.reserve_decimals
     if (!params.draw_decimals) params.draw_decimals = params.reserve_decimals
 
-    const dailyCandles = await backend.getDailyCandles(address);
+    const dailyCloses = await backend.getDailyCloses(address).then((data) => data).catch(() => []);
 
     const responses = await obyte.api.getAaResponses({ aa: address });
 
     let recentEvents = responses.filter((res) => !res.response?.error).map((res) => responseToEvent(res, params, stateVars))
-    const firstConfigureEvent = recentEvents.find((ev) => ev.event === 'Configuration');
-    recentEvents = [...recentEvents.filter((ev) => ev.event !== 'Configuration'), firstConfigureEvent];
+    const firstConfigureEvent = recentEvents.find((ev) => ev.Event === 'Configuration');
+    recentEvents = [...recentEvents.filter((ev) => ev.Event !== 'Configuration'), firstConfigureEvent];
 
     await obyte.justsaying("light/new_aa_to_watch", {
       aa: address
@@ -84,7 +84,7 @@ export const setActiveMarket = createAsyncThunk(
     let noTeam;
     let currencyCandles = [];
     let currencyCurrentValue = 0;
-    let isHourlyChart = params.end_of_trading_period + params.waiting_period_length - moment.utc().unix() <= 7 * 24 * 3600;
+    let isHourlyChart = params.event_date + params.waiting_period_length - moment.utc().unix() <= 7 * 24 * 3600;
     let league_emblem = null;
     let league = null;
 
@@ -121,12 +121,12 @@ export const setActiveMarket = createAsyncThunk(
       }
     }
 
-    const created_at = await obyte.api.getAaStateVars({ address: appConfig.FACTORY_AA, var_prefix: `prediction_${address}` }).then((data)=> data?.[`prediction_${address}`]?.created_at)
+    const created_at = await obyte.api.getAaStateVars({ address: appConfig.FACTORY_AA, var_prefix: `prediction_${address}` }).then((data) => data?.[`prediction_${address}`]?.created_at)
 
     return {
       params,
       stateVars,
-      dailyCandles,
+      dailyCloses,
       recentEvents,
       datafeedValue: datafeedValue !== 'none' ? datafeedValue : null,
       yesTeam,
