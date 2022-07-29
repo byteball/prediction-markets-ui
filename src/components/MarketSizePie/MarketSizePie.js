@@ -1,7 +1,9 @@
 import { Pie } from "@ant-design/plots"
-import appConfig from "appConfig";
 import { useEffect, useState } from "react";
+
 import { getMarketPriceByType } from "utils";
+
+import appConfig from "appConfig";
 
 export const MarketSizePie = ({ teams, reserve_decimals, stateVars = {}, reserve_symbol, allow_draw = false, oracle }) => {
     const [dataForPie, setDataForPie] = useState([]);
@@ -14,7 +16,6 @@ export const MarketSizePie = ({ teams, reserve_decimals, stateVars = {}, reserve
     const yesPrice = +getMarketPriceByType(stateVars, 'yes').toFixed(reserve_decimals);
     const noPrice = +getMarketPriceByType(stateVars, 'no').toFixed(reserve_decimals);
     const drawPrice = +getMarketPriceByType(stateVars, 'draw').toFixed(reserve_decimals);
-
 
     const pieConfig = {
         angleField: 'value',

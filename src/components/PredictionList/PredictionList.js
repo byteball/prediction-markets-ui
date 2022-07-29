@@ -6,17 +6,27 @@ import { useLocation } from "react-router-dom";
 
 import { PredictionItem } from "./PredictionItem";
 import { SwitchActions } from "components/SwitchActions/SwitchActions";
-import { selectAllMarkets, selectAllMarketsCount, selectChampionships, selectCurrencyMarkets, selectCurrencyMarketsCount, selectMiscMarkets, selectMiscMarketsCount, selectPopularCurrencies } from "store/slices/marketsSlice";
+import {
+  selectAllMarkets,
+  selectAllMarketsCount,
+  selectChampionships,
+  selectCurrencyMarkets,
+  selectCurrencyMarketsCount,
+  selectMiscMarkets,
+  selectMiscMarketsCount,
+  selectPopularCurrencies
+} from "store/slices/marketsSlice";
 import { loadSportsCalendarCache } from "store/thunks/loadSportsCalendarCache";
 import { selectMarketsCache } from "store/slices/cacheSlice";
 import { loadMarketsInCache } from "store/thunks/loadMarketsInCache";
+import { loadCurrencyCalendarCache } from "store/thunks/loadCurrencyCalendarCache";
 
 import { getEmojiByType } from "utils";
+import { historyInstance } from "historyInstance";
 import backend from "services/backend";
 
 import styles from "./PredictionList.module.css";
-import { loadCurrencyCalendarCache } from "store/thunks/loadCurrencyCalendarCache";
-import { historyInstance } from "historyInstance";
+
 
 export const PredictionList = ({ type = 'all', particle = 'all', setParticle }) => {
   const [marketsDataSource, setMarketsDataSource] = useState([]);
@@ -26,6 +36,7 @@ export const PredictionList = ({ type = 'all', particle = 'all', setParticle }) 
   const [loading, setLoading] = useState(true);
 
   const calendarRef = useRef(null);
+
   const [inited, setInited] = useState(false);
 
   const currencyMarkets = useSelector(selectCurrencyMarkets);
@@ -45,27 +56,10 @@ export const PredictionList = ({ type = 'all', particle = 'all', setParticle }) 
   const dispatch = useDispatch();
   const location = useLocation();
 
-  // const { ch } = useParams();
-
-
-  // useEffect(() => {
-  //   if (ch) {
-  //     setParticle(ch);
-  //   }
-
-  //   setInited(true);
-  // }, []);
-
-  // useEffect(() => {
-  //   if (ch && ch !== particle) {
-  //     setParticle(ch)
-  //   }
-  // }, [location.pathname])
-
   useEffect(async () => {
     setLoading(true);
 
-    if (allMarkets.length > 0 && !isEmpty(championships)) { //&& inited
+    if (allMarkets.length > 0 && !isEmpty(championships)) {
       let dataSource = [];
       let calendarData = [];
       let count = 0;
@@ -86,13 +80,6 @@ export const PredictionList = ({ type = 'all', particle = 'all', setParticle }) 
           page: 1
         });
 
-        // if (location.pathname !== `/${type}/${particle}`) {
-        //   navigate(`/${type}/${particle}`);
-        // }
-
-        // historyInstance.replace(`/${type}/${particle}`);
-        // historyInstance.deleteUrl(`/${type}`)
-
         dataSource = newDataSource;
         count = max_count;
 
@@ -109,15 +96,15 @@ export const PredictionList = ({ type = 'all', particle = 'all', setParticle }) 
 
       setLoading(false);
     }
-  }, [allMarkets, type, championships, particle]) //inited
+  }, [allMarkets, type, championships, particle]);
 
   useEffect(async () => {
-    if (type === 'currency') { //&& inited
+    if (type === 'currency') {
       const { data } = await backend.getCurrencyCalendar(actualCurrency);
 
       setCalendarDataSource(data);
     }
-  }, [type, actualCurrency]) //inited
+  }, [type, actualCurrency]);
 
   const getActionList = useCallback(() => ([
     { value: 'all', text: `${getEmojiByType(type)} All soccer` },
@@ -175,21 +162,16 @@ export const PredictionList = ({ type = 'all', particle = 'all', setParticle }) 
     if (fullCalendarDataSource.length > 0 && location.hash === "#calendar" && calendarRef.current && !loading && !inited && !['all', 'misc'].includes(type)) {
       calendarRef.current.scrollIntoView({ behavior: "smooth", alignToTop: false, block: "center" });
       setInited(true);
-      // console.log(1);
     } else if (loading && ['all', 'misc'].includes(type)) {
       setInited(true)
-      // console.log(2);
     } else if (location.hash !== "#calendar") {
       setInited(true);
-      // console.log(3);
     }
 
-    // console.log('for 4: ', calendarRef.current, !loading, !inited, !['all', 'misc'].includes(type), location.hash === "#calendar")
-    // console.log(4);
   }, [inited, calendarRef.current, location.hash, loading, fullCalendarDataSource]);
 
-  useEffect(()=> {
-    if(inited && location.hash === "#calendar"){
+  useEffect(() => {
+    if (inited && location.hash === "#calendar") {
       historyInstance.replace(location.pathname)
     }
   }, [inited]);
