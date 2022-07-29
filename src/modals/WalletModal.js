@@ -3,7 +3,10 @@ import { useEffect, useRef, useState } from "react"
 import { useDispatch, useSelector } from "react-redux";
 import obyte from "obyte";
 
-import { changeWalletAddress, selectWalletAddress } from "store/slices/settingsSlice";
+import {
+  changeWalletAddress,
+  selectWalletAddress
+} from "store/slices/settingsSlice";
 
 export const WalletModal = ({ children = "WALLET", type = "default", styles = {} }) => {
   const [visible, setVisible] = useState(false);
