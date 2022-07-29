@@ -1,6 +1,8 @@
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faDiscord, faWeixin, faTelegram, faMediumM, faRedditAlien, faBitcoin, faTwitter, faFacebook, faYoutube, faGithub } from '@fortawesome/free-brands-svg-icons';
 
+import styles from './SocialLinks.module.css';
+
 export const SocialLinks = ({ size = 'full', centered = false }) => { // type full or short
 
   const links = [
@@ -56,9 +58,9 @@ export const SocialLinks = ({ size = 'full', centered = false }) => { // type fu
     },
   ];
 
-  return (<div style={{ textAlign: "center", fontSize: 14 }}>
-    <div style={{ display: "flex", justifyContent: centered ? "center" : "flex-start", flexWrap: "wrap", alignItems: "center", fontSize: 18 }}>
-      {(size === "full" ? links : links.slice(0, 5)).map((social) => <a style={{ margin: "5px 10px", color: "#2D72F6" }} key={"link-" + social.name} target="_blank" rel="noopener" href={social.link}><FontAwesomeIcon size="lg" icon={social.icon} /></a>)}
+  return (<div className={styles.wrap}>
+    <div className={styles.list} style={{ justifyContent: centered ? "center" : "flex-start" }}>
+      {(size === "full" ? links : links.slice(0, 5)).map((social) => <a className={styles.item} key={"link-" + social.name} target="_blank" rel="noopener" href={social.link}><FontAwesomeIcon size="lg" icon={social.icon} /></a>)}
     </div>
   </div>)
 }

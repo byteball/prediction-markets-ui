@@ -20,15 +20,12 @@ export const RecentEvents = ({ data: notSortedData }) => {
 
   const increaseLimit = () => setLimit((limit) => limit + limitStep);
 
-  console.log('dataSource', data)
-
   return <List
     dataSource={data.slice(0, limit)}
     renderItem={RecentEventItem}
     className={styles.eventList}
     loadMore={showMoreButton ? <div className={styles.moreButtonWrap}><Button onClick={increaseLimit}>Show more</Button></div> : null}
     locale={{ emptyText: 'No events' }}
-    // rowKey={({ timestamp }) => timestamp}
     size="large"
   />
 }
