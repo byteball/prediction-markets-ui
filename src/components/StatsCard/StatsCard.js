@@ -12,8 +12,8 @@ export const StatsCard = ({ title, tooltip = '', value = <span />, subValue = nu
     <div className={styles.subValueWrap} style={{ color }}>
       <div>{subValue}</div>
       {onAction && <Space size="large">
-        <Button size='small' onClick={() => onAction('buy')} style={{ padding: 0, color: "#fff", fontWeight: 300, lineHeight: 'initial', height: 'auto' }} icon={<DownloadOutlined />} type='link'>buy</Button>
-        <Button size='small' onClick={() => onAction('redeem')} style={{ padding: 0, color: "#fff", fontWeight: 300, lineHeight: 'initial', height: 'auto' }} icon={<UploadOutlined />} type='link'>sell</Button>
+        <Button size='small' onClick={() => onAction('buy')} className={styles.btn} icon={<DownloadOutlined />} type='link'>buy</Button>
+        <Button size='small' onClick={() => onAction('redeem')} className={styles.btn} icon={<UploadOutlined />} type='link'>sell</Button>
       </Space>}
     </div>
 

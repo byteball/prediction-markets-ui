@@ -29,3 +29,11 @@
   justify-content: space-between;
   min-height: 1.5em;
 }
+
+.btn {
+  padding: 0 !important;
+  color: #fff !important;
+  line-height: initial !important;
+  font-weight: 300 !important;
+  height: auto !important;
+}
