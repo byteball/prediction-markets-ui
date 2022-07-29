@@ -205,8 +205,6 @@ export const bootstrap = async () => {
         message: "Received your request. The interface will update after the transaction stabilizes.",
         placement: 'top'
       })
-
-      // TODO: Not working
     }
   }
 
