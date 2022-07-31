@@ -397,8 +397,8 @@ export const MarketPage = () => {
               By buying all tokens without changing their proportions you are not betting on any outcome but taking a market-neutral position instead and adding liquidity to the market. This is safe if the current proportions reflect the true probabilities.
             </Typography.Paragraph>
             <Typography.Paragraph>
-              <b>Liquidity provision APY since the pool was started: {+apy}%</b>
-              <div><small>The APY estimation is for the first LP assuming the trading activity stays the same as it has been so far. Later LPs earn from fewer trades, and the trading activity can change in the future, so the actual APY can be significantly different.</small></div>
+              <b>Liquidity provision APY since the pool was started: {+apy}%</b><br/>
+              <small>The APY estimation is for the first LP assuming the trading activity stays the same as it has been so far. Later LPs earn from fewer trades, and the trading activity can change in the future, so the actual APY can be significantly different.</small>
             </Typography.Paragraph>
             <AddLiquidityModal disabled={!tradeIsActive} yes_team={teams?.yes?.name} no_team={teams?.no?.name} />
           </Col>
