@@ -398,7 +398,7 @@ export const MarketPage = () => {
             </Typography.Paragraph>
             <Typography.Paragraph>
               <b>Liquidity provision APY since the pool was started: {+apy}%</b>
-
+              <div><small>The APY estimation is for the first LP assuming the trading activity stays the same as it has been so far. Later LPs earn from fewer trades, and the trading activity can change in the future, so the actual APY can be significantly different.</small></div>
             </Typography.Paragraph>
             <AddLiquidityModal disabled={!tradeIsActive} yes_team={teams?.yes?.name} no_team={teams?.no?.name} />
           </Col>

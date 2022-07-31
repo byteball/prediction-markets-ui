@@ -33,8 +33,6 @@ export const MainPage = () => {
 
 	switchActionsData.push({ value: 'misc', text: 'Misc' })
 
-	console.log('particle', particle, marketType)
-
 	useEffect(() => {
 		// init params from url
 		if (!inited) {
