@@ -9,7 +9,6 @@ import { updateCreationOrder } from "store/slices/settingsSlice";
 import { loadMarkets } from "store/thunks/loadMarkets";
 import { loadReserveAssets } from "store/thunks/loadReserveAssets";
 import { setActiveMarket } from "store/thunks/setActiveMarket";
-import { responseToEvent } from "utils/responseToEvent";
 import { checkCreationOrder } from "store/thunks/checkCreationOrder";
 import { checkDataFeed } from "store/thunks/checkDataFeed";
 import { historyInstance } from "historyInstance";
@@ -197,9 +196,8 @@ export const bootstrap = async () => {
         store.dispatch(updateStateForActualMarket({ diff, address: aa_address }));
       }
 
-      const recentEventObject = responseToEvent(body, state.active.params, state.active.stateVars);
+      store.dispatch(addRecentEvent(body));
 
-      store.dispatch(addRecentEvent(recentEventObject));
     } else if (subject === "light/aa_request" && state.settings.walletAddress && author === state.settings.walletAddress) {
       notification.info({
         message: "Received your request. The interface will update after the transaction stabilizes.",

@@ -7,7 +7,6 @@ import backend from "services/backend";
 import obyte from "services/obyte";
 
 import { setActiveMarketAddress } from "store/slices/activeSlice";
-import { responseToEvent } from "utils/responseToEvent";
 
 import appConfig from "appConfig";
 
@@ -65,11 +64,7 @@ export const setActiveMarket = createAsyncThunk(
 
     const dailyCloses = await backend.getDailyCloses(address).then((data) => data).catch(() => []);
 
-    const responses = await obyte.api.getAaResponses({ aa: address });
-
-    let recentEvents = responses.filter((res) => !res.response?.error).map((res) => responseToEvent(res, params, stateVars))
-    const firstConfigureEvent = recentEvents.find((ev) => ev.Event === 'Configuration');
-    recentEvents = [...recentEvents.filter((ev) => ev.Event !== 'Configuration'), firstConfigureEvent];
+    const recentResponses = await obyte.api.getAaResponses({ aa: address });
 
     await obyte.justsaying("light/new_aa_to_watch", {
       aa: address
@@ -128,7 +123,7 @@ export const setActiveMarket = createAsyncThunk(
       params,
       stateVars,
       dailyCloses,
-      recentEvents,
+      recentResponses,
       datafeedValue: datafeedValue !== 'none' ? datafeedValue : null,
       yesTeam,
       noTeam,

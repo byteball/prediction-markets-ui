@@ -3,14 +3,14 @@ import { FormLabel } from "components/FormLabel/FormLabel";
 import { useState } from "react";
 import { useSelector } from "react-redux";
 
-import { selectPriceOrCoef } from "store/slices/settingsSlice";
+import { selectPriceOrOdds } from "store/slices/settingsSlice";
 
 import styles from "./TransactionMeta.module.css";
 
 export const TransactionMeta = ({ meta, params, tokenType }) => {
     const { reserve_symbol, reserve_decimals, issue_fee } = params;
     const [visibleFee, setVisibleFee] = useState(false);
-    const priceOrCoef = useSelector(selectPriceOrCoef);
+    const priceOrOdds = useSelector(selectPriceOrOdds);
 
     if (!meta || !tokenType) return null;
 
@@ -22,16 +22,16 @@ export const TransactionMeta = ({ meta, params, tokenType }) => {
     const old_supply = tokenType === 'yes' ? meta.old_supply_yes : (tokenType === 'no' ? meta.old_supply_no : meta.old_supply_draw);
     const new_supply = tokenType === 'yes' ? meta.new_supply_yes : (tokenType === 'no' ? meta.new_supply_no : meta.new_supply_draw);
 
-    const coef = old_price !== 0 ? (meta.old_reserve / old_supply) / old_price : 1;
-    const new_coef = (meta.new_reserve / new_supply) / new_price;
+    const odds = old_price !== 0 ? (meta.old_reserve / old_supply) / old_price : 1;
+    const new_odds = (meta.new_reserve / new_supply) / new_price;
 
-    const percentageCoefDifference = 100 * (new_coef - coef) / coef;
+    const percentageOddsDifference = 100 * (new_odds - odds) / odds;
 
     return <div className={styles.wrap}>
         {percentagePriceDifference !== 0 && <div>
-            {priceOrCoef === 'price'
+            {priceOrOdds === 'price'
                 ? <><span className="metaLabel">New price</span>: <span style={{ color: getColorByValue(percentagePriceDifference) }}>{+Number(new_price).toPrecision(8)} {reserve_symbol} (<span>{percentagePriceDifference > 0 ? "+" : ''}{Number(percentagePriceDifference).toFixed(2)}%)</span></span></>
-                : <><span className="metaLabel">New coef</span>: <span style={{ color: getColorByValue(percentageCoefDifference) }}>x{+Number(new_coef).toPrecision(6)} ({percentageCoefDifference > 0 ? "+" : ''}{Number(percentageCoefDifference).toFixed(2)}%)</span></>}
+                : <><span className="metaLabel">New odds</span>: <span style={{ color: getColorByValue(percentageOddsDifference) }}>x{+Number(new_odds).toPrecision(6)} ({percentageOddsDifference > 0 ? "+" : ''}{Number(percentageOddsDifference).toFixed(2)}%)</span></>}
         </div>}
         <div>
             <Space>
