@@ -27,11 +27,10 @@ export const MainPage = () => {
 
 	const sportTypes = Object.keys(championships);
 
-	const switchActionsData = [{ value: 'all', text: 'All' }, { value: 'currency', text: '📈 Currency' }];
+	const switchActionsData = [{ value: 'all', text: 'All' }];
 
 	sportTypes.forEach((type) => switchActionsData.push(({ value: type, text: getTabNameByType(type) })))
-
-	switchActionsData.push({ value: 'misc', text: 'Misc' })
+	switchActionsData.push({ value: 'currency', text: '📈 Currency' }, { value: 'misc', text: 'Misc' })
 
 	useEffect(() => {
 		// init params from url

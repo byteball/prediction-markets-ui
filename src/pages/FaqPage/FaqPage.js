@@ -55,19 +55,34 @@ export const FaqPage = () => <Layout>
       <Panel header="How are the tokens priced?" key="9">
         <p>The tokens are issued on a bonding curve and their prices depend on the numbers of tokens already issued. Issuing (buying) more tokens that represent a bet on the specific outcome (e.g. team A wins) increases their price and decreases the prices of the tokens that represent all other outcomes (team B wins and draw). Selling the same tokens does the opposite.</p>
         <p>The bonding curve is a formula that links the token supplies (<i>s</i><sub>yes</sub>, <i>s</i><sub>no</sub>, and <i>s</i><sub>draw</sub>) to the total capital invested in all tokens (the reserve, denoted as <i>r</i>):</p>
-        <p>
+        <p style={{ fontSize: "larger" }}>
           <i>r</i> &nbsp; = &nbsp;
-          <i>c</i> &nbsp; 
-          <span style={{whiteSpace: "nowrap", fontSize:"larger"}}>
-            &radic;<span style={{textDecoration:"overline"}}>&nbsp;<i>s</i><sub>yes</sub><sup>2</sup> + <i>s</i><sub>no</sub><sup>2</sup><i>s</i><sub>draw</sub><sup>2</sup>&nbsp;</span>
+          <i>c </i> &nbsp;
+          <span style={{ whiteSpace: "nowrap", verticalAlign: 'middle' }}>
+            &radic;<span style={{ borderTop: '1px solid #fff' }}>&nbsp;<i>s</i><sub><small>yes</small></sub><sup><small>2</small></sup> + <i>s</i><sub><small>no</small></sub><sup><small>2</small></sup> + <i>s</i><sub><small>draw</small></sub><sup><small>2</small></sup>&nbsp;</span>
           </span>
         </p>
         <p>where <i>c</i> is a coefficient that starts with 1 and gradually grows to account for the accrued fees.</p>
         <p>The price of the YES-token that represents a bet that the event will actually happen is then determined as a partial derivative by <i>s</i><sub>yes</sub>:</p>
-        <p>
-          <i>p</i><sub>yes</sub> &nbsp; = &nbsp;
 
-        </p>
+        <div style={{ display: 'flex', alignItems: 'center', marginTop: -10, fontSize: "larger", marginBottom: 10 }}>
+          <div style={{ marginTop: -10 }}>
+            <i>p</i><sub><small>yes</small></sub> &nbsp; = &nbsp;
+            <i>c </i> &nbsp;&nbsp;
+          </div>
+          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', }}>
+            <div>
+              <i>s</i><sub><small>yes</small></sub>
+            </div>
+            <div style={{ borderTop: '1px solid #fff', paddingTop: 5 }}>
+              <span style={{ whiteSpace: "nowrap" }}>
+                &radic;<span style={{ borderTop: '1px solid #fff' }}>&nbsp;<i>s</i><sub><small>yes</small></sub><sup><small>2</small></sup> + <i>s</i><sub><small>no</small></sub><sup><small>2</small></sup> + <i>s</i><sub><small>draw</small></sub><sup><small>2</small></sup>&nbsp;</span>
+              </span>
+            </div>
+          </div>
+        </div>
+
+
         <p>and similar formulas for the prices of NO and DRAW tokens.</p>
         <p>Thanks to the bonding curve, we have continuous pricing and it is always possible to buy or sell any tokens, i.e. liquidity is always available.</p>
         <p>The bonding curve is implemented by an <a href="https://obyte.org/platform/autonomous-agents" target="_blank" rel="noopener">Autonomous Agent</a>, and the AA acts like a decentralized automated bookmaker that automatically adjusts its prices in response to the changing demand. LPs act like shareholders of the decentralized bookmaker, and share its profits.</p>
@@ -103,6 +118,6 @@ export const FaqPage = () => <Layout>
 
     </Collapse>
   </div>
-  
+
   <div className={styles.otherQuestionsWrap}>Other questions? Ask on <a href="https://discord.obyte.org" target="_blank" rel="noopener">Obyte discord</a>.</div>
 </Layout>

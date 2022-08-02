@@ -31,7 +31,7 @@ export const TransactionMeta = ({ meta, params, tokenType }) => {
         {percentagePriceDifference !== 0 && <div>
             {priceOrCoef === 'price'
                 ? <><span className="metaLabel">New price</span>: <span style={{ color: getColorByValue(percentagePriceDifference) }}>{+Number(new_price).toPrecision(8)} {reserve_symbol} (<span>{percentagePriceDifference > 0 ? "+" : ''}{Number(percentagePriceDifference).toFixed(2)}%)</span></span></>
-                : <><span className="metaLabel">New coef</span>: <span style={{ color: getColorByValue(percentageCoefDifference) }}>x{+Number(new_coef).toPrecision(6)} ({percentageCoefDifference > 0 ? "+" : ''}{Number(percentageCoefDifference).toFixed(2)}%)</span></>}
+                : <><span className="metaLabel">New odds</span>: <span style={{ color: getColorByValue(percentageCoefDifference) }}>x{+Number(new_coef).toPrecision(6)} ({percentageCoefDifference > 0 ? "+" : ''}{Number(percentageCoefDifference).toFixed(2)}%)</span></>}
         </div>}
         <div>
             <Space>

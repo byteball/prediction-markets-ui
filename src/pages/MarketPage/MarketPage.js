@@ -32,7 +32,7 @@ import { AddLiquidityModal, ClaimProfitModal, ViewParamsModal, TradeModal } from
 import styles from './MarketPage.module.css';
 import appConfig from "appConfig";
 
-const chartConfig = {
+const getConfig = (chartType) => ({
   xField: 'date',
   yField: 'value',
   seriesField: 'type',
@@ -47,6 +47,17 @@ const chartConfig = {
   },
   color: ({ type }) => {
     return type === 'NO' ? appConfig.NO_COLOR : type === 'YES' ? appConfig.YES_COLOR : appConfig.DRAW_COLOR;
+  },
+  yAxis: {
+    label: {
+      formatter: (v) => {
+        if(chartType === 'fee') {
+          return `${v}%`
+        } else {
+          return v
+        }
+      }
+    },
   },
   tooltip: {
     customContent: (title, items) => {
@@ -79,7 +90,7 @@ const chartConfig = {
       );
     }
   }
-};
+});
 
 export const MarketPage = () => {
   const { address } = useParams();
@@ -102,6 +113,8 @@ export const MarketPage = () => {
   const params = useSelector(selectActiveMarketParams);
   const recentEvents = useSelector(selectActiveRecentEvents);
   const priceOrCoef = useSelector(selectPriceOrCoef);
+
+  const chartConfig = getConfig(chartType);
 
   const { reserve_asset = 'base', allow_draw, quiet_period = 0, reserve_symbol, reserve_decimals, yes_decimals, no_decimals, draw_decimals, yes_symbol, no_symbol, draw_symbol, event_date, league, league_emblem, created_at, oracle } = params;
 
