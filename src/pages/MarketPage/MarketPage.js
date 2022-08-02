@@ -3,7 +3,7 @@ import { Layout } from "components/Layout/Layout";
 import { StatsCard } from "components/StatsCard/StatsCard";
 import { Line } from '@ant-design/plots';
 import { useParams } from "react-router-dom";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import moment from 'moment';
 import QRButton from "obyte-qr-button";
@@ -18,12 +18,12 @@ import {
   selectActiveMarketParams,
   selectActiveMarketStateVars,
   selectActiveMarketStatus,
-  selectActiveRecentEvents,
+  selectActiveRecentResponses,
   selectActiveTeams
 } from "store/slices/activeSlice";
 import { setActiveMarket } from "store/thunks/setActiveMarket";
 import { selectPriceOrCoef, selectReserveAssets, selectReservesRate } from "store/slices/settingsSlice";
-import { getMarketPriceByType, generateLink, generateTextEvent } from "utils";
+import { getMarketPriceByType, generateLink, generateTextEvent, responseToEvent } from "utils";
 import { RecentEvents } from "components/RecentEvents/RecentEvents";
 import { CurrencyChart } from "components/CurrencyChart/CurrencyChart";
 import { MarketSizePie } from "components/MarketSizePie/MarketSizePie";
@@ -51,7 +51,7 @@ const getConfig = (chartType) => ({
   yAxis: {
     label: {
       formatter: (v) => {
-        if(chartType === 'fee') {
+        if (chartType === 'fee') {
           return `${v}%`
         } else {
           return v
@@ -111,7 +111,14 @@ export const MarketPage = () => {
   const currencyCurrentValue = useSelector(selectActiveCurrencyCurrentValue);
 
   const params = useSelector(selectActiveMarketParams);
-  const recentEvents = useSelector(selectActiveRecentEvents);
+  const recentResponses = useSelector(selectActiveRecentResponses);
+
+  const recentEvents = useMemo(() => {
+    let events = recentResponses?.filter((res) => !res.response?.error).map((res) => responseToEvent(res, params, stateVars))
+    const firstConfigureEvent = events.find((ev) => ev.Event === 'Configuration');
+    return events = [...events.filter((ev) => ev.Event !== 'Configuration'), firstConfigureEvent];
+  }, [recentResponses, stateVars, params]);
+
   const priceOrCoef = useSelector(selectPriceOrCoef);
 
   const chartConfig = getConfig(chartType);
