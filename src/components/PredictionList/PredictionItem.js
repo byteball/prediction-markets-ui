@@ -7,7 +7,7 @@ import { useSelector } from 'react-redux';
 import { min } from 'lodash';
 import { Img } from 'react-image';
 
-import { selectPriceOrCoef, selectReservesRate } from 'store/slices/settingsSlice';
+import { selectPriceOrOdds, selectReservesRate } from 'store/slices/settingsSlice';
 
 import { CreateNowModal } from "modals";
 import { generateTextEvent } from "utils";
@@ -40,7 +40,7 @@ export const PredictionItem = ({ reserve_asset = 'base', aa_address, reserve = 0
   });
 
   const reservesRates = useSelector(selectReservesRate);
-  const priceOrCoef = useSelector(selectPriceOrCoef);
+  const priceOrOdds = useSelector(selectPriceOrOdds);
 
   const now = moment.utc().unix();
   const isExpiry = now > event_date;
@@ -119,15 +119,15 @@ export const PredictionItem = ({ reserve_asset = 'base', aa_address, reserve = 0
   const SecondWrapper = exists && !preview ? Link : Fragment
   const secondWrapperProps = exists ? { to: `/market/${aa_address}` } : {};
 
-  // calc coef
-  let yes_coef = 0;
-  let draw_coef = 0;
-  let no_coef = 0;
+  // calc odds
+  let yesOddsView = 0;
+  let drawOddsView = 0;
+  let noOddsView = 0;
 
   if (reserve !== 0) {
-    yes_coef = supply_yes !== 0 ? +Number((reserve / supply_yes) / yes_price).toFixed(5) : null;
-    no_coef = supply_no !== 0 ? +Number((reserve / supply_no) / no_price).toFixed(5) : null;
-    draw_coef = supply_draw !== 0 ? +Number((reserve / supply_draw) / draw_price).toFixed(5) : null;
+    yesOddsView = supply_yes !== 0 ? +Number((reserve / supply_yes) / yes_price).toFixed(5) : null;
+    noOddsView = supply_no !== 0 ? +Number((reserve / supply_no) / no_price).toFixed(5) : null;
+    drawOddsView = supply_draw !== 0 ? +Number((reserve / supply_draw) / draw_price).toFixed(5) : null;
   }
 
   return <Wrapper {...wrapperProps}>
@@ -138,14 +138,14 @@ export const PredictionItem = ({ reserve_asset = 'base', aa_address, reserve = 0
             {!marketHasCrests ? <div className={styles.eventDesc}>
               {eventView}
             </div> : <div style={{ marginTop: 5 }}>
-              <Row gutter={8} align={(exists && allow_draw && draw_coef && width >= 576) ? "bottom" : 'middle'}>
+              <Row gutter={8} align={(exists && allow_draw && drawOddsView && width >= 576) ? "bottom" : 'middle'}>
                 <Col sm={{ span: 8 }} xs={{ span: 8 }} style={{ textAlign: 'center' }}>
                   <Img unloader={<div />} src={[`https://crests.football-data.org/${yes_team_id}.png`, `https://crests.football-data.org/${yes_team_id}.svg`]} className={styles.crests} />
                   <div className={styles.teamWrap}>
                     <Typography.Text style={{ color: appConfig.YES_COLOR }} className={styles.team} ellipsis={true}><small>{yes_team}</small></Typography.Text>
                   </div>
 
-                  {exists && yes_coef && no_coef ? <div style={{ color: appConfig.YES_COLOR }}><span className={styles.price}>{priceOrCoef === 'price' ? <>{yesPriceView} <small>{reserve_symbol}</small></> : `x${yes_coef}`}</span></div> : null}
+                  {exists && yesOddsView && noOddsView ? <div style={{ color: appConfig.YES_COLOR }}><span className={styles.price}>{priceOrOdds === 'price' ? <>{yesPriceView} <small>{reserve_symbol}</small></> : `x${yesOddsView}`}</span></div> : null}
                 </Col>
 
                 <Col sm={{ span: 8 }} xs={{ span: 8 }} style={{ textAlign: 'center' }} className={styles.draw}>
@@ -153,9 +153,9 @@ export const PredictionItem = ({ reserve_asset = 'base', aa_address, reserve = 0
                   <div className={styles.time}>
                     <small>{moment.unix(event_date).format('lll')}</small>
                   </div>
-                  {(exists && allow_draw && draw_coef && width >= 576) ? <div style={{ color: appConfig.DRAW_COLOR }}>
+                  {(exists && allow_draw && drawOddsView && width >= 576) ? <div style={{ color: appConfig.DRAW_COLOR }}>
                     <div className={styles.team}><small>draw</small></div>
-                    <span className={styles.price}>{priceOrCoef === 'price' ? <>{drawPriceView} <small>{reserve_symbol}</small></> : `x${draw_coef}`}</span>
+                    <span className={styles.price}>{priceOrOdds === 'price' ? <>{drawPriceView} <small>{reserve_symbol}</small></> : `x${drawOddsView}`}</span>
                   </div> : null}
                 </Col>
 
@@ -171,8 +171,8 @@ export const PredictionItem = ({ reserve_asset = 'base', aa_address, reserve = 0
                     </Typography.Text>
                   </div>
 
-                  {exists && no_coef && yes_coef ? <div style={{ color: appConfig.NO_COLOR }}>
-                    <span className={styles.price}>{priceOrCoef === 'price' ? <>{noPriceView} <small>{reserve_symbol}</small></> : `x${no_coef}`}</span>
+                  {exists && noOddsView && yesOddsView ? <div style={{ color: appConfig.NO_COLOR }}>
+                    <span className={styles.price}>{priceOrOdds === 'price' ? <>{noPriceView} <small>{reserve_symbol}</small></> : `x${noOddsView}`}</span>
                   </div> : null}
                 </Col>
               </Row>
@@ -183,29 +183,29 @@ export const PredictionItem = ({ reserve_asset = 'base', aa_address, reserve = 0
                 <div>
                   <div className={styles.infoTitle}>reserve</div>
                   <div>{reserveView} <small>{reserve_symbol}</small></div>
-                  {(priceOrCoef === 'price' && currentReserveRate) ? <div className={styles.infoValueInDollar}>${+Number(reserveView * currentReserveRate).toFixed(2)}</div> : null}
+                  {(priceOrOdds === 'price' && currentReserveRate) ? <div className={styles.infoValueInDollar}>${+Number(reserveView * currentReserveRate).toFixed(2)}</div> : null}
                 </div>
               </Col>
               <Col md={{ span: 6 }} xs={{ span: 12 }}>
                 <div style={{ color: appConfig.YES_COLOR }}>
                   <div className={styles.infoTitle}>yes price</div>
-                  <div style={{ fontSize: 13 }}>{<div>{priceOrCoef === 'price' ? `${yesPriceView} ${reserve_symbol}` : yes_coef ? `x${yes_coef}` : '-'}</div>}</div>
-                  {(priceOrCoef === 'price' && currentReserveRate) ? <div className={styles.infoValueInDollar}>${+Number(yes_price * currentReserveRate).toFixed(2)}</div> : null}
+                  <div style={{ fontSize: 13 }}>{<div>{priceOrOdds === 'price' ? `${yesPriceView} ${reserve_symbol}` : yesOddsView ? `x${yesOddsView}` : '-'}</div>}</div>
+                  {(priceOrOdds === 'price' && currentReserveRate) ? <div className={styles.infoValueInDollar}>${+Number(yes_price * currentReserveRate).toFixed(2)}</div> : null}
                 </div>
               </Col>
               <Col md={{ span: 6 }} xs={{ span: 12 }}>
                 <div style={{ color: appConfig.NO_COLOR }}>
                   <div className={styles.infoTitle}>no price</div>
-                  <div style={{ fontSize: 13 }}>{<div>{priceOrCoef === 'price' ? `${noPriceView} ${reserve_symbol}` : (no_coef ? `x${no_coef}` : '-')}</div>}</div>
-                  {(priceOrCoef === 'price' && currentReserveRate) ? <div className={styles.infoValueInDollar}> ${+Number(no_price * currentReserveRate).toFixed(2)}</div> : null}
+                  <div style={{ fontSize: 13 }}>{<div>{priceOrOdds === 'price' ? `${noPriceView} ${reserve_symbol}` : (noOddsView ? `x${noOddsView}` : '-')}</div>}</div>
+                  {(priceOrOdds === 'price' && currentReserveRate) ? <div className={styles.infoValueInDollar}> ${+Number(no_price * currentReserveRate).toFixed(2)}</div> : null}
                 </div>
               </Col>
               <Col md={{ span: 6 }} xs={{ span: 12 }}>
                 {allow_draw ? <div>
                   <div className={styles.infoTitle}>draw price</div>
                   <div style={{ color: appConfig.DRAW_COLOR }}>
-                    <div style={{ fontSize: 13 }}>{<div>{priceOrCoef === 'price' ? `${drawPriceView} ${reserve_symbol}` : draw_coef ? `x${draw_coef}` : '-'}</div>}</div>
-                    {(priceOrCoef === 'price' && currentReserveRate) ? <div className={styles.infoValueInDollar}> ${+Number(draw_price * currentReserveRate).toFixed(2)}</div> : null}
+                    <div style={{ fontSize: 13 }}>{<div>{priceOrOdds === 'price' ? `${drawPriceView} ${reserve_symbol}` : drawOddsView ? `x${drawOddsView}` : '-'}</div>}</div>
+                    {(priceOrOdds === 'price' && currentReserveRate) ? <div className={styles.infoValueInDollar}> ${+Number(draw_price * currentReserveRate).toFixed(2)}</div> : null}
                   </div>
                 </div> : null}
               </Col>

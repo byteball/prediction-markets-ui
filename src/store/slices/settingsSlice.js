@@ -12,7 +12,7 @@ export const settingsSlice = createSlice({
     reserveRateUpdateTime: 0,
     reserveAssets: {},
     sportsCalendar: [],
-    priceOrCoef: 'coef'
+    priceOrOdds: 'odds'
   },
   reducers: {
     saveCreationOrder: (state, action) => {
@@ -41,10 +41,10 @@ export const settingsSlice = createSlice({
       state.walletAddress = action.payload;
     },
     changeViewType: (state) => {
-      if (state.priceOrCoef === 'coef') {
-        state.priceOrCoef = 'price';
+      if (state.priceOrOdds === 'odds') {
+        state.priceOrOdds = 'price';
       } else {
-        state.priceOrCoef = 'coef';
+        state.priceOrOdds = 'odds';
       }
     }
   },
@@ -82,4 +82,4 @@ export const selectCreationOrder = state => state.settings.creationOrder;
 export const selectReserveAssets = state => state.settings.reserveAssets;
 export const selectReservesRate = state => state.settings.reserveRates;
 export const selectWalletAddress = state => state.settings.walletAddress;
-export const selectPriceOrCoef = state => state.settings.priceOrCoef;
+export const selectPriceOrOdds = state => state.settings.priceOrOdds;

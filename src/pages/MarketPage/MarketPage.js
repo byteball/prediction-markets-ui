@@ -22,7 +22,7 @@ import {
   selectActiveTeams
 } from "store/slices/activeSlice";
 import { setActiveMarket } from "store/thunks/setActiveMarket";
-import { selectPriceOrCoef, selectReserveAssets, selectReservesRate } from "store/slices/settingsSlice";
+import { selectPriceOrOdds, selectReserveAssets, selectReservesRate } from "store/slices/settingsSlice";
 import { getMarketPriceByType, generateLink, generateTextEvent, responseToEvent } from "utils";
 import { RecentEvents } from "components/RecentEvents/RecentEvents";
 import { CurrencyChart } from "components/CurrencyChart/CurrencyChart";
@@ -119,7 +119,7 @@ export const MarketPage = () => {
     return events = [...events.filter((ev) => ev.Event !== 'Configuration'), firstConfigureEvent];
   }, [recentResponses, stateVars, params]);
 
-  const priceOrCoef = useSelector(selectPriceOrCoef);
+  const priceOrOdds = useSelector(selectPriceOrOdds);
 
   const chartConfig = getConfig(chartType);
 
@@ -246,14 +246,15 @@ export const MarketPage = () => {
 
   if (status !== 'loaded' || !address || !actualReserveSymbol) return (<Layout> <div style={{ margin: 20, display: 'flex', justifyContent: 'center' }}><Spin size="large" /></div></Layout>)
 
-  let yes_coef = 0;
-  let draw_coef = 0;
-  let no_coef = 0;
+  // calc odds
+  let yesOddsView = 0;
+  let drawOddsView = 0;
+  let noOddsView = 0;
 
   if (reserve !== 0) {
-    yes_coef = supply_yes !== 0 ? +Number((reserve / supply_yes) / yesPrice).toFixed(5) : null;
-    no_coef = supply_no !== 0 ? +Number((reserve / supply_no) / noPrice).toFixed(5) : null;
-    draw_coef = supply_draw !== 0 ? +Number((reserve / supply_draw) / drawPrice).toFixed(5) : null;
+    yesOddsView = supply_yes !== 0 ? +Number((reserve / supply_yes) / yesPrice).toFixed(5) : null;
+    drawOddsView = supply_no !== 0 ? +Number((reserve / supply_no) / noPrice).toFixed(5) : null;
+    noOddsView = supply_draw !== 0 ? +Number((reserve / supply_draw) / drawPrice).toFixed(5) : null;
   }
 
   const haveTeamNames = isSportMarket && teams?.yes?.name && teams?.no?.name;
@@ -269,7 +270,7 @@ export const MarketPage = () => {
     const yes_team_name = teams.yes.name;
     const no_team_name = teams.no.name;
 
-    if (priceOrCoef === 'price') {
+    if (priceOrOdds === 'price') {
       yesTooltip = `The price of the ${yes_team_name} token. If ${yes_team_name} wins, all funds paid by buyers of all tokens will be divided among ${yes_team_name} token holders.`;
       noTooltip = `The price of the ${no_team_name} token. If ${no_team_name} wins, all funds paid by buyers of all tokens will be divided among ${no_team_name} token holders.`;
       drawTooltip = `The price of the draw token. If will be draw, all funds paid by buyers of all tokens will be divided among draw token holders.`;
@@ -280,7 +281,7 @@ export const MarketPage = () => {
     }
 
   } else {
-    if (priceOrCoef === 'price') {
+    if (priceOrOdds === 'price') {
       yesTooltip = "The price of the token that represents the “Yes” outcome. If this outcome wins, all funds paid by buyers of all tokens will be divided among “Yes” token holders.";
       noTooltip = "The price of the token that represents the “No” outcome. If this outcome wins, all funds paid by buyers of all tokens will be divided among “No” token holders.";
       drawTooltip = "The price of the token that represents the “Draw” outcome. If this outcome wins, all funds paid by buyers of all tokens will be divided among “Draw” token holders.";
@@ -348,24 +349,24 @@ export const MarketPage = () => {
             <StatsCard
               title={`${haveTeamNames ? teams.yes.name : 'Yes'}`}
               tooltip={yesTooltip}
-              subValue={(priceOrCoef === 'price' && reserve_rate) ? `$${yesPriceInUSD}` : ''} color={appConfig.YES_COLOR} onAction={tradeIsActive ? (action) => setVisibleTradeModal({ type: 'yes', action }) : undefined}
-              value={priceOrCoef === 'price' ? <span>{yesPrice} <small>{reserve_symbol}</small></span> : (yes_coef ? <span>x{yes_coef}</span> : '-')} />
+              subValue={(priceOrOdds === 'price' && reserve_rate) ? `$${yesPriceInUSD}` : ''} color={appConfig.YES_COLOR} onAction={tradeIsActive ? (action) => setVisibleTradeModal({ type: 'yes', action }) : undefined}
+              value={priceOrOdds === 'price' ? <span>{yesPrice} <small>{reserve_symbol}</small></span> : (yesOddsView ? <span>x{yesOddsView}</span> : '-')} />
           </Col>
 
           <Col lg={{ span: 8 }} md={{ span: 12 }} xs={{ span: 24 }} style={{ marginBottom: 30 }}>
             <StatsCard
               title={`${haveTeamNames ? teams.no.name : 'No'}`}
               tooltip={noTooltip}
-              subValue={(priceOrCoef === 'price' && reserve_rate) ? `$${noPriceInUSD}` : ''} color={appConfig.NO_COLOR} onAction={tradeIsActive ? (action) => setVisibleTradeModal({ type: 'no', action }) : undefined}
-              value={priceOrCoef === 'price' ? <span>{noPrice} <small>{reserve_symbol}</small></span> : (no_coef ? <span>x{no_coef}</span> : '-')} />
+              subValue={(priceOrOdds === 'price' && reserve_rate) ? `$${noPriceInUSD}` : ''} color={appConfig.NO_COLOR} onAction={tradeIsActive ? (action) => setVisibleTradeModal({ type: 'no', action }) : undefined}
+              value={priceOrOdds === 'price' ? <span>{noPrice} <small>{reserve_symbol}</small></span> : (noOddsView ? <span>x{noOddsView}</span> : '-')} />
           </Col>
 
           {allow_draw && <Col lg={{ span: 8 }} md={{ span: 12 }} xs={{ span: 24 }} style={{ marginBottom: 30 }}>
             <StatsCard
               title="Draw"
               tooltip={drawTooltip}
-              subValue={(priceOrCoef === 'price' && reserve_rate) ? `$${drawPriceInUSD}` : ''} color={appConfig.DRAW_COLOR} onAction={tradeIsActive ? (action) => setVisibleTradeModal({ type: 'draw', action }) : undefined}
-              value={priceOrCoef === 'price' ? <span>{drawPrice} <small>{reserve_symbol}</small></span> : (draw_coef ? <span>x{draw_coef}</span> : '-')} />
+              subValue={(priceOrOdds === 'price' && reserve_rate) ? `$${drawPriceInUSD}` : ''} color={appConfig.DRAW_COLOR} onAction={tradeIsActive ? (action) => setVisibleTradeModal({ type: 'draw', action }) : undefined}
+              value={priceOrOdds === 'price' ? <span>{drawPrice} <small>{reserve_symbol}</small></span> : (drawOddsView ? <span>x{drawOddsView}</span> : '-')} />
           </Col>}
 
           <Col lg={{ span: 8 }} md={{ span: 12 }} xs={{ span: 24 }} style={{ marginBottom: 30 }}>
