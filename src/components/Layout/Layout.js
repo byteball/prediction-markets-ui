@@ -20,9 +20,10 @@ export const Layout = ({ children }) => {
           ReactGA.pageview(location.pathname);
         }
       });
-    }
 
-    ReactGA.pageview(location.pathname);
+      ReactGA.pageview(location.pathname);
+
+    }
 
     return () => {
       unlisten && unlisten();
