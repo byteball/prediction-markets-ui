@@ -82,4 +82,4 @@ export const selectCreationOrder = state => state.settings.creationOrder;
 export const selectReserveAssets = state => state.settings.reserveAssets;
 export const selectReservesRate = state => state.settings.reserveRates;
 export const selectWalletAddress = state => state.settings.walletAddress;
-export const selectPriceOrOdds = state => state.settings.priceOrOdds;
+export const selectPriceOrOdds = state => state.settings.priceOrOdds || "odds";

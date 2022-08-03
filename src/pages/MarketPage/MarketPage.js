@@ -254,8 +254,8 @@ export const MarketPage = () => {
 
   if (reserve !== 0) {
     yesOddsView = supply_yes !== 0 ? +Number((reserve / supply_yes) / yesPrice).toFixed(5) : null;
-    drawOddsView = supply_no !== 0 ? +Number((reserve / supply_no) / noPrice).toFixed(5) : null;
-    noOddsView = supply_draw !== 0 ? +Number((reserve / supply_draw) / drawPrice).toFixed(5) : null;
+    drawOddsView = supply_draw !== 0 ? +Number((reserve / supply_draw) / drawPrice).toFixed(5) : null;
+    noOddsView = supply_no !== 0 ? +Number((reserve / supply_no) / noPrice).toFixed(5) : null;
   }
 
   const haveTeamNames = isSportMarket && teams?.yes?.name && teams?.no?.name;

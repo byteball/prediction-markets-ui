@@ -188,21 +188,21 @@ export const PredictionItem = ({ reserve_asset = 'base', aa_address, reserve = 0
               </Col>
               <Col md={{ span: 6 }} xs={{ span: 12 }}>
                 <div style={{ color: appConfig.YES_COLOR }}>
-                  <div className={styles.infoTitle}>yes price</div>
+                  <div className={styles.infoTitle}>yes {priceOrOdds}</div>
                   <div style={{ fontSize: 13 }}>{<div>{priceOrOdds === 'price' ? `${yesPriceView} ${reserve_symbol}` : yesOddsView ? `x${yesOddsView}` : '-'}</div>}</div>
                   {(priceOrOdds === 'price' && currentReserveRate) ? <div className={styles.infoValueInDollar}>${+Number(yes_price * currentReserveRate).toFixed(2)}</div> : null}
                 </div>
               </Col>
               <Col md={{ span: 6 }} xs={{ span: 12 }}>
                 <div style={{ color: appConfig.NO_COLOR }}>
-                  <div className={styles.infoTitle}>no price</div>
+                  <div className={styles.infoTitle}>no {priceOrOdds}</div>
                   <div style={{ fontSize: 13 }}>{<div>{priceOrOdds === 'price' ? `${noPriceView} ${reserve_symbol}` : (noOddsView ? `x${noOddsView}` : '-')}</div>}</div>
                   {(priceOrOdds === 'price' && currentReserveRate) ? <div className={styles.infoValueInDollar}> ${+Number(no_price * currentReserveRate).toFixed(2)}</div> : null}
                 </div>
               </Col>
               <Col md={{ span: 6 }} xs={{ span: 12 }}>
                 {allow_draw ? <div>
-                  <div className={styles.infoTitle}>draw price</div>
+                  <div className={styles.infoTitle}>draw {priceOrOdds}</div>
                   <div style={{ color: appConfig.DRAW_COLOR }}>
                     <div style={{ fontSize: 13 }}>{<div>{priceOrOdds === 'price' ? `${drawPriceView} ${reserve_symbol}` : drawOddsView ? `x${drawOddsView}` : '-'}</div>}</div>
                     {(priceOrOdds === 'price' && currentReserveRate) ? <div className={styles.infoValueInDollar}> ${+Number(draw_price * currentReserveRate).toFixed(2)}</div> : null}
