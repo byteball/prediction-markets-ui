@@ -32,7 +32,7 @@ export const TradeModal = memo(({ disabled, visible, setVisible, yes_team, no_te
   }, [visible]);
 
   return <>
-    {visible && <Helmet title="Prediction markets - Trade" />}
+    {visible && <Helmet title="Prediction markets — Trade" />}
     <Button type="primary" size="large" disabled={disabled} onClick={open}>Trade</Button>
 
     {status === 'loaded' && <Drawer

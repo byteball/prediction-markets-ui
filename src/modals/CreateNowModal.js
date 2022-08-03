@@ -16,7 +16,7 @@ export const CreateNowModal = (props) => {
   const close = () => setVisible(false);
 
   return <>
-    {visible && <Helmet title="Prediction markets - Create new market"/>}
+    {visible && <Helmet title="Prediction markets — Create new market"/>}
     <Button size="large" type="primary" onClick={open}>Create market</Button>
     <Drawer
       width={width > 640 ? 640 : width}

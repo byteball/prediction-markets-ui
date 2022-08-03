@@ -22,7 +22,7 @@ export const CreatePage = () => {
 
   return <Layout>
     <Typography.Title level={1}>Create new market</Typography.Title>
-    <Helmet title="Prediction markets - Create new market" />
+    <Helmet title="Prediction markets — Create new market" />
     {(!creationOrder || creationOrder.status === 'order') ? <CreateForm /> : <div>
       {(creationOrder.status === 'pending') && <WaitingPredictionMarket />}
       {creationOrder.status === 'created' && !symbolsAlreadyReg && <RegisterSymbols />}
