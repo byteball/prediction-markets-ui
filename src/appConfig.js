@@ -38,5 +38,6 @@ export default {
   KNOWN_ORACLES: [
     process.env.REACT_APP_CURRENCY_ORACLE,
     process.env.REACT_APP_SPORT_ORACLE
-  ]
+  ],
+  GA_ID: process.env.REACT_APP_GA_ID
 }

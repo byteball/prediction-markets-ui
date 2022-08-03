@@ -4,6 +4,7 @@ import QRButton from "obyte-qr-button";
 import { useEffect, useRef, useState } from "react";
 import { useSelector } from "react-redux";
 import { estimateOutput, transferEVM2Obyte } from "counterstake-sdk";
+import ReactGA from "react-ga";
 
 import {
   selectActiveAddress,
@@ -141,6 +142,14 @@ export const BuyForm = ({ type, yes_team, no_team, amount, setAmount }) => {
     }
   }, [fromToken, amount]);
 
+  const buyForReserve = () => {
+    ReactGA.event({
+      category: "Trade",
+      action: "Buy",
+      label: address
+    });
+  }
+
   const buyViaEVM = async () => {
     try {
       await transferEVM2Obyte({
@@ -156,6 +165,13 @@ export const BuyForm = ({ type, yes_team, no_team, amount, setAmount }) => {
         obyteClient: client,
         oswap_change_address: walletAddress
       });
+
+      ReactGA.event({
+        category: "Trade",
+        action: "Buy",
+        label: address
+      });
+
     } catch {
       notification.error({
         message: "The transaction would fail. Please check that you have sufficient balance",
@@ -252,7 +268,7 @@ export const BuyForm = ({ type, yes_team, no_team, amount, setAmount }) => {
     </Form.Item>}
 
     <Form.Item>
-      {fromToken.network === "Obyte" ? <QRButton size="large" ref={btnRef} href={link} disabled={!amount.valid || !Number(amount.value)} type="primary">Send{(amount.valid && amount.value) ? ` ${amount.value}` : ''} {reserve_symbol}</QRButton> : <Button size="large" type="primary" onClick={buyViaEVM} disabled={!metamaskInstalled || !walletAddress || !amount.valid || !Number(amount.value) || estimateError}>Send{(amount.valid && amount.value) ? ` ${amount.value}` : ''} {fromToken.symbol}</Button>}
+      {fromToken.network === "Obyte" ? <QRButton size="large" ref={btnRef} href={link} disabled={!amount.valid || !Number(amount.value)} type="primary" onClick={buyForReserve}>Send{(amount.valid && amount.value) ? ` ${amount.value}` : ''} {reserve_symbol}</QRButton> : <Button size="large" type="primary" onClick={buyViaEVM} disabled={!metamaskInstalled || !walletAddress || !amount.valid || !Number(amount.value) || estimateError}>Send{(amount.valid && amount.value) ? ` ${amount.value}` : ''} {fromToken.symbol}</Button>}
     </Form.Item>
   </Form>
 }

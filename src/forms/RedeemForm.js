@@ -3,6 +3,7 @@ import { isNaN } from "lodash";
 import QRButton from "obyte-qr-button";
 import { memo, useEffect, useRef, useState } from "react";
 import { useSelector } from "react-redux";
+import ReactGA from "react-ga";
 
 import { TransactionMeta } from "components/TransactionMeta/TransactionMeta";
 import {
@@ -84,6 +85,14 @@ export const RedeemForm = memo(({ type, yes_team, no_team, amount, setAmount }) 
 
   if (!currentToken) return <Spin size="large" />
 
+  const redeem = () => {
+    ReactGA.event({
+      category: "Trade",
+      action: "Redeem",
+      label: address
+    });
+  }
+
   return <Form size="large">
     <Row gutter={8}>
       <Col md={{ span: type ? 24 : 6 }} xs={{ span: 24 }}>
@@ -122,7 +131,7 @@ export const RedeemForm = memo(({ type, yes_team, no_team, amount, setAmount }) 
     </Form.Item> : null}
 
     <Form.Item>
-      <QRButton ref={btnRef} href={link} disabled={!amount.valid || !Number(amount.value) || payoutAmount.value <= 0} type="primary">Send {amount.valid && Number(amount.value) ? Number(amount.value) : ''} {truncate(currentToken.symbol, { length: 14 })}</QRButton>
+      <QRButton ref={btnRef} href={link} disabled={!amount.valid || !Number(amount.value) || payoutAmount.value <= 0} type="primary" onClick={redeem}>Send {amount.valid && Number(amount.value) ? Number(amount.value) : ''} {truncate(currentToken.symbol, { length: 14 })}</QRButton>
     </Form.Item>
   </Form>
 })
