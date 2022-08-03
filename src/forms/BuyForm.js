@@ -168,7 +168,7 @@ export const BuyForm = ({ type, yes_team, no_team, amount, setAmount }) => {
 
       ReactGA.event({
         category: "Trade",
-        action: "Buy",
+        action: "CS Buy",
         label: address
       });
 

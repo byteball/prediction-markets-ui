@@ -299,7 +299,7 @@ export const AddLiquidityForm = ({ yes_team, no_team }) => {
 
       ReactGA.event({
         category: "Trade",
-        action: "Add liquidity",
+        action: "CS Add liquidity",
         label: address
       });
 
