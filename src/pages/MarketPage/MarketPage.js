@@ -294,7 +294,7 @@ export const MarketPage = () => {
   }
 
   return <Layout>
-    <Helmet title={'Prediction markets - ' + ((teams.yes === null || teams.no === null) ? event : `${teams.yes.name} vs ${teams.no.name}`)} />
+    <Helmet title={'Prediction markets — ' + ((teams.yes === null || teams.no === null) ? event : `${teams.yes.name} vs ${teams.no.name}`)} />
     <div style={{ marginTop: 50 }}>
       {(teams.yes === null || teams.no === null) ? <h1 style={{ maxWidth: 800 }}>{event}</h1> : <div style={{ margin: '30px 0', width: '100%' }}>
         <Row align="middle">

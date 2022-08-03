@@ -17,7 +17,7 @@ export const ViewParamsModal = ({ event, reserve_asset, allow_draw, oracle, feed
   const close = () => setVisible(false);
 
   return <>
-    {visible && <Helmet title="Prediction markets - View params" />}
+    {visible && <Helmet title="Prediction markets — View params" />}
     <Button size="small" type="link" onClick={open}>View params</Button>
     <Drawer
       width={width > 640 ? 640 : width}

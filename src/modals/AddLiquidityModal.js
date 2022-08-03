@@ -19,7 +19,7 @@ export const AddLiquidityModal = ({ disabled, yes_team, no_team }) => {
   const close = () => setVisible(false);
 
   return <>
-    {visible && <Helmet title="Prediction markets - Add liquidity"/>}
+    {visible && <Helmet title="Prediction markets — Add liquidity"/>}
     <Button type="primary" size="large" disabled={disabled} onClick={open}>Add liquidity</Button>
 
     {status === 'loaded' && <Drawer
