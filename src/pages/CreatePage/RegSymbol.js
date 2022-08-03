@@ -5,6 +5,7 @@ import { isBoolean } from "lodash";
 import { useSelector } from "react-redux";
 import QRButton from "obyte-qr-button";
 import moment from "moment";
+import { Helmet } from "react-helmet-async";
 
 import { generateLink, generateTextEvent } from "utils";
 import { useWindowSize } from "hooks";
@@ -205,6 +206,7 @@ export const RegisterSymbols = () => {
 
   return (
     <div>
+      <Helmet title="Prediction markets - Symbol registration" />
       <Steps
         current={currentStep}
         style={{ marginTop: 20 }}

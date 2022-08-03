@@ -5,6 +5,7 @@ import { isEmpty, isNumber } from "lodash";
 import moment from "moment";
 import { useDispatch, useSelector } from "react-redux";
 import QRButton from "obyte-qr-button";
+import ReactGA from "react-ga";
 
 import { FormLabel } from "components/FormLabel/FormLabel";
 import { saveCreationOrder, selectReserveAssets } from "store/slices/settingsSlice";
@@ -196,6 +197,12 @@ export const CreateForm = () => {
 
   const save = () => {
     if (!isValidForm) return null;
+
+    ReactGA.event({
+      category: "Create",
+      action: `Create ${category.value} market`,
+      label: data.oracle
+    });
 
     dispatch(saveCreationOrder(data));
   }

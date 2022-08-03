@@ -9,6 +9,7 @@ import moment from 'moment';
 import QRButton from "obyte-qr-button";
 import Countdown from "antd/lib/statistic/Countdown";
 import { Img } from 'react-image';
+import { Helmet } from "react-helmet-async";
 
 import {
   selectActiveCurrencyCandles,
@@ -293,6 +294,7 @@ export const MarketPage = () => {
   }
 
   return <Layout>
+    <Helmet title={'Prediction markets - ' + ((teams.yes === null || teams.no === null) ? event : `${teams.yes.name} vs ${teams.no.name}`)} />
     <div style={{ marginTop: 50 }}>
       {(teams.yes === null || teams.no === null) ? <h1 style={{ maxWidth: 800 }}>{event}</h1> : <div style={{ margin: '30px 0', width: '100%' }}>
         <Row align="middle">
@@ -334,7 +336,10 @@ export const MarketPage = () => {
             no_team={teams?.no?.name}
           />
           {showCommitResultButton && (datafeedValue ? <QRButton type="primary" size="large" href={commitResultLink}>Commit result</QRButton> : <Tooltip title="Oracle has not published results yet"><Button size="large" disabled={true}>Commit result</Button></Tooltip>)}
-          {showClaimProfitButton && <ClaimProfitModal />}
+          {showClaimProfitButton && <ClaimProfitModal
+            yes_team={teams?.yes?.name}
+            no_team={teams?.no?.name}
+          />}
           <ViewParamsModal {...params} aa_address={address} />
         </Space>
       </Row>

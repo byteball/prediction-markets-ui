@@ -1,6 +1,7 @@
 import { Button, Drawer, Typography } from "antd";
 import { useState } from "react";
 import { Outlet } from "react-router-dom";
+import { Helmet } from "react-helmet-async";
 
 import { useWindowSize } from "hooks";
 import { CreateNowForm } from "forms";
@@ -15,6 +16,7 @@ export const CreateNowModal = (props) => {
   const close = () => setVisible(false);
 
   return <>
+    {visible && <Helmet title="Prediction markets - Create new market"/>}
     <Button size="large" type="primary" onClick={open}>Create market</Button>
     <Drawer
       width={width > 640 ? 640 : width}

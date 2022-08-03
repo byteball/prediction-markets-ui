@@ -2,6 +2,7 @@ import { Button, Form, Input, Modal, Typography } from "antd";
 import { useEffect, useRef, useState } from "react"
 import { useDispatch, useSelector } from "react-redux";
 import obyte from "obyte";
+import { Helmet } from "react-helmet-async";
 
 import {
   changeWalletAddress,
@@ -53,6 +54,7 @@ export const WalletModal = ({ children = "WALLET", type = "default", styles = {}
   const btnStyles = type === "link" ? { padding: 0, ...styles } : { ...styles };
 
   return <>
+    {visible && <Helmet title="Prediction markets - Wallet" />}
     <Button onClick={changeVisible} size="large" type={type} style={btnStyles}>{currentWalletAddress ? `${currentWalletAddress.slice(0, 7)}...` : children}</Button>
 
     <Modal

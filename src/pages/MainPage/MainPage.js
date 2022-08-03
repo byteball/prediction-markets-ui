@@ -12,6 +12,7 @@ import { selectAllMarkets, selectAllMarketsStatus, selectChampionships } from "s
 import { getTabNameByType } from "utils/getTabNameByType";
 
 import styles from "./MainPage.module.css";
+import { Helmet } from "react-helmet-async";
 
 export const MainPage = () => {
 	const markets = useSelector(selectAllMarkets);
@@ -103,6 +104,7 @@ export const MainPage = () => {
 	}
 
 	return <div>
+		<Helmet title={`Prediction markets - ${marketType} markets`} />
 		<Layout>
 			<Row className={styles.headerWrap}>
 				<Col xs={{ span: 24 }} md={{ span: 24 }}>

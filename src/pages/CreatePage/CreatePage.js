@@ -2,6 +2,7 @@ import { Button, Result, Typography } from "antd";
 import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import { useEffect } from "react";
+import { Helmet } from "react-helmet-async";
 
 import { Layout } from "components/Layout/Layout"
 import { CreateForm } from "forms";
@@ -21,7 +22,7 @@ export const CreatePage = () => {
 
   return <Layout>
     <Typography.Title level={1}>Create new market</Typography.Title>
-
+    <Helmet title="Prediction markets - Create new market" />
     {(!creationOrder || creationOrder.status === 'order') ? <CreateForm /> : <div>
       {(creationOrder.status === 'pending') && <WaitingPredictionMarket />}
       {creationOrder.status === 'created' && !symbolsAlreadyReg && <RegisterSymbols />}

@@ -6,6 +6,7 @@ import { isNumber } from "lodash";
 import QRButton from "obyte-qr-button";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
+import ReactGA from "react-ga";
 
 import client from "services/obyte";
 
@@ -295,6 +296,13 @@ export const AddLiquidityForm = ({ yes_team, no_team }) => {
         obyteClient: client,
         oswap_change_address: walletAddress
       });
+
+      ReactGA.event({
+        category: "Trade",
+        action: "Add liquidity CS",
+        label: address
+      });
+
     } catch (e) {
       console.error(e);
 
@@ -306,6 +314,14 @@ export const AddLiquidityForm = ({ yes_team, no_team }) => {
   }
 
   const probabilitiesAreValid = !isFirstIssue || (probabilities.yes.value && (!allow_draw || probabilities.no.value));
+
+  const addLiquidity = () => {
+    ReactGA.event({
+      category: "Trade",
+      action: "Add liquidity",
+      label: address
+    });
+  }
 
   return <Form size="small" layout="vertical">
     <Row gutter={8}>
@@ -409,7 +425,7 @@ export const AddLiquidityForm = ({ yes_team, no_team }) => {
 
     <Form.Item>
       {fromToken.network === "Obyte"
-        ? <QRButton size="large" type="primary" disabled={!valid || !probabilitiesAreValid} href={link}>Send{(reserveAmount.valid && reserveAmount.value) ? ` ${reserveAmount.value} ${reserve_symbol}` : ''}</QRButton>
+        ? <QRButton size="large" type="primary" disabled={!valid || !probabilitiesAreValid} onClick={addLiquidity} href={link}>Send{(reserveAmount.valid && reserveAmount.value) ? ` ${reserveAmount.value} ${reserve_symbol}` : ''}</QRButton>
         : <Button size="large" type="primary" onClick={buyViaEVM} disabled={!metamaskInstalled || !walletAddress || !reserveAmount.valid || !Number(reserveAmount.value) || estimateError || !probabilitiesAreValid}>Send{(reserveAmount.valid && reserveAmount.value) ? ` ${reserveAmount.value}` : ''} {fromToken.symbol}</Button>}
     </Form.Item>
 
