@@ -1,6 +1,7 @@
 import { Button, Drawer, Typography } from "antd";
 import { useState } from "react";
 import moment from "moment";
+import { Helmet } from "react-helmet-async";
 
 import { useWindowSize } from "hooks";
 
@@ -16,6 +17,7 @@ export const ViewParamsModal = ({ event, reserve_asset, allow_draw, oracle, feed
   const close = () => setVisible(false);
 
   return <>
+    {visible && <Helmet title="Prediction markets - View params" />}
     <Button size="small" type="link" onClick={open}>View params</Button>
     <Drawer
       width={width > 640 ? 640 : width}

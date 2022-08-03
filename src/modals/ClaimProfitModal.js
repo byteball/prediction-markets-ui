@@ -1,6 +1,7 @@
 import { Button, Drawer, Typography } from "antd";
 import { useState } from "react";
 import { useSelector } from "react-redux";
+import { Helmet } from "react-helmet-async";
 
 import { ClaimProfitForm } from "forms";
 import { useWindowSize } from "hooks";
@@ -14,7 +15,7 @@ import { selectWalletAddress } from "store/slices/settingsSlice";
 
 const { Title } = Typography;
 
-export const ClaimProfitModal = ({ disabled }) => {
+export const ClaimProfitModal = ({ disabled, yes_team, no_team }) => {
   const [visible, setVisible] = useState(false);
   const status = useSelector(selectActiveMarketStatus);
   const address = useSelector(selectActiveAddress);
@@ -36,6 +37,7 @@ export const ClaimProfitModal = ({ disabled }) => {
   const close = () => setVisible(false);
 
   return <>
+    {visible && <Helmet title="Prediction markets - Claim profit" />}
     <Button type="primary" size="large" disabled={disabled} onClick={open}>Claim profit</Button>
     {status === 'loaded' && <Drawer
       width={width > 640 ? 640 : width}
@@ -47,7 +49,7 @@ export const ClaimProfitModal = ({ disabled }) => {
       <Title level={2}>Claim profit</Title>
 
       <Typography.Paragraph type="secondary">
-        YES was the right choice and you can collect your winnings
+        {winner === 'yes' ? yes_team || 'Yes' : (winner === 'No' ? no_team || 'no' : 'Draw')} was the right choice and you can collect your winnings
       </Typography.Paragraph>
 
       <ClaimProfitForm

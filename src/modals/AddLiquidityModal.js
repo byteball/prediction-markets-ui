@@ -1,6 +1,7 @@
 import { Button, Drawer, Typography } from "antd";
 import { useState } from "react";
 import { useSelector } from "react-redux";
+import { Helmet } from "react-helmet-async";
 
 import { useWindowSize } from "hooks";
 import { AddLiquidityForm } from "forms";
@@ -18,6 +19,7 @@ export const AddLiquidityModal = ({ disabled, yes_team, no_team }) => {
   const close = () => setVisible(false);
 
   return <>
+    {visible && <Helmet title="Prediction markets - Add liquidity"/>}
     <Button type="primary" size="large" disabled={disabled} onClick={open}>Add liquidity</Button>
 
     {status === 'loaded' && <Drawer

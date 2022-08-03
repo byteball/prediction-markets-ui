@@ -1,6 +1,7 @@
 import { Button, Drawer, Typography } from "antd";
 import { memo, useEffect, useState } from "react";
 import { useSelector } from "react-redux";
+import { Helmet } from "react-helmet-async";
 
 import { SwitchActions } from "components/SwitchActions/SwitchActions";
 import { BuyForm, RedeemForm } from "forms";
@@ -31,6 +32,7 @@ export const TradeModal = memo(({ disabled, visible, setVisible, yes_team, no_te
   }, [visible]);
 
   return <>
+    {visible && <Helmet title="Prediction markets - Trade" />}
     <Button type="primary" size="large" disabled={disabled} onClick={open}>Trade</Button>
 
     {status === 'loaded' && <Drawer
