@@ -75,6 +75,11 @@
   margin-top: 8px;
 }
 
+.event {
+  font-size: 32px;
+  margin-bottom: 10px;
+}
+
 /* Small devices (landscape phones, 576px and up) */
 @media (min-width: 576px) {
 
@@ -96,3 +101,9 @@
 
 /* Extra large devices (large desktops, 1200px and up) */
 @media (min-width: 1200px) {}
+
+@media (max-width: 576px) {
+  .event {
+    font-size: 26px;
+  }
+}

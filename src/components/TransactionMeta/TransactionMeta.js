@@ -34,11 +34,11 @@ export const TransactionMeta = ({ meta, params, tokenType }) => {
                 : <><span className="metaLabel">New odds</span>: <span style={{ color: getColorByValue(percentageOddsDifference) }}>x{+Number(new_odds).toPrecision(6)} ({percentageOddsDifference > 0 ? "+" : ''}{Number(percentageOddsDifference).toFixed(2)}%)</span></>}
         </div>}
         <div>
-            <Space>
+            <Space wrap={true}>
                 <span>Total fee: <span style={{ color: getColorByValue(meta.percentage_total_fee) }}>{+Number((meta.total_fee) / 10 ** reserve_decimals).toFixed(reserve_decimals)} {reserve_symbol} ({Number(meta.percentage_total_fee).toFixed(2)}%)</span></span>
-                <span onClick={() => setVisibleFee((v) => !v)} className={styles.detailsBtn}>show details</span>
+                <span onClick={() => setVisibleFee((v) => !v)} className={styles.detailsBtn}>{visibleFee ? 'hide' : 'show'} details</span>
             </Space>
-            {visibleFee && <div className={styles.detailsWrap} onClick={() => setVisibleFee((v) => !v)}>
+            {visibleFee && <div className={styles.detailsWrap}>
                 {meta.arb_profit_tax !== 0 && <div><span className="metaLabel">Arb profit tax</span>:  <span style={{ color: getColorByValue(meta.percentage_arb_profit_tax) }}>{+Number(meta.arb_profit_tax / 10 ** reserve_decimals).toFixed(reserve_decimals)} {reserve_symbol} ({Number(meta.percentage_arb_profit_tax).toFixed(2)}%) {meta.percentage_arb_profit_tax > 5 && <FormLabel info="The more you change the price, the more commissions you pay." />}</span></div>}
                 {meta.issue_fee !== 0 && <div><span className="metaLabel">Issue fee</span>: {+Number((meta.issue_fee) / 10 ** reserve_decimals).toFixed(reserve_decimals)} {reserve_symbol} ({issue_fee * 100}%)</div>}
                 {meta.redeem_fee !== 0 && <div><span className="metaLabel">Sell fee</span>: {+Number((meta.redeem_fee) / 10 ** reserve_decimals).toFixed(reserve_decimals)} {reserve_symbol} ({meta.percentage_redeem_fee}%)</div>}
