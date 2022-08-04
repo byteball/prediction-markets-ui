@@ -202,7 +202,7 @@ export const BuyForm = ({ type, yes_team, no_team, amount, setAmount }) => {
               <Select.Option value={`Obyte__${reserve_asset}__${reserve_decimals}__no__${reserve_symbol}`}>{reserve_symbol}</Select.Option>
             </Select.OptGroup>
             {Object.entries(tokensByNetwork).map(([network, items]) => (
-              <Select.OptGroup label={network}>
+              <Select.OptGroup key={`network-${network}`} label={network}>
                 {items.map((item) => <Select.Option value={`${network}__${item.home_asset}__${item.home_asset_decimals}__${item.foreign_asset}__${item.home_symbol}`} key={`${item.home_network} ${item.home_asset} ${item.bridge_id}`}>
                   {item.home_symbol}
                 </Select.Option>)}

@@ -216,7 +216,7 @@ export const MarketPage = () => {
   }, [])
 
   if (params.event_date - quiet_period > now) {
-    tradeStatus = "TRADING"
+    tradeStatus = "TRADING";
     tradeStatusColor = appConfig.YES_COLOR;
     tradeTimerExpiry = params.event_date;
     tradeIsActive = true;
@@ -235,7 +235,8 @@ export const MarketPage = () => {
     showCommitResultButton = true;
   } else {
     tradeStatus = "RESUMED TRADING";
-    tradeStatusColor = appConfig.YES_COLOR
+    tradeStatusColor = appConfig.YES_COLOR;
+    showCommitResultButton = true;
     tradeIsActive = true;
   }
 
@@ -296,7 +297,7 @@ export const MarketPage = () => {
   return <Layout>
     <Helmet title={'Prediction markets — ' + ((teams.yes === null || teams.no === null) ? event : `${teams.yes.name} vs ${teams.no.name}`)} />
     <div style={{ marginTop: 50 }}>
-      {(teams.yes === null || teams.no === null) ? <h1 style={{ maxWidth: 800 }}>{event}</h1> : <div style={{ margin: '30px 0', width: '100%' }}>
+      {(teams.yes === null || teams.no === null) ? <div className={styles.event} style={{ maxWidth: 800 }}>{event}</div> : <div style={{ margin: '30px 0', width: '100%' }}>
         <Row align="middle">
           <Col md={{ span: 8 }} xs={{ span: 8 }} style={{ textAlign: 'center' }}>
             <Img src={[`https://crests.football-data.org/${teams.yes.id}.png`, `https://crests.football-data.org/${teams.yes.id}.svg`]} width={'50%'} style={{ maxWidth: 120 }} />
@@ -374,6 +375,13 @@ export const MarketPage = () => {
               value={priceOrOdds === 'price' ? <span>{drawPrice} <small>{reserve_symbol}</small></span> : (drawOddsView ? <span>x{drawOddsView}</span> : '-')} />
           </Col>}
 
+          {isCurrencyMarket && currencyCurrentValue && <Col lg={{ span: 8 }} md={{ span: 12 }} xs={{ span: 24 }} style={{ marginBottom: 30 }}>
+            <StatsCard
+              title="Current value"
+              tooltip={`The latest value of the data feed ${params.feed_name}`}
+              value={+currencyCurrentValue.toFixed(9)} />
+          </Col>}
+
           <Col lg={{ span: 8 }} md={{ span: 12 }} xs={{ span: 24 }} style={{ marginBottom: 30 }}>
             <StatsCard
               title="Reserve"
@@ -381,13 +389,6 @@ export const MarketPage = () => {
               tooltip="Total amount invested in all outcomes"
               value={<span>{viewReserve} <small>{reserve_symbol}</small></span>} />
           </Col>
-
-          {isCurrencyMarket && currencyCurrentValue && <Col lg={{ span: 8 }} md={{ span: 12 }} xs={{ span: 24 }} style={{ marginBottom: 30 }}>
-            <StatsCard
-              title="Current value"
-              tooltip={`The latest value of the data feed ${params.feed_name}`}
-              value={+currencyCurrentValue.toFixed(9)} />
-          </Col>}
 
           <Col lg={{ span: 8 }} md={{ span: 12 }} xs={{ span: 24 }} style={{ marginBottom: 30 }}>
             <StatsCard

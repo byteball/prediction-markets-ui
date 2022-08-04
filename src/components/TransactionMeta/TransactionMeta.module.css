@@ -13,3 +13,9 @@
     font-style: 14px;
     margin-top: 2px;
 }
+
+@media (max-width: 768px) {
+    .detailsWrap {
+        margin-top: 10px;
+    }
+}
