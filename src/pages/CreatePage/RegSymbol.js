@@ -75,7 +75,8 @@ export const RegisterSymbols = () => {
     let symbol;
     const feed_name = order.data.feed_name;
     const type = String(currentStep === 0 ? 'yes' : (currentStep === 1 ? 'no' : 'draw')).toUpperCase();
-    const date = moment.unix(order.data.event_date).format("YYYY-MM-DD");
+    const momentDate = moment.utc(order.data.event_date, 'YYYY-MM-DDTHH:mm:ss').utc();
+    const date = momentDate.format((momentDate.hours() === 0 && momentDate.minutes() === 0) ? "YYYY-MM-DD" : "YYYY-MM-DD-hhmm");
 
     if (appConfig.CATEGORIES.sport.oracles.find(({ address }) => address === order.data.oracle)) {
 
@@ -84,9 +85,6 @@ export const RegisterSymbols = () => {
       const actual_team = currentStep === 0 ? yes_team : (currentStep === 1 ? no_team : 'DRAW');
 
       symbol = String(`${feed_name}_${actual_team}`).toUpperCase();
-    } else if (isSportMarket) {
-
-      symbol = `${feed_name}_${order.data.datafeed_value}_${date}_${type}`
     } else {
       symbol = `${feed_name}_${date}_${type}`
     }
@@ -137,16 +135,16 @@ export const RegisterSymbols = () => {
             const { yes_team, no_team } = order.data;
 
             const actual_team = currentStep === 0 ? yes_team : (currentStep === 1 ? no_team : 'DRAW');
-            const date = moment.unix(order.data.event_date).format("lll");
+            const date = moment.utc(order.data.event_date, 'YYYY-MM-DDTHH:mm:ss').utc().format("lll");
 
             if (actual_team !== 'DRAW') {
-              value = `${yes_team} will win the match against ${no_team} on ${date}`
+              value = `${yes_team} will win the match against ${no_team} on ${date} UTC`
             } else {
-              value = `The match between ${yes_team} and ${no_team} on ${date} will end with a draw`;
+              value = `The match between ${yes_team} and ${no_team} on ${date} will end with a draw UTC`;
             }
 
           } else {
-            value = `${String(currentSymbol).toUpperCase()}-token for event: "${generateTextEvent({ ...order.data })}"`;
+            value = `${String(currentSymbol).toUpperCase()}-token for event: "${generateTextEvent({ ...order.data, event_date: moment.utc(order.data.event_date, 'YYYY-MM-DDTHH:mm:ss').unix(), isUTC: true })}"`;
           }
 
           setDescr({
