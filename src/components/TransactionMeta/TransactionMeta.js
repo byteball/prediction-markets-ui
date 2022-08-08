@@ -31,11 +31,11 @@ export const TransactionMeta = ({ meta, params, tokenType, showEstimatedWinnings
     const estimatedWinningsView = +Number(estimatedWinnings / 10 ** reserve_decimals).toFixed(reserve_decimals);
     const percentageEstimatedProfit = Number((((estimatedWinnings - meta.reserve_amount) / meta.reserve_amount) * 100)).toFixed(4);
 
-    const tokenName = tokenType === 'yes' ? (yes_team || 'YES') : (tokenType === 'no' ? (no_team || 'NO') : 'DRAW')
+    const tokenName = tokenType === 'yes' ? (yes_team || 'yes') : (tokenType === 'no' ? (no_team || 'no') : 'draw')
 
     return <div className={styles.wrap}>
         {showEstimatedWinnings && <div>
-            Estimated winnings <FormLabel info={`if ${tokenName} wins`} /> : {estimatedWinningsView} {reserve_symbol} ({percentageEstimatedProfit > 0 ? '+' : '-'}{percentageEstimatedProfit}%)
+            Estimated winnings <FormLabel info={yes_team && no_team && tokenType === 'draw' ? 'if the game ends with a draw' : yes_team && no_team ? `if ${tokenName} wins` : `if the outcome is ${tokenName}`} /> : {estimatedWinningsView} {reserve_symbol} ({percentageEstimatedProfit > 0 ? '+' : '-'}{percentageEstimatedProfit}%)
         </div>}
         {percentagePriceDifference !== 0 && <div>
             {priceOrOdds === 'price'
