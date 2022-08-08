@@ -88,7 +88,7 @@ export const CreateNowForm = ({ feed_name, event_date, expect_datafeed_value, ye
 
   const data = {
     oracle: type === 'sport' ? oracle : customOracle.value,
-    event_date: type === 'sport' ? event_date : eventDate.value,
+    event_date: moment.unix(type === 'sport' ? event_date : eventDate.value).utc().format('YYYY-MM-DDTHH:mm:ss'),
     feed_name: String(type === 'sport' ? feed_name : feedName.value).toUpperCase(),
     comparison: type === 'sport' ? '==' : comparison.value,
     datafeed_value: type === 'sport' ? expect_datafeed_value : datafeedValue.value,

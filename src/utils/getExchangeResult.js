@@ -219,5 +219,6 @@ export const get_result_for_buying_by_type = (state, params, type, reserve_amoun
     new_supply_yes: type === 'yes' ? supply_by_type : supply_yes,
     new_supply_no: type === 'no' ? supply_by_type : supply_no,
     new_supply_draw: type === 'draw' ? supply_by_type : supply_draw,
+    reserve_amount
   })
 }

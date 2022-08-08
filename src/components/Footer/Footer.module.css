@@ -15,3 +15,18 @@
   margin-bottom: 10px;
   font-weight: 300;
 }
+
+.name {
+  color: #ccc !important;
+}
+
+.disclaimer {
+  font-size: 10px;
+  font-weight: 300;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.copy {
+  margin-top: 10px;
+}
