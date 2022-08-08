@@ -237,6 +237,9 @@ export const BuyForm = ({ type, yes_team, no_team, amount, setAmount }) => {
         meta={meta}
         params={params}
         tokenType={currentToken?.type}
+        showEstimatedWinnings={true}
+        yes_team={yes_team}
+        no_team={no_team}
       />
       {(fromToken.network !== "Obyte" && estimate) ? <div style={{ marginTop: 20 }}>
         {counterstake_assistant_fee ? <div><span className="metaLabel"><a href="https://counterstake.org" target="_blank" rel="noopener">Counterstake</a> fee</span>: {+Number(counterstake_assistant_fee).toFixed(fromToken.decimals)} {fromToken.symbol}</div> : null}

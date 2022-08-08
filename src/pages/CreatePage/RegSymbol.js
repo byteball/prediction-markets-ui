@@ -119,12 +119,12 @@ export const RegisterSymbols = () => {
           token.value
         );
         if (!!asset) {
-          setIsAvailable(undefined);
           const name = token.value;
-          const split = name.split("#");
-          const number = split.length >= 2 ? Number(split[split.length - 1]) + 1 : 2;
+          const split = name.split("_");
+          const hasNumber = !isNaN(Number(split[split.length - 1]));
+          const number = (split.length >= 2 && hasNumber) ? Number(split[split.length - 1]) + 1 : 2;
 
-          setToken({ value: split[0] + "#" + number, valid: true })
+          setToken({ value: (hasNumber ? split.slice(0, -1).join("_") : name) + "_" + number, valid: true })
         } else {
 
           setIsAvailable(true);
@@ -140,7 +140,7 @@ export const RegisterSymbols = () => {
             if (actual_team !== 'DRAW') {
               value = `${yes_team} will win the match against ${no_team} on ${date} UTC`
             } else {
-              value = `The match between ${yes_team} and ${no_team} on ${date} will end with a draw UTC`;
+              value = `The match between ${yes_team} and ${no_team} on ${date} UTC will end with a draw`;
             }
 
           } else {
@@ -156,7 +156,7 @@ export const RegisterSymbols = () => {
         }
       })();
     }
-  }, [isAvailable, currentSymbol]);
+  }, [isAvailable, currentSymbol, token]);
 
   const data = {
     asset: currentAsset,

@@ -7,7 +7,7 @@ import { selectPriceOrOdds } from "store/slices/settingsSlice";
 
 import styles from "./TransactionMeta.module.css";
 
-export const TransactionMeta = ({ meta, params, tokenType }) => {
+export const TransactionMeta = ({ meta, params, tokenType, showEstimatedWinnings = false, yes_team, no_team }) => {
     const { reserve_symbol, reserve_decimals, issue_fee } = params;
     const [visibleFee, setVisibleFee] = useState(false);
     const priceOrOdds = useSelector(selectPriceOrOdds);
@@ -27,7 +27,16 @@ export const TransactionMeta = ({ meta, params, tokenType }) => {
 
     const percentageOddsDifference = 100 * (new_odds - odds) / odds;
 
+    const estimatedWinnings = (meta.new_reserve / new_supply) * meta.amount;
+    const estimatedWinningsView = +Number(estimatedWinnings / 10 ** reserve_decimals).toFixed(reserve_decimals);
+    const percentageEstimatedProfit = Number((((estimatedWinnings - meta.reserve_amount) / meta.reserve_amount) * 100)).toFixed(4);
+
+    const tokenName = tokenType === 'yes' ? (yes_team || 'YES') : (tokenType === 'no' ? (no_team || 'NO') : 'DRAW')
+
     return <div className={styles.wrap}>
+        {showEstimatedWinnings && <div>
+            Estimated winnings <FormLabel info={`if ${tokenName} wins`} /> : {estimatedWinningsView} {reserve_symbol} ({percentageEstimatedProfit > 0 ? '+' : '-'}{percentageEstimatedProfit}%)
+        </div>}
         {percentagePriceDifference !== 0 && <div>
             {priceOrOdds === 'price'
                 ? <><span className="metaLabel">New price</span>: <span style={{ color: getColorByValue(percentagePriceDifference) }}>{+Number(new_price).toPrecision(8)} {reserve_symbol} (<span>{percentagePriceDifference > 0 ? "+" : ''}{Number(percentagePriceDifference).toFixed(2)}%)</span></span></>

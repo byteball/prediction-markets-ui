@@ -111,9 +111,9 @@ export const MainPage = () => {
 					<h1 className={styles.mainHeader}>
 						Decentralized <span className={styles.select}>prediction markets</span>
 					</h1>
-					<div className={styles.description}>
+					<h2 className={styles.description}>
 						<p>Sports betting, binary options, and other bets on future events</p>
-					</div>
+					</h2>
 				</Col>
 			</Row>
 

@@ -32,7 +32,7 @@ export const setActiveMarket = createAsyncThunk(
     const base_aa = aa[1].base_aa;
     const reserve_asset = aa[1].params.reserve_asset || 'base';
 
-    if (base_aa !== appConfig.BASE_AA) throw new Error("unknown base aa");
+    if (!appConfig.BASE_AA.includes(base_aa)) throw new Error("unknown base aa");
 
     const tokenRegistry = obyte.api.getOfficialTokenRegistryAddress();
 
