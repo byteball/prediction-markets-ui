@@ -18,7 +18,7 @@ export const Footer = () => {
       accuracy of the displayed information however there are no guarantees of accuracy and the information is provided as is. None of the material on the Site is intended to be, nor does it constitute, a solicitation, recommendation or offer to buy or sell any security, commodity, interest, derivative, financial product or instrument. Users are responsible for complying with all applicable laws and should conduct their own analysis and consult with professional advisors prior to engaging with any markets.
     </div>
     <div className={styles.copy}>
-      &copy; {year} <a className={styles.name} href="https://obyte.org" target="_blank" rel="noopener">Obyte</a>. All rights reserved
+      &copy; {year} <a className={styles.name} href="https://obyte.org" target="_blank" rel="noopener">Obyte</a>, all rights reserved
     </div>
     <div className={styles.socialWrap}>
       <SocialLinks centered />
