@@ -4,7 +4,10 @@ import axios from "axios";
 class Backend {
   constructor() {
     this.axios = axios.create({
-      baseURL: appConfig.BACKEND_URL
+      baseURL: appConfig.BACKEND_URL,
+      headers: {
+        'Access-Control-Allow-Origin': '*'
+      }
     });
   }
 

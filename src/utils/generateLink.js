@@ -2,7 +2,7 @@ import { encodeData } from "./encodeData";
 import config from "appConfig";
 
 const suffixes = {
-  mainnet: "",
+  livenet: "",
   testnet: "-tn",
   devnet: "-dev",
 };
