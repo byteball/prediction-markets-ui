@@ -375,7 +375,7 @@ export const MarketPage = () => {
               value={priceOrOdds === 'price' ? <span>{drawPrice} <small>{reserve_symbol}</small></span> : (drawOddsView ? <span>x{drawOddsView}</span> : '-')} />
           </Col> : null}
 
-          {isCurrencyMarket && currencyCurrentValue ? <Col lg={{ span: 8 }} md={{ span: 12 }} xs={{ span: 24 }} style={{ marginBottom: 30 }}>
+          {(isCurrencyMarket && currencyCurrentValue) ? <Col lg={{ span: 8 }} md={{ span: 12 }} xs={{ span: 24 }} style={{ marginBottom: 30 }}>
             <StatsCard
               title="Current value"
               tooltip={`The latest value of the data feed ${params.feed_name}`}
