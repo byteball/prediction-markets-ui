@@ -34,9 +34,9 @@ export const TransactionMeta = ({ meta, params, tokenType, showEstimatedWinnings
     const tokenName = tokenType === 'yes' ? (yes_team || 'yes') : (tokenType === 'no' ? (no_team || 'no') : 'draw')
 
     return <div className={styles.wrap}>
-        {showEstimatedWinnings && <div>
-            Estimated winnings <FormLabel info={yes_team && no_team && tokenType === 'draw' ? 'if the game ends with a draw' : yes_team && no_team ? `if ${tokenName} wins` : `if the outcome is ${tokenName}`} /> : {estimatedWinningsView} {reserve_symbol} ({percentageEstimatedProfit > 0 ? '+' : '-'}{percentageEstimatedProfit}%)
-        </div>}
+        {(showEstimatedWinnings && meta.old_reserve) ? <div>
+            Estimated winnings <FormLabel info={yes_team && no_team && tokenType === 'draw' ? 'if the game ends with a draw' : yes_team && no_team ? `if ${tokenName} wins` : `if the outcome is ${tokenName}`} /> : {estimatedWinningsView} {reserve_symbol} ({percentageEstimatedProfit > 0 ? '+' : '-'}{Math.abs(percentageEstimatedProfit)}%)
+        </div> : null}
         {percentagePriceDifference !== 0 && <div>
             {priceOrOdds === 'price'
                 ? <><span className="metaLabel">New price</span>: <span style={{ color: getColorByValue(percentagePriceDifference) }}>{+Number(new_price).toPrecision(8)} {reserve_symbol} (<span>{percentagePriceDifference > 0 ? "+" : ''}{Number(percentagePriceDifference).toFixed(2)}%)</span></span></>
