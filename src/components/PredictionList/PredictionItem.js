@@ -140,7 +140,7 @@ export const PredictionItem = ({ reserve_asset = 'base', aa_address, reserve = 0
             </div> : <div style={{ marginTop: 5 }}>
               <Row gutter={8} align={(exists && allow_draw && drawOddsView && width >= 576) ? "bottom" : 'middle'}>
                 <Col sm={{ span: 8 }} xs={{ span: 8 }} style={{ textAlign: 'center' }}>
-                  <Img unloader={<div />} src={[`https://crests.football-data.org/${yes_team_id}.png`, `https://crests.football-data.org/${yes_team_id}.svg`]} className={styles.crests} />
+                  <Img unloader={<div />} src={[`https://crests.football-data.org/${yes_team_id}.svg`, `https://crests.football-data.org/${yes_team_id}.png`]} className={styles.crests} />
                   <div className={styles.teamWrap}>
                     <Typography.Text style={{ color: appConfig.YES_COLOR }} className={styles.team} ellipsis={true}><small>{yes_team}</small></Typography.Text>
                   </div>
@@ -161,7 +161,7 @@ export const PredictionItem = ({ reserve_asset = 'base', aa_address, reserve = 0
 
                 <Col sm={{ span: 8 }} xs={{ span: 8 }} style={{ textAlign: 'center' }}>
                   <Img
-                    src={[`https://crests.football-data.org/${no_team_id}.png`, `https://crests.football-data.org/${no_team_id}.svg`]}
+                    src={[`https://crests.football-data.org/${no_team_id}.svg`, `https://crests.football-data.org/${no_team_id}.png`]}
                     className={styles.crests}
                     unloader={<div />}
                   />

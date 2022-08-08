@@ -181,7 +181,7 @@ export const CreateNowForm = ({ feed_name, event_date, expect_datafeed_value, ye
   return <Form layout="vertical">
     {type === 'sport' ? <Row gutter={8} align='middle' style={{ marginBottom: 20 }}>
       <Col sm={{ span: 8 }} xs={{ span: 24 }} style={{ textAlign: 'center' }}>
-        <Img src={[`https://crests.football-data.org/${yes_team_id}.png`, `https://crests.football-data.org/${yes_team_id}.svg`]} className={styles.crests} />
+        <Img src={[`https://crests.football-data.org/${yes_team_id}.svg`, `https://crests.football-data.org/${yes_team_id}.png`]} className={styles.crests} />
         <div className={styles.teamWrap}>
           <Typography.Text style={{ color: appConfig.YES_COLOR, textOverflow: 'ellipsis', display: 'block' }} ellipsis={true}><small>{yes_team}</small></Typography.Text>
         </div>
@@ -196,7 +196,7 @@ export const CreateNowForm = ({ feed_name, event_date, expect_datafeed_value, ye
 
       <Col sm={{ span: 8 }} xs={{ span: 24 }} style={{ textAlign: 'center' }}>
         <Img
-          src={[`https://crests.football-data.org/${no_team_id}.png`, `https://crests.football-data.org/${no_team_id}.svg`]}
+          src={[`https://crests.football-data.org/${no_team_id}.svg`, `https://crests.football-data.org/${no_team_id}.png`]}
           className={styles.crests}
         />
         <div className={styles.teamWrap}>

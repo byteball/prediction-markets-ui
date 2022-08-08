@@ -300,7 +300,7 @@ export const MarketPage = () => {
       {(teams.yes === null || teams.no === null) ? <div className={styles.event} style={{ maxWidth: 800 }}>{event}</div> : <div style={{ margin: '30px 0', width: '100%' }}>
         <Row align="middle">
           <Col md={{ span: 8 }} xs={{ span: 8 }} style={{ textAlign: 'center' }}>
-            <Img src={[`https://crests.football-data.org/${teams.yes.id}.png`, `https://crests.football-data.org/${teams.yes.id}.svg`]} width={'50%'} style={{ maxWidth: 120 }} />
+            <Img src={[`https://crests.football-data.org/${teams.yes.id}.svg`, `https://crests.football-data.org/${teams.yes.id}.png`]} width={'50%'} style={{ maxWidth: 120 }} />
             <div style={{ paddingTop: 10, lineHeight: 1 }}>
               <span style={{ color: appConfig.YES_COLOR }}>{teams.yes.name}</span>
             </div>
@@ -316,7 +316,7 @@ export const MarketPage = () => {
 
           <Col md={{ span: 8 }} xs={{ span: 8 }} style={{ textAlign: 'center' }}>
             <Img
-              src={[`https://crests.football-data.org/${teams.no.id}.png`, `https://crests.football-data.org/${teams.no.id}.svg`]}
+              src={[`https://crests.football-data.org/${teams.no.id}.svg`, `https://crests.football-data.org/${teams.no.id}.png`]}
               width={'50%'}
               style={{ maxWidth: 120 }}
             />
