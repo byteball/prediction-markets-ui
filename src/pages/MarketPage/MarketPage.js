@@ -300,7 +300,7 @@ export const MarketPage = () => {
       {(teams.yes === null || teams.no === null) ? <div className={styles.event} style={{ maxWidth: 800 }}>{event}</div> : <div style={{ margin: '30px 0', width: '100%' }}>
         <Row align="middle">
           <Col md={{ span: 8 }} xs={{ span: 8 }} style={{ textAlign: 'center' }}>
-            <Img src={[`https://crests.football-data.org/${teams.yes.id}.png`, `https://crests.football-data.org/${teams.yes.id}.svg`]} width={'50%'} style={{ maxWidth: 120 }} />
+            <Img src={[`https://crests.football-data.org/${teams.yes.id}.svg`, `https://crests.football-data.org/${teams.yes.id}.png`]} width={'50%'} style={{ maxWidth: 120 }} />
             <div style={{ paddingTop: 10, lineHeight: 1 }}>
               <span style={{ color: appConfig.YES_COLOR }}>{teams.yes.name}</span>
             </div>
@@ -316,7 +316,7 @@ export const MarketPage = () => {
 
           <Col md={{ span: 8 }} xs={{ span: 8 }} style={{ textAlign: 'center' }}>
             <Img
-              src={[`https://crests.football-data.org/${teams.no.id}.png`, `https://crests.football-data.org/${teams.no.id}.svg`]}
+              src={[`https://crests.football-data.org/${teams.no.id}.svg`, `https://crests.football-data.org/${teams.no.id}.png`]}
               width={'50%'}
               style={{ maxWidth: 120 }}
             />
@@ -367,20 +367,20 @@ export const MarketPage = () => {
               value={priceOrOdds === 'price' ? <span>{noPrice} <small>{reserve_symbol}</small></span> : (noOddsView ? <span>x{noOddsView}</span> : '-')} />
           </Col>
 
-          {allow_draw && <Col lg={{ span: 8 }} md={{ span: 12 }} xs={{ span: 24 }} style={{ marginBottom: 30 }}>
+          {allow_draw ? <Col lg={{ span: 8 }} md={{ span: 12 }} xs={{ span: 24 }} style={{ marginBottom: 30 }}>
             <StatsCard
               title="Draw"
               tooltip={drawTooltip}
               subValue={(priceOrOdds === 'price' && reserve_rate) ? `$${drawPriceInUSD}` : ''} color={appConfig.DRAW_COLOR} onAction={tradeIsActive ? (action) => setVisibleTradeModal({ type: 'draw', action }) : undefined}
               value={priceOrOdds === 'price' ? <span>{drawPrice} <small>{reserve_symbol}</small></span> : (drawOddsView ? <span>x{drawOddsView}</span> : '-')} />
-          </Col>}
+          </Col> : null}
 
-          {isCurrencyMarket && currencyCurrentValue && <Col lg={{ span: 8 }} md={{ span: 12 }} xs={{ span: 24 }} style={{ marginBottom: 30 }}>
+          {(isCurrencyMarket && currencyCurrentValue) ? <Col lg={{ span: 8 }} md={{ span: 12 }} xs={{ span: 24 }} style={{ marginBottom: 30 }}>
             <StatsCard
               title="Current value"
               tooltip={`The latest value of the data feed ${params.feed_name}`}
               value={+currencyCurrentValue.toFixed(9)} />
-          </Col>}
+          </Col> : null}
 
           <Col lg={{ span: 8 }} md={{ span: 12 }} xs={{ span: 24 }} style={{ marginBottom: 30 }}>
             <StatsCard
