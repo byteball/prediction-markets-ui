@@ -75,7 +75,8 @@ export const RegisterSymbols = () => {
     let symbol;
     const feed_name = order.data.feed_name;
     const type = String(currentStep === 0 ? 'yes' : (currentStep === 1 ? 'no' : 'draw')).toUpperCase();
-    const date = moment.unix(order.data.event_date).format("YYYY-MM-DD");
+    const momentDate = moment.utc(order.data.event_date, 'YYYY-MM-DDTHH:mm:ss').utc();
+    const date = momentDate.format((momentDate.hours() === 0 && momentDate.minutes() === 0) ? "YYYY-MM-DD" : "YYYY-MM-DD-hhmm");
 
     if (appConfig.CATEGORIES.sport.oracles.find(({ address }) => address === order.data.oracle)) {
 
@@ -84,9 +85,6 @@ export const RegisterSymbols = () => {
       const actual_team = currentStep === 0 ? yes_team : (currentStep === 1 ? no_team : 'DRAW');
 
       symbol = String(`${feed_name}_${actual_team}`).toUpperCase();
-    } else if (isSportMarket) {
-
-      symbol = `${feed_name}_${order.data.datafeed_value}_${date}_${type}`
     } else {
       symbol = `${feed_name}_${date}_${type}`
     }
@@ -121,12 +119,12 @@ export const RegisterSymbols = () => {
           token.value
         );
         if (!!asset) {
-          setIsAvailable(undefined);
           const name = token.value;
-          const split = name.split("#");
-          const number = split.length >= 2 ? Number(split[split.length - 1]) + 1 : 2;
+          const split = name.split("_");
+          const hasNumber = !isNaN(Number(split[split.length - 1]));
+          const number = (split.length >= 2 && hasNumber) ? Number(split[split.length - 1]) + 1 : 2;
 
-          setToken({ value: split[0] + "#" + number, valid: true })
+          setToken({ value: (hasNumber ? split.slice(0, -1).join("_") : name) + "_" + number, valid: true })
         } else {
 
           setIsAvailable(true);
@@ -137,16 +135,16 @@ export const RegisterSymbols = () => {
             const { yes_team, no_team } = order.data;
 
             const actual_team = currentStep === 0 ? yes_team : (currentStep === 1 ? no_team : 'DRAW');
-            const date = moment.unix(order.data.event_date).format("lll");
+            const date = moment.utc(order.data.event_date, 'YYYY-MM-DDTHH:mm:ss').utc().format("lll");
 
             if (actual_team !== 'DRAW') {
-              value = `${yes_team} will win the match against ${no_team} on ${date}`
+              value = `${yes_team} will win the match against ${no_team} on ${date} UTC`
             } else {
-              value = `The match between ${yes_team} and ${no_team} on ${date} will end with a draw`;
+              value = `The match between ${yes_team} and ${no_team} on ${date} UTC will end with a draw`;
             }
 
           } else {
-            value = `${String(currentSymbol).toUpperCase()}-token for event: "${generateTextEvent({ ...order.data })}"`;
+            value = `${String(currentSymbol).toUpperCase()}-token for event: "${generateTextEvent({ ...order.data, event_date: moment.utc(order.data.event_date, 'YYYY-MM-DDTHH:mm:ss').unix(), isUTC: true })}"`;
           }
 
           setDescr({
@@ -158,7 +156,7 @@ export const RegisterSymbols = () => {
         }
       })();
     }
-  }, [isAvailable, currentSymbol]);
+  }, [isAvailable, currentSymbol, token]);
 
   const data = {
     asset: currentAsset,
