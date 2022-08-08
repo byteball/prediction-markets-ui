@@ -31,7 +31,7 @@ export const TransactionMeta = ({ meta, params, tokenType, showEstimatedWinnings
     const estimatedWinningsView = +Number(estimatedWinnings / 10 ** reserve_decimals).toFixed(reserve_decimals);
     const percentageEstimatedProfit = Number((((estimatedWinnings - meta.reserve_amount) / meta.reserve_amount) * 100)).toFixed(4);
 
-    const tokenName = tokenType === 'yes' ? (yes_team || 'yes') : (tokenType === 'no' ? (no_team || 'no') : 'draw')
+    const tokenName = tokenType === 'yes' ? (yes_team || 'YES') : (tokenType === 'no' ? (no_team || 'NO') : 'DRAW')
 
     return <div className={styles.wrap}>
         {(showEstimatedWinnings && meta.old_reserve) ? <div>
