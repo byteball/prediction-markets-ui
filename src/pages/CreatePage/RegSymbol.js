@@ -134,11 +134,12 @@ export const RegisterSymbols = () => {
           if (isSportMarket) {
             const { yes_team, no_team } = order.data;
 
-            const actual_team = currentStep === 0 ? yes_team : (currentStep === 1 ? no_team : 'DRAW');
+            const current_team = currentStep === 0 ? yes_team : (currentStep === 1 ? no_team : 'DRAW');
+            const another_team = currentStep === 0 ? no_team : (currentStep === 1 ? yes_team : 'DRAW')
             const date = moment.utc(order.data.event_date, 'YYYY-MM-DDTHH:mm:ss').utc().format("lll");
 
-            if (actual_team !== 'DRAW') {
-              value = `${yes_team} will win the match against ${no_team} on ${date} UTC`
+            if (current_team !== 'DRAW') {
+              value = `${current_team} will win the match against ${another_team} on ${date} UTC`
             } else {
               value = `The match between ${yes_team} and ${no_team} on ${date} UTC will end with a draw`;
             }
