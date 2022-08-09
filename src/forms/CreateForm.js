@@ -181,7 +181,7 @@ export const CreateForm = () => {
     reserve_asset: reserveAsset.value,
     comparison: comparison.value,
     datafeed_value: datafeedValue.value,
-    event_date: moment.unix(eventDate.value).utc().format('YYYY-MM-DDTHH:mm:ss'),
+    event_date: moment.unix(eventDate.value).utc().seconds(0).format('YYYY-MM-DDTHH:mm:ss'),
     waiting_period_length: waitingPeriodLength.value * 24 * 3600,
     issue_fee: issueFee.value / 100,
     redeem_fee: redeemFee.value / 100,
