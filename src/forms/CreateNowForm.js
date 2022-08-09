@@ -99,7 +99,7 @@ export const CreateNowForm = ({ feed_name, event_date, expect_datafeed_value, ye
     allow_draw: type === 'sport' ? 1 : undefined,
     datafeed_draw_value: type === 'sport' ? 'draw' : undefined,
     reserve_asset: reserveAsset.value,
-    quiet_period: (type === 'sport' ? 2 : quietPeriod.value) * 3600
+    quiet_period: (type === 'sport' ? 0 : quietPeriod.value) * 3600
   }
 
   const create = () => {
