@@ -17,6 +17,7 @@ import { selectTokensByNetwork } from "store/slices/bridgesSlice";
 import { generateLink } from "utils";
 
 import { TransactionMeta } from "components/TransactionMeta/TransactionMeta";
+import { WalletModal } from "modals";
 
 import appConfig from "appConfig";
 import client from "services/obyte";
@@ -232,7 +233,7 @@ export const BuyForm = ({ type, yes_team, no_team, amount, setAmount }) => {
       </div> : '')}
     </Row>
 
-    {meta && <Form.Item className="metaWrap">
+    {meta && (fromToken.network === 'Obyte' || !estimateError) && <Form.Item className="metaWrap">
       <TransactionMeta
         meta={meta}
         params={params}
@@ -259,7 +260,7 @@ export const BuyForm = ({ type, yes_team, no_team, amount, setAmount }) => {
       <Alert
         type="error"
         message="You have not added your Obyte wallet to the site!"
-        description={<span>If you don't have it yet, please <a href="https://obyte.org/#download" target="_blank">install</a> it. It is to this wallet that the purchased assets will come.</span>}
+        description={<span>If you don't have it yet, please <a href="https://obyte.org/#download" target="_blank">install</a>  and <WalletModal type="link" styles={{ fontSize: 16 }}>add</WalletModal> it. It is to this wallet that the purchased assets will come.</span>}
       />
     </Form.Item>}
 
