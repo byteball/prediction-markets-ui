@@ -28,8 +28,8 @@ export const activeSlice = createSlice({
         state.stateVars = { ...state.stateVars, ...diff }
       }
     },
-    addRecentEvent: (state, action) => {
-      state.recentEvents.push(action.payload);
+    addRecentResponse: (state, action) => {
+      state.recentResponses.push(action.payload);
     },
     updateSymbolForActualMarket: (state, action) => {
       const { type, symbol } = action.payload || {};
@@ -66,7 +66,7 @@ export const activeSlice = createSlice({
 export const {
   setActiveMarketAddress,
   updateStateForActualMarket,
-  addRecentEvent,
+  addRecentResponse,
   updateSymbolForActualMarket,
   updateDataFeedValue
 } = activeSlice.actions;

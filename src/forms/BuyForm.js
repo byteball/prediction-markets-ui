@@ -17,6 +17,7 @@ import { selectTokensByNetwork } from "store/slices/bridgesSlice";
 import { generateLink } from "utils";
 
 import { TransactionMeta } from "components/TransactionMeta/TransactionMeta";
+import { WalletModal } from "modals";
 
 import appConfig from "appConfig";
 import client from "services/obyte";
@@ -93,7 +94,7 @@ export const BuyForm = ({ type, yes_team, no_team, amount, setAmount }) => {
       setMeta(null);
       setGetAmount({ value: '', valid: true });
     }
-  }, [currentToken, amount, estimate]);
+  }, [currentToken, amount, estimate, stateVars]);
 
   let data = { type: currentToken?.type };
 
@@ -215,7 +216,7 @@ export const BuyForm = ({ type, yes_team, no_team, amount, setAmount }) => {
       {!type ? <>
         <Col md={{ span: 8 }} xs={{ span: 24 }}>
           <Form.Item>
-            <span className="ant-form-text" style={{ display: 'flex', alignItems: 'center', height: 40, verticalAlign: 'middle', fontSize: 18, justifyContent: 'space-between', flexWrap: 'wrap' }}><span>You get:</span> {fromToken.network !== "Obyte" ? '≈' : ''}{+Number(getAmount.value / 10 ** currentToken?.decimals).toPrecision(currentToken?.decimals)}</span>
+            <span className="ant-form-text" style={{ display: 'flex', alignItems: 'center', height: 40, verticalAlign: 'middle', fontSize: 18, justifyContent: 'space-between', flexWrap: 'wrap' }}><span>You get:</span> {fromToken.network !== "Obyte" ? '≈' : ''}{getAmount.value > 0 ? +Number(getAmount.value / 10 ** currentToken?.decimals).toPrecision(currentToken?.decimals) : 0}</span>
           </Form.Item>
         </Col>
         <Col md={{ span: 16 }} xs={{ span: 24 }}>
@@ -228,11 +229,11 @@ export const BuyForm = ({ type, yes_team, no_team, amount, setAmount }) => {
           </Form.Item>
         </Col>
       </> : (getAmount.value ? <div style={{ marginBottom: 10, fontWeight: 'bold', paddingLeft: 5 }}>
-        <span style={{ marginRight: 5 }}>You get:</span> <span>{getAmount.value / 10 ** currentToken?.decimals}</span> {(yes_team && no_team) ? <>{(currentToken?.type === 'draw' ? 'Draw' : (currentToken?.type === 'yes' ? yes_team : no_team))} ({currentToken?.symbol})</> : <>{currentToken?.symbol} {(currentToken?.type && currentToken?.type !== 'reserve') ? '(' + currentToken?.type.toUpperCase() + '-token)' : ''}</>}
+        <span style={{ marginRight: 5 }}>You get:</span> <span>{(Number(getAmount.value) > 0 ? getAmount.value : 0) / 10 ** currentToken?.decimals}</span> {(yes_team && no_team) ? <>{(currentToken?.type === 'draw' ? 'Draw' : (currentToken?.type === 'yes' ? yes_team : no_team))} ({currentToken?.symbol})</> : <>{currentToken?.symbol} {(currentToken?.type && currentToken?.type !== 'reserve') ? '(' + currentToken?.type.toUpperCase() + '-token)' : ''}</>}
       </div> : '')}
     </Row>
 
-    {meta && <Form.Item className="metaWrap">
+    {meta && (fromToken.network === 'Obyte' || !estimateError) && <Form.Item className="metaWrap">
       <TransactionMeta
         meta={meta}
         params={params}
@@ -259,7 +260,7 @@ export const BuyForm = ({ type, yes_team, no_team, amount, setAmount }) => {
       <Alert
         type="error"
         message="You have not added your Obyte wallet to the site!"
-        description={<span>If you don't have it yet, please <a href="https://obyte.org/#download" target="_blank">install</a> it. It is to this wallet that the purchased assets will come.</span>}
+        description={<span>If you don't have it yet, please <a href="https://obyte.org/#download" target="_blank">install</a> and <WalletModal type="link" styles={{ fontSize: 16 }}>add</WalletModal> it. It is to this wallet that the purchased assets will come.</span>}
       />
     </Form.Item>}
 

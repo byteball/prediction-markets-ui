@@ -359,14 +359,6 @@ export const MarketPage = () => {
               value={priceOrOdds === 'price' ? <span>{yesPrice} <small>{reserve_symbol}</small></span> : (yesOddsView ? <span>x{yesOddsView}</span> : '-')} />
           </Col>
 
-          <Col lg={{ span: 8 }} md={{ span: 12 }} xs={{ span: 24 }} style={{ marginBottom: 30 }}>
-            <StatsCard
-              title={`${haveTeamNames ? teams.no.name : 'No'}`}
-              tooltip={noTooltip}
-              subValue={(priceOrOdds === 'price' && reserve_rate) ? `$${noPriceInUSD}` : ''} color={appConfig.NO_COLOR} onAction={tradeIsActive ? (action) => setVisibleTradeModal({ type: 'no', action }) : undefined}
-              value={priceOrOdds === 'price' ? <span>{noPrice} <small>{reserve_symbol}</small></span> : (noOddsView ? <span>x{noOddsView}</span> : '-')} />
-          </Col>
-
           {allow_draw ? <Col lg={{ span: 8 }} md={{ span: 12 }} xs={{ span: 24 }} style={{ marginBottom: 30 }}>
             <StatsCard
               title="Draw"
@@ -374,6 +366,14 @@ export const MarketPage = () => {
               subValue={(priceOrOdds === 'price' && reserve_rate) ? `$${drawPriceInUSD}` : ''} color={appConfig.DRAW_COLOR} onAction={tradeIsActive ? (action) => setVisibleTradeModal({ type: 'draw', action }) : undefined}
               value={priceOrOdds === 'price' ? <span>{drawPrice} <small>{reserve_symbol}</small></span> : (drawOddsView ? <span>x{drawOddsView}</span> : '-')} />
           </Col> : null}
+          
+          <Col lg={{ span: 8 }} md={{ span: 12 }} xs={{ span: 24 }} style={{ marginBottom: 30 }}>
+            <StatsCard
+              title={`${haveTeamNames ? teams.no.name : 'No'}`}
+              tooltip={noTooltip}
+              subValue={(priceOrOdds === 'price' && reserve_rate) ? `$${noPriceInUSD}` : ''} color={appConfig.NO_COLOR} onAction={tradeIsActive ? (action) => setVisibleTradeModal({ type: 'no', action }) : undefined}
+              value={priceOrOdds === 'price' ? <span>{noPrice} <small>{reserve_symbol}</small></span> : (noOddsView ? <span>x{noOddsView}</span> : '-')} />
+          </Col>
 
           {(isCurrencyMarket && currencyCurrentValue) ? <Col lg={{ span: 8 }} md={{ span: 12 }} xs={{ span: 24 }} style={{ marginBottom: 30 }}>
             <StatsCard

@@ -4,7 +4,7 @@ import { notification } from "antd";
 
 import client from "services/obyte";
 
-import { addRecentEvent, updateStateForActualMarket, updateSymbolForActualMarket } from "store/slices/activeSlice";
+import { addRecentResponse, updateStateForActualMarket, updateSymbolForActualMarket } from "store/slices/activeSlice";
 import { updateCreationOrder } from "store/slices/settingsSlice";
 import { loadMarkets } from "store/thunks/loadMarkets";
 import { loadReserveAssets } from "store/thunks/loadReserveAssets";
@@ -59,6 +59,7 @@ export const bootstrap = async () => {
     if (err) return null;
 
     const { body } = result[1];
+    const state = store.getState();
 
     if (body.aa_address === config.FACTORY_AA) {
       handleEventPredictionFactory(result);
@@ -196,7 +197,7 @@ export const bootstrap = async () => {
         store.dispatch(updateStateForActualMarket({ diff, address: aa_address }));
       }
 
-      store.dispatch(addRecentEvent(body));
+      store.dispatch(addRecentResponse(body));
 
     } else if (subject === "light/aa_request" && state.settings.walletAddress && author === state.settings.walletAddress) {
       notification.info({
