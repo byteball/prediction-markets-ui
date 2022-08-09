@@ -62,10 +62,21 @@ export const AddLiquidityForm = ({ yes_team, no_team }) => {
   let noAmount;
   let drawAmount;
 
+  let yesOdds;
+  let noOdds;
+  let drawOdds;
+
   if (isFirstIssue) {
     yesAmount = Math.floor(Math.sqrt(amountInPenniesWithoutFee ** 2 * (probabilities.yes.value / 100 || 0)));
     noAmount = Math.floor(Math.sqrt(amountInPenniesWithoutFee ** 2 * (probabilities.no.value / 100 || 0)));
     drawAmount = allow_draw ? Math.floor(Math.sqrt(amountInPenniesWithoutFee ** 2 * (drawPercent / 100 || 0))) : 0;
+
+    const new_den = Math.sqrt(yesAmount * yesAmount + noAmount * noAmount + drawAmount * drawAmount);
+
+    yesOdds = (Number(probabilities.yes.value) !== 0 && percentSum === 100) ? `x${+((amountInPenniesWithoutFee / yesAmount) / (yesAmount / new_den)).toFixed(4)}` : '';
+    noOdds = (Number(probabilities.no.value) !== 0 && percentSum === 100) ? `x${+((amountInPenniesWithoutFee / noAmount) / (noAmount / new_den)).toFixed(4)}` : '';
+    drawOdds = (Number(drawPercent) !== 0 && percentSum === 100) ? `x${+((amountInPenniesWithoutFee / drawAmount) / (drawAmount / new_den)).toFixed(4)}` : '';
+
   } else {
     const ratio = (amountInPenniesWithoutFee + reserve) / reserve;
 
@@ -352,22 +363,22 @@ export const AddLiquidityForm = ({ yes_team, no_team }) => {
       <p>Outcome probability</p>
       <Row gutter={8}>
         <Col md={{ span: allow_draw ? 8 : 12 }} xs={{ span: 24 }}>
-          <Form.Item label={<small>{haveTeamNames ? `${yes_team}` : 'YES'}</small>}>
+          <Form.Item extra={<span style={{ color: appConfig.YES_COLOR }}>{yesOdds}</span>} label={<small>{haveTeamNames ? `${yes_team}` : 'YES'}</small>}>
             <Input size="large" value={probabilities.yes.value} placeholder="ex. 65" suffix='%' onChange={(ev) => handleChangeProbability(ev, 'yes')} />
           </Form.Item>
         </Col>
 
-        <Col md={{ span: allow_draw ? 8 : 12 }} xs={{ span: 24 }}>
-          <Form.Item label={<small>{haveTeamNames ? `${no_team}` : 'NO'}</small>}>
-            <Input size="large" value={probabilities.no.value} placeholder={`ex. ${allow_draw ? 15 : 35}`} suffix='%' onChange={(ev) => handleChangeProbability(ev, 'no')} />
-          </Form.Item>
-        </Col>
-
         {allow_draw && <Col md={{ span: 8 }} xs={{ span: 24 }}>
-          <Form.Item label={<small>DRAW</small>}>
+          <Form.Item extra={<span style={{ color: appConfig.DRAW_COLOR }}>{drawOdds}</span>}  label={<small>DRAW</small>}>
             <Input size="large" disabled={true} value={drawPercent} placeholder="ex. 20" suffix='%' />
           </Form.Item>
         </Col>}
+
+        <Col md={{ span: allow_draw ? 8 : 12 }} xs={{ span: 24 }}>
+          <Form.Item extra={<span style={{ color: appConfig.NO_COLOR }}>{noOdds}</span>}  label={<small>{haveTeamNames ? `${no_team}` : 'NO'}</small>}>
+            <Input size="large" value={probabilities.no.value} placeholder={`ex. ${allow_draw ? 15 : 35}`} suffix='%' onChange={(ev) => handleChangeProbability(ev, 'no')} />
+          </Form.Item>
+        </Col>
       </Row>
     </>
     }

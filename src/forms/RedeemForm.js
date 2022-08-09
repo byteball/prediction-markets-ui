@@ -73,7 +73,7 @@ export const RedeemForm = memo(({ type, yes_team, no_team, amount, setAmount }) 
       setMeta(null);
       setPayoutAmount({ value: '', valid: true });
     }
-  }, [currentToken, amount]);
+  }, [currentToken, amount, stateVars]);
 
   let data = {};
 

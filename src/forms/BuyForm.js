@@ -93,7 +93,7 @@ export const BuyForm = ({ type, yes_team, no_team, amount, setAmount }) => {
       setMeta(null);
       setGetAmount({ value: '', valid: true });
     }
-  }, [currentToken, amount, estimate]);
+  }, [currentToken, amount, estimate, stateVars]);
 
   let data = { type: currentToken?.type };
 
