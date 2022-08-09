@@ -90,7 +90,7 @@ export const PredictionItem = ({ reserve_asset = 'base', aa_address, reserve = 0
   });
 
   // wrappers configure
-  const Wrapper = isExpiry ? Badge.Ribbon : Fragment;
+  const Wrapper = isExpiry && aa_address ? Badge.Ribbon : Fragment;
   let status = '';
   let color = 'red'
 
@@ -108,7 +108,7 @@ export const PredictionItem = ({ reserve_asset = 'base', aa_address, reserve = 0
     }
   }
 
-  const wrapperProps = isExpiry ? {
+  const wrapperProps = isExpiry && aa_address ? {
     color,
     text: <div style={{ fontSize: 12 }}>{status}</div>,
     placement: "start"
