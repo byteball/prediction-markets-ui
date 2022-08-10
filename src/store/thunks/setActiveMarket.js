@@ -117,7 +117,16 @@ export const setActiveMarket = createAsyncThunk(
       }
     }
 
-    const created_at = await obyte.api.getAaStateVars({ address: appConfig.FACTORY_AA, var_prefix: `prediction_${address}` }).then((data) => data?.[`prediction_${address}`]?.created_at)
+    let created_at;
+
+    for (let index = 0; index < appConfig.FACTORY_AAS.length; index++) {
+      const ts = await obyte.api.getAaStateVars({ address: appConfig.FACTORY_AAS[index], var_prefix: `prediction_${address}` }).then((data) => data?.[`prediction_${address}`]?.created_at);
+
+      if (ts) {
+        created_at = ts;
+        break;
+      }
+    }
 
     return {
       params,

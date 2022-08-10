@@ -54,7 +54,7 @@ export const SocialLinks = ({ size = 'full', centered = false }) => { // type fu
     {
       name: "github",
       icon: faGithub,
-      link: "https://github.com/byteball/prediction-markets"
+      link: "https://github.com/byteball/prediction-markets-aa"
     },
   ];
 

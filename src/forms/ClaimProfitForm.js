@@ -26,8 +26,8 @@ export const ClaimProfitForm = ({ address, asset, supply = 0, reserve = 0, decim
 
   const link = generateLink({ aa: address, asset, is_single: true, amount: Math.ceil(+amount.value * 10 ** decimals), data: { claim_profit: 1 }, from_address: walletAddress || undefined })
 
-  const amountLessSupply = Number(amount.value) * 10 ** decimals < supply;
-  const amountIsValid = amount.valid && Number(amount.value) && amountLessSupply;
+  const amountLessOrEqualSupply = Number(amount.value) * 10 ** decimals <= supply;
+  const amountIsValid = amount.valid && Number(amount.value) && amountLessOrEqualSupply;
 
   return <Form size="large">
     <Form.Item
