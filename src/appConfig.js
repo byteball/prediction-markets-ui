@@ -3,7 +3,7 @@ const feedNamesPreciousMetalOracle = ["XAG_BTC","XAG_EUR","XAG_GBP","XAG_JPY","X
 
 export default {
   ENVIRONMENT: process.env.REACT_APP_ENVIRONMENT,
-  FACTORY_AA: process.env.REACT_APP_FACTORY_AA,
+  FACTORY_AAS: process.env.REACT_APP_FACTORY_AAS?.split(",") || [],
   BACKEND_URL: process.env.REACT_APP_BACKEND_URL,
   BASE_AAS: process.env.REACT_APP_BASE_AAS?.split(","),
   YES_COLOR: "#05c46b",

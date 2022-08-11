@@ -112,7 +112,7 @@ export const CreateNowForm = ({ feed_name, event_date, expect_datafeed_value, ye
     });
   }
 
-  const link = generateLink({ amount: 2e4, data, aa: appConfig.FACTORY_AA });
+  const link = generateLink({ amount: 2e4, data, aa: appConfig.FACTORY_AAS[appConfig.FACTORY_AAS.length - 1] });
 
   let event;
 

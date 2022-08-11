@@ -26,6 +26,7 @@ export const setActiveMarket = createAsyncThunk(
   async (address, { dispatch, getState }) => {
     dispatch(setActiveMarketAddress(address))
     const state = getState();
+    const marketInList = state.markets.allMarkets?.find(({ aa_address }) => aa_address === address);
 
     const aa = await obyte.api.getDefinition(address);
     const stateVars = await obyte.api.getAaStateVars({ address })
@@ -37,40 +38,57 @@ export const setActiveMarket = createAsyncThunk(
     const tokenRegistry = obyte.api.getOfficialTokenRegistryAddress();
 
     const tokensInfo = {};
+    let tokensInfoGetters = [];
 
-    const tokensInfoGetters = [
-      obyte.api.getSymbolByAsset(tokenRegistry, stateVars.yes_asset).then(symbol => tokensInfo.yes_symbol = symbol),
-      obyte.api.getSymbolByAsset(tokenRegistry, stateVars.no_asset).then(symbol => tokensInfo.no_symbol = symbol),
-      obyte.api.getSymbolByAsset(tokenRegistry, reserve_asset).then(symbol => tokensInfo.reserve_symbol = symbol),
-      obyte.api.getDecimalsBySymbolOrAsset(tokenRegistry, stateVars.yes_asset).then(decimals => tokensInfo.yes_decimals = decimals).catch(() => tokensInfo.yes_decimals = null),
-      obyte.api.getDecimalsBySymbolOrAsset(tokenRegistry, stateVars.no_asset).then(decimals => tokensInfo.no_decimals = decimals).catch(() => tokensInfo.no_decimals = null),
-      obyte.api.getDecimalsBySymbolOrAsset(tokenRegistry, reserve_asset).then(decimals => tokensInfo.reserve_decimals = decimals).catch(() => tokensInfo.reserve_decimals = null),
-    ]
+    if (marketInList) {
+      tokensInfo.yes_symbol = marketInList.yes_symbol;
+      tokensInfo.no_symbol = marketInList.no_symbol;
+      tokensInfo.reserve_symbol = marketInList.reserve_symbol;
+
+      tokensInfo.yes_decimals = marketInList.yes_decimals;
+      tokensInfo.no_decimals = marketInList.no_decimals;
+      tokensInfo.reserve_decimals = marketInList.reserve_decimals;
+
+    } else {
+      tokensInfoGetters = [
+        obyte.api.getSymbolByAsset(tokenRegistry, stateVars.yes_asset).then(symbol => tokensInfo.yes_symbol = symbol),
+        obyte.api.getSymbolByAsset(tokenRegistry, stateVars.no_asset).then(symbol => tokensInfo.no_symbol = symbol),
+        obyte.api.getSymbolByAsset(tokenRegistry, reserve_asset).then(symbol => tokensInfo.reserve_symbol = symbol),
+        obyte.api.getDecimalsBySymbolOrAsset(tokenRegistry, stateVars.yes_asset).then(decimals => tokensInfo.yes_decimals = decimals).catch(() => tokensInfo.yes_decimals = null),
+        obyte.api.getDecimalsBySymbolOrAsset(tokenRegistry, stateVars.no_asset).then(decimals => tokensInfo.no_decimals = decimals).catch(() => tokensInfo.no_decimals = null),
+        obyte.api.getDecimalsBySymbolOrAsset(tokenRegistry, reserve_asset).then(decimals => tokensInfo.reserve_decimals = decimals).catch(() => tokensInfo.reserve_decimals = null),
+      ]
+    }
 
     if (aa[1].params.allow_draw && stateVars.draw_asset) {
-      tokensInfoGetters.push(
-        obyte.api.getSymbolByAsset(tokenRegistry, stateVars.draw_asset).then(symbol => tokensInfo.draw_symbol = symbol),
-        obyte.api.getDecimalsBySymbolOrAsset(tokenRegistry, stateVars.draw_asset).then(decimals => tokensInfo.draw_decimals = decimals).catch(() => tokensInfo.draw_decimals = 0)
-      );
+      if (marketInList) {
+        tokensInfo.draw_symbol = marketInList.draw_symbol;
+        tokensInfo.draw_decimals = marketInList.draw_decimals;
+      } else {
+        tokensInfoGetters.push(
+          obyte.api.getSymbolByAsset(tokenRegistry, stateVars.draw_asset).then(symbol => tokensInfo.draw_symbol = symbol),
+          obyte.api.getDecimalsBySymbolOrAsset(tokenRegistry, stateVars.draw_asset).then(decimals => tokensInfo.draw_decimals = decimals).catch(() => tokensInfo.draw_decimals = 0)
+        );
+      }
     }
 
     await Promise.all(tokensInfoGetters);
 
     const params = { ...initialParams, ...aa[1].params, ...tokensInfo };
 
-    if (!params.yes_decimals) params.yes_decimals = params.reserve_decimals
-    if (!params.no_decimals) params.no_decimals = params.reserve_decimals
-    if (!params.draw_decimals) params.draw_decimals = params.reserve_decimals
+    if (!params.yes_decimals) params.yes_decimals = params.reserve_decimals;
+    if (!params.no_decimals) params.no_decimals = params.reserve_decimals;
+    if (!params.draw_decimals) params.draw_decimals = params.reserve_decimals;
 
-    const dailyCloses = await backend.getDailyCloses(address).then((data) => data).catch(() => []);
-
-    const recentResponses = await obyte.api.getAaResponses({ aa: address });
+    const [dailyCloses, recentResponses, datafeedValue] = await Promise.all([
+      backend.getDailyCloses(address).then((data) => data).catch(() => []),
+      obyte.api.getAaResponses({ aa: address }),
+      obyte.api.getDataFeed({ oracles: [params.oracle], feed_name: params.feed_name, ifnone: 'none' })
+    ]);
 
     await obyte.justsaying("light/new_aa_to_watch", {
       aa: address
     });
-
-    const datafeedValue = await obyte.api.getDataFeed({ oracles: [params.oracle], feed_name: params.feed_name, ifnone: 'none' })
 
     const isSportMarket = !!appConfig.CATEGORIES.sport.oracles.find(({ address }) => address === params.oracle);
     const isCurrencyMarket = !!appConfig.CATEGORIES.currency.oracles.find(({ address }) => address === params.oracle);
@@ -110,14 +128,36 @@ export const setActiveMarket = createAsyncThunk(
       const [from, to] = params.feed_name.split("_");
 
       try {
-        currencyCandles = await axios.get(`https://min-api.cryptocompare.com/data/v2/${isHourlyChart ? 'histohour' : 'histoday'}?fsym=${from}&tsym=${to}&limit=${isHourlyChart ? 168 : 30}`).then(({ data }) => data?.Data?.Data);
-        currencyCurrentValue = await axios.get(`https://min-api.cryptocompare.com/data/price?fsym=${from}&tsyms=${to}`).then(({ data }) => data?.[to]);
+         const cryptocompare = await Promise.all([
+          axios.get(`https://min-api.cryptocompare.com/data/v2/${isHourlyChart ? 'histohour' : 'histoday'}?fsym=${from}&tsym=${to}&limit=${isHourlyChart ? 168 : 30}`).then(({ data }) => data?.Data?.Data),
+          axios.get(`https://min-api.cryptocompare.com/data/price?fsym=${from}&tsyms=${to}`).then(({ data }) => data?.[to])
+        ]);
+        
+        currencyCandles = cryptocompare[0];
+        currencyCurrentValue = cryptocompare[1];
       } catch {
         console.log(`no candles for ${from}->${to}`)
       }
     }
 
-    const created_at = await obyte.api.getAaStateVars({ address: appConfig.FACTORY_AA, var_prefix: `prediction_${address}` }).then((data) => data?.[`prediction_${address}`]?.created_at)
+    let created_at;
+
+    if (marketInList) {
+      created_at = marketInList.created_at;
+    } else {
+      created_at = await backend.getCreatedAt(address);
+    }
+
+    if (!created_at) {
+      for (let index = 0; index < appConfig.FACTORY_AAS.length; index++) {
+        const ts = await obyte.api.getAaStateVars({ address: appConfig.FACTORY_AAS[index], var_prefix: `prediction_${address}` }).then((data) => data?.[`prediction_${address}`]?.created_at);
+
+        if (ts) {
+          created_at = ts;
+          break;
+        }
+      }
+    }
 
     return {
       params,
