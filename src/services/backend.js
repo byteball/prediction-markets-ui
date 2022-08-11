@@ -74,6 +74,11 @@ class Backend {
     const calendar = await this.axios.get(`/calendar/currency/${currency}/${page}`);
     return calendar?.data;
   }
+
+  getCreatedAt = async (address) => {
+    const ts = await this.axios.get(`/created_at/${address}`);
+    return ts?.data;
+  }
 }
 
 export default new Backend();

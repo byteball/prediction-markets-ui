@@ -5,14 +5,15 @@ import appConfig from 'appConfig';
 
 export const CurrencyChart = ({ data, params }) => {
   const { datafeed_value, waiting_period_length, event_date } = params;
+  const momentFormat = (event_date + waiting_period_length - moment.utc().unix() <= 7 * 24 * 3600) ? 'lll' : 'll';
 
   const transformedData = data.map(({ time, open, close, high, low }) => ({
-    time: moment.unix(time).format((event_date + waiting_period_length - moment.utc().unix() <= 7 * 24 * 3600) ? 'lll' : 'll'),
+    time: moment.unix(time).format(momentFormat),
     open: +Number(open).toPrecision(6),
     close: +Number(close).toPrecision(6),
     high: +Number(high).toPrecision(6),
     low: +Number(low).toPrecision(6),
-  }))
+  }));
 
   const config = {
     data: transformedData,
@@ -22,7 +23,10 @@ export const CurrencyChart = ({ data, params }) => {
     animation: false,
     renderer: 'svg',
     tooltip: {
-      showCrosshairs: false
+      showCrosshairs: false,
+      title: (_, { time }) => {
+        return time;
+      }
     },
     yField: ['open', 'close', 'high', 'low'],
     yAxis: {

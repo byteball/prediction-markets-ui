@@ -47,7 +47,7 @@ export const bootstrap = async () => {
   const tokenRegistry = client.api.getOfficialTokenRegistryAddress();
 
   await client.justsaying("light/new_aa_to_watch", {
-    aa: config.FACTORY_AA
+    aa: config.FACTORY_AAS[config.FACTORY_AAS.length - 1]
   });
 
   await client.justsaying("light/new_aa_to_watch", {
@@ -61,7 +61,7 @@ export const bootstrap = async () => {
     const { body } = result[1];
     const state = store.getState();
 
-    if (body.aa_address === config.FACTORY_AA) {
+    if (body.aa_address === config.FACTORY_AAS[config.FACTORY_AAS.length - 1]) {
       handleEventPredictionFactory(result);
     } else if (body.aa_address === tokenRegistry) {
       handleTokenRegistry(result);
@@ -151,10 +151,10 @@ export const bootstrap = async () => {
     } else if (subject === "light/aa_response") {
       const { updatedStateVars, trigger_initial_unit } = body;
 
-      if (!orderData || !updatedStateVars || (updatedStateVars && !(config.FACTORY_AA in updatedStateVars)) || order.status !== 'pending') return null;
+      if (!orderData || !updatedStateVars || (updatedStateVars && !(config.FACTORY_AAS[config.FACTORY_AAS.length - 1] in updatedStateVars)) || order.status !== 'pending') return null;
 
       if (trigger_initial_unit === order.creation_unit_id) {
-        const newFactoryStateVars = updatedStateVars[config.FACTORY_AA];
+        const newFactoryStateVars = updatedStateVars[config.FACTORY_AAS[config.FACTORY_AAS.length - 1]];
         const varName = Object.keys(newFactoryStateVars)?.[0];
 
         if (varName && varName.includes('prediction_')) {

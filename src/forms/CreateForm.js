@@ -228,7 +228,7 @@ export const CreateForm = () => {
 
   const feedNames = infoByCurrentCategory?.oracles?.find(({ address }) => address === oracle.value)?.feedNames;
 
-  const link = generateLink({ amount: 2e4, data: { ...data, reserve_decimals: undefined }, aa: appConfig.FACTORY_AA });
+  const link = generateLink({ amount: 2e4, data: { ...data, reserve_decimals: undefined }, aa: appConfig.FACTORY_AAS[appConfig.FACTORY_AAS.length - 1] });
 
   const timeZone = moment().utcOffset() / 60;
 
