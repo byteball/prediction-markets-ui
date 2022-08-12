@@ -294,6 +294,16 @@ export const MarketPage = () => {
     }
   }
 
+  let winnerPriceView = 0;
+
+  if (result && reserve) {
+    const winnerSupply = result === 'yes' ? supply_yes : (result === 'no' ? supply_no : supply_draw);
+
+    if (winnerSupply) {
+      winnerPriceView = +Number(reserve / winnerSupply).toPrecision(5);
+    }
+  }
+
   return <Layout>
     <Helmet title={'Prediction markets — ' + ((teams.yes === null || teams.no === null) ? event : `${teams.yes.name} vs ${teams.no.name}`)} />
     <div style={{ marginTop: 50 }}>
@@ -355,24 +365,27 @@ export const MarketPage = () => {
             <StatsCard
               title={`${haveTeamNames ? teams.yes.name : 'Yes'}`}
               tooltip={yesTooltip}
+              isWinner={result ? result === 'yes' : undefined}
               subValue={(priceOrOdds === 'price' && reserve_rate) ? `$${yesPriceInUSD}` : ''} color={appConfig.YES_COLOR} onAction={tradeIsActive ? (action) => setVisibleTradeModal({ type: 'yes', action }) : undefined}
-              value={priceOrOdds === 'price' ? <span>{yesPrice} <small>{reserve_symbol}</small></span> : (yesOddsView ? <span>x{yesOddsView}</span> : '-')} />
+              value={priceOrOdds === 'price' ? <span>{result ? winnerPriceView : yesPrice} <small>{reserve_symbol}</small></span> : (yesOddsView ? <span>x{yesOddsView}</span> : '-')} />
           </Col>
 
           {allow_draw ? <Col lg={{ span: 8 }} md={{ span: 12 }} xs={{ span: 24 }} style={{ marginBottom: 30 }}>
             <StatsCard
               title="Draw"
               tooltip={drawTooltip}
+              isWinner={result ? result === 'draw' : undefined}
               subValue={(priceOrOdds === 'price' && reserve_rate) ? `$${drawPriceInUSD}` : ''} color={appConfig.DRAW_COLOR} onAction={tradeIsActive ? (action) => setVisibleTradeModal({ type: 'draw', action }) : undefined}
-              value={priceOrOdds === 'price' ? <span>{drawPrice} <small>{reserve_symbol}</small></span> : (drawOddsView ? <span>x{drawOddsView}</span> : '-')} />
+              value={priceOrOdds === 'price' ? <span>{result ? winnerPriceView : drawPrice} <small>{reserve_symbol}</small></span> : (drawOddsView ? <span>x{drawOddsView}</span> : '-')} />
           </Col> : null}
-          
+
           <Col lg={{ span: 8 }} md={{ span: 12 }} xs={{ span: 24 }} style={{ marginBottom: 30 }}>
             <StatsCard
               title={`${haveTeamNames ? teams.no.name : 'No'}`}
               tooltip={noTooltip}
+              isWinner={result ? result === 'no' : undefined}
               subValue={(priceOrOdds === 'price' && reserve_rate) ? `$${noPriceInUSD}` : ''} color={appConfig.NO_COLOR} onAction={tradeIsActive ? (action) => setVisibleTradeModal({ type: 'no', action }) : undefined}
-              value={priceOrOdds === 'price' ? <span>{noPrice} <small>{reserve_symbol}</small></span> : (noOddsView ? <span>x{noOddsView}</span> : '-')} />
+              value={priceOrOdds === 'price' ? <span>{result ? winnerPriceView : noPrice} <small>{reserve_symbol}</small></span> : (noOddsView ? <span>x{noOddsView}</span> : '-')} />
           </Col>
 
           {(isCurrencyMarket && currencyCurrentValue) ? <Col lg={{ span: 8 }} md={{ span: 12 }} xs={{ span: 24 }} style={{ marginBottom: 30 }}>

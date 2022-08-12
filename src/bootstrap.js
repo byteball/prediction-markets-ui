@@ -12,9 +12,10 @@ import { setActiveMarket } from "store/thunks/setActiveMarket";
 import { checkCreationOrder } from "store/thunks/checkCreationOrder";
 import { checkDataFeed } from "store/thunks/checkDataFeed";
 import { historyInstance } from "historyInstance";
+import { loadEVMTokens } from "store/thunks/loadEVMTokens";
+import { loadUserBalance } from "store/thunks/loadUserBalance";
 
 import config from "appConfig";
-import { loadEVMTokens } from "store/thunks/loadEVMTokens";
 
 const getAAPayload = (messages = []) => messages.find(m => m.app === 'data')?.payload || {};
 
@@ -27,6 +28,11 @@ export const bootstrap = async () => {
   store.dispatch(loadEVMTokens());
 
   const state = store.getState();
+
+  if (state.settings.walletAddress) {
+    store.dispatch(loadUserBalance(state.settings.walletAddress));
+    await client.justsaying("light/new_address_to_watch", state.settings.walletAddress);
+  }
 
   if (state.active.address) { // reload data for active market
     store.dispatch(setActiveMarket(state.active.address));
@@ -58,15 +64,18 @@ export const bootstrap = async () => {
   client.subscribe((err, result) => {
     if (err) return null;
 
-    const { body } = result[1];
+    const { body, subject } = result[1];
     const state = store.getState();
-
-    if (body.aa_address === config.FACTORY_AAS[config.FACTORY_AAS.length - 1]) {
-      handleEventPredictionFactory(result);
-    } else if (body.aa_address === tokenRegistry) {
-      handleTokenRegistry(result);
-    } else if (state.active.address && body.aa_address === state.active.address) {
-      handleActivePredictionMarket(result);
+    if (subject === "joint" && state.settings.walletAddress){
+      store.dispatch(loadUserBalance(state.settings.walletAddress));
+    } else if (body) {
+      if (body.aa_address === config.FACTORY_AAS[config.FACTORY_AAS.length - 1]) {
+        handleEventPredictionFactory(result);
+      } else if (body.aa_address === tokenRegistry) {
+        handleTokenRegistry(result);
+      } else if (state.active.address && body.aa_address === state.active.address) {
+        handleActivePredictionMarket(result);
+      }
     }
   });
 
