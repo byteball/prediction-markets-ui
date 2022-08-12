@@ -1,13 +1,16 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Form, Input } from "antd";
 import QRButton from "obyte-qr-button";
 
 import { generateLink } from "utils";
+import { useSelector } from "react-redux";
+import { selectWalletBalance } from "store/slices/userWalletSlice";
 
 const f = (x) => (~(x + "").indexOf(".") ? (x + "").split(".")[1].length : 0);
 
 export const ClaimProfitForm = ({ address, asset, supply = 0, reserve = 0, decimals = 0, walletAddress, symbol, reserve_decimals, reserve_symbol }) => {
   const [amount, setAmount] = useState({ value: '', valid: false });
+  const walletBalance = useSelector(selectWalletBalance);
 
   const price_winner_by_reserve = reserve / supply;
   const payout = Math.floor(amount.value * 10 ** decimals * price_winner_by_reserve);
@@ -28,6 +31,17 @@ export const ClaimProfitForm = ({ address, asset, supply = 0, reserve = 0, decim
 
   const amountLessOrEqualSupply = Number(amount.value) * 10 ** decimals <= supply;
   const amountIsValid = amount.valid && Number(amount.value) && amountLessOrEqualSupply;
+
+  const userBalanceOfWinnerTokens = walletBalance?.[asset]?.total || 0;
+  const userBalanceOfWinnerTokensView = Number(userBalanceOfWinnerTokens / 10 ** decimals).toFixed(decimals);
+
+  useEffect(() => {
+    if (userBalanceOfWinnerTokens) {
+      setAmount({ value: userBalanceOfWinnerTokensView, valid: true })
+    } else {
+      setAmount({ value: '', valid: false })
+    }
+  }, [userBalanceOfWinnerTokensView]);
 
   return <Form size="large">
     <Form.Item

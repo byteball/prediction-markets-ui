@@ -1,4 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit';
+import { changeWalletAddress } from 'store/thunks/changeWalletAddress';
 import { loadReserveAssets } from 'store/thunks/loadReserveAssets';
 import { updateReserveRate } from 'store/thunks/updateReserveRate';
 
@@ -37,9 +38,6 @@ export const settingsSlice = createSlice({
         state.creationOrder.cancelRegSymbol = true;
       }
     },
-    changeWalletAddress: (state, action) => {
-      state.walletAddress = action.payload;
-    },
     changeViewType: (state) => {
       if (state.priceOrOdds === 'odds') {
         state.priceOrOdds = 'price';
@@ -59,6 +57,9 @@ export const settingsSlice = createSlice({
         state.reserveRates = action.payload;
         state.reserveRateUpdateTime = Math.floor(Date.now() / 1000);
       }
+    },
+    [changeWalletAddress.fulfilled]: (state, action) => {
+      state.walletAddress = action.payload;
     }
   }
 });
@@ -68,7 +69,6 @@ export const {
   removeCreationOrder,
   updateCreationOrder,
   cancelRegSymbol,
-  changeWalletAddress,
   changeViewType
 } = settingsSlice.actions;
 
