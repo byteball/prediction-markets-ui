@@ -9,7 +9,7 @@ import appConfig from "appConfig";
 
 const { Title } = Typography;
 
-export const ViewParamsModal = ({ reserve_asset, allow_draw, oracle, feed_name, comparison, datafeed_value, datafeed_draw_value, event_date, waiting_period_length, issue_fee, redeem_fee, arb_profit_tax, aa_address }) => {
+export const ViewParamsModal = ({ reserve_asset, allow_draw, oracle, feed_name, comparison, datafeed_value, datafeed_draw_value, event_date, waiting_period_length, issue_fee, redeem_fee, arb_profit_tax, aa_address, quiet_period = 0 }) => {
   const [visible, setVisible] = useState(false);
   const [width] = useWindowSize();
 
@@ -37,6 +37,7 @@ export const ViewParamsModal = ({ reserve_asset, allow_draw, oracle, feed_name, 
       {allow_draw && <p><b>datafeed draw value: </b>{datafeed_draw_value}</p>}
       <p><b>End of trading period: </b>{moment.unix(event_date).format('lll')}</p>
       <p><b>Waiting period length: </b>{+Number(waiting_period_length / (24 * 3600)).toFixed(3)} days</p>
+      <p><b>Quiet period: </b>{+Number(quiet_period / 3600).toFixed(3)} hours</p>
       <p><b>Issue fee: </b>{issue_fee * 100}%</p>
       <p><b>Redeem fee: </b>{redeem_fee * 100}%</p>
       <p><b>Arb profit tax: </b>{arb_profit_tax * 100}%</p>

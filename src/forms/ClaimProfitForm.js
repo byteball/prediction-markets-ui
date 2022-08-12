@@ -1,8 +1,8 @@
-import { useEffect, useState } from "react";
-import { Form, Input } from "antd";
+import { useState, useEffect } from "react";
+import { Form, Input, Typography } from "antd";
 import QRButton from "obyte-qr-button";
 
-import { generateLink } from "utils";
+import { generateLink, truncate } from "utils";
 import { useSelector } from "react-redux";
 import { selectWalletBalance } from "store/slices/userWalletSlice";
 
@@ -33,7 +33,7 @@ export const ClaimProfitForm = ({ address, asset, supply = 0, reserve = 0, decim
   const amountIsValid = amount.valid && Number(amount.value) && amountLessOrEqualSupply;
 
   const userBalanceOfWinnerTokens = walletBalance?.[asset]?.total || 0;
-  const userBalanceOfWinnerTokensView = Number(userBalanceOfWinnerTokens / 10 ** decimals).toFixed(decimals);
+  const userBalanceOfWinnerTokensView = +Number(userBalanceOfWinnerTokens / 10 ** decimals).toFixed(decimals);
 
   useEffect(() => {
     if (userBalanceOfWinnerTokens) {
@@ -43,11 +43,16 @@ export const ClaimProfitForm = ({ address, asset, supply = 0, reserve = 0, decim
     }
   }, [userBalanceOfWinnerTokensView]);
 
-  return <Form size="large">
+  const insertToInput = () => {
+    setAmount({ value: userBalanceOfWinnerTokensView, valid: true });
+  }
+
+  return <Form size="large" layout='vertical'>
+    {userBalanceOfWinnerTokens ? <Typography.Text type="secondary" onClick={insertToInput} style={{cursor: 'pointer'}}>max {userBalanceOfWinnerTokensView}</Typography.Text> : null}
     <Form.Item
       validateStatus={amount.value === '' ? '' : (amountIsValid ? 'success' : 'error')}
       extra={amount.value === '' ? null : (amountIsValid ? <div>You get {+Number(payout / 10 ** reserve_decimals).toFixed(reserve_decimals)} {reserve_symbol}</div> : <div style={{ color: 'red' }}>{(!amount.valid ? (Number(amount.value) !== 0 ? 'Not valid amount' : '') : `Max value: ${+Number(supply / 10 ** decimals).toFixed(decimals)}`)}</div>)}>
-      <Input autoFocus={true} value={amount.value} onChange={handleAmount} placeholder="Amount" suffix={symbol} />
+      <Input autoFocus={true} value={amount.value} onChange={handleAmount} placeholder="Amount" suffix={<span style={{ maxWidth: '100%', overflow: 'hidden' }}>{truncate(symbol, { length: 18 })}</span>} />
     </Form.Item>
 
     <Form.Item>
