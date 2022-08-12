@@ -297,7 +297,11 @@ export const MarketPage = () => {
   let winnerPriceView = 0;
 
   if (result && reserve) {
-    winnerPriceView = +Number(reserve / (result === 'yes' ? supply_yes : (result === 'no' ? supply_no : supply_draw))).toPrecision(5);
+    const winnerSupply = result === 'yes' ? supply_yes : (result === 'no' ? supply_no : supply_draw);
+
+    if (winnerSupply) {
+      winnerPriceView = +Number(reserve / winnerSupply).toPrecision(5);
+    }
   }
 
   return <Layout>
@@ -464,13 +468,3 @@ export const MarketPage = () => {
     </div>
   </Layout>
 }
-
-// const ResultLabel = ({ result, type }) => {
-//   if (!result) return null;
-
-//   if (result === type) {
-//     return <span style={{ verticalAlign: 'middle', display: 'inline-block' }}>WINNER <img src="/winner-icon.svg" style={{ height: '1em', marginTop: -6 }} /></span>
-//   } else {
-//     return <span>LOSER</span>
-//   }
-// }
