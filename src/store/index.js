@@ -16,6 +16,7 @@ import marketsSlice from './slices/marketsSlice';
 import activeSlice from './slices/activeSlice';
 import cacheSlice from './slices/cacheSlice';
 import bridgesSlice from './slices/bridgesSlice';
+import userWalletSlice from './slices/userWalletSlice';
 
 import config from "appConfig";
 
@@ -24,7 +25,8 @@ const rootReducer = combineReducers({
   markets: marketsSlice,
   active: activeSlice,
   cache: cacheSlice,
-  bridges: bridgesSlice
+  bridges: bridgesSlice,
+  userWallet: userWalletSlice
 });
 
 const persistConfig = {

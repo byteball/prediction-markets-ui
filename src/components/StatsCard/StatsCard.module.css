@@ -4,6 +4,7 @@
   padding: 15px;
   width: 100%;
   position: relative;
+  min-height: 115px;
 }
 
 .title {
@@ -36,4 +37,12 @@
   line-height: initial !important;
   font-weight: 300 !important;
   height: auto !important;
+}
+
+.winnerIcon {
+  position: absolute;
+  right: 7%;
+  bottom: -25%;
+  max-height: 100px;
+  user-select: none;
 }

@@ -4,10 +4,8 @@ import { useDispatch, useSelector } from "react-redux";
 import obyte from "obyte";
 import { Helmet } from "react-helmet-async";
 
-import {
-  changeWalletAddress,
-  selectWalletAddress
-} from "store/slices/settingsSlice";
+import { selectWalletAddress } from "store/slices/settingsSlice";
+import { changeWalletAddress } from "store/thunks/changeWalletAddress";
 
 export const WalletModal = ({ children = "WALLET", type = "default", styles = {} }) => {
   const [visible, setVisible] = useState(false);
