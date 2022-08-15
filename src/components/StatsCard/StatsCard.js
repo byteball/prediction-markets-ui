@@ -12,9 +12,9 @@ export const StatsCard = ({ title, tooltip = '', value = <span />, subValue = nu
   return <div className={styles.wrap} style={{ overflow: 'hidden' }}>
     <div className={styles.title}>{title}</div>
     {showValue && <div className={styles.value} style={{ color }}>{value}</div>}
-    {isWinner === false && <div className={styles.value} style={{ color }}>LOSER</div>}
+    {isWinner === false && <div className={styles.value} style={{ color }}> </div>}
     <div className={styles.subValueWrap} style={{ color: !winnerExists ? color : '#fff' }}>
-      {!winnerExists ? <div>{subValue}</div> : (isWinner ? 'WINNER' : '')}
+      {!winnerExists ? <div>{subValue}</div> : (isWinner ? 'WINNER' : 'LOSER')}
       {(onAction && !winnerExists) ? <Space size="large">
         <Button size='small' onClick={() => onAction('buy')} className={styles.btn} icon={<DownloadOutlined />} type='link'>buy</Button>
         <Button size='small' onClick={() => onAction('redeem')} className={styles.btn} icon={<UploadOutlined />} type='link'>sell</Button>
