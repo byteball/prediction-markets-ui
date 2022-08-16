@@ -304,7 +304,7 @@ export const MarketPage = () => {
     }
   }
 
-  const shownMarketSizePie = !result && reserve !== 0;
+  const showMarketSizePie = !result && reserve !== 0;
 
   return <Layout>
     <Helmet title={'Prediction markets — ' + ((teams.yes === null || teams.no === null) ? event : `${teams.yes.name} vs ${teams.no.name}`)} />
@@ -430,7 +430,7 @@ export const MarketPage = () => {
 
       <div style={{ marginTop: 50 }}>
         <Row gutter={10} align="middle" justify="space-between">
-          <Col md={{ span: shownMarketSizePie ? 12 : 24 }} xs={{ span: 24 }}>
+          <Col md={{ span: showMarketSizePie ? 12 : 24 }} xs={{ span: 24 }}>
             <h2 style={{ fontSize: 28 }}>Make money from liquidity provision</h2>
             <Typography.Paragraph>
               {reserve !== 0 && <span>Every trade is charged a fee which is added to the market’s pool (see the fee accumulation chart above).</span>} Earn a share of these fees by buying all tokens in the same proportions they are already issued. One of the tokens will win, and you’ll get a share of the trading fees collected after you invested.
@@ -447,7 +447,7 @@ export const MarketPage = () => {
             <AddLiquidityModal disabled={!tradeIsActive} yes_team={teams?.yes?.name} no_team={teams?.no?.name} />
           </Col>
 
-          {shownMarketSizePie && <Col md={{ span: 8 }} xs={{ span: 24 }}>
+          {showMarketSizePie && <Col md={{ span: 8 }} xs={{ span: 24 }}>
             <div style={{ width: '100%' }}>
               <MarketSizePie
                 teams={teams}
