@@ -128,11 +128,11 @@ export const setActiveMarket = createAsyncThunk(
       const [from, to] = params.feed_name.split("_");
 
       try {
-         const cryptocompare = await Promise.all([
+        const cryptocompare = await Promise.all([
           axios.get(`https://min-api.cryptocompare.com/data/v2/${isHourlyChart ? 'histohour' : 'histoday'}?fsym=${from}&tsym=${to}&limit=${isHourlyChart ? 168 : 30}`).then(({ data }) => data?.Data?.Data),
           axios.get(`https://min-api.cryptocompare.com/data/price?fsym=${from}&tsyms=${to}`).then(({ data }) => data?.[to])
         ]);
-        
+
         currencyCandles = cryptocompare[0];
         currencyCurrentValue = cryptocompare[1];
       } catch {
@@ -141,22 +141,15 @@ export const setActiveMarket = createAsyncThunk(
     }
 
     let created_at;
+    let committed_at;
 
     if (marketInList) {
       created_at = marketInList.created_at;
+      committed_at = marketInList.committed_at;
     } else {
-      created_at = await backend.getCreatedAt(address);
-    }
-
-    if (!created_at) {
-      for (let index = 0; index < appConfig.FACTORY_AAS.length; index++) {
-        const ts = await obyte.api.getAaStateVars({ address: appConfig.FACTORY_AAS[index], var_prefix: `prediction_${address}` }).then((data) => data?.[`prediction_${address}`]?.created_at);
-
-        if (ts) {
-          created_at = ts;
-          break;
-        }
-      }
+      const dates = await backend.getDates(address);
+      created_at = dates.created_at;
+      committed_at = dates.committed_at;
     }
 
     return {
@@ -170,6 +163,7 @@ export const setActiveMarket = createAsyncThunk(
       currencyCandles,
       currencyCurrentValue,
       created_at,
+      committed_at,
       league: {
         league_emblem,
         league

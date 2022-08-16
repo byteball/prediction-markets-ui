@@ -75,9 +75,9 @@ class Backend {
     return calendar?.data;
   }
 
-  getCreatedAt = async (address) => {
-    const ts = await this.axios.get(`/created_at/${address}`);
-    return ts?.data;
+  getDates = async (address) => {
+    const dates = await this.axios.get(`/date/${address}`);
+    return dates?.data;
   }
 }
 
