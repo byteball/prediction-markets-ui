@@ -124,7 +124,7 @@ export const MarketPage = () => {
 
   const chartConfig = getConfig(chartType);
 
-  const { reserve_asset = 'base', allow_draw, quiet_period = 0, reserve_symbol, reserve_decimals, yes_decimals, no_decimals, draw_decimals, yes_symbol, no_symbol, draw_symbol, event_date, league, league_emblem, created_at, oracle } = params;
+  const { reserve_asset = 'base', allow_draw, quiet_period = 0, reserve_symbol, reserve_decimals, yes_decimals, no_decimals, draw_decimals, yes_symbol, no_symbol, draw_symbol, event_date, league, league_emblem, created_at, committed_at, oracle } = params;
 
   const actualReserveSymbol = reserveAssets[reserve_asset]?.symbol;
 
@@ -261,7 +261,7 @@ export const MarketPage = () => {
 
   const haveTeamNames = isSportMarket && teams?.yes?.name && teams?.no?.name;
 
-  const elapsed_seconds = moment.utc().unix() - created_at;
+  const elapsed_seconds = (committed_at || moment.utc().unix()) - created_at;
   const apy = coef !== 1 ? Number(((coef * (1 - params.issue_fee)) ** (31536000 / elapsed_seconds) - 1) * 100).toFixed(2) : 0;
 
   let yesTooltip = '';
@@ -303,6 +303,8 @@ export const MarketPage = () => {
       winnerPriceView = +Number(reserve / winnerSupply).toPrecision(5);
     }
   }
+
+  const showMarketSizePie = !result && reserve !== 0;
 
   return <Layout>
     <Helmet title={'Prediction markets — ' + ((teams.yes === null || teams.no === null) ? event : `${teams.yes.name} vs ${teams.no.name}`)} />
@@ -428,7 +430,7 @@ export const MarketPage = () => {
 
       <div style={{ marginTop: 50 }}>
         <Row gutter={10} align="middle" justify="space-between">
-          <Col md={{ span: reserve !== 0 ? 12 : 24 }} xs={{ span: 24 }}>
+          <Col md={{ span: showMarketSizePie ? 12 : 24 }} xs={{ span: 24 }}>
             <h2 style={{ fontSize: 28 }}>Make money from liquidity provision</h2>
             <Typography.Paragraph>
               {reserve !== 0 && <span>Every trade is charged a fee which is added to the market’s pool (see the fee accumulation chart above).</span>} Earn a share of these fees by buying all tokens in the same proportions they are already issued. One of the tokens will win, and you’ll get a share of the trading fees collected after you invested.
@@ -445,7 +447,7 @@ export const MarketPage = () => {
             <AddLiquidityModal disabled={!tradeIsActive} yes_team={teams?.yes?.name} no_team={teams?.no?.name} />
           </Col>
 
-          {reserve !== 0 && <Col md={{ span: 8 }} xs={{ span: 24 }}>
+          {showMarketSizePie && <Col md={{ span: 8 }} xs={{ span: 24 }}>
             <div style={{ width: '100%' }}>
               <MarketSizePie
                 teams={teams}
