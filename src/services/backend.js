@@ -76,7 +76,7 @@ class Backend {
   }
 
   getDates = async (address) => {
-    const dates = await this.axios.get(`/date/${address}`);
+    const dates = await this.axios.get(`/dates/${address}`);
     return dates?.data;
   }
 }
