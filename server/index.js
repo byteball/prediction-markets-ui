@@ -31,6 +31,7 @@ app.get(['/', '/currency', '/soccer/*', '/misc', '/create', '/faq', '/market/*']
                 title = 'Prediction markets — Create new market';
             } else {
                 imageUrl = `${process.env.REACT_APP_BACKEND_URL}og_images/main`
+                title = 'Prophet — Decentralized prediction markets'
             }
 
             // inject meta tags
