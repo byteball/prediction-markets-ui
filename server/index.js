@@ -42,6 +42,8 @@ app.get(['/', '/currency', '/soccer/*', '/misc', '/create', '/faq', '/market/*']
                     "<title>Prophet — Decentralized prediction markets</title>",
                     `<title>${title}</title>`
                 )
+                
+                modifiedHTMLData.replace('__META_OG_TITLE__', title);
             }
 
             return res.send(modifiedHTMLData);
