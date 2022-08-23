@@ -35,7 +35,7 @@ app.get(['/', '/currency', '/soccer/*', '/misc', '/create', '/faq', '/market/*']
 
             // inject meta tags
             modifiedHTMLData = htmlData.replace('__META_OG_IMAGE__', imageUrl);
-            modifiedHTMLData = htmlData.replace('__META_OG_IMAGE__', imageUrl);
+            modifiedHTMLData = modifiedHTMLData.replace('__META_OG_IMAGE__', imageUrl);
             
             if (title) {
                 modifiedHTMLData = modifiedHTMLData.replace(
