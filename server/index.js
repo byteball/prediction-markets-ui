@@ -3,7 +3,7 @@ const path = require('path');
 const fs = require("fs");
 require('dotenv').config()
 const app = express();
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 3005;
 const indexPath = path.resolve(__dirname, '..', 'build', 'index.html');
 
 // here we serve the index.html page
