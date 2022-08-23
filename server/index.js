@@ -44,7 +44,7 @@ app.get(['/', '/currency', '/soccer/*', '/misc', '/create', '/faq', '/market/*']
                     `<title>${title}</title>`
                 )
                 
-                modifiedHTMLData.replace('__META_OG_TITLE__', title);
+                modifiedHTMLData = modifiedHTMLData.replace('__META_OG_TITLE__', title);
             }
 
             return res.send(modifiedHTMLData);
