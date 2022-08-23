@@ -11,7 +11,7 @@ app.get(['/', '/currency', '/soccer/*', '/misc', '/create', '/faq', '/market/*']
     fs.readFile(indexPath, 'utf8', (err, htmlData) => {
         if (err) {
             console.error('Error during file reading', err);
-            return res.status(404).end()
+            return res.status(404).end();
         }
 
         try {
@@ -23,15 +23,16 @@ app.get(['/', '/currency', '/soccer/*', '/misc', '/create', '/faq', '/market/*']
 
             if (url.includes('market') && address) {
                 imageUrl = `${process.env.REACT_APP_BACKEND_URL}og_images/market/${address}`;
+                title = 'Prophet — Decentralized prediction markets';
             } else if (url.includes('faq')) {
-                imageUrl = `${process.env.REACT_APP_BACKEND_URL}og_images/faq`
+                imageUrl = `${process.env.REACT_APP_BACKEND_URL}og_images/faq`;
                 title = 'Prediction markets — F.A.Q.';
             } else if (url.includes('create')) {
-                imageUrl = `${process.env.REACT_APP_BACKEND_URL}og_images/create`
+                imageUrl = `${process.env.REACT_APP_BACKEND_URL}og_images/create`;
                 title = 'Prediction markets — Create new market';
             } else {
-                imageUrl = `${process.env.REACT_APP_BACKEND_URL}og_images/main`
-                title = 'Prophet — Decentralized prediction markets'
+                imageUrl = `${process.env.REACT_APP_BACKEND_URL}og_images/main`;
+                title = 'Prophet — Decentralized prediction markets';
             }
 
             // inject meta tags
