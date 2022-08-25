@@ -9,7 +9,7 @@ import styles from "./FaqPage.module.css";
 const { Panel } = Collapse;
 
 export const FaqPage = () => <Layout>
-  <Helmet title="Prediction markets — F.A.Q." />
+  <Helmet title="Prophet prediction markets — F.A.Q." />
   <Typography.Title level={1}>F.A.Q.</Typography.Title>
   <div className="faq">
     <Collapse
