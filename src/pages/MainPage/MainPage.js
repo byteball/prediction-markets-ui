@@ -103,8 +103,14 @@ export const MainPage = () => {
 		}
 	}
 
+	let actualChampionshipName;
+
+	if (marketType === 'soccer' && particle !== 'all' && championships) {
+		actualChampionshipName = championships[marketType].find(({ code }) => code === particle)?.name;
+	}
+
 	return <div>
-		<Helmet title={`Prediction markets — ${marketType} markets`} />
+		<Helmet title={`Prediction markets — ${actualChampionshipName || marketType} markets`} />
 		<Layout>
 			<Row className={styles.headerWrap}>
 				<Col xs={{ span: 24 }} md={{ span: 24 }}>
