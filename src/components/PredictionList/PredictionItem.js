@@ -130,6 +130,18 @@ export const PredictionItem = ({ reserve_asset = 'base', aa_address, reserve = 0
     drawOddsView = supply_draw !== 0 ? +Number((reserve / supply_draw) / draw_price).toFixed(5) : null;
   }
 
+  let winnerPriceView = 0;
+  let winnerOddsView = 0;
+
+  if (result && reserve) {
+    const winnerSupply = result === 'yes' ? supply_yes : (result === 'no' ? supply_no : supply_draw);
+
+    if (winnerSupply) {
+      winnerPriceView = +Number(reserve / winnerSupply).toFixed(5);
+      winnerOddsView = +Number(reserve / winnerSupply).toFixed(5);
+    }
+  }
+
   return <Wrapper {...wrapperProps}>
     <SecondWrapper {...secondWrapperProps}>
       <Card className={styles.itemWrap} style={{ opacity: isExpiry ? 0.5 : 1 }}>

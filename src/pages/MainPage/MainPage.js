@@ -110,7 +110,7 @@ export const MainPage = () => {
 	}
 
 	return <div>
-		<Helmet title={`Prediction markets — ${actualChampionshipName || marketType} markets`} />
+		<Helmet title={`Prediction markets — ${actualChampionshipName || (marketType === 'misc' ? 'miscellaneous' : marketType)} markets`} />
 		<Layout>
 			<Row className={styles.headerWrap}>
 				<Col xs={{ span: 24 }} md={{ span: 24 }}>
