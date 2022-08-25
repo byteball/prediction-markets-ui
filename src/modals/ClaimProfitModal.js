@@ -37,7 +37,7 @@ export const ClaimProfitModal = ({ disabled, yes_team, no_team }) => {
   const close = () => setVisible(false);
 
   return <>
-    {visible && <Helmet title="Prediction markets — Claim profit" />}
+    {visible && <Helmet title="Prophet prediction markets — Claim profit" />}
     <Button type="primary" size="large" disabled={disabled} onClick={open}>Claim profit</Button>
     {status === 'loaded' && <Drawer
       width={width > 640 ? 640 : width}

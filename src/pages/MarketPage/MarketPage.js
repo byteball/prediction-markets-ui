@@ -309,7 +309,7 @@ export const MarketPage = () => {
   const showMarketSizePie = !result && reserve !== 0;
 
   return <Layout>
-    <Helmet title={'Prediction markets — ' + ((teams.yes === null || teams.no === null) ? event : `${teams.yes.name} vs ${teams.no.name}`) + `, liquidity provider APY ${apy}%`} />
+    <Helmet title={'Prophet prediction markets — ' + ((teams.yes === null || teams.no === null) ? event : `${teams.yes.name} vs ${teams.no.name}`) + `, liquidity provider APY ${apy}%`} />
     <div style={{ marginTop: 50 }}>
       {(teams.yes === null || teams.no === null) ? <div className={styles.event} style={{ maxWidth: 800 }}>{event}</div> : <div style={{ margin: '30px 0', width: '100%' }}>
         <Row align="middle">
