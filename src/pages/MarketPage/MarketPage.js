@@ -289,7 +289,7 @@ export const MarketPage = () => {
       drawTooltip = "The price of the token that represents the “Draw” outcome. If this outcome wins, all funds paid by buyers of all tokens will be divided among “Draw” token holders.";
     } else {
       yesTooltip = "The multiple you receive if you bet on “Yes” outcome and it wins, assuming the odds don’t change.";
-      noTooltip = "The multiple you receive if you bet on “Yes” outcome and it wins, assuming the odds don’t change.";
+      noTooltip = "The multiple you receive if you bet on “No” outcome and it wins, assuming the odds don’t change.";
       drawTooltip = "The multiple you receive if you bet on “Draw” outcome and it wins, assuming the odds don’t change.";
     }
   }
@@ -323,7 +323,7 @@ export const MarketPage = () => {
           <Col md={{ span: 8 }} xs={{ span: 8 }} style={{ textAlign: 'center' }}>
             <b className={styles.vs}>VS</b>
             <div>
-              {moment.unix(event_date).format('lll')}
+              {moment.unix(event_date).format('MMM D, h:mm A')}
             </div>
             {league && league_emblem && <div><Tooltip title={league}><img className={styles.league} src={league_emblem} alt={league} /></Tooltip></div>}
           </Col>
