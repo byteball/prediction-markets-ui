@@ -205,7 +205,7 @@ export const RegisterSymbols = () => {
 
   return (
     <div>
-      <Helmet title="Prediction markets — Symbol registration" />
+      <Helmet title="Prophet prediction markets — Symbol registration" />
       <Steps
         current={currentStep}
         style={{ marginTop: 20 }}
