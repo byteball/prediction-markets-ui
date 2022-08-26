@@ -289,7 +289,7 @@ export const MarketPage = () => {
       drawTooltip = "The price of the token that represents the “Draw” outcome. If this outcome wins, all funds paid by buyers of all tokens will be divided among “Draw” token holders.";
     } else {
       yesTooltip = "The multiple you receive if you bet on “Yes” outcome and it wins, assuming the odds don’t change.";
-      noTooltip = "The multiple you receive if you bet on “Yes” outcome and it wins, assuming the odds don’t change.";
+      noTooltip = "The multiple you receive if you bet on “No” outcome and it wins, assuming the odds don’t change.";
       drawTooltip = "The multiple you receive if you bet on “Draw” outcome and it wins, assuming the odds don’t change.";
     }
   }
