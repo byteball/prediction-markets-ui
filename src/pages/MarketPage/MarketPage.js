@@ -323,7 +323,7 @@ export const MarketPage = () => {
           <Col md={{ span: 8 }} xs={{ span: 8 }} style={{ textAlign: 'center' }}>
             <b className={styles.vs}>VS</b>
             <div>
-              {moment.unix(event_date).format('lll')}
+              {moment.unix(event_date).format('MMM D, h:mm A')}
             </div>
             {league && league_emblem && <div><Tooltip title={league}><img className={styles.league} src={league_emblem} alt={league} /></Tooltip></div>}
           </Col>

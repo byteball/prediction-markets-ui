@@ -163,7 +163,7 @@ export const PredictionItem = ({ reserve_asset = 'base', aa_address, reserve = 0
                 <Col sm={{ span: 8 }} xs={{ span: 8 }} style={{ textAlign: 'center' }} className={styles.draw}>
                   <b style={{ fontSize: 24 }}>VS</b>
                   <div className={styles.time}>
-                    <small>{moment.unix(event_date).format('lll')}</small>
+                    <small>{moment.unix(event_date).format('MMM D, h:mm A')}</small>
                   </div>
                   {(exists && allow_draw && drawOddsView && width >= 576) ? <div style={{ color: appConfig.DRAW_COLOR }}>
                     <div className={styles.team}><small>draw</small></div>
