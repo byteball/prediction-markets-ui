@@ -125,22 +125,78 @@ export const PredictionItem = ({ reserve_asset = 'base', aa_address, reserve = 0
   let noOddsView = 0;
 
   if (reserve !== 0) {
-    yesOddsView = supply_yes !== 0 ? +Number((reserve / supply_yes) / yes_price).toFixed(5) : null;
-    noOddsView = supply_no !== 0 ? +Number((reserve / supply_no) / no_price).toFixed(5) : null;
-    drawOddsView = supply_draw !== 0 ? +Number((reserve / supply_draw) / draw_price).toFixed(5) : null;
+    yesOddsView = supply_yes !== 0 ? +Number((reserve / supply_yes) / yes_price).toFixed(5) : 0;
+    noOddsView = supply_no !== 0 ? +Number((reserve / supply_no) / no_price).toFixed(5) : 0;
+    drawOddsView = supply_draw !== 0 ? +Number((reserve / supply_draw) / draw_price).toFixed(5) : 0;
   }
 
-  // let winnerPriceView = 0;
-  // let winnerOddsView = 0;
+  let winnerPriceView = 0;
+  let winnerOddsView = 0;
 
-  // if (result && reserve) {
-  //   const winnerSupply = result === 'yes' ? supply_yes : (result === 'no' ? supply_no : supply_draw);
+  if (result && reserve) {
+    const winnerSupply = result === 'yes' ? supply_yes : (result === 'no' ? supply_no : supply_draw);
 
-  //   if (winnerSupply) {
-  //     winnerPriceView = +Number(reserve / winnerSupply).toFixed(5);
-  //     winnerOddsView = +Number(reserve / winnerSupply).toFixed(5);
-  //   }
-  // }
+    if (winnerSupply) {
+      winnerPriceView = +Number(reserve / winnerSupply).toFixed(5);
+      winnerOddsView = +Number(reserve / winnerSupply).toFixed(5);
+    }
+  }
+
+  let yesValue = null;
+  let noValue = null;
+  let drawValue = null;
+
+  let yesSubValue = null;
+  let noSubValue = null;
+  let drawSubValue = null;
+
+  if (reserve === 0 && !result) {
+    if (!isSportMarket) {
+      yesValue = priceOrOdds === 'price' ? `0 ${reserve_symbol}` : `x1`;
+      noValue = priceOrOdds === 'price' ? `0 ${reserve_symbol}` : `x1`;
+
+      if (allow_draw) {
+        drawValue = priceOrOdds === 'price' ? `0 ${reserve_symbol}` : `x1`;
+      }
+    }
+  } else if (!result) {
+    yesValue = priceOrOdds === 'price' ? `${yesPriceView || 0} ${reserve_symbol}` : `x${yesOddsView || 1}`;
+    noValue = priceOrOdds === 'price' ? `${noPriceView || 0} ${reserve_symbol}` : `x${noOddsView || 1}`;
+
+    if (allow_draw) {
+      drawValue = priceOrOdds === 'price' ? `${drawPriceView || 0} ${reserve_symbol}` : `x${drawOddsView || 1}`;
+    }
+
+    if (priceOrOdds === 'price' && currentReserveRate) {
+      if (yes_price) {
+        yesSubValue = `$${+Number(yes_price * currentReserveRate).toFixed(2)}`;
+      }
+
+      if (no_price) {
+        noSubValue = `$${+Number(no_price * currentReserveRate).toFixed(2)}`;
+      }
+
+      if (allow_draw && draw_price) {
+        drawSubValue = `$${+Number(draw_price * currentReserveRate).toFixed(2)}`;
+      }
+    }
+
+  } else if (result) {
+    yesValue = 'LOSER';
+    noValue = 'LOSER';
+
+    if (allow_draw) {
+      drawValue = 'LOSER';
+    }
+
+    if (result === 'yes') {
+      yesValue = supply_yes ? (priceOrOdds === 'price' ? `${winnerPriceView} ${reserve_symbol}` : `x${winnerOddsView}`) : 'WINNER';
+    } else if (result === 'no') {
+      noValue = supply_no ? (priceOrOdds === 'price' ? `${winnerPriceView} ${reserve_symbol}` : `x${winnerOddsView}`) : 'WINNER';
+    } else if (result === 'draw' && allow_draw) {
+      drawValue = supply_draw ? (priceOrOdds === 'price' ? `${winnerPriceView} ${reserve_symbol}` : `x${winnerOddsView}`) : 'WINNER';
+    }
+  }
 
   return <Wrapper {...wrapperProps}>
     <SecondWrapper {...secondWrapperProps}>
@@ -150,14 +206,22 @@ export const PredictionItem = ({ reserve_asset = 'base', aa_address, reserve = 0
             {!marketHasCrests ? <div className={styles.eventDesc}>
               {eventView}
             </div> : <div style={{ marginTop: 5 }}>
-              <Row gutter={8} align={(exists && allow_draw && drawOddsView && width >= 576) ? "bottom" : 'middle'}>
+              <Row gutter={8} align={(exists && allow_draw && (drawOddsView || result) && width >= 576) ? "bottom" : 'middle'}>
                 <Col sm={{ span: 8 }} xs={{ span: 8 }} style={{ textAlign: 'center' }}>
-                  <Img unloader={<div />} src={[`https://crests.football-data.org/${yes_team_id}.svg`, `https://crests.football-data.org/${yes_team_id}.png`]} className={styles.crests} />
+                  <Img unloader={<div />} src={[`https://crests.football-data.org/${yes_team_id}.svg`, `https://crests.football-data.org/${yes_team_id}.png`]}
+                    className={styles.crests}
+                    container={(children) => <div style={{ position: 'relative' }}>
+                      {children}
+                      {result === 'yes' && <div style={{ position: 'absolute', right: 'calc(50% - 40px)', bottom: -10 }}>
+                        <WinnerIcon />
+                      </div>}
+                    </div>
+                    } />
                   <div className={styles.teamWrap}>
                     <Typography.Text style={{ color: appConfig.YES_COLOR }} className={styles.team} ellipsis={true}><small>{yes_team}</small></Typography.Text>
                   </div>
 
-                  {exists && yesOddsView && noOddsView ? <div style={{ color: appConfig.YES_COLOR }}><span className={styles.price}>{priceOrOdds === 'price' ? <>{yesPriceView} <small>{reserve_symbol}</small></> : `x${yesOddsView}`}</span></div> : null}
+                  {exists && yesValue ? <div style={{ color: appConfig.YES_COLOR }}><span className={styles.price}>{yesValue}</span></div> : null}
                 </Col>
 
                 <Col sm={{ span: 8 }} xs={{ span: 8 }} style={{ textAlign: 'center' }} className={styles.draw}>
@@ -165,9 +229,9 @@ export const PredictionItem = ({ reserve_asset = 'base', aa_address, reserve = 0
                   <div className={styles.time}>
                     <small>{moment.unix(event_date).format('MMM D, h:mm A')}</small>
                   </div>
-                  {(exists && allow_draw && drawOddsView && width >= 576) ? <div style={{ color: appConfig.DRAW_COLOR }}>
+                  {(exists && allow_draw && (drawOddsView || result) && width >= 576) ? <div style={{ color: appConfig.DRAW_COLOR }}>
                     <div className={styles.team}><small>draw</small></div>
-                    <span className={styles.price}>{priceOrOdds === 'price' ? <>{drawPriceView} <small>{reserve_symbol}</small></> : `x${drawOddsView}`}</span>
+                    <div style={{ color: appConfig.DRAW_COLOR }}><span className={styles.price}>{drawValue}</span></div>
                   </div> : null}
                 </Col>
 
@@ -176,16 +240,22 @@ export const PredictionItem = ({ reserve_asset = 'base', aa_address, reserve = 0
                     src={[`https://crests.football-data.org/${no_team_id}.svg`, `https://crests.football-data.org/${no_team_id}.png`]}
                     className={styles.crests}
                     unloader={<div />}
+                    container={(children) => <div style={{ position: 'relative' }}>
+                      {children}
+                      {result === 'no' && <div style={{ position: 'absolute', right: 'calc(50% - 40px)', bottom: -10 }}>
+                        <WinnerIcon />
+                      </div>}
+                    </div>
+                    }
                   />
+
                   <div className={styles.teamWrap}>
                     <Typography.Text style={{ color: appConfig.NO_COLOR }} className={styles.team} ellipsis={true}>
                       <small>{no_team}</small>
                     </Typography.Text>
                   </div>
 
-                  {exists && noOddsView && yesOddsView ? <div style={{ color: appConfig.NO_COLOR }}>
-                    <span className={styles.price}>{priceOrOdds === 'price' ? <>{noPriceView} <small>{reserve_symbol}</small></> : `x${noOddsView}`}</span>
-                  </div> : null}
+                  {exists && noValue ? <div style={{ color: appConfig.NO_COLOR }}><span className={styles.price}>{noValue}</span></div> : null}
                 </Col>
               </Row>
             </div>}
@@ -195,29 +265,29 @@ export const PredictionItem = ({ reserve_asset = 'base', aa_address, reserve = 0
                 <div>
                   <div className={styles.infoTitle}>reserve</div>
                   <div>{reserveView} <small>{reserve_symbol}</small></div>
-                  {(priceOrOdds === 'price' && currentReserveRate) ? <div className={styles.infoValueInDollar}>${+Number(reserveView * currentReserveRate).toFixed(2)}</div> : null}
+                  {(priceOrOdds === 'price' && currentReserveRate && !result) ? <div className={styles.infoValueInDollar}>${+Number(reserveView * currentReserveRate).toFixed(2)}</div> : null}
                 </div>
               </Col>
               <Col md={{ span: 6 }} xs={{ span: 12 }}>
                 <div style={{ color: appConfig.YES_COLOR }}>
                   <div className={styles.infoTitle}>yes {priceOrOdds}</div>
-                  <div style={{ fontSize: 13 }}>{<div>{priceOrOdds === 'price' ? `${yesPriceView} ${reserve_symbol}` : yesOddsView ? `x${yesOddsView}` : '-'}</div>}</div>
-                  {(priceOrOdds === 'price' && currentReserveRate) ? <div className={styles.infoValueInDollar}>${+Number(yes_price * currentReserveRate).toFixed(2)}</div> : null}
+                  <div style={{ fontSize: 13 }}>{yesValue}</div>
+                  {yesSubValue ? <div className={styles.infoValueInDollar}>{yesSubValue}</div> : null}
                 </div>
               </Col>
               <Col md={{ span: 6 }} xs={{ span: 12 }}>
                 <div style={{ color: appConfig.NO_COLOR }}>
                   <div className={styles.infoTitle}>no {priceOrOdds}</div>
-                  <div style={{ fontSize: 13 }}>{<div>{priceOrOdds === 'price' ? `${noPriceView} ${reserve_symbol}` : (noOddsView ? `x${noOddsView}` : '-')}</div>}</div>
-                  {(priceOrOdds === 'price' && currentReserveRate) ? <div className={styles.infoValueInDollar}> ${+Number(no_price * currentReserveRate).toFixed(2)}</div> : null}
+                  <div style={{ fontSize: 13 }}>{noValue}</div>
+                  {noSubValue ? <div className={styles.infoValueInDollar}>{noSubValue}</div> : null}
                 </div>
               </Col>
               <Col md={{ span: 6 }} xs={{ span: 12 }}>
                 {allow_draw ? <div>
                   <div className={styles.infoTitle}>draw {priceOrOdds}</div>
                   <div style={{ color: appConfig.DRAW_COLOR }}>
-                    <div style={{ fontSize: 13 }}>{<div>{priceOrOdds === 'price' ? `${drawPriceView} ${reserve_symbol}` : drawOddsView ? `x${drawOddsView}` : '-'}</div>}</div>
-                    {(priceOrOdds === 'price' && currentReserveRate) ? <div className={styles.infoValueInDollar}> ${+Number(draw_price * currentReserveRate).toFixed(2)}</div> : null}
+                    <div style={{ fontSize: 13 }}>{drawValue}</div>
+                    {drawSubValue ? <div className={styles.infoValueInDollar}>{drawSubValue}</div> : null}
                   </div>
                 </div> : null}
               </Col>
@@ -253,3 +323,5 @@ export const PredictionItem = ({ reserve_asset = 'base', aa_address, reserve = 0
     </SecondWrapper>
   </Wrapper>
 }
+
+const WinnerIcon = () => <img src="/winner-icon-stroke.svg" style={{ width: 32 }} alt="" />
