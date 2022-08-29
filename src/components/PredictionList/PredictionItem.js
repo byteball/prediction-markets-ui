@@ -221,7 +221,7 @@ export const PredictionItem = ({ reserve_asset = 'base', aa_address, reserve = 0
                     <Typography.Text style={{ color: appConfig.YES_COLOR }} className={styles.team} ellipsis={true}><small>{yes_team}</small></Typography.Text>
                   </div>
 
-                  {exists && yesValue ? <div style={{ color: appConfig.YES_COLOR }}><span className={styles.price}>{yesValue}</span></div> : null}
+                  {exists && yesValue && noValue ? <div style={{ color: appConfig.YES_COLOR }}><span className={styles.price}>{yesValue}</span></div> : null}
                 </Col>
 
                 <Col sm={{ span: 8 }} xs={{ span: 8 }} style={{ textAlign: 'center' }} className={styles.draw}>
@@ -255,7 +255,7 @@ export const PredictionItem = ({ reserve_asset = 'base', aa_address, reserve = 0
                     </Typography.Text>
                   </div>
 
-                  {exists && noValue ? <div style={{ color: appConfig.NO_COLOR }}><span className={styles.price}>{noValue}</span></div> : null}
+                  {exists && noValue && yesValue ? <div style={{ color: appConfig.NO_COLOR }}><span className={styles.price}>{noValue}</span></div> : null}
                 </Col>
               </Row>
             </div>}
