@@ -33,7 +33,7 @@ import { AddLiquidityModal, ClaimProfitModal, ViewParamsModal, TradeModal } from
 import styles from './MarketPage.module.css';
 import appConfig from "appConfig";
 
-const getConfig = (chartType) => ({
+const getConfig = (chartType, teams) => ({
   xField: 'date',
   yField: 'value',
   seriesField: 'type',
@@ -47,15 +47,15 @@ const getConfig = (chartType) => ({
     style: 'dark',
   },
   color: ({ type }) => {
-    return type === 'NO' ? appConfig.NO_COLOR : type === 'YES' ? appConfig.YES_COLOR : appConfig.DRAW_COLOR;
+    return (type === 'NO' || type === teams?.no?.name) ? appConfig.NO_COLOR : (type === 'YES' || type === teams?.yes?.name) ? appConfig.YES_COLOR : appConfig.DRAW_COLOR;
   },
   yAxis: {
     label: {
       formatter: (v) => {
         if (chartType === 'fee') {
-          return `${v}%`
+          return `${v}%`;
         } else {
-          return v
+          return v;
         }
       }
     },
@@ -122,7 +122,7 @@ export const MarketPage = () => {
 
   const priceOrOdds = useSelector(selectPriceOrOdds);
 
-  const chartConfig = getConfig(chartType);
+  const chartConfig = getConfig(chartType, teams);
 
   const { reserve_asset = 'base', allow_draw, quiet_period = 0, reserve_symbol, reserve_decimals, yes_decimals, no_decimals, draw_decimals, yes_symbol, no_symbol, draw_symbol, event_date, league, league_emblem, created_at, committed_at, oracle } = params;
 
@@ -179,8 +179,8 @@ export const MarketPage = () => {
 
       if (chartType === 'prices') {
         data.push(
-          { date, value: yes_price, type: "YES", currencySymbol: reserve_symbol, chartType, symbol: yes_symbol },
-          { date, value: no_price, type: "NO", currencySymbol: reserve_symbol, chartType, symbol: no_symbol }
+          { date, value: yes_price, type: teams?.yes?.name || "YES", currencySymbol: reserve_symbol, chartType, symbol: yes_symbol },
+          { date, value: no_price, type: teams?.no?.name || "NO", currencySymbol: reserve_symbol, chartType, symbol: no_symbol }
         );
 
         if (allow_draw) {
@@ -192,8 +192,8 @@ export const MarketPage = () => {
         );
       } else {
         data.push(
-          { date, value: +Number(supply_yes / 10 ** yes_decimals).toFixed(yes_decimals), type: "YES", currencySymbol: yes_symbol, chartType },
-          { date, value: +Number(supply_no / 10 ** no_decimals).toFixed(no_decimals), type: "NO", currencySymbol: no_symbol, chartType }
+          { date, value: +Number(supply_yes / 10 ** yes_decimals).toFixed(yes_decimals), type: teams?.yes?.name || "YES", currencySymbol: yes_symbol, chartType },
+          { date, value: +Number(supply_no / 10 ** no_decimals).toFixed(no_decimals), type: teams?.no?.name || "NO", currencySymbol: no_symbol, chartType }
         );
 
         if (allow_draw) {
@@ -203,7 +203,7 @@ export const MarketPage = () => {
     });
 
     setDataForChart(data);
-  }, [candles, chartType, address, reservesRate]);
+  }, [candles, chartType, address, reservesRate, teams]);
 
   useEffect(() => {
     const intervalId = setInterval(() => setNow(moment.utc().unix()), 10000);

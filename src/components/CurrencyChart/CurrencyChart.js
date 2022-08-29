@@ -22,6 +22,8 @@ export const CurrencyChart = ({ data, params }) => {
     legend: false,
     animation: false,
     renderer: 'svg',
+    risingFill: '#26a69a',
+    fallingFill: "#ef5350",
     tooltip: {
       showCrosshairs: false,
       title: (_, { time }) => {
