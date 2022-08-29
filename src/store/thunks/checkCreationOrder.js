@@ -18,7 +18,7 @@ export const checkCreationOrder = createAsyncThunk(
 
       let newOrderData = {};
 
-      if (order.status !== 'created' || prediction_address) {
+      if (order.status !== 'created' || !prediction_address) {
 
         const responses = await client.api.getAaResponseChain({
           trigger_unit: order.creation_unit_id
