@@ -47,6 +47,24 @@ export const CurrencyChart = ({ data, params }) => {
           lineWidth: 4
         },
       },
+      {
+        type: 'line',
+        start: [moment.unix(event_date).format(momentFormat), 'min',],
+        end: [moment.unix(event_date).format(momentFormat), 'max',],
+        style: {
+          stroke: appConfig.DRAW_COLOR,
+          lineDash: [4, 4],
+          lineWidth: 4
+        },
+        text: {
+          content: 'Event date',
+          offsetX: -5,
+          style: {
+            fontSize: 14,
+            fill: appConfig.DRAW_COLOR,
+          }
+        }
+      },
     ]
   };
 

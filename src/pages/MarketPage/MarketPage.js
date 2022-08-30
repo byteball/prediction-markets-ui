@@ -41,7 +41,7 @@ const getConfig = (chartType, teams) => ({
   animation: false,
   renderer: 'svg',
   smooth: true,
-  appendPadding: 0,
+  appendPadding: 5,
   theme: 'dark',
   map: {
     style: 'dark',

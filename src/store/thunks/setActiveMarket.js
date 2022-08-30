@@ -28,8 +28,11 @@ export const setActiveMarket = createAsyncThunk(
     const state = getState();
     const marketInList = state.markets.allMarkets?.find(({ aa_address }) => aa_address === address);
 
-    const aa = await obyte.api.getDefinition(address);
-    const stateVars = await obyte.api.getAaStateVars({ address })
+    const [aa, stateVars] = await Promise.all([
+      obyte.api.getDefinition(address),
+      obyte.api.getAaStateVars({ address })
+    ])
+
     const base_aa = aa[1].base_aa;
     const reserve_asset = aa[1].params.reserve_asset || 'base';
 
@@ -83,12 +86,12 @@ export const setActiveMarket = createAsyncThunk(
     const [dailyCloses, recentResponses, datafeedValue] = await Promise.all([
       backend.getDailyCloses(address).then((data) => data).catch(() => []),
       obyte.api.getAaResponses({ aa: address }),
-      obyte.api.getDataFeed({ oracles: [params.oracle], feed_name: params.feed_name, ifnone: 'none' })
+      obyte.api.getDataFeed({ oracles: [params.oracle], feed_name: params.feed_name, ifnone: 'none' }),
+      obyte.justsaying("light/new_aa_to_watch", {
+        aa: address
+      })
     ]);
 
-    await obyte.justsaying("light/new_aa_to_watch", {
-      aa: address
-    });
 
     const isSportMarket = !!appConfig.CATEGORIES.sport.oracles.find(({ address }) => address === params.oracle);
     const isCurrencyMarket = !!appConfig.CATEGORIES.currency.oracles.find(({ address }) => address === params.oracle);
@@ -118,8 +121,11 @@ export const setActiveMarket = createAsyncThunk(
         league = championshipData?.name;
 
         try {
-          yesTeam = await backend.getTeam(sport[0], yes_abbreviation);
-          noTeam = await backend.getTeam(sport[0], no_abbreviation);
+          [yesTeam, noTeam] = await Promise.all([
+            backend.getTeam(sport[0], yes_abbreviation),
+            backend.getTeam(sport[0], no_abbreviation)
+          ]);
+
         } catch (e) {
           console.error('error get teams id');
         }
