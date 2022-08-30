@@ -275,7 +275,7 @@ export const MarketPage = () => {
     if (priceOrOdds === 'price') {
       yesTooltip = `The price of the ${yes_team_name} token. If ${yes_team_name} wins, all funds paid by buyers of all tokens will be divided among ${yes_team_name} token holders.`;
       noTooltip = `The price of the ${no_team_name} token. If ${no_team_name} wins, all funds paid by buyers of all tokens will be divided among ${no_team_name} token holders.`;
-      drawTooltip = `The price of the draw token. If will be draw, all funds paid by buyers of all tokens will be divided among draw token holders.`;
+      drawTooltip = `The price of the draw token. In case of a draw, all funds paid by buyers of all tokens will be divided among draw token holders.`;
     } else {
       yesTooltip = `The multiple you receive if you bet on ${yes_team_name} and it wins, assuming the odds don’t change.`;
       noTooltip = `The multiple you receive if you bet on ${no_team_name} and it wins, assuming the odds don’t change.`;

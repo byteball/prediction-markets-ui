@@ -150,7 +150,7 @@ export const PredictionItem = ({ reserve_asset = 'base', aa_address, reserve = 0
   let noSubValue = null;
   let drawSubValue = null;
 
-  if (reserve === 0 && !result) {
+  if (reserve === 0 && !result && priceOrOdds !== 'price') {
     if (!isSportMarket) {
       yesValue = '-';
       noValue = '-';
@@ -160,36 +160,34 @@ export const PredictionItem = ({ reserve_asset = 'base', aa_address, reserve = 0
       }
     }
   } else if (!result) {
-    if (supply_yes) {
-      yesValue = priceOrOdds === 'price' ? `${yesPriceView} ${reserve_symbol}` : `x${yesOddsView}`;
+    const anySupply = supply_yes + supply_no;
+
+    if (supply_yes || (priceOrOdds === 'price' && anySupply)) {
+      yesValue = priceOrOdds === 'price' ? `${yesPriceView || 0} ${reserve_symbol}` : `x${yesOddsView}`;
     } else if (!isSportMarket || (isSportMarket && supply_no)) {
       yesValue = '-';
     }
 
-    if (supply_no) {
-      noValue = priceOrOdds === 'price' ? `${noPriceView} ${reserve_symbol}` : `x${noOddsView}`;
+    if (supply_no || (priceOrOdds === 'price' && anySupply)) {
+      noValue = priceOrOdds === 'price' ? `${noPriceView || 0} ${reserve_symbol}` : `x${noOddsView}`;
     } else if (!isSportMarket || (isSportMarket && supply_yes)) {
       noValue = '-';
     }
 
     if (allow_draw) {
-      if (supply_draw) {
-        drawValue = priceOrOdds === 'price' ? `${drawPriceView} ${reserve_symbol}` : `x${drawOddsView}`;
-      } else if (!isSportMarket || supply_yes || supply_no) {
+      if (supply_draw || (priceOrOdds === 'price' && anySupply)) {
+        drawValue = priceOrOdds === 'price' ? `${drawPriceView || 0} ${reserve_symbol}` : `x${drawOddsView}`;
+      } else if (!isSportMarket || anySupply) {
         drawValue = '-';
       }
     }
 
     if (priceOrOdds === 'price' && currentReserveRate && !isSportMarket) {
-      if (yes_price && supply_yes) {
+
         yesSubValue = `$${+Number(yes_price * currentReserveRate).toFixed(2)}`;
-      }
-
-      if (no_price && supply_no) {
         noSubValue = `$${+Number(no_price * currentReserveRate).toFixed(2)}`;
-      }
 
-      if (allow_draw && draw_price && supply_draw) {
+      if (allow_draw) {
         drawSubValue = `$${+Number(draw_price * currentReserveRate).toFixed(2)}`;
       }
     }
