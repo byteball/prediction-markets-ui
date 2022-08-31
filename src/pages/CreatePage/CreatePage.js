@@ -21,7 +21,7 @@ export const CreatePage = () => {
   const symbolsAlreadyReg = creationOrder ? (creationOrder.yes_symbol && creationOrder.no_symbol && (!creationOrder.data.allow_draw || creationOrder.draw_symbol)) || creationOrder.cancelRegSymbol : false;
 
   return <Layout>
-    <Typography.Title level={1}>Create new market</Typography.Title>
+    <Typography.Title level={1}>Create new prediction market</Typography.Title>
     <Helmet title="Prophet prediction markets — Create new market" />
     {(!creationOrder || creationOrder.status === 'order') ? <CreateForm /> : <div>
       {(creationOrder.status === 'pending') && <WaitingPredictionMarket />}
