@@ -1,4 +1,4 @@
-import { Button, Drawer, Typography } from "antd";
+import { Button, Drawer, Tooltip, Typography } from "antd";
 import { memo, useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { Helmet } from "react-helmet-async";
@@ -10,7 +10,7 @@ import { selectActiveMarketStatus } from "store/slices/activeSlice";
 
 const { Title } = Typography;
 
-export const TradeModal = memo(({ disabled, visible, setVisible, yes_team, no_team }) => {
+export const TradeModal = memo(({ disabled, visible, setVisible, yes_team, no_team, reserve }) => {
   const [action, setAction] = useState('buy'); // buy or redeem
 
   const status = useSelector(selectActiveMarketStatus);
@@ -33,7 +33,9 @@ export const TradeModal = memo(({ disabled, visible, setVisible, yes_team, no_te
 
   return <>
     {visible && <Helmet title="Prophet prediction markets — Trade" />}
-    <Button type="primary" size="large" disabled={disabled} onClick={open}>Trade</Button>
+
+    {reserve === 0 && !disabled ? <Tooltip title="Please add liquidity first"><Button size="large" type="primary" disabled={true}>Trade</Button></Tooltip>
+      : <Button type="primary" size="large" disabled={disabled} onClick={open}>Trade</Button>}
 
     {status === 'loaded' && <Drawer
       width={width > 640 ? 640 : width}

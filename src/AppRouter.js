@@ -13,7 +13,7 @@ const AppRouter = () => {
         <Route path="/:category/:particle" element={<MainPage />} />
         <Route path="/create" element={<CreatePage />} />
         <Route path="/faq" element={<FaqPage />} />
-        <Route path="/market/:address" element={<MarketPage />} />
+        <Route path="/market/*" element={<MarketPage />} />
       </Routes>
     </HistoryRouter>
   </HelmetProvider>

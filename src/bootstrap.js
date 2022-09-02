@@ -4,7 +4,7 @@ import { notification } from "antd";
 
 import client from "services/obyte";
 
-import { addRecentResponse, updateStateForActualMarket, updateSymbolForActualMarket } from "store/slices/activeSlice";
+import { updateStateForActualMarket, updateSymbolForActualMarket } from "store/slices/activeSlice";
 import { updateCreationOrder } from "store/slices/settingsSlice";
 import { loadMarkets } from "store/thunks/loadMarkets";
 import { loadReserveAssets } from "store/thunks/loadReserveAssets";
@@ -14,6 +14,7 @@ import { checkDataFeed } from "store/thunks/checkDataFeed";
 import { historyInstance } from "historyInstance";
 import { loadEVMTokens } from "store/thunks/loadEVMTokens";
 import { loadUserBalance } from "store/thunks/loadUserBalance";
+import { addRecentEvent } from "store/thunks/addRecentEvent";
 
 import config from "appConfig";
 
@@ -206,7 +207,7 @@ export const bootstrap = async () => {
         store.dispatch(updateStateForActualMarket({ diff, address: aa_address }));
       }
 
-      store.dispatch(addRecentResponse(body));
+      store.dispatch(addRecentEvent(body));
 
     } else if (subject === "light/aa_request" && state.settings.walletAddress && author === state.settings.walletAddress) {
       notification.info({

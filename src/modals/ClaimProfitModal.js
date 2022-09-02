@@ -49,7 +49,7 @@ export const ClaimProfitModal = ({ disabled, yes_team, no_team }) => {
       <Title level={2}>Claim profit</Title>
 
       <Typography.Paragraph type="secondary">
-        {winner === 'yes' ? yes_team || 'Yes' : (winner === 'no' ? no_team || 'No' : 'Draw')} was the right choice and you can collect your winnings
+        "{winner === 'yes' ? yes_team || 'Yes' : (winner === 'no' ? no_team || 'No' : 'Draw')}" was the right choice and you can collect your winnings
       </Typography.Paragraph>
 
       <ClaimProfitForm

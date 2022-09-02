@@ -1,4 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit';
+import { addRecentEvent } from 'store/thunks/addRecentEvent';
+import { loadMoreRecentEvents } from 'store/thunks/loadMoreRecentEvents';
 import { setActiveMarket } from 'store/thunks/setActiveMarket';
 
 export const activeSlice = createSlice({
@@ -9,7 +11,8 @@ export const activeSlice = createSlice({
     stateVars: {},
     category: null,
     params: {},
-    recentResponses: [],
+    recentEvents: [],
+    recentEventsCount: 0,
     dailyCloses: [],
     datafeedValue: null,
     currencyCandles: [],
@@ -28,9 +31,6 @@ export const activeSlice = createSlice({
         state.stateVars = { ...state.stateVars, ...diff }
       }
     },
-    addRecentResponse: (state, action) => {
-      state.recentResponses.push(action.payload);
-    },
     updateSymbolForActualMarket: (state, action) => {
       const { type, symbol } = action.payload || {};
 
@@ -44,11 +44,12 @@ export const activeSlice = createSlice({
   },
   extraReducers: {
     [setActiveMarket.fulfilled]: (state, action) => {
-      const { params, stateVars, recentResponses, dailyCloses, datafeedValue, yesTeam, noTeam, currencyCandles, currencyCurrentValue, league, created_at, committed_at } = action.payload;
+      const { params, stateVars, recentEvents, recentEventsCount, dailyCloses, datafeedValue, yesTeam, noTeam, currencyCandles, currencyCurrentValue, league, created_at, committed_at } = action.payload;
 
-      state.params = {...params, ...league, created_at, committed_at };
+      state.params = { ...params, ...league, created_at, committed_at };
       state.stateVars = stateVars;
-      state.recentResponses = recentResponses;
+      state.recentEvents = recentEvents;
+      state.recentEventsCount = recentEventsCount;
       state.dailyCloses = dailyCloses;
       state.datafeedValue = datafeedValue;
       state.currencyCandles = currencyCandles || [];
@@ -60,13 +61,26 @@ export const activeSlice = createSlice({
     [setActiveMarket.rejected]: (state, action) => {
       state.status = 'error';
     },
+    [addRecentEvent.fulfilled]: (state, action) => {
+      if (action.payload) {
+        state.recentEvents.push(action.payload);
+        state.recentEventsCount = state.recentEventsCount + 1;
+      }
+    },
+    [loadMoreRecentEvents.fulfilled]: (state, action) => {
+      if (action.payload) {
+        const recentEvents = action.payload.recentEvents || [];
+
+        state.recentEvents = [...state.recentEvents, ...recentEvents]
+        state.recentEventsCount = action.payload.recentEventsCount;
+      }
+    }
   }
 });
 
 export const {
   setActiveMarketAddress,
   updateStateForActualMarket,
-  addRecentResponse,
   updateSymbolForActualMarket,
   updateDataFeedValue
 } = activeSlice.actions;
@@ -82,7 +96,8 @@ export const selectActiveMarketParams = state => state.active.params || {};
 export const selectActiveMarketStateVars = state => state.active.stateVars || {};
 export const selectActiveCategory = state => state.active.category || 'No category';
 export const selectActiveAddress = state => state.active.address;
-export const selectActiveRecentResponses = state => state.active.recentResponses;
+export const selectActiveRecentEvents = state => state.active.recentEvents;
+export const selectActiveRecentEventsCount = state => state.active.recentEventsCount;
 export const selectActiveDailyCloses = state => state.active.dailyCloses;
 export const selectActiveDatafeedValue = state => state.active.datafeedValue;
 export const selectActiveTeams = state => state.active.teams;

@@ -27,7 +27,7 @@ export const ViewParamsModal = ({ reserve_asset, allow_draw, oracle, feed_name, 
       onClose={close}
     >
       <Title level={2} style={{ marginBottom: 0 }}>View params</Title>
-      <p><a href={`https://${appConfig.ENVIRONMENT === 'testnet' ? 'testnet' : ''}explorer.obyte.org/#${aa_address}`} target="_blank" rel="noopener">View AA on explorer</a></p>
+      <p><a href={`https://${appConfig.ENVIRONMENT === 'testnet' ? 'testnet' : ''}explorer.obyte.org/address/${aa_address}`} target="_blank" rel="noopener">View AA on explorer</a></p>
       <p><b>Reserve asset: </b>{reserve_asset}</p>
       <p><b>Allow draw: </b>{allow_draw ? 'yes' : 'no'}</p>
       <p><b>Oracle: </b><a href={`https://${appConfig.ENVIRONMENT === 'testnet' ? 'testnet' : ''}explorer.obyte.org/#${oracle}`} target="_blank" rel="noopener">{oracle}</a></p>
