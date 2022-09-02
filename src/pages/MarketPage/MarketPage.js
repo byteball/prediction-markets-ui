@@ -124,7 +124,7 @@ export const MarketPage = () => {
 
   const reserve_rate = reservesRate[reserve_asset] || 0;
 
-  const event = generateTextEvent({...params, yes_team_name: teams?.yes?.name, no_team_name: teams?.no?.name});
+  const event = generateTextEvent({ ...params, yes_team_name: teams?.yes?.name, no_team_name: teams?.no?.name });
 
   const { reserve = 0, result, supply_yes = 0, supply_no = 0, supply_draw = 0, coef = 1 } = stateVars;
   const viewReserve = +Number(reserve / 10 ** reserve_decimals).toPrecision(5);
@@ -303,7 +303,7 @@ export const MarketPage = () => {
   return <Layout>
     <Helmet title={'Prophet prediction markets — ' + ((teams.yes === null || teams.no === null) ? event : `${teams.yes.name} vs ${teams.no.name}`) + `, liquidity provider APY ${apy}%`} />
     <div style={{ marginTop: 50 }}>
-    <h1 className={styles.event} style={{ maxWidth: 860 }}>{event}</h1>
+      <h1 className={styles.event} style={{ maxWidth: 860 }}>{event}</h1>
       {(teams.yes === null || teams.no === null) ? null : <div style={{ margin: '30px 0', width: '100%' }}>
         <Row align="middle">
           <Col md={{ span: 8 }} xs={{ span: 8 }} style={{ textAlign: 'center' }}>
@@ -340,6 +340,7 @@ export const MarketPage = () => {
             visible={visibleTradeModal}
             setVisible={setVisibleTradeModal}
             disabled={!tradeIsActive}
+            reserve={reserve}
             yes_team={teams?.yes?.name}
             no_team={teams?.no?.name}
           />
