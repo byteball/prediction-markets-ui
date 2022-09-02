@@ -380,6 +380,7 @@ export const MarketPage = () => {
             <StatsCard
               title={`${haveTeamNames ? teams.yes.name : 'Yes'}`}
               tooltip={yesTooltip}
+              reserve={reserve}
               isWinner={result ? result === 'yes' : undefined}
               subValue={(priceOrOdds === 'price' && reserve_rate) ? `$${yesPriceInUSD}` : ''} color={appConfig.YES_COLOR} onAction={tradeIsActive ? (action) => setVisibleTradeModal({ type: 'yes', action }) : undefined}
               value={priceOrOdds === 'price' ? <span>{result ? winnerPriceView : yesPrice} <small>{reserve_symbol}</small></span> : (yesOddsView ? <span>x{result ? winnerOddsView : yesOddsView}</span> : '-')} />
@@ -389,6 +390,7 @@ export const MarketPage = () => {
             <StatsCard
               title="Draw"
               tooltip={drawTooltip}
+              reserve={reserve}
               isWinner={result ? result === 'draw' : undefined}
               subValue={(priceOrOdds === 'price' && reserve_rate) ? `$${drawPriceInUSD}` : ''} color={appConfig.DRAW_COLOR} onAction={tradeIsActive ? (action) => setVisibleTradeModal({ type: 'draw', action }) : undefined}
               value={priceOrOdds === 'price' ? <span>{result ? winnerPriceView : drawPrice} <small>{reserve_symbol}</small></span> : (drawOddsView ? <span>x{result ? winnerOddsView : drawOddsView}</span> : '-')} />
@@ -398,6 +400,7 @@ export const MarketPage = () => {
             <StatsCard
               title={`${haveTeamNames ? teams.no.name : 'No'}`}
               tooltip={noTooltip}
+              reserve={reserve}
               isWinner={result ? result === 'no' : undefined}
               subValue={(priceOrOdds === 'price' && reserve_rate) ? `$${noPriceInUSD}` : ''} color={appConfig.NO_COLOR} onAction={tradeIsActive ? (action) => setVisibleTradeModal({ type: 'no', action }) : undefined}
               value={priceOrOdds === 'price' ? <span>{result ? winnerPriceView : noPrice} <small>{reserve_symbol}</small></span> : (noOddsView ? <span>x{result ? winnerOddsView : noOddsView}</span> : '-')} />

@@ -5,7 +5,7 @@ import { InfoTooltip } from 'components/InfoTooltip/InfoTooltip';
 
 import styles from "./StatsCard.module.css";
 
-export const StatsCard = ({ title, tooltip = '', value = <span />, subValue = null, color = '#fff', onAction, isWinner }) => {
+export const StatsCard = ({ title, tooltip = '', value = <span />, subValue = null, color = '#fff', onAction, isWinner, reserve = 0 }) => {
   const winnerExists = isWinner !== undefined;
   const showValue = isWinner || !winnerExists;
 
@@ -15,7 +15,7 @@ export const StatsCard = ({ title, tooltip = '', value = <span />, subValue = nu
     {isWinner === false && <div className={styles.value} style={{ color }}> </div>}
     <div className={styles.subValueWrap} style={{ color: !winnerExists ? color : '#fff' }}>
       {!winnerExists ? <div>{subValue}</div> : (isWinner ? 'WINNER' : 'LOSER')}
-      {(onAction && !winnerExists) ? <Space size="large">
+      {(onAction && !winnerExists && reserve !== 0) ? <Space size="large">
         <Button size='small' onClick={() => onAction('buy')} className={styles.btn} icon={<DownloadOutlined />} type='link'>buy</Button>
         <Button size='small' onClick={() => onAction('redeem')} className={styles.btn} icon={<UploadOutlined />} type='link'>sell</Button>
       </Space> : null}
