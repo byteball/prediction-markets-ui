@@ -45,21 +45,21 @@ export const RecentEvents = () => {
     if (type === 'add_liquidity' || type === 'buy_by_type') {
       const action = type === 'add_liquidity' ? 'add liquidity' : 'buy';
       Event = <span>
-        <a href={`https://${appConfig.ENVIRONMENT === 'testnet' ? 'testnet' : ''}explorer.obyte.org/#${trigger_address}`} target="_blank" rel="noopener">{trigger_address.slice(0, 16)}...</a> sent {reserveAmount} {reserve_symbol} to {action} {yes_amount !== 0 ? <span style={{ color: appConfig.YES_COLOR }}>{` ${yesAmount} ${yes_symbol}`}</span> : ''} {no_amount !== 0 ? <span style={{ color: appConfig.NO_COLOR }}>{` ${noAmount} ${no_symbol}`}</span> : ''}{draw_amount !== 0 ? <span style={{ color: appConfig.DRAW_COLOR }}>{` ${drawAmount} ${draw_symbol}`}</span> : ''}
+        <a href={`https://${appConfig.ENVIRONMENT === 'testnet' ? 'testnet' : ''}explorer.obyte.org/address/${trigger_address}`} target="_blank" rel="noopener">{trigger_address.slice(0, 16)}...</a> sent {reserveAmount} {reserve_symbol} to {action} {yes_amount !== 0 ? <span style={{ color: appConfig.YES_COLOR }}>{` ${yesAmount} ${yes_symbol}`}</span> : ''} {no_amount !== 0 ? <span style={{ color: appConfig.NO_COLOR }}>{` ${noAmount} ${no_symbol}`}</span> : ''}{draw_amount !== 0 ? <span style={{ color: appConfig.DRAW_COLOR }}>{` ${drawAmount} ${draw_symbol}`}</span> : ''}
       </span>
     } else if (type === 'redeem') {
       Event = <span>
-        <a href={`https://${appConfig.ENVIRONMENT === 'testnet' ? 'testnet' : ''}explorer.obyte.org/#${trigger_address}`} target="_blank" rel="noopener">{trigger_address.slice(0, 16)}...</a> sold {yes_amount !== 0 ? <span style={{ color: appConfig.YES_COLOR }}>{` ${yesAmount} ${yes_symbol}`}</span> : ''} {no_amount !== 0 ? <span style={{ color: appConfig.NO_COLOR }}>{` ${noAmount} ${no_symbol}`}</span> : ''}{draw_amount !== 0 ? <span style={{ color: appConfig.DRAW_COLOR }}>{` ${drawAmount} ${draw_symbol}`}</span> : ''} for {reserveAmount} {reserve_symbol}
+        <a href={`https://${appConfig.ENVIRONMENT === 'testnet' ? 'testnet' : ''}explorer.obyte.org/address/${trigger_address}`} target="_blank" rel="noopener">{trigger_address.slice(0, 16)}...</a> sold {yes_amount !== 0 ? <span style={{ color: appConfig.YES_COLOR }}>{` ${yesAmount} ${yes_symbol}`}</span> : ''} {no_amount !== 0 ? <span style={{ color: appConfig.NO_COLOR }}>{` ${noAmount} ${no_symbol}`}</span> : ''}{draw_amount !== 0 ? <span style={{ color: appConfig.DRAW_COLOR }}>{` ${drawAmount} ${draw_symbol}`}</span> : ''} for {reserveAmount} {reserve_symbol}
       </span>
     } else if (type === 'claim_profit') {
       Event = <span>
-        <a href={`https://${appConfig.ENVIRONMENT === 'testnet' ? 'testnet' : ''}explorer.obyte.org/#${trigger_address}`} target="_blank" rel="noopener">{trigger_address.slice(0, 16)}...</a> profited {reserveAmount} {reserve_symbol}
+        <a href={`https://${appConfig.ENVIRONMENT === 'testnet' ? 'testnet' : ''}explorer.obyte.org/address/${trigger_address}`} target="_blank" rel="noopener">{trigger_address.slice(0, 16)}...</a> profited {reserveAmount} {reserve_symbol}
       </span>
     }
 
     return (<div className={styles.eventWrap}>
       <div key={`ev-${timestamp}`}>{Event}</div>
-      <a href={`https://${appConfig.ENVIRONMENT === 'testnet' ? 'testnet' : ''}explorer.obyte.org/#${trigger_unit}`} target="_blank" rel="noopener" className={styles.timestamp}>{moment.unix(timestamp).format("LLL")}</a>
+      <a href={`https://${appConfig.ENVIRONMENT === 'testnet' ? 'testnet' : ''}explorer.obyte.org/${trigger_unit}`} target="_blank" rel="noopener" className={styles.timestamp}>{moment.unix(timestamp).format("LLL")}</a>
     </div>)
   }
 
