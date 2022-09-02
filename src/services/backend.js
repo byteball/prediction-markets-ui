@@ -79,6 +79,11 @@ class Backend {
     const dates = await this.axios.get(`/dates/${address}`);
     return dates?.data;
   }
+
+  getRecentEvents = async (address, page = 1) => {
+    const events = await this.axios.get(`/recent_events/${address}/${page}`);
+    return events?.data;
+  }
 }
 
 export default new Backend();

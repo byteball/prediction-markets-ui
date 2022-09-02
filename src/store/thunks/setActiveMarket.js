@@ -83,9 +83,9 @@ export const setActiveMarket = createAsyncThunk(
     if (!params.no_decimals) params.no_decimals = params.reserve_decimals;
     if (!params.draw_decimals) params.draw_decimals = params.reserve_decimals;
 
-    const [dailyCloses, recentResponses, datafeedValue] = await Promise.all([
+    const [dailyCloses, { data: recentEvents, count: recentEventsCount }, datafeedValue] = await Promise.all([
       backend.getDailyCloses(address).then((data) => data).catch(() => []),
-      obyte.api.getAaResponses({ aa: address }),
+      backend.getRecentEvents(address),
       obyte.api.getDataFeed({ oracles: [params.oracle], feed_name: params.feed_name, ifnone: 'none' }),
       obyte.justsaying("light/new_aa_to_watch", {
         aa: address
@@ -162,7 +162,8 @@ export const setActiveMarket = createAsyncThunk(
       params,
       stateVars,
       dailyCloses,
-      recentResponses,
+      recentEvents,
+      recentEventsCount,
       datafeedValue: datafeedValue !== 'none' ? datafeedValue : null,
       yesTeam,
       noTeam,
