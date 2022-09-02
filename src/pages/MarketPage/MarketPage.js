@@ -95,12 +95,14 @@ const getConfig = (chartType, teams) => ({
 
 export const MarketPage = () => {
   const location = useLocation();
+  let address;
 
-  const pathname = location.pathname.substring(8, location.pathname.length);
-  const regex = /-\w{32}$/;
-  const startSymbol = pathname.search(regex) + 1;
+  const regex = /(\w{32})$/;
+  const match = location.pathname.match(regex);
 
-  const address = pathname.substring(startSymbol, startSymbol + 32);
+  if (match) {
+    address = match[0];
+  }
 
   const dispatch = useDispatch();
 
