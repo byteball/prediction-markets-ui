@@ -4,7 +4,7 @@ import { Badge, Card, Col, Row, Typography } from "antd";
 import { Link } from "react-router-dom";
 import moment from 'moment';
 import { useSelector } from 'react-redux';
-import { min } from 'lodash';
+import { kebabCase, min } from 'lodash';
 import { Img } from 'react-image';
 
 import { selectPriceOrOdds, selectReservesRate } from 'store/slices/settingsSlice';
@@ -81,12 +81,24 @@ export const PredictionItem = ({ reserve_asset = 'base', aa_address, reserve = 0
   const noPriceView = +Number(no_price).toPrecision(max_display_decimals);
   const drawPriceView = +Number(draw_price).toPrecision(max_display_decimals);
   const apyView = apy ? (apy < 500 ? `Liquidity provider APY: ${Number(apy).toFixed(2)}%` : 'APY not shown') : 'APY not available yet';
+
   const eventView = generateTextEvent({
     event_date,
     feed_name,
     datafeed_value: expect_datafeed_value || datafeed_value,
     oracle,
     comparison
+  });
+
+  const eventViewUTC = generateTextEvent({
+    event_date,
+    feed_name,
+    datafeed_value: expect_datafeed_value || datafeed_value,
+    oracle,
+    comparison,
+    isUTC: true,
+    yes_team_name: yes_team,
+    no_team_name: no_team
   });
 
   // wrappers configure
@@ -116,8 +128,10 @@ export const PredictionItem = ({ reserve_asset = 'base', aa_address, reserve = 0
 
   const isSportMarket = !!appConfig.CATEGORIES.sport.oracles.find(({ address }) => address === oracle);
   const marketHasCrests = isSportMarket ? yes_team_id !== undefined && no_team_id !== undefined : false;
-  const SecondWrapper = exists && !preview ? Link : Fragment
-  const secondWrapperProps = exists ? { to: `/market/${aa_address}` } : {};
+  const SecondWrapper = exists && !preview ? Link : Fragment;
+
+  const seoText = kebabCase(eventViewUTC);
+  const secondWrapperProps = exists ? { to: `/market/${seoText}-${aa_address}` } : {};
 
   // calc odds
   let yesOddsView = 0;
@@ -184,8 +198,8 @@ export const PredictionItem = ({ reserve_asset = 'base', aa_address, reserve = 0
 
     if (priceOrOdds === 'price' && currentReserveRate && !isSportMarket) {
 
-        yesSubValue = `$${+Number(yes_price * currentReserveRate).toFixed(2)}`;
-        noSubValue = `$${+Number(no_price * currentReserveRate).toFixed(2)}`;
+      yesSubValue = `$${+Number(yes_price * currentReserveRate).toFixed(2)}`;
+      noSubValue = `$${+Number(no_price * currentReserveRate).toFixed(2)}`;
 
       if (allow_draw) {
         drawSubValue = `$${+Number(draw_price * currentReserveRate).toFixed(2)}`;

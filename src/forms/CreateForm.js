@@ -324,7 +324,7 @@ export const CreateForm = () => {
 
       <Row gutter={16}>
         <Col xs={{ span: 24 }} md={{ span: 8 }}>
-          <Form.Item help={eventDate.value !== '' && !eventDate.valid ? paramList.event_date.errorMessage : ''} validateStatus={eventDate.value !== '' ? (eventDate.valid ? 'success' : 'error') : undefined} label={<FormLabel info={paramList.event_date.description}>Date of the event (GMT{timeZone >= 0 ? '+' : '-'}{timeZone})</FormLabel>}>
+          <Form.Item help={eventDate.value !== '' && !eventDate.valid ? paramList.event_date.errorMessage : ''} validateStatus={eventDate.value !== '' ? (eventDate.valid ? 'success' : 'error') : undefined} label={<FormLabel info={paramList.event_date.description}>Date of the event (UTC{timeZone >= 0 ? '+' : '-'}{timeZone})</FormLabel>}>
             <DatePicker allowClear={false} disabledDate={dateFilter} size="large" format="YYYY-MM-DD HH:mm" showToday={false} showTime={true} showNow={false} value={eventDate.value ? moment.unix(eventDate.value) : undefined} onChange={(ev) => handleChangeValue(ev, 'event_date')} style={{ width: '100%' }} placeholder={paramList.event_date.placeholder} />
           </Form.Item>
         </Col>

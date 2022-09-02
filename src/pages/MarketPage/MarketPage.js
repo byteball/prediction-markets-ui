@@ -2,14 +2,15 @@ import { Row, Col, Space, Button, Radio, Spin, Tooltip, Typography, Alert } from
 import { Layout } from "components/Layout/Layout";
 import { StatsCard } from "components/StatsCard/StatsCard";
 import { Line } from '@ant-design/plots';
-import { useParams } from "react-router-dom";
-import { useEffect, useState, useMemo } from "react";
+import { useLocation } from "react-router-dom";
+import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import moment from 'moment';
 import QRButton from "obyte-qr-button";
 import Countdown from "antd/lib/statistic/Countdown";
 import { Img } from 'react-image';
 import { Helmet } from "react-helmet-async";
+import { kebabCase } from "lodash";
 
 import {
   selectActiveCurrencyCandles,
@@ -19,12 +20,11 @@ import {
   selectActiveMarketParams,
   selectActiveMarketStateVars,
   selectActiveMarketStatus,
-  selectActiveRecentResponses,
   selectActiveTeams
 } from "store/slices/activeSlice";
 import { setActiveMarket } from "store/thunks/setActiveMarket";
 import { selectPriceOrOdds, selectReserveAssets, selectReservesRate } from "store/slices/settingsSlice";
-import { getMarketPriceByType, generateLink, generateTextEvent, responseToEvent } from "utils";
+import { getMarketPriceByType, generateLink, generateTextEvent } from "utils";
 import { RecentEvents } from "components/RecentEvents/RecentEvents";
 import { CurrencyChart } from "components/CurrencyChart/CurrencyChart";
 import { MarketSizePie } from "components/MarketSizePie/MarketSizePie";
@@ -94,8 +94,18 @@ const getConfig = (chartType, teams) => ({
 });
 
 export const MarketPage = () => {
-  const { address } = useParams();
+  const location = useLocation();
+  let address;
+
+  const regex = /(\w{32})$/;
+  const match = location.pathname.match(regex);
+
+  if (match) {
+    address = match[0];
+  }
+
   const dispatch = useDispatch();
+
   const [chartType, setChartType] = useState('prices')
   const [visibleTradeModal, setVisibleTradeModal] = useState(false);
   const [dataForChart, setDataForChart] = useState([]);
@@ -112,13 +122,6 @@ export const MarketPage = () => {
   const currencyCurrentValue = useSelector(selectActiveCurrencyCurrentValue);
 
   const params = useSelector(selectActiveMarketParams);
-  const recentResponses = useSelector(selectActiveRecentResponses);
-
-  const recentEvents = useMemo(() => {
-    let events = recentResponses?.filter((res) => !res.response?.error).map((res) => responseToEvent(res, params, stateVars))
-    const firstConfigureEvent = events.find((ev) => ev.Event === 'Configuration');
-    return events = [...events.filter((ev) => ev.Event !== 'Configuration'), firstConfigureEvent];
-  }, [recentResponses, stateVars, params]);
 
   const priceOrOdds = useSelector(selectPriceOrOdds);
 
@@ -132,7 +135,8 @@ export const MarketPage = () => {
 
   const reserve_rate = reservesRate[reserve_asset] || 0;
 
-  const event = generateTextEvent(params);
+  const event = generateTextEvent({ ...params, yes_team_name: teams?.yes?.name, no_team_name: teams?.no?.name });
+  const eventUTC = generateTextEvent({ ...params, yes_team_name: teams?.yes?.name, no_team_name: teams?.no?.name, isUTC: true });
 
   const { reserve = 0, result, supply_yes = 0, supply_no = 0, supply_draw = 0, coef = 1 } = stateVars;
   const viewReserve = +Number(reserve / 10 ** reserve_decimals).toPrecision(5);
@@ -308,10 +312,16 @@ export const MarketPage = () => {
 
   const showMarketSizePie = !result && reserve !== 0;
 
+  const seoText = kebabCase(eventUTC);
+
   return <Layout>
-    <Helmet title={'Prophet prediction markets — ' + ((teams.yes === null || teams.no === null) ? event : `${teams.yes.name} vs ${teams.no.name}`) + `, liquidity provider APY ${apy}%`} />
+    <Helmet>
+      <title>Prophet prediction markets — {((teams.yes === null || teams.no === null) ? event : `${teams.yes.name} vs ${teams.no.name}`) + `, liquidity provider APY ${apy}%`}</title>
+      <link rel="canonical" href={`${window.location.protocol + '//' + window.location.host}/market/${seoText}-${address}`} />
+    </Helmet>
     <div style={{ marginTop: 50 }}>
-      {(teams.yes === null || teams.no === null) ? <div className={styles.event} style={{ maxWidth: 800 }}>{event}</div> : <div style={{ margin: '30px 0', width: '100%' }}>
+      <h1 className={styles.event} style={{ maxWidth: 860 }}>{event}</h1>
+      {(teams.yes === null || teams.no === null) ? null : <div style={{ margin: '30px 0', width: '100%' }}>
         <Row align="middle">
           <Col md={{ span: 8 }} xs={{ span: 8 }} style={{ textAlign: 'center' }}>
             <Img src={[`https://crests.football-data.org/${teams.yes.id}.svg`, `https://crests.football-data.org/${teams.yes.id}.png`]} width={'50%'} style={{ maxWidth: 120 }} />
@@ -347,6 +357,7 @@ export const MarketPage = () => {
             visible={visibleTradeModal}
             setVisible={setVisibleTradeModal}
             disabled={!tradeIsActive}
+            reserve={reserve}
             yes_team={teams?.yes?.name}
             no_team={teams?.no?.name}
           />
@@ -466,7 +477,7 @@ export const MarketPage = () => {
 
       <div>
         <h2 style={{ marginBottom: 15, marginTop: 50, fontSize: 28 }}>Recent events</h2>
-        <RecentEvents data={recentEvents} />
+        <RecentEvents />
       </div>
 
     </div>
