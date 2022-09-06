@@ -161,6 +161,7 @@ export const setActiveMarket = createAsyncThunk(
     return {
       params,
       stateVars,
+      base_aa,
       dailyCloses,
       recentEvents,
       recentEventsCount,
