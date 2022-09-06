@@ -44,9 +44,9 @@ export const activeSlice = createSlice({
   },
   extraReducers: {
     [setActiveMarket.fulfilled]: (state, action) => {
-      const { params, stateVars, recentEvents, recentEventsCount, dailyCloses, datafeedValue, yesTeam, noTeam, currencyCandles, currencyCurrentValue, league, created_at, committed_at } = action.payload;
+      const { params, stateVars, recentEvents, recentEventsCount, dailyCloses, datafeedValue, yesTeam, noTeam, currencyCandles, currencyCurrentValue, league, created_at, committed_at, base_aa } = action.payload;
 
-      state.params = { ...params, ...league, created_at, committed_at };
+      state.params = { ...params, ...league, created_at, committed_at, base_aa };
       state.stateVars = stateVars;
       state.recentEvents = recentEvents;
       state.recentEventsCount = recentEventsCount;
