@@ -24,7 +24,7 @@ import {
 } from "store/slices/activeSlice";
 import { setActiveMarket } from "store/thunks/setActiveMarket";
 import { selectPriceOrOdds, selectReserveAssets, selectReservesRate } from "store/slices/settingsSlice";
-import { getMarketPriceByType, generateLink, generateTextEvent } from "utils";
+import { getMarketPriceByType, generateLink, generateTextEvent, getEstimateAPY } from "utils";
 import { RecentEvents } from "components/RecentEvents/RecentEvents";
 import { CurrencyChart } from "components/CurrencyChart/CurrencyChart";
 import { MarketSizePie } from "components/MarketSizePie/MarketSizePie";
@@ -127,7 +127,7 @@ export const MarketPage = () => {
 
   const chartConfig = getConfig(chartType, teams);
 
-  const { reserve_asset = 'base', allow_draw, quiet_period = 0, reserve_symbol, reserve_decimals, yes_decimals, no_decimals, draw_decimals, yes_symbol, no_symbol, draw_symbol, event_date, league, league_emblem, created_at, committed_at, oracle } = params;
+  const { reserve_asset = 'base', allow_draw, quiet_period = 0, reserve_symbol, reserve_decimals, yes_decimals, no_decimals, draw_decimals, yes_symbol, no_symbol, draw_symbol, event_date, league, league_emblem, created_at, oracle } = params;
 
   const actualReserveSymbol = reserveAssets[reserve_asset]?.symbol;
 
@@ -265,8 +265,7 @@ export const MarketPage = () => {
 
   const haveTeamNames = isSportMarket && teams?.yes?.name && teams?.no?.name;
 
-  const elapsed_seconds = (committed_at || moment.utc().unix()) - created_at;
-  const apy = coef !== 1 ? Number(((coef * (1 - params.issue_fee)) ** (31536000 / elapsed_seconds) - 1) * 100).toFixed(2) : 0;
+  const apy = getEstimateAPY({ coef, params });
 
   let yesTooltip = '';
   let noTooltip = '';

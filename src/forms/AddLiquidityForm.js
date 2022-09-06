@@ -39,20 +39,21 @@ export const AddLiquidityForm = ({ yes_team, no_team }) => {
   const [estimate, setEstimate] = useState();
   const [estimateError, setEstimateError] = useState();
 
-  const { allow_draw, reserve_asset, reserve_decimals, reserve_symbol } = params;
+  const { allow_draw, reserve_asset, reserve_decimals, reserve_symbol, base_aa } = params;
   const { supply_yes = 0, supply_no = 0, supply_draw = 0, reserve = 0 } = stateVars;
 
   const network_fee = reserve_asset === 'base' ? 1e4 : 0;
   const minAmount = reserve_asset === 'base' ? network_fee / 1e9 : 1 / 10 ** reserve_decimals
   const haveTeamNames = yes_team && no_team;
   const isFirstIssue = supply_yes + supply_no + supply_draw === 0;
+  const needsIssueFeeForLiquidity = appConfig.BASE_AAS.findIndex((address) => address === base_aa) === 0;
 
   let amountInPennies = 0;
   let amountInPenniesWithoutFee = 0;
 
   if (fromToken && reserveAmount.valid && Number(reserveAmount.value)) {
     amountInPennies = Math.ceil((fromToken.network === "Obyte" ? reserveAmount.value : estimate) * 10 ** reserve_decimals);
-    amountInPenniesWithoutFee = amountInPennies * (1 - params.issue_fee) - network_fee;
+    amountInPenniesWithoutFee = amountInPennies * (1 - (needsIssueFeeForLiquidity ? params.issue_fee : 0)) - network_fee;
   }
 
   const drawPercent = probabilities.yes.valid && probabilities.no.valid && ((Number(probabilities.no.value) + Number(probabilities.yes.value)) < 100) ? 100 - probabilities.no.value - probabilities.yes.value : 0;
@@ -402,14 +403,16 @@ export const AddLiquidityForm = ({ yes_team, no_team }) => {
       </div>}
 
       <div className="metaWrap">
-        {meta?.issue_fee !== 0 && <div><span className="metaLabel">Issue fee</span>: {+Number(meta.issue_fee / 10 ** reserve_decimals).toFixed(reserve_decimals)} {reserve_symbol}</div>}
+        {meta?.issue_fee !== 0 && needsIssueFeeForLiquidity ? <div><span className="metaLabel">Issue fee</span>: {+Number(meta.issue_fee / 10 ** reserve_decimals).toFixed(reserve_decimals)} {reserve_symbol}</div> : null}
         {(fromToken.network !== "Obyte" && estimate) ? <div style={{ marginTop: 20 }}>
           {counterstake_assistant_fee ? <div><span className="metaLabel"><a href="https://counterstake.org" target="_blank" rel="noopener">Counterstake</a> fee</span>: {+Number(counterstake_assistant_fee).toFixed(fromToken.decimals)} {fromToken.symbol}</div> : null}
           {(fromToken.network !== "Obyte" && estimate && fromToken.foreign_asset !== reserve_asset) ? <div><span className="metaLabel"><a href="https://oswap.io" target="_blank" rel="noopener">Oswap</a> rate</span>: 1 {fromToken.symbol} ≈ {+Number(estimate / (reserveAmount.value * 0.99)).toFixed(reserve_decimals)} {reserve_symbol}</div> : null}
         </div> : null}
       </div>
 
-      {isFirstIssue && percentSum !== 100 && <div style={{ marginTop: 20 }}><Alert type="error" message="The percentage sum must be equal to 100" /></div>}
+      {isFirstIssue && percentSum !== 100 && <div style={{ marginTop: 20 }}>
+        <Alert type="error" message="The percentage sum must be equal to 100" />
+      </div>}
     </Form.Item>
     }
 
