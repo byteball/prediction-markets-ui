@@ -24,7 +24,7 @@ import {
 } from "store/slices/activeSlice";
 import { setActiveMarket } from "store/thunks/setActiveMarket";
 import { selectPriceOrOdds, selectReserveAssets, selectReservesRate } from "store/slices/settingsSlice";
-import { getMarketPriceByType, generateLink, generateTextEvent, getEstimateAPY } from "utils";
+import { getMarketPriceByType, generateLink, generateTextEvent, getEstimatedAPY } from "utils";
 import { RecentEvents } from "components/RecentEvents/RecentEvents";
 import { CurrencyChart } from "components/CurrencyChart/CurrencyChart";
 import { MarketSizePie } from "components/MarketSizePie/MarketSizePie";
@@ -265,7 +265,7 @@ export const MarketPage = () => {
 
   const haveTeamNames = isSportMarket && teams?.yes?.name && teams?.no?.name;
 
-  const apy = getEstimateAPY({ coef, params });
+  const apy = getEstimatedAPY({ coef, params });
 
   let yesTooltip = '';
   let noTooltip = '';
