@@ -14,9 +14,9 @@ export const loadMarketsInCache = createAsyncThunk(
 
     if (type === 'soccer') {
       const cacheMarketsByType = state.cache?.[type]?.[championship]?.data || [];
-      const marketsAddresses = cacheMarketsByType.map(({ aa_address }) => aa_address);
+      const marketAddresses = cacheMarketsByType.map(({ aa_address }) => aa_address);
 
-      filteredData = data.filter(({ aa_address }) => !marketsAddresses.includes(aa_address));
+      filteredData = data.filter(({ aa_address }) => !marketAddresses.includes(aa_address));
       customCount = max_count;
     } else {
       const cacheMarketsByType = state.cache?.[type]?.data || [];
@@ -33,9 +33,9 @@ export const loadMarketsInCache = createAsyncThunk(
         firstLoadedMarkets = [];
       }
 
-      const unionMarketsAddresses = [...firstLoadedMarkets, ...cacheMarketsByType].map(({ aa_address }) => aa_address)
+      const unionMarketAddresses = [...firstLoadedMarkets, ...cacheMarketsByType].map(({ aa_address }) => aa_address)
 
-      filteredData = data.filter(({ aa_address }) => !unionMarketsAddresses.includes(aa_address));
+      filteredData = data.filter(({ aa_address }) => !unionMarketAddresses.includes(aa_address));
     }
 
     return {
