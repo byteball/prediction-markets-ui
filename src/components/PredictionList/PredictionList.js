@@ -126,14 +126,14 @@ export const PredictionList = ({ type = 'all', particle = 'all', setParticle }) 
   }
 
   let currentMarketsCache;
-  let countOfSportMarkets = 0;
+  let countOfSportMarkets;
 
   if (championship) {
     currentMarketsCache = marketsCache[type]?.[championship]?.data || [];
-    countOfSportMarkets = marketsCache[type]?.[championship]?.count || 0;
+    countOfSportMarkets = marketsCache[type]?.[championship]?.count;
   } else {
     currentMarketsCache = marketsCache[type]?.data || [];
-    countOfSportMarkets = marketsCache[type]?.count || [];
+    countOfSportMarkets = marketsCache[type]?.count;
   }
 
   const fullDataSource = [...marketsDataSource, ...currentMarketsCache];
@@ -177,7 +177,7 @@ export const PredictionList = ({ type = 'all', particle = 'all', setParticle }) 
       <SwitchActions small={true} value={championship} data={getActionList()} onChange={handleChangeChampionship} />
     </div>}
 
-    {!loading ? <>
+    {!loading && (!(type in championships) || countOfSportMarkets !== undefined) ? <>
       <List
         dataSource={fullDataSource}
         style={{ marginBottom: 50 }}
