@@ -74,16 +74,9 @@ export const PredictionList = ({ type = 'all', particle = 'all', setParticle }) 
         dataSource = miscMarkets;
         count = miscMarketsCount;
       } else if (type in championships) {
-        const { data: newDataSource, max_count } = await backend.getMarketsByType({
-          type,
-          championship: particle !== 'all' ? particle : undefined,
-          page: 1
-        });
-
-        dataSource = newDataSource;
-        count = max_count;
-
+        dispatch(loadMarketsInCache({ championship, page: 1, type }));
         const { data } = await backend.getSportsCalendar(type, particle);
+        dataSource = [];
         calendarData = data;
       }
 
@@ -133,11 +126,14 @@ export const PredictionList = ({ type = 'all', particle = 'all', setParticle }) 
   }
 
   let currentMarketsCache;
+  let countOfSportMarkets;
 
   if (championship) {
     currentMarketsCache = marketsCache[type]?.[championship]?.data || [];
+    countOfSportMarkets = marketsCache[type]?.[championship]?.count;
   } else {
     currentMarketsCache = marketsCache[type]?.data || [];
+    countOfSportMarkets = marketsCache[type]?.count;
   }
 
   const fullDataSource = [...marketsDataSource, ...currentMarketsCache];
@@ -181,14 +177,14 @@ export const PredictionList = ({ type = 'all', particle = 'all', setParticle }) 
       <SwitchActions small={true} value={championship} data={getActionList()} onChange={handleChangeChampionship} />
     </div>}
 
-    {!loading ? <>
+    {!loading && (!(type in championships) || countOfSportMarkets !== undefined) ? <>
       <List
         dataSource={fullDataSource}
         style={{ marginBottom: 50 }}
         rowKey={(item) => `${type}-${item.aa_address}`}
         locale={{ emptyText: type === 'all' ? 'no markets' : `no ${type} markets` }}
         renderItem={(data) => <PredictionItem {...data} particle={particle} type={type} />}
-        loadMore={fullDataSource.length < maxCount && <div className={styles.loadMoreWrap}>
+        loadMore={fullDataSource.length < ((type in championships) ? countOfSportMarkets : maxCount) && <div className={styles.loadMoreWrap}>
           <Button onClick={() => dispatch(loadMarketsInCache({ championship, page: currentPage + 1, type }))}>Load more</Button>
         </div>}
       />

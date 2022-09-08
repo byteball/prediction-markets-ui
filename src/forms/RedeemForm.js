@@ -1,4 +1,4 @@
-import { Form, Select, Input, Alert, Spin, Row, Col } from "antd";
+import { Form, Select, Input, Alert, Spin, Row, Col, Typography } from "antd";
 import { isNaN } from "lodash";
 import QRButton from "obyte-qr-button";
 import { memo, useEffect, useRef, useState } from "react";
@@ -12,6 +12,7 @@ import {
   selectActiveMarketStateVars
 } from "store/slices/activeSlice";
 import { selectWalletAddress } from "store/slices/settingsSlice";
+import { selectWalletBalance } from "store/slices/userWalletSlice";
 import { generateLink, getExchangeResult, truncate } from "utils";
 
 const f = (x) => (~(x + "").indexOf(".") ? (x + "").split(".")[1].length : 0);
@@ -21,6 +22,7 @@ export const RedeemForm = memo(({ type, yes_team, no_team, amount, setAmount }) 
   const address = useSelector(selectActiveAddress);
   const params = useSelector(selectActiveMarketParams);
   const walletAddress = useSelector(selectWalletAddress);
+  const walletBalance = useSelector(selectWalletBalance);
 
   const [tokens, setTokens] = useState([]);
   const [currentToken, setCurrentToken] = useState();
@@ -32,6 +34,11 @@ export const RedeemForm = memo(({ type, yes_team, no_team, amount, setAmount }) 
 
   const { yes_symbol, no_symbol, draw_symbol, allow_draw, reserve_symbol, reserve_decimals, yes_decimals, no_decimals, draw_decimals } = params;
   const { yes_asset, no_asset, draw_asset } = stateVars;
+
+  const walletBalanceOfCurrentToken = (currentToken && walletAddress) ? walletBalance?.[currentToken.asset]?.total || 0 : 0;
+  const currentDecimals = currentToken?.decimals || 0;
+
+  const walletBalanceOfCurrentTokenView = +Number(walletBalanceOfCurrentToken / 10 ** currentDecimals).toFixed(currentDecimals);
 
   useEffect(() => {
     const tokens = [
@@ -93,7 +100,19 @@ export const RedeemForm = memo(({ type, yes_team, no_team, amount, setAmount }) 
     });
   }
 
+  const handleChangeCurrentToken = (toAsset) => {
+    setCurrentToken(tokens.find(({ asset }) => asset === toAsset));
+    setAmount({ value: '', valid: false })
+  }
+
+  const insertToInput = () => {
+    if (walletBalanceOfCurrentToken) {
+      setAmount({ value: walletBalanceOfCurrentTokenView, valid: true })
+    }
+  }
+
   return <Form size="large">
+    {walletBalanceOfCurrentToken ? <Typography.Text type="secondary" onClick={insertToInput} style={{ cursor: 'pointer' }}>max {walletBalanceOfCurrentTokenView}</Typography.Text> : null}
     <Row gutter={8}>
       <Col md={{ span: type ? 24 : 6 }} xs={{ span: 24 }}>
         <Form.Item>
@@ -103,7 +122,7 @@ export const RedeemForm = memo(({ type, yes_team, no_team, amount, setAmount }) 
 
       {!type ? <Col md={{ span: 18 }} xs={{ span: 24 }}>
         <Form.Item>
-          <Select placeholder="Select a get token" value={currentToken?.asset} onChange={(toAsset) => setCurrentToken(tokens.find(({ asset }) => asset === toAsset))}>
+          <Select placeholder="Select a get token" value={currentToken?.asset} onChange={handleChangeCurrentToken}>
             {tokens?.map(({ asset, symbol, type }) => (<Select.Option key={`to_${asset}`} value={asset}>
               {(yes_team && no_team) ? <>{(type === 'draw' ? 'Draw' : (type === 'yes' ? yes_team : no_team))} ({symbol})</> : <>{symbol} {(type && type !== 'reserve') ? '(' + type.toUpperCase() + '-token)' : ''}</>}
             </Select.Option>))}
