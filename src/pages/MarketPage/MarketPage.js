@@ -67,6 +67,8 @@ const getConfig = (chartType, teams) => ({
   xAxis: {
     title: {
       text: chartType === 'apy' ? 'Liquidity provision date' : '',
+      offset: 35,
+      position: 'center',
       style: {
         fontSize: 16
       }
@@ -204,7 +206,7 @@ export const MarketPage = () => {
     }
 
     candlesData.forEach(({ start_timestamp: open_ts, open_yes_price: yes_price, open_no_price: no_price, open_draw_price: draw_price, open_supply_yes: supply_yes, open_supply_no: supply_no, open_supply_draw: supply_draw, open_coef }, index) => {
-      const date = moment.unix(open_ts).format(now > ((first_trade_ts || created_at) + 3600 * 24 * 30) ? 'll' : 'lll');
+      const date = moment.unix(open_ts).format((committed_at || now )> ((first_trade_ts || created_at) + 3600 * 24 * 30) ? 'll' : 'lll');
 
       if (chartType === 'prices') {
         data.push(
@@ -300,6 +302,7 @@ export const MarketPage = () => {
   const haveTeamNames = isSportMarket && teams?.yes?.name && teams?.no?.name;
 
   const apy = getEstimatedAPY({ coef, params });
+  const apyView = apy < 1e15 ? (+Number(apy).toPrecision(9)).toLocaleString('en-US') : apy;
 
   let yesTooltip = '';
   let noTooltip = '';
@@ -476,6 +479,13 @@ export const MarketPage = () => {
           </Radio.Group>
         </div>
         <Line {...chartConfig} data={dataForChart} />
+        {chartType === 'apy' && <div style={{ margin: '0 auto', fontSize: 12, fontWeight: 300, maxWidth: 800, textAlign: 'center' }}>
+          <Typography.Paragraph>
+            {committed_at
+              ? "APY that would be earned if an infinitesimal amount of liquidity were added on the date on the chart and held until the outcome was published."
+              : "Estimated APY that would be earned if an infinitesimal amount of liquidity were added on the date on the chart and held until the event date. The estimation assumes that trading activity stays the same as it has been so far."}
+          </Typography.Paragraph>
+        </div>}
       </div>}
 
       <div style={{ marginTop: 50 }}>
@@ -490,7 +500,7 @@ export const MarketPage = () => {
             </Typography.Paragraph>
 
             <div className={styles.apyWrap}>
-              <div className={styles.apyPanel}>Liquidity provision APY since the pool was started: {+apy}%</div>
+              <div className={styles.apyPanel}>Liquidity provision APY since the pool was started: {apyView}%</div>
               <div className={styles.apyDesc}>The APY estimation is for the first LP assuming the trading activity stays the same as it has been so far. Later LPs earn from fewer trades, and the trading activity can change in the future, so the actual APY can be significantly different.</div>
             </div>
 
