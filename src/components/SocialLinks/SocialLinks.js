@@ -1,5 +1,6 @@
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faDiscord, faWeixin, faTelegram, faMediumM, faRedditAlien, faBitcoin, faTwitter, faFacebook, faYoutube, faGithub } from '@fortawesome/free-brands-svg-icons';
+import ReactGA from "react-ga";
 
 import styles from './SocialLinks.module.css';
 
@@ -58,9 +59,16 @@ export const SocialLinks = ({ size = 'full', centered = false }) => { // type fu
     },
   ];
 
+  const sendGAEvent = (name) => {
+    ReactGA.event({
+      category: "outbound-click",
+      action: `click-social_${name}`
+    });
+  }
+
   return (<div className={styles.wrap}>
     <div className={styles.list} style={{ justifyContent: centered ? "center" : "flex-start" }}>
-      {(size === "full" ? links : links.slice(0, 5)).map((social) => <a className={styles.item} key={"link-" + social.name} target="_blank" rel="noopener" href={social.link}><FontAwesomeIcon size="lg" icon={social.icon} /></a>)}
+      {(size === "full" ? links : links.slice(0, 5)).map((social) => <a className={styles.item} onClick={() => sendGAEvent(social.name)} key={"link-" + social.name} target="_blank" rel="noopener" href={social.link}><FontAwesomeIcon size="lg" icon={social.icon} /></a>)}
     </div>
   </div>)
 }

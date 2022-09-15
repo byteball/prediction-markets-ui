@@ -2,6 +2,7 @@ import { Button, Drawer, Tooltip, Typography } from "antd";
 import { memo, useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { Helmet } from "react-helmet-async";
+import ReactGA from "react-ga";
 
 import { SwitchActions } from "components/SwitchActions/SwitchActions";
 import { BuyForm, RedeemForm } from "forms";
@@ -18,7 +19,15 @@ export const TradeModal = memo(({ disabled, visible, setVisible, yes_team, no_te
   const [buyAmount, setBuyAmount] = useState({ value: '', valid: true });
   const [redeemAmount, setRedeemAmount] = useState({ value: '', valid: true });
 
-  const open = () => setVisible(true);
+  const open = () => {
+    setVisible(true);
+
+    ReactGA.event({
+      category: "user-engagement",
+      action: "click-trade"
+    });
+  }
+
   const close = () => setVisible(false);
 
   useEffect(() => {
@@ -27,6 +36,20 @@ export const TradeModal = memo(({ disabled, visible, setVisible, yes_team, no_te
         setAction(visible.action)
       } else {
         setAction('buy')
+      }
+
+      if (visible.action === 'buy') {
+        ReactGA.event({
+          category: "user-engagement",
+          action: "click-buy",
+          label: visible.type
+        });
+      } else if (visible.action === 'redeem') {
+        ReactGA.event({
+          category: "user-engagement",
+          action: "click-sell",
+          label: visible.type
+        });
       }
     }
   }, [visible]);
