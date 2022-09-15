@@ -82,7 +82,7 @@ const getConfig = (chartType, teams) => ({
           <ul style={{ paddingLeft: 0 }}>
             {items?.map((item, index) => {
               const { color, data: { currencySymbol, chartType, value, symbol, type, date } } = item;
-              const valueView = (chartType === 'fee' || chartType === 'apy') ? `${+value.toPrecision(4)}%` : `${+value.toPrecision(9)} ${currencySymbol}`; //chartType === 'prices' ? `$${value.toPrecision(4)}` :
+              const valueView = (chartType === 'fee' || chartType === 'apy') ? `${Number(value) > 1e15 ? value.toPrecision(9) : (+Number(value).toPrecision(9)).toLocaleString('en-US')}%` : `${+value.toPrecision(9)} ${currencySymbol}`;
 
               return (
                 <li
@@ -206,7 +206,7 @@ export const MarketPage = () => {
     }
 
     candlesData.forEach(({ start_timestamp: open_ts, open_yes_price: yes_price, open_no_price: no_price, open_draw_price: draw_price, open_supply_yes: supply_yes, open_supply_no: supply_no, open_supply_draw: supply_draw, open_coef }, index) => {
-      const date = moment.unix(open_ts).format((committed_at || now )> ((first_trade_ts || created_at) + 3600 * 24 * 30) ? 'll' : 'lll');
+      const date = moment.unix(open_ts).format((committed_at || now) > ((first_trade_ts || created_at) + 3600 * 24 * 30) ? 'll' : 'lll');
 
       if (chartType === 'prices') {
         data.push(
