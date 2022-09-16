@@ -105,6 +105,22 @@ export const setActiveMarket = createAsyncThunk(
     let league_emblem = null;
     let league = null;
 
+    let created_at;
+    let committed_at;
+    let first_trade_ts;
+
+    if (marketInList) {
+      created_at = marketInList.created_at;
+      committed_at = marketInList.committed_at;
+      first_trade_ts = marketInList.first_trade_at;
+    } else {
+      const dates = await backend.getDates(address);
+
+      created_at = dates.created_at;
+      committed_at = dates.committed_at;
+      first_trade_ts = await backend.getFirstTradeTs(address);
+    }
+
     if (isSportMarket) {
       const [championship, yes_abbreviation, no_abbreviation] = params.feed_name.split("_");
       let championships = state.markets.championships;
@@ -113,7 +129,7 @@ export const setActiveMarket = createAsyncThunk(
         championships = await backend.getChampionships();
       }
 
-      const sport = Object.entries(championships).find(([_, cs]) => cs.find(({ code }) => code === championship))//?.[0];
+      const sport = Object.entries(championships).find(([_, cs]) => cs.find(({ code }) => code === championship));
 
       if (sport) {
         const championshipData = championships[sport[0]].find(({ code }) => code === championship);
@@ -132,10 +148,11 @@ export const setActiveMarket = createAsyncThunk(
       }
     } else if (isCurrencyMarket) {
       const [from, to] = params.feed_name.split("_");
+      const toTsQueryParam = committed_at ? `&toTs=${committed_at}` : '';
 
       try {
         const cryptocompare = await Promise.all([
-          axios.get(`https://min-api.cryptocompare.com/data/v2/${isHourlyChart ? 'histohour' : 'histoday'}?fsym=${from}&tsym=${to}&limit=${isHourlyChart ? 168 : 30}`).then(({ data }) => data?.Data?.Data),
+          axios.get(`https://min-api.cryptocompare.com/data/v2/${isHourlyChart ? 'histohour' : 'histoday'}?fsym=${from}&tsym=${to}${toTsQueryParam}&limit=${isHourlyChart ? 168 : 30}`).then(({ data }) => data?.Data?.Data),
           axios.get(`https://min-api.cryptocompare.com/data/price?fsym=${from}&tsyms=${to}`).then(({ data }) => data?.[to])
         ]);
 
@@ -144,22 +161,6 @@ export const setActiveMarket = createAsyncThunk(
       } catch {
         console.log(`no candles for ${from}->${to}`)
       }
-    }
-
-    let created_at;
-    let committed_at;
-    let first_trade_ts;
-
-    if (marketInList) {
-      created_at = marketInList.created_at;
-      committed_at = marketInList.committed_at;
-      first_trade_ts = marketInList.first_trade_at;
-    } else {
-      const dates = await backend.getDates(address);
-
-      created_at = dates.created_at;
-      committed_at = dates.committed_at;
-      first_trade_ts = await backend.getFirstTradeTs(address);
     }
 
     return {
