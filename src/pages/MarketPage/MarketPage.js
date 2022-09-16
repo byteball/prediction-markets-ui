@@ -15,7 +15,7 @@ import { kebabCase } from "lodash";
 import {
   selectActiveCurrencyCandles,
   selectActiveCurrencyCurrentValue,
-  selectActiveDailyCloses,
+  selectActiveDailyCandles,
   selectActiveDatafeedValue,
   selectActiveMarketParams,
   selectActiveMarketStateVars,
@@ -33,6 +33,8 @@ import { AddLiquidityModal, ClaimProfitModal, ViewParamsModal, TradeModal } from
 import styles from './MarketPage.module.css';
 import appConfig from "appConfig";
 
+const SECONDS_IN_YEAR = 31536000;
+
 const getConfig = (chartType, teams) => ({
   xField: 'date',
   yField: 'value',
@@ -47,18 +49,30 @@ const getConfig = (chartType, teams) => ({
     style: 'dark',
   },
   color: ({ type }) => {
+    if (chartType === 'apy') return appConfig.YES_COLOR;
+
     return (type === 'NO' || type === teams?.no?.name) ? appConfig.NO_COLOR : (type === 'YES' || type === teams?.yes?.name) ? appConfig.YES_COLOR : appConfig.DRAW_COLOR;
   },
   yAxis: {
     label: {
       formatter: (v) => {
-        if (chartType === 'fee') {
+        if (chartType === 'fee' || chartType === 'apy') {
           return `${v}%`;
         } else {
           return v;
         }
       }
-    },
+    }
+  },
+  xAxis: {
+    title: {
+      text: chartType === 'apy' ? 'Liquidity provision date' : '',
+      offset: 35,
+      position: 'center',
+      style: {
+        fontSize: 16
+      }
+    }
   },
   tooltip: {
     customContent: (title, items) => {
@@ -68,7 +82,7 @@ const getConfig = (chartType, teams) => ({
           <ul style={{ paddingLeft: 0 }}>
             {items?.map((item, index) => {
               const { color, data: { currencySymbol, chartType, value, symbol, type, date } } = item;
-              const valueView = chartType === 'fee' ? `${+value.toPrecision(4)}%` : `${+value.toPrecision(9)} ${currencySymbol}`; //chartType === 'prices' ? `$${value.toPrecision(4)}` :
+              const valueView = (chartType === 'fee' || chartType === 'apy') ? `${Number(value) > 1e15 ? value.toPrecision(9) : (+Number(value).toPrecision(9)).toLocaleString('en-US')}%` : `${+value.toPrecision(9)} ${currencySymbol}`;
 
               return (
                 <li
@@ -114,7 +128,7 @@ export const MarketPage = () => {
   const reserveAssets = useSelector(selectReserveAssets);
   const stateVars = useSelector(selectActiveMarketStateVars);
 
-  const candles = useSelector(selectActiveDailyCloses);
+  const candles = useSelector(selectActiveDailyCandles);
   const datafeedValue = useSelector(selectActiveDatafeedValue);
 
   const teams = useSelector(selectActiveTeams);
@@ -127,7 +141,7 @@ export const MarketPage = () => {
 
   const chartConfig = getConfig(chartType, teams);
 
-  const { reserve_asset = 'base', allow_draw, quiet_period = 0, reserve_symbol, reserve_decimals, yes_decimals, no_decimals, draw_decimals, yes_symbol, no_symbol, draw_symbol, event_date, league, league_emblem, created_at, oracle } = params;
+  const { reserve_asset = 'base', allow_draw, quiet_period = 0, reserve_symbol, reserve_decimals, yes_decimals, no_decimals, draw_decimals, yes_symbol, no_symbol, draw_symbol, event_date, league, league_emblem, created_at, committed_at, oracle, base_aa, issue_fee, first_trade_ts } = params;
 
   const actualReserveSymbol = reserveAssets[reserve_asset]?.symbol;
 
@@ -170,7 +184,7 @@ export const MarketPage = () => {
 
     const data = [];
 
-    if (candlesData.length === 1) {
+    if (candlesData.length === 1 && chartType !== 'apy') {
       candlesData = [candles[0], { ...candlesData[0], start_timestamp: candlesData[0].start_timestamp - 3600 }];
     }
 
@@ -178,8 +192,21 @@ export const MarketPage = () => {
       data.push({ date: moment.unix(created_at).format(sevenDaysAlreadyPassed ? 'll' : 'lll'), value: 0, chartType });
     }
 
-    candlesData.forEach(({ start_timestamp, yes_price, no_price, draw_price, supply_yes, supply_no, supply_draw, coef }) => {
-      const date = moment.unix(start_timestamp).format(sevenDaysAlreadyPassed ? 'll' : 'lll');
+    const last_close_ts = committed_at ? committed_at : candlesData[candlesData.length - 1]?.start_timestamp;
+    const needsIssueFeeForLiquidity = appConfig.BASE_AAS.findIndex((address) => address === base_aa) === 0;
+
+    let coef_end;
+
+    const first_trade_at = first_trade_ts || created_at;
+
+    if (result) {
+      coef_end = coef * (1 - (needsIssueFeeForLiquidity ? issue_fee : 0));
+    } else {
+      coef_end = (coef * (1 - (needsIssueFeeForLiquidity ? issue_fee : 0))) ** (((committed_at || event_date) - first_trade_at) / (last_close_ts - first_trade_at));
+    }
+
+    candlesData.forEach(({ start_timestamp: open_ts, open_yes_price: yes_price, open_no_price: no_price, open_draw_price: draw_price, open_supply_yes: supply_yes, open_supply_no: supply_no, open_supply_draw: supply_draw, open_coef }, index) => {
+      const date = moment.unix(open_ts).format((committed_at || now) > ((first_trade_ts || created_at) + 3600 * 24 * 30) ? 'll' : 'lll');
 
       if (chartType === 'prices') {
         data.push(
@@ -192,8 +219,17 @@ export const MarketPage = () => {
         }
       } else if (chartType === 'fee') {
         data.push(
-          { date, value: (coef - 1) * 100, chartType },
+          { date, value: (open_coef - 1) * 100, chartType },
         );
+      } else if (chartType === 'apy') {
+
+        const capitalGain = coef_end / (open_coef * (1 - (needsIssueFeeForLiquidity ? issue_fee : 0)));
+
+        const time_left = (committed_at || event_date) - open_ts;
+
+        const apy = (capitalGain ** (SECONDS_IN_YEAR / time_left) - 1) * 100;
+
+        data.push({ date, value: apy, chartType });
       } else {
         data.push(
           { date, value: +Number(supply_yes / 10 ** yes_decimals).toFixed(yes_decimals), type: teams?.yes?.name || "YES", currencySymbol: yes_symbol, chartType },
@@ -217,7 +253,7 @@ export const MarketPage = () => {
 
   useEffect(() => {
     window.scrollTo(0, 0);
-  }, [])
+  }, []);
 
   if (params.event_date - quiet_period > now) {
     tradeStatus = "TRADING";
@@ -266,6 +302,7 @@ export const MarketPage = () => {
   const haveTeamNames = isSportMarket && teams?.yes?.name && teams?.no?.name;
 
   const apy = getEstimatedAPY({ coef, params });
+  const apyView = apy < 1e15 ? (+Number(apy).toPrecision(9)).toLocaleString('en-US') : apy;
 
   let yesTooltip = '';
   let noTooltip = '';
@@ -433,14 +470,22 @@ export const MarketPage = () => {
       </div>
 
       {dataForChart.length > 0 && <div>
-        <div style={{ display: 'flex', justifyContent: "flex-end", marginBottom: 10 }}>
-          <Radio.Group value={chartType} onChange={(ev) => setChartType(ev.target.value)}>
+        <div style={{ display: 'flex', justifyContent: "flex-end", marginBottom: 5, whiteSpace: 'nowrap' }}>
+          <Radio.Group value={chartType} style={{ overflowX: 'scroll', paddingBottom: 15 }} onChange={(ev) => setChartType(ev.target.value)}>
             <Radio.Button value="prices">Prices</Radio.Button>
             <Radio.Button value="supplies">Supplies</Radio.Button>
             <Radio.Button value="fee">Fee accumulation</Radio.Button>
+            <Radio.Button value="apy">{!result ? 'Estimated ' : ''}APY</Radio.Button>
           </Radio.Group>
         </div>
         <Line {...chartConfig} data={dataForChart} />
+        {chartType === 'apy' && <div style={{ margin: '0 auto', fontSize: 12, fontWeight: 300, maxWidth: 800, textAlign: 'center' }}>
+          <Typography.Paragraph>
+            {committed_at
+              ? "APY that would be earned if an infinitesimal amount of liquidity were added on the date on the chart and held until the outcome was published."
+              : "Estimated APY that would be earned if an infinitesimal amount of liquidity were added on the date on the chart and held until the event date. The estimation assumes that trading activity stays the same as it has been so far."}
+          </Typography.Paragraph>
+        </div>}
       </div>}
 
       <div style={{ marginTop: 50 }}>
@@ -455,7 +500,7 @@ export const MarketPage = () => {
             </Typography.Paragraph>
 
             <div className={styles.apyWrap}>
-              <div className={styles.apyPanel}>Liquidity provision APY since the pool was started: {+apy}%</div>
+              <div className={styles.apyPanel}>Liquidity provision APY since the pool was started: {apyView}%</div>
               <div className={styles.apyDesc}>The APY estimation is for the first LP assuming the trading activity stays the same as it has been so far. Later LPs earn from fewer trades, and the trading activity can change in the future, so the actual APY can be significantly different.</div>
             </div>
 

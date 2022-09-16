@@ -2,6 +2,7 @@ import { Button, Drawer, Typography } from "antd";
 import { useState } from "react";
 import moment from "moment";
 import { Helmet } from "react-helmet-async";
+import ReactGA from "react-ga";
 
 import { useWindowSize } from "hooks";
 
@@ -13,7 +14,15 @@ export const ViewParamsModal = ({ reserve_asset, allow_draw, oracle, feed_name, 
   const [visible, setVisible] = useState(false);
   const [width] = useWindowSize();
 
-  const open = () => setVisible(true);
+  const open = () => {
+    setVisible(true);
+
+    ReactGA.event({
+      category: "user-engagement",
+      action: "click-view-params"
+    });
+  };
+
   const close = () => setVisible(false);
 
   return <>

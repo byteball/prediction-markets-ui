@@ -2,6 +2,7 @@ import { Button, Drawer, Typography } from "antd";
 import { useState } from "react";
 import { useSelector } from "react-redux";
 import { Helmet } from "react-helmet-async";
+import ReactGA from "react-ga";
 
 import { useWindowSize } from "hooks";
 import { AddLiquidityForm } from "forms";
@@ -15,11 +16,19 @@ export const AddLiquidityModal = ({ disabled, yes_team, no_team }) => {
   const status = useSelector(selectActiveMarketStatus);
   const [width] = useWindowSize();
 
-  const open = () => setVisible(true);
+  const open = () => {
+    setVisible(true);
+
+    ReactGA.event({
+      category: "user-engagement",
+      action: "click-add-liquidity"
+    });
+  };
+
   const close = () => setVisible(false);
 
   return <>
-    {visible && <Helmet title="Prophet prediction markets — Add liquidity"/>}
+    {visible && <Helmet title="Prophet prediction markets — Add liquidity" />}
     <Button type="primary" size="large" disabled={disabled} onClick={open}>Add liquidity</Button>
 
     {status === 'loaded' && <Drawer
