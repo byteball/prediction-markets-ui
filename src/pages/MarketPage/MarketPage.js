@@ -64,16 +64,6 @@ const getConfig = (chartType, teams) => ({
       }
     }
   },
-  xAxis: {
-    title: {
-      text: chartType === 'apy' ? 'Liquidity provision date' : '',
-      offset: 35,
-      position: 'center',
-      style: {
-        fontSize: 16
-      }
-    }
-  },
   tooltip: {
     customContent: (title, items) => {
       return (
@@ -470,8 +460,8 @@ export const MarketPage = () => {
       </div>
 
       {dataForChart.length > 0 && <div>
-        <div style={{ display: 'flex', justifyContent: "flex-end", marginBottom: 5, whiteSpace: 'nowrap' }}>
-          <Radio.Group value={chartType} style={{ overflowX: 'scroll', paddingBottom: 15 }} onChange={(ev) => setChartType(ev.target.value)}>
+        <div className={styles.typeChartSelectorWrap}>
+          <Radio.Group value={chartType} className={styles.typeChartSelector} onChange={(ev) => setChartType(ev.target.value)}>
             <Radio.Button value="prices">Prices</Radio.Button>
             <Radio.Button value="supplies">Supplies</Radio.Button>
             <Radio.Button value="fee">Fee accumulation</Radio.Button>
@@ -479,12 +469,15 @@ export const MarketPage = () => {
           </Radio.Group>
         </div>
         <Line {...chartConfig} data={dataForChart} />
-        {chartType === 'apy' && <div style={{ margin: '0 auto', fontSize: 12, fontWeight: 300, maxWidth: 800, textAlign: 'center' }}>
-          <Typography.Paragraph>
+        {chartType === 'apy' && <div className={styles.apyChartDescWrap}>
+          <div>
+            Liquidity provision date
+          </div>
+          <div className={styles.apyChartDesc}>
             {committed_at
               ? "APY that would be earned if an infinitesimal amount of liquidity were added on the date on the chart and held until the outcome was published."
               : "Estimated APY that would be earned if an infinitesimal amount of liquidity were added on the date on the chart and held until the event date. The estimation assumes that trading activity stays the same as it has been so far."}
-          </Typography.Paragraph>
+          </div>
         </div>}
       </div>}
 

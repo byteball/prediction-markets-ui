@@ -80,6 +80,31 @@
   margin-bottom: 10px;
 }
 
+.typeChartSelectorWrap {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 5px;
+  white-space: nowrap;
+}
+
+.typeChartSelector {
+  overflow-x: scroll;
+  padding-bottom: 15px;
+}
+
+.apyChartDescWrap {
+  text-align: center;
+  width: 100%;
+  margin-top: 5px;
+}
+
+.apyChartDesc {
+  margin: 0 auto;
+  font-size: 12px;
+  font-weight: 300;
+  max-width: 800px;
+}
+
 /* Small devices (landscape phones, 576px and up) */
 @media (min-width: 576px) {
 
