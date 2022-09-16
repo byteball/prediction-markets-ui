@@ -83,8 +83,8 @@ export const setActiveMarket = createAsyncThunk(
     if (!params.no_decimals) params.no_decimals = params.reserve_decimals;
     if (!params.draw_decimals) params.draw_decimals = params.reserve_decimals;
 
-    const [dailyCloses, { data: recentEvents, count: recentEventsCount }, datafeedValue] = await Promise.all([
-      backend.getDailyCloses(address).then((data) => data).catch(() => []),
+    const [dailyCandles, { data: recentEvents, count: recentEventsCount }, datafeedValue] = await Promise.all([
+      backend.getDailyCandles(address).then((data) => data).catch(() => []),
       backend.getRecentEvents(address),
       obyte.api.getDataFeed({ oracles: [params.oracle], feed_name: params.feed_name, ifnone: 'none' }),
       obyte.justsaying("light/new_aa_to_watch", {
@@ -148,21 +148,25 @@ export const setActiveMarket = createAsyncThunk(
 
     let created_at;
     let committed_at;
+    let first_trade_ts;
 
     if (marketInList) {
       created_at = marketInList.created_at;
       committed_at = marketInList.committed_at;
+      first_trade_ts = marketInList.first_trade_at;
     } else {
       const dates = await backend.getDates(address);
+
       created_at = dates.created_at;
       committed_at = dates.committed_at;
+      first_trade_ts = await backend.getFirstTradeTs(address);
     }
 
     return {
       params,
       stateVars,
       base_aa,
-      dailyCloses,
+      dailyCandles,
       recentEvents,
       recentEventsCount,
       datafeedValue: datafeedValue !== 'none' ? datafeedValue : null,
@@ -172,6 +176,7 @@ export const setActiveMarket = createAsyncThunk(
       currencyCurrentValue,
       created_at,
       committed_at,
+      first_trade_ts,
       league: {
         league_emblem,
         league

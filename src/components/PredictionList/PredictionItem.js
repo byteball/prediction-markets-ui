@@ -80,7 +80,7 @@ export const PredictionItem = ({ reserve_asset = 'base', aa_address, reserve = 0
   const yesPriceView = +Number(yes_price).toPrecision(max_display_decimals);
   const noPriceView = +Number(no_price).toPrecision(max_display_decimals);
   const drawPriceView = +Number(draw_price).toPrecision(max_display_decimals);
-  const apyView = apy ? (apy < 500 ? `Liquidity provider APY: ${Number(apy).toFixed(2)}%` : 'APY not shown') : 'APY not available yet';
+  const apyView = apy ? (apy < 1000 ? `Liquidity provider APY: ${Number(apy).toFixed(2)}%` : 'APY not shown') : 'APY not available yet';
 
   const eventView = generateTextEvent({
     event_date,

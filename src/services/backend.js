@@ -60,8 +60,8 @@ class Backend {
     return categories?.data;
   }
 
-  getDailyCloses = async (address) => {
-    const candles = await this.axios.get(`/daily_closes/${address}`);
+  getDailyCandles = async (address) => {
+    const candles = await this.axios.get(`/daily_candles/${address}`);
     return candles?.data;
   }
 
@@ -83,6 +83,11 @@ class Backend {
   getRecentEvents = async (address, page = 1) => {
     const events = await this.axios.get(`/recent_events/${address}/${page}`);
     return events?.data;
+  }
+
+  getFirstTradeTs = async (address) => {
+    const ts = await this.axios.get(`/first_trade_ts/${address}`);
+    return ts?.data;
   }
 }
 

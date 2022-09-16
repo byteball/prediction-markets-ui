@@ -3,6 +3,7 @@ import { useEffect, useRef, useState } from "react"
 import { useDispatch, useSelector } from "react-redux";
 import obyte from "obyte";
 import { Helmet } from "react-helmet-async";
+import ReactGA from "react-ga";
 
 import { selectWalletAddress } from "store/slices/settingsSlice";
 import { changeWalletAddress } from "store/thunks/changeWalletAddress";
@@ -27,9 +28,25 @@ export const WalletModal = ({ children = "WALLET", type = "default", styles = {}
     }
   }, [currentWalletAddress, visible])
 
-  const changeVisible = () => setVisible((v) => !v);
+  const changeVisible = () => {
+    if (!visible) {
+      ReactGA.event({
+        category: "user-engagement",
+        action: "click-wallet"
+      });
+    }
+
+    setVisible((v) => !v);
+  };
 
   const handleWalletAddress = (ev) => {
+    if (obyte.utils.isValidAddress(ev.target.value)) {
+      ReactGA.event({
+        category: "user-engagement",
+        action: "save-wallet"
+      });
+    }
+
     setWalletAddress({
       valid: obyte.utils.isValidAddress(ev.target.value),
       value: ev.target.value

@@ -13,7 +13,7 @@ export const activeSlice = createSlice({
     params: {},
     recentEvents: [],
     recentEventsCount: 0,
-    dailyCloses: [],
+    dailyCandles: [],
     datafeedValue: null,
     currencyCandles: [],
     currencyCurrentValue: 0,
@@ -44,13 +44,13 @@ export const activeSlice = createSlice({
   },
   extraReducers: {
     [setActiveMarket.fulfilled]: (state, action) => {
-      const { params, stateVars, recentEvents, recentEventsCount, dailyCloses, datafeedValue, yesTeam, noTeam, currencyCandles, currencyCurrentValue, league, created_at, committed_at, base_aa } = action.payload;
+      const { params, stateVars, recentEvents, recentEventsCount, dailyCandles, datafeedValue, yesTeam, noTeam, currencyCandles, currencyCurrentValue, league, created_at, committed_at, base_aa, first_trade_ts } = action.payload;
 
-      state.params = { ...params, ...league, created_at, committed_at, base_aa };
+      state.params = { ...params, ...league, created_at, committed_at, first_trade_ts, base_aa };
       state.stateVars = stateVars;
       state.recentEvents = recentEvents;
       state.recentEventsCount = recentEventsCount;
-      state.dailyCloses = dailyCloses;
+      state.dailyCandles = dailyCandles;
       state.datafeedValue = datafeedValue;
       state.currencyCandles = currencyCandles || [];
       state.currencyCurrentValue = currencyCurrentValue || 0;
@@ -98,7 +98,7 @@ export const selectActiveCategory = state => state.active.category || 'No catego
 export const selectActiveAddress = state => state.active.address;
 export const selectActiveRecentEvents = state => state.active.recentEvents;
 export const selectActiveRecentEventsCount = state => state.active.recentEventsCount;
-export const selectActiveDailyCloses = state => state.active.dailyCloses;
+export const selectActiveDailyCandles = state => state.active.dailyCandles;
 export const selectActiveDatafeedValue = state => state.active.datafeedValue;
 export const selectActiveTeams = state => state.active.teams;
 export const selectActiveCurrencyCandles = state => state.active.currencyCandles;
