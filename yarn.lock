@@ -8688,10 +8688,10 @@ obuf@^1.0.0, obuf@^1.1.2:
   resolved "https://registry.npmjs.org/obuf/-/obuf-1.1.2.tgz"
   integrity sha512-PX1wu0AmAdPqOL1mWhqmlOd8kOIZQwGZw6rh7uby9fTc5lhaOWFLX3I6R1hrF9k3zUY40e6igsLGkDXK92LJNg==
 
-obyte-qr-button@^0.0.15:
-  version "0.0.15"
-  resolved "https://registry.npmjs.org/obyte-qr-button/-/obyte-qr-button-0.0.15.tgz"
-  integrity sha512-e5jeQeeMZlpQQLO5a1zU+enrF5a2/vm9DOJ7iGxbv42KK009XFPpz+ZbJ/Dbsh/tS93O9cVUQrueEvpgtOWCow==
+obyte-qr-button@^0.0.16:
+  version "0.0.16"
+  resolved "https://registry.yarnpkg.com/obyte-qr-button/-/obyte-qr-button-0.0.16.tgz#388d21f54abbe243518d04e6d80055e6d158aaf3"
+  integrity sha512-VZS32DYMPxGq5NUIjV7Q25TfQiEXZUPBWHRl0pwnuh0DNYOd+5J/TY+exmTudeSO8ipMuvwW/NSzRq07OTwrsw==
   dependencies:
     prop-types "^15.7.2"
     qrcode.react "^1.0.1"

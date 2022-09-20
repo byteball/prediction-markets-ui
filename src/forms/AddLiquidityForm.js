@@ -21,6 +21,7 @@ import { generateLink, getExchangeResult, getMarketPriceByType } from "utils";
 import { WalletModal } from "modals";
 
 const f = (x) => (~(x + "").indexOf(".") ? (x + "").split(".")[1].length : 0);
+const floorDecimals = (number, decimals) => Math.floor(number * 10 ** decimals) / 10 ** decimals;
 
 export const AddLiquidityForm = ({ yes_team, no_team }) => {
   const params = useSelector(selectActiveMarketParams);
@@ -39,7 +40,7 @@ export const AddLiquidityForm = ({ yes_team, no_team }) => {
   const [estimate, setEstimate] = useState();
   const [estimateError, setEstimateError] = useState();
 
-  const { allow_draw, reserve_asset, reserve_decimals, reserve_symbol, base_aa } = params;
+  const { allow_draw, reserve_asset, reserve_decimals, reserve_symbol, base_aa, yes_odds: bookmaker_yes_odds, no_odds: bookmaker_no_odds, draw_odds: bookmaker_draw_odds } = params;
   const { supply_yes = 0, supply_no = 0, supply_draw = 0, reserve = 0 } = stateVars;
 
   const network_fee = reserve_asset === 'base' ? 1e4 : 0;
@@ -288,6 +289,20 @@ export const AddLiquidityForm = ({ yes_team, no_team }) => {
     }
   }
 
+  useEffect(()=> {
+    if (bookmaker_yes_odds && bookmaker_no_odds && bookmaker_draw_odds && isFirstIssue) {
+      const sum = (1 / bookmaker_yes_odds + 1 / bookmaker_no_odds + 1 / bookmaker_draw_odds);
+  
+      const yes_odds_percentage = (1 / bookmaker_yes_odds) / sum * 100;
+      const no_odds_percentage = (1 / bookmaker_no_odds) / sum * 100;
+
+      setProbabilities({
+        yes: {value: floorDecimals(yes_odds_percentage, 2), valid: true},
+        no: {value: floorDecimals(no_odds_percentage, 2), valid: true},
+      })
+    }
+  }, [bookmaker_yes_odds, bookmaker_no_odds, bookmaker_draw_odds, isFirstIssue])
+  
   if (!fromToken) return <div style={{ display: 'flex', justifyContent: 'center', padding: 20 }}>
     <Spin size="large" />
   </div>
