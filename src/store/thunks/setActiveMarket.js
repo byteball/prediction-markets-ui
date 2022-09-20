@@ -134,9 +134,11 @@ export const setActiveMarket = createAsyncThunk(
       if (!yes_odds || !no_odds || !draw_odds) {
         const odds = await backend.getBookmakerOdds('soccer', params.feed_name);
 
-        yes_odds = odds.yes_odds;
-        no_odds = odds.no_odds;
-        draw_odds = odds.draw_odds;
+        if (odds) {
+          yes_odds = odds.yes_odds;
+          no_odds = odds.no_odds;
+          draw_odds = odds.draw_odds;
+        }
       }
 
       const [championship, yes_abbreviation, no_abbreviation] = params.feed_name.split("_");
