@@ -89,6 +89,11 @@ class Backend {
     const ts = await this.axios.get(`/first_trade_ts/${address}`);
     return ts?.data;
   }
+
+  getBookmakerOdds = async (sport, feed_name) => {
+    const odds = await this.axios.get(`/bookmaker_odds/${sport}/${feed_name}`);
+    return odds?.data;
+  }
 }
 
 export default new Backend();

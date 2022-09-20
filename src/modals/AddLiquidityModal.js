@@ -43,6 +43,7 @@ export const AddLiquidityModal = ({ disabled, yes_team, no_team }) => {
       <AddLiquidityForm
         yes_team={yes_team}
         no_team={no_team}
+        visible={visible}
       />
     </Drawer>}
   </>
