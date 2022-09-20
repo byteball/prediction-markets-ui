@@ -109,10 +109,18 @@ export const setActiveMarket = createAsyncThunk(
     let committed_at;
     let first_trade_ts;
 
+    let yes_odds = null;
+    let no_odds = null;
+    let draw_odds = null;
+
     if (marketInList) {
       created_at = marketInList.created_at;
       committed_at = marketInList.committed_at;
       first_trade_ts = marketInList.first_trade_at;
+
+      yes_odds = marketInList.yes_odds || null;
+      no_odds = marketInList.no_odds || null;
+      draw_odds = marketInList.draw_odds || null;
     } else {
       const dates = await backend.getDates(address);
 
@@ -122,6 +130,15 @@ export const setActiveMarket = createAsyncThunk(
     }
 
     if (isSportMarket) {
+
+      if (!yes_odds || !no_odds || !draw_odds) {
+        const odds = await backend.getBookmakerOdds('soccer', params.feed_name);
+
+        yes_odds = odds.yes_odds;
+        no_odds = odds.no_odds;
+        draw_odds = odds.draw_odds;
+      }
+
       const [championship, yes_abbreviation, no_abbreviation] = params.feed_name.split("_");
       let championships = state.markets.championships;
 
@@ -178,6 +195,9 @@ export const setActiveMarket = createAsyncThunk(
       created_at,
       committed_at,
       first_trade_ts,
+      yes_odds,
+      no_odds,
+      draw_odds,
       league: {
         league_emblem,
         league

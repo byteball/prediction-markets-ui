@@ -1,5 +1,5 @@
 import { Pie } from "@ant-design/plots";
-import { Alert, Button, Col, Form, Input, Row, Select, Spin, notification } from "antd";
+import { Alert, Button, Col, Form, Input, Row, Select, Spin, notification, Typography } from "antd";
 import appConfig from "appConfig";
 import { estimateOutput, transferEVM2Obyte } from "counterstake-sdk";
 import { isNumber } from "lodash";
@@ -21,8 +21,9 @@ import { generateLink, getExchangeResult, getMarketPriceByType } from "utils";
 import { WalletModal } from "modals";
 
 const f = (x) => (~(x + "").indexOf(".") ? (x + "").split(".")[1].length : 0);
+const floorDecimals = (number, decimals) => Math.floor(number * 10 ** decimals) / 10 ** decimals;
 
-export const AddLiquidityForm = ({ yes_team, no_team }) => {
+export const AddLiquidityForm = ({ yes_team, no_team, visible }) => {
   const params = useSelector(selectActiveMarketParams);
   const stateVars = useSelector(selectActiveMarketStateVars);
 
@@ -39,7 +40,7 @@ export const AddLiquidityForm = ({ yes_team, no_team }) => {
   const [estimate, setEstimate] = useState();
   const [estimateError, setEstimateError] = useState();
 
-  const { allow_draw, reserve_asset, reserve_decimals, reserve_symbol, base_aa } = params;
+  const { allow_draw, reserve_asset, reserve_decimals, reserve_symbol, base_aa, yes_odds: bookmaker_yes_odds, no_odds: bookmaker_no_odds, draw_odds: bookmaker_draw_odds } = params;
   const { supply_yes = 0, supply_no = 0, supply_draw = 0, reserve = 0 } = stateVars;
 
   const network_fee = reserve_asset === 'base' ? 1e4 : 0;
@@ -288,6 +289,20 @@ export const AddLiquidityForm = ({ yes_team, no_team }) => {
     }
   }
 
+  useEffect(()=> {
+    if (bookmaker_yes_odds && bookmaker_no_odds && bookmaker_draw_odds && isFirstIssue) {
+      const sum = (1 / bookmaker_yes_odds + 1 / bookmaker_no_odds + 1 / bookmaker_draw_odds);
+  
+      const yes_odds_percentage = (1 / bookmaker_yes_odds) / sum * 100;
+      const no_odds_percentage = (1 / bookmaker_no_odds) / sum * 100;
+
+      setProbabilities({
+        yes: {value: floorDecimals(yes_odds_percentage, 2), valid: true},
+        no: {value: floorDecimals(no_odds_percentage, 2), valid: true},
+      })
+    }
+  }, [bookmaker_yes_odds, bookmaker_no_odds, bookmaker_draw_odds, isFirstIssue, visible])
+  
   if (!fromToken) return <div style={{ display: 'flex', justifyContent: 'center', padding: 20 }}>
     <Spin size="large" />
   </div>
@@ -363,7 +378,7 @@ export const AddLiquidityForm = ({ yes_team, no_team }) => {
     </Row>
 
     {isFirstIssue && <>
-      <p>Outcome probability</p>
+      <p>Outcome probabilities</p>
       <Row gutter={8}>
         <Col md={{ span: allow_draw ? 8 : 12 }} xs={{ span: 24 }}>
           <Form.Item extra={<span style={{ color: appConfig.YES_COLOR }}>{yesOdds}</span>} label={<small>{haveTeamNames ? `${yes_team}` : 'YES'}</small>}>
@@ -373,7 +388,7 @@ export const AddLiquidityForm = ({ yes_team, no_team }) => {
 
         {allow_draw && <Col md={{ span: 8 }} xs={{ span: 24 }}>
           <Form.Item extra={<span style={{ color: appConfig.DRAW_COLOR }}>{drawOdds}</span>} label={<small>DRAW</small>}>
-            <Input size="large" disabled={true} value={drawPercent} placeholder="ex. 20" suffix='%' />
+            <Input size="large" disabled={true} value={floorDecimals(drawPercent, 2)} placeholder="ex. 20" suffix='%' />
           </Form.Item>
         </Col>}
 
@@ -383,6 +398,7 @@ export const AddLiquidityForm = ({ yes_team, no_team }) => {
           </Form.Item>
         </Col>
       </Row>
+      {bookmaker_yes_odds !== null && bookmaker_no_odds !== null && bookmaker_draw_odds !== null ? <Typography.Text type="secondary">Suggested probabilities are based on the current bookmaker odds</Typography.Text> : null}
     </>
     }
 

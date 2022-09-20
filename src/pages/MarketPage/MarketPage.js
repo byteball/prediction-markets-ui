@@ -131,7 +131,7 @@ export const MarketPage = () => {
 
   const chartConfig = getConfig(chartType, teams);
 
-  const { reserve_asset = 'base', allow_draw, quiet_period = 0, reserve_symbol, reserve_decimals, yes_decimals, no_decimals, draw_decimals, yes_symbol, no_symbol, draw_symbol, event_date, league, league_emblem, created_at, committed_at, oracle, base_aa, issue_fee, first_trade_ts } = params;
+  const { reserve_asset = 'base', allow_draw, quiet_period = 0, reserve_symbol, reserve_decimals, yes_decimals, no_decimals, draw_decimals, yes_symbol, no_symbol, draw_symbol, event_date, league, league_emblem, created_at, committed_at, oracle, base_aa, issue_fee, first_trade_ts, yes_odds = null, no_odds = null, draw_odds = null } = params;
 
   const actualReserveSymbol = reserveAssets[reserve_asset]?.symbol;
 
@@ -336,6 +336,23 @@ export const MarketPage = () => {
     }
   }
 
+  let yesSubValueView = '';
+  let noSubValueView = '';
+  let drawSubValueView = '';
+
+  if (priceOrOdds === 'price' && reserve_rate) {
+    yesSubValueView = `$${yesPriceInUSD}`;
+    noSubValueView = `$${noPriceInUSD}`;
+    if (allow_draw) {
+      drawSubValueView = `$${drawPriceInUSD}`;
+    }
+  } else if (priceOrOdds === 'odds' && yes_odds && no_odds && draw_odds && yesOddsView && noOddsView && drawOddsView) {
+    yesSubValueView = `Bookmaker odds: x${yes_odds}`;
+    noSubValueView = `Bookmaker odds: x${no_odds}`;
+    drawSubValueView = `Bookmaker odds: x${draw_odds}`;
+  }
+
+
   const showMarketSizePie = !result && reserve !== 0;
 
   const seoText = kebabCase(eventUTC);
@@ -408,7 +425,9 @@ export const MarketPage = () => {
               tooltip={yesTooltip}
               reserve={reserve}
               isWinner={result ? result === 'yes' : undefined}
-              subValue={(priceOrOdds === 'price' && reserve_rate) ? `$${yesPriceInUSD}` : ''} color={appConfig.YES_COLOR} onAction={tradeIsActive ? (action) => setVisibleTradeModal({ type: 'yes', action }) : undefined}
+              subValue={yesSubValueView}
+              color={appConfig.YES_COLOR}
+              onAction={tradeIsActive ? (action) => setVisibleTradeModal({ type: 'yes', action }) : undefined}
               value={priceOrOdds === 'price' ? <span>{result ? winnerPriceView : yesPrice} <small>{reserve_symbol}</small></span> : (yesOddsView ? <span>x{result ? winnerOddsView : yesOddsView}</span> : '-')} />
           </Col>
 
@@ -418,7 +437,9 @@ export const MarketPage = () => {
               tooltip={drawTooltip}
               reserve={reserve}
               isWinner={result ? result === 'draw' : undefined}
-              subValue={(priceOrOdds === 'price' && reserve_rate) ? `$${drawPriceInUSD}` : ''} color={appConfig.DRAW_COLOR} onAction={tradeIsActive ? (action) => setVisibleTradeModal({ type: 'draw', action }) : undefined}
+              subValue={drawSubValueView}
+              color={appConfig.DRAW_COLOR}
+              onAction={tradeIsActive ? (action) => setVisibleTradeModal({ type: 'draw', action }) : undefined}
               value={priceOrOdds === 'price' ? <span>{result ? winnerPriceView : drawPrice} <small>{reserve_symbol}</small></span> : (drawOddsView ? <span>x{result ? winnerOddsView : drawOddsView}</span> : '-')} />
           </Col> : null}
 
@@ -428,7 +449,9 @@ export const MarketPage = () => {
               tooltip={noTooltip}
               reserve={reserve}
               isWinner={result ? result === 'no' : undefined}
-              subValue={(priceOrOdds === 'price' && reserve_rate) ? `$${noPriceInUSD}` : ''} color={appConfig.NO_COLOR} onAction={tradeIsActive ? (action) => setVisibleTradeModal({ type: 'no', action }) : undefined}
+              subValue={noSubValueView}
+              color={appConfig.NO_COLOR}
+              onAction={tradeIsActive ? (action) => setVisibleTradeModal({ type: 'no', action }) : undefined}
               value={priceOrOdds === 'price' ? <span>{result ? winnerPriceView : noPrice} <small>{reserve_symbol}</small></span> : (noOddsView ? <span>x{result ? winnerOddsView : noOddsView}</span> : '-')} />
           </Col>
 
