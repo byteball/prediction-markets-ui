@@ -346,7 +346,7 @@ export const MarketPage = () => {
     if (allow_draw) {
       drawSubValueView = `$${drawPriceInUSD}`;
     }
-  } else if (priceOrOdds === 'odds' && yes_odds && no_odds && draw_odds) {
+  } else if (priceOrOdds === 'odds' && yes_odds && no_odds && draw_odds && yesOddsView && noOddsView && drawOddsView) {
     yesSubValueView = `Bookmaker odds: x${yes_odds}`;
     noSubValueView = `Bookmaker odds: x${no_odds}`;
     drawSubValueView = `Bookmaker odds: x${draw_odds}`;
