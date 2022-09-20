@@ -388,7 +388,7 @@ export const AddLiquidityForm = ({ yes_team, no_team }) => {
 
         {allow_draw && <Col md={{ span: 8 }} xs={{ span: 24 }}>
           <Form.Item extra={<span style={{ color: appConfig.DRAW_COLOR }}>{drawOdds}</span>} label={<small>DRAW</small>}>
-            <Input size="large" disabled={true} value={drawPercent} placeholder="ex. 20" suffix='%' />
+            <Input size="large" disabled={true} value={floorDecimals(drawPercent, 2)} placeholder="ex. 20" suffix='%' />
           </Form.Item>
         </Col>}
 
