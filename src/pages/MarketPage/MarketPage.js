@@ -24,7 +24,7 @@ import {
 } from "store/slices/activeSlice";
 import { setActiveMarket } from "store/thunks/setActiveMarket";
 import { selectPriceOrOdds, selectReserveAssets, selectReservesRate } from "store/slices/settingsSlice";
-import { getMarketPriceByType, generateLink, generateTextEvent, getEstimatedAPY } from "utils";
+import { getMarketPriceByType, generateLink, generateTextEvent, getEstimatedAPY, transformChampionshipName } from "utils";
 import { RecentEvents } from "components/RecentEvents/RecentEvents";
 import { CurrencyChart } from "components/CurrencyChart/CurrencyChart";
 import { MarketSizePie } from "components/MarketSizePie/MarketSizePie";
@@ -356,6 +356,7 @@ export const MarketPage = () => {
   const showMarketSizePie = !result && reserve !== 0;
 
   const seoText = kebabCase(eventUTC);
+  const leagueView = transformChampionshipName(league, params.feed_name.split('_')?.[0])
 
   return <Layout>
     <Helmet>
@@ -378,7 +379,7 @@ export const MarketPage = () => {
             <div>
               {moment.unix(event_date).format('MMM D, h:mm A')}
             </div>
-            {league && league_emblem && <div><Tooltip title={league}><img className={styles.league} src={league_emblem} alt={league} /></Tooltip></div>}
+            {league && league_emblem && <div><Tooltip title={leagueView}><img className={styles.league} src={league_emblem} alt={leagueView} /></Tooltip></div>}
           </Col>
 
           <Col md={{ span: 8 }} xs={{ span: 8 }} style={{ textAlign: 'center' }}>

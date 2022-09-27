@@ -6,6 +6,7 @@ import { getEstimatedAPY } from "./getEstimatedAPY";
 import { getExchangeResult } from "./getExchangeResult";
 import { getMarketPriceByType } from "./getMarketPriceByType";
 import { getEmojiByType } from "./getTabNameByType";
+import { transformChampionshipName } from "./transformChampionshipName";
 
 export {
   encodeData,
@@ -15,5 +16,6 @@ export {
   getEmojiByType,
   generateTextEvent,
   truncate,
-  getEstimatedAPY
+  getEstimatedAPY,
+  transformChampionshipName
 }

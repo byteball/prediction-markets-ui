@@ -21,7 +21,7 @@ import { selectMarketsCache } from "store/slices/cacheSlice";
 import { loadMarketsInCache } from "store/thunks/loadMarketsInCache";
 import { loadCurrencyCalendarCache } from "store/thunks/loadCurrencyCalendarCache";
 
-import { getEmojiByType } from "utils";
+import { getEmojiByType, transformChampionshipName } from "utils";
 import { historyInstance } from "historyInstance";
 import backend from "services/backend";
 
@@ -101,7 +101,7 @@ export const PredictionList = ({ type = 'all', particle = 'all', setParticle }) 
 
   const getActionList = useCallback(() => ([
     { value: 'all', text: `${getEmojiByType(type)} All soccer` },
-    ...championships[type]?.map(({ name, code, emblem }) => ({ value: code, text: name, iconLink: emblem }))
+    ...championships[type]?.map(({ name, code, emblem }) => ({ value: code, text: transformChampionshipName(name, code), iconLink: emblem }))
   ]), [championships, type])
 
   const getCurrencyCalendarActionList = useCallback(() => ([
