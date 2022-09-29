@@ -3,11 +3,13 @@ import { memo, useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { Helmet } from "react-helmet-async";
 import ReactGA from "react-ga";
+import { useTranslation } from "react-i18next";
 
 import { SwitchActions } from "components/SwitchActions/SwitchActions";
 import { BuyForm, RedeemForm } from "forms";
 import { useWindowSize } from "hooks";
 import { selectActiveMarketStatus } from "store/slices/activeSlice";
+import { capitalizeFirstLetter } from "utils";
 
 const { Title } = Typography;
 
@@ -18,6 +20,7 @@ export const TradeModal = memo(({ disabled, visible, setVisible, yes_team, no_te
   const [width] = useWindowSize();
   const [buyAmount, setBuyAmount] = useState({ value: '', valid: true });
   const [redeemAmount, setRedeemAmount] = useState({ value: '', valid: true });
+  const { t } = useTranslation();
 
   const open = () => {
     setVisible(true);
@@ -55,10 +58,10 @@ export const TradeModal = memo(({ disabled, visible, setVisible, yes_team, no_te
   }, [visible]);
 
   return <>
-    {visible && <Helmet title="Prophet prediction markets — Trade" />}
+    {visible && <Helmet title={`Prophet prediction markets — ${t("modals.trade.title", "Trade")}`} />}
 
-    {reserve === 0 && !disabled ? <Tooltip title="Please add liquidity first"><Button size="large" type="primary" disabled={true}>Trade</Button></Tooltip>
-      : <Button type="primary" size="large" disabled={disabled} onClick={open}>Trade</Button>}
+    {reserve === 0 && !disabled ? <Tooltip title={t("modals.trade.liquidity_first", "Please add liquidity first")}><Button size="large" type="primary" disabled={true}>{t("modals.trade.title", "Trade")}</Button></Tooltip>
+      : <Button type="primary" size="large" disabled={disabled} onClick={open}>{t("modals.trade.title", "Trade")}</Button>}
 
     {status === 'loaded' && <Drawer
       width={width > 640 ? 640 : width}
@@ -68,8 +71,8 @@ export const TradeModal = memo(({ disabled, visible, setVisible, yes_team, no_te
       onClose={close}
     >
 
-      <Title level={2}>Trade</Title>
-      <SwitchActions data={[{ value: 'buy', text: 'Buy' }, { value: 'redeem', text: 'Sell', disabled: true }]} onChange={(action) => setAction(action)} value={action} />
+      <Title level={2}>{t("modals.trade.title", "Trade")}</Title>
+      <SwitchActions data={[{ value: 'buy', text: capitalizeFirstLetter(t("common.buy", "buy")) }, { value: 'redeem', text: capitalizeFirstLetter(t("common.sell", "sell")), disabled: true }]} onChange={(action) => setAction(action)} value={action} />
 
       {action === 'buy' && <BuyForm
         amount={buyAmount}

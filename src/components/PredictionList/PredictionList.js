@@ -3,6 +3,7 @@ import { Button, Divider, List, Spin } from "antd";
 import { isEmpty } from "lodash";
 import { useDispatch, useSelector } from "react-redux";
 import { useLocation } from "react-router-dom";
+import { t } from "i18next";
 
 import { PredictionItem } from "./PredictionItem";
 import { SwitchActions } from "components/SwitchActions/SwitchActions";
@@ -102,7 +103,7 @@ export const PredictionList = ({ type = 'all', particle = 'all', setParticle }) 
   const getActionList = useCallback(() => ([
     { value: 'all', text: `${getEmojiByType(type)} All soccer` },
     ...championships[type]?.map(({ name, code, emblem }) => ({ value: code, text: transformChampionshipName(name, code), iconLink: emblem }))
-  ]), [championships, type])
+  ]), [championships, type]);
 
   const getCurrencyCalendarActionList = useCallback(() => ([
     ...popularCurrencies?.map((currency) => ({ value: currency, text: currency }))
@@ -182,14 +183,14 @@ export const PredictionList = ({ type = 'all', particle = 'all', setParticle }) 
         dataSource={fullDataSource}
         style={{ marginBottom: 50 }}
         rowKey={(item) => `${type}-${item.aa_address}`}
-        locale={{ emptyText: type === 'all' ? 'no markets' : `no ${type} markets` }}
+        locale={{ emptyText: type === 'all' ? t("common.no_markets", 'no markets') : t("common.no_markets_type", 'no {{type}} markets', { type }) }}
         renderItem={(data) => <PredictionItem {...data} particle={particle} type={type} />}
         loadMore={fullDataSource.length < ((type in championships) ? countOfSportMarkets : maxCount) && <div className={styles.loadMoreWrap}>
           <Button onClick={() => dispatch(loadMarketsInCache({ championship, page: currentPage + 1, type }))}>Load more</Button>
         </div>}
       />
 
-      {(type in championships || type === 'currency') && <div><Divider dashed className={styles.calendarHeader}>{type === 'currency' ? 'create new markets' : 'calendar of upcoming matches'}</Divider></div>}
+      {(type in championships || type === 'currency') && <div><Divider dashed className={styles.calendarHeader}>{type === 'currency' ? t("prediction_list.title_create", 'create new markets') : t("prediction_list.title_calendar", 'calendar of upcoming matches')}</Divider></div>}
 
       {type === 'currency' && popularCurrencies.length > 0 && <div>
         <SwitchActions small={true} value={actualCurrency} data={getCurrencyCalendarActionList()} onChange={(currency) => setActualCurrency(currency)} />
@@ -200,7 +201,7 @@ export const PredictionList = ({ type = 'all', particle = 'all', setParticle }) 
           dataSource={fullCalendarDataSource}
           style={{ marginTop: 10 }}
           rowKey={(item) => `${type}-${item.aa_address}`}
-          locale={{ emptyText: type === 'all' ? 'no markets' : `no ${type} markets` }}
+          locale={{ emptyText: type === 'all' ? t("common.no_markets", 'no markets') : t("common.no_markets_type", 'no {{type}} markets', { type }) }}
           renderItem={(data) => <PredictionItem {...data} particle={particle} type={type} />}
           loadMore={fullCalendarDataSource.length < calendarMaxCount && <div className={styles.loadMoreWrap}>
             <Button onClick={loadCalendarMore}>Load more</Button>

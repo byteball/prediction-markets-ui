@@ -5,6 +5,7 @@ import { useEffect, useRef, useState } from "react";
 import { useSelector } from "react-redux";
 import { estimateOutput, transferEVM2Obyte } from "counterstake-sdk";
 import ReactGA from "react-ga";
+import { useTranslation, Trans } from "react-i18next";
 
 import {
   selectActiveAddress,
@@ -22,6 +23,7 @@ import { WalletModal } from "modals";
 import appConfig from "appConfig";
 import client from "services/obyte";
 
+
 const f = (x) => (~(x + "").indexOf(".") ? (x + "").split(".")[1].length : 0);
 
 export const BuyForm = ({ type, yes_team, no_team, amount, setAmount }) => {
@@ -32,6 +34,7 @@ export const BuyForm = ({ type, yes_team, no_team, amount, setAmount }) => {
   const tokensByNetwork = useSelector(selectTokensByNetwork);
 
   const btnRef = useRef();
+  const { t } = useTranslation();
 
   const [tokens, setTokens] = useState([]);
   const [currentToken, setCurrentToken] = useState();
@@ -175,7 +178,7 @@ export const BuyForm = ({ type, yes_team, no_team, amount, setAmount }) => {
 
     } catch {
       notification.error({
-        message: "The transaction would fail. Please check that you have sufficient balance",
+        message: t("common.errors.transaction_fail", "The transaction would fail. Please check that you have sufficient balance"),
         placement: "top"
       });
     };
@@ -193,7 +196,7 @@ export const BuyForm = ({ type, yes_team, no_team, amount, setAmount }) => {
     <Row gutter={8}>
       <Col md={{ span: 8 }} xs={{ span: 24 }}>
         <Form.Item>
-          <Input size="large" placeholder="Stake amount" value={amount.value} onChange={handleChangeAmount} onKeyDown={(ev) => ev.key === 'Enter' ? btnRef.current.click() : null} />
+          <Input size="large" placeholder={t("forms.buy.stake_amount", "Stake amount")} value={amount.value} onChange={handleChangeAmount} onKeyDown={(ev) => ev.key === 'Enter' ? btnRef.current.click() : null} />
         </Form.Item>
       </Col>
       <Col md={{ span: 16 }} xs={{ span: 24 }}>
@@ -216,7 +219,7 @@ export const BuyForm = ({ type, yes_team, no_team, amount, setAmount }) => {
       {!type ? <>
         <Col md={{ span: 8 }} xs={{ span: 24 }}>
           <Form.Item>
-            <span className="ant-form-text" style={{ display: 'flex', alignItems: 'center', height: 40, verticalAlign: 'middle', fontSize: 18, justifyContent: 'space-between', flexWrap: 'wrap' }}><span>You get:</span> {fromToken.network !== "Obyte" ? '≈' : ''}{getAmount.value > 0 ? +Number(getAmount.value / 10 ** currentToken?.decimals).toPrecision(currentToken?.decimals) : 0}</span>
+            <span className="ant-form-text" style={{ display: 'flex', alignItems: 'center', height: 40, verticalAlign: 'middle', fontSize: 18, justifyContent: 'space-between', flexWrap: 'wrap' }}><span>{t("forms.common.you_get", "You get")}:</span> {fromToken.network !== "Obyte" ? '≈' : ''}{getAmount.value > 0 ? +Number(getAmount.value / 10 ** currentToken?.decimals).toPrecision(currentToken?.decimals) : 0}</span>
           </Form.Item>
         </Col>
         <Col md={{ span: 16 }} xs={{ span: 24 }}>
@@ -243,24 +246,24 @@ export const BuyForm = ({ type, yes_team, no_team, amount, setAmount }) => {
         no_team={no_team}
       />
       {(fromToken.network !== "Obyte" && estimate) ? <div style={{ marginTop: 20 }}>
-        {counterstake_assistant_fee ? <div><span className="metaLabel"><a href="https://counterstake.org" target="_blank" rel="noopener">Counterstake</a> fee</span>: {+Number(counterstake_assistant_fee).toFixed(fromToken.decimals)} {fromToken.symbol}</div> : null}
-        {(fromToken.network !== "Obyte" && estimate && fromToken.foreign_asset !== reserve_asset) ? <div><span className="metaLabel"><a href="https://oswap.io" target="_blank" rel="noopener">Oswap</a> rate</span>: 1 {fromToken.symbol} ≈ {+Number(estimate / amount.value).toFixed(reserve_decimals)} {reserve_symbol}</div> : null}
+        {counterstake_assistant_fee ? <div><span className="metaLabel"><Trans i18nKey="meta_trans.cs_fee"><a href="https://counterstake.org" target="_blank" rel="noopener">Counterstake</a> fee</Trans></span>: {+Number(counterstake_assistant_fee).toFixed(fromToken.decimals)} {fromToken.symbol}</div> : null}
+        {(fromToken.network !== "Obyte" && estimate && fromToken.foreign_asset !== reserve_asset) ? <div><span className="metaLabel"><Trans i18nKey="meta_trans.oswap_rate"><a href="https://oswap.io" target="_blank" rel="noopener">Oswap</a> rate</Trans></span>: 1 {fromToken.symbol} ≈ {+Number(estimate / amount.value).toFixed(reserve_decimals)} {reserve_symbol}</div> : null}
       </div> : <div />}
     </Form.Item>}
 
     {!metamaskInstalled && fromToken.network !== "Obyte" && <Form.Item>
       <Alert
         type="error"
-        message="MetaMask not installed!"
-        description={<span>Please <a href="https://metamask.io/download/" style={{ color: "#fff", textDecoration: 'underline' }} target="_blank" rel="noopener">install</a> it in your browser.</span>}
+        message={t("forms.common.no_metamask", "MetaMask not installed!")}
+        description={<Trans i18nKey="forms.common.install_metamask">Please <a href="https://metamask.io/download/" style={{ color: "#fff", textDecoration: 'underline' }} target="_blank" rel="noopener">install</a> it in your browser.</Trans>}
       />
     </Form.Item>}
 
     {!walletAddress && fromToken.network !== "Obyte" && <Form.Item>
       <Alert
         type="error"
-        message="You have not added your Obyte wallet to the site!"
-        description={<span>If you don't have it yet, please <a href="https://obyte.org/#download" target="_blank">install</a> and <WalletModal type="link" styles={{ fontSize: 16 }}>add</WalletModal> it. It is to this wallet that the purchased assets will come.</span>}
+        message={t("forms.common.no_obyte_wallet", "You have not added your Obyte wallet to the site!")}
+        description={<Trans i18nKey="forms.common.install_obyte">If you don't have it yet, please <a href="https://obyte.org/#download" target="_blank" rel="noopener">install</a> and <WalletModal type="link" styles={{ fontSize: 16 }}>add</WalletModal> it. It is to this wallet that the purchased assets will come.</Trans>}
       />
     </Form.Item>}
 
@@ -272,7 +275,7 @@ export const BuyForm = ({ type, yes_team, no_team, amount, setAmount }) => {
     </Form.Item>}
 
     <Form.Item>
-      {fromToken.network === "Obyte" ? <QRButton size="large" ref={btnRef} href={link} disabled={!amount.valid || !Number(amount.value)} type="primary" onClick={buyForReserve}>Send{(amount.valid && amount.value) ? ` ${amount.value}` : ''} {reserve_symbol}</QRButton> : <Button size="large" type="primary" onClick={buyViaEVM} disabled={!metamaskInstalled || !walletAddress || !amount.valid || !Number(amount.value) || estimateError}>Send{(amount.valid && amount.value) ? ` ${amount.value}` : ''} {fromToken.symbol}</Button>}
+      {fromToken.network === "Obyte" ? <QRButton size="large" ref={btnRef} href={link} disabled={!amount.valid || !Number(amount.value)} type="primary" onClick={buyForReserve}>{t("forms.common.send", "Send")}{(amount.valid && amount.value) ? ` ${amount.value}` : ''} {reserve_symbol}</QRButton> : <Button size="large" type="primary" onClick={buyViaEVM} disabled={!metamaskInstalled || !walletAddress || !amount.valid || !Number(amount.value) || estimateError}>{t("forms.common.send", "Send")}{(amount.valid && amount.value) ? ` ${amount.value}` : ''} {fromToken.symbol}</Button>}
     </Form.Item>
   </Form>
 }

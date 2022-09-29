@@ -7,6 +7,7 @@ import QRButton from "obyte-qr-button";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import ReactGA from "react-ga";
+import { Trans, useTranslation } from "react-i18next";
 
 import client from "services/obyte";
 
@@ -30,6 +31,8 @@ export const AddLiquidityForm = ({ yes_team, no_team, visible }) => {
   const walletAddress = useSelector(selectWalletAddress);
   const address = useSelector(selectActiveAddress);
   const tokensByNetwork = useSelector(selectTokensByNetwork);
+
+  const { t } = useTranslation();
 
   const [meta, setMeta] = useState(null);
   const [reserveAmount, setReserveAmount] = useState({ value: 0.1, valid: true });
@@ -336,7 +339,7 @@ export const AddLiquidityForm = ({ yes_team, no_team, visible }) => {
       console.error(e);
 
       notification.error({
-        message: "The transaction would fail. Please check that you have sufficient balance",
+        message: t("common.errors.transaction_fail", "The transaction would fail. Please check that you have sufficient balance"),
         placement: "top"
       })
     }
@@ -378,7 +381,7 @@ export const AddLiquidityForm = ({ yes_team, no_team, visible }) => {
     </Row>
 
     {isFirstIssue && <>
-      <p>Outcome probabilities</p>
+      <p>{t("forms.liquidity.outcome_probabilities", "Outcome probabilities")}</p>
       <Row gutter={8}>
         <Col md={{ span: allow_draw ? 8 : 12 }} xs={{ span: 24 }}>
           <Form.Item extra={<span style={{ color: appConfig.YES_COLOR }}>{yesOdds}</span>} label={<small>{haveTeamNames ? `${yes_team}` : 'YES'}</small>}>
@@ -398,13 +401,13 @@ export const AddLiquidityForm = ({ yes_team, no_team, visible }) => {
           </Form.Item>
         </Col>
       </Row>
-      {bookmaker_yes_odds !== null && bookmaker_no_odds !== null && bookmaker_draw_odds !== null ? <Typography.Text type="secondary">Suggested probabilities are based on the current bookmaker odds</Typography.Text> : null}
+      {bookmaker_yes_odds !== null && bookmaker_no_odds !== null && bookmaker_draw_odds !== null ? <Typography.Text type="secondary">{t("forms.liquidity.suggested_probabilities", "Suggested probabilities are based on the current bookmaker odds")}</Typography.Text> : null}
     </>
     }
 
     {meta && <Form.Item>
       {!isFirstIssue && <div style={{ marginBottom: 15 }}>
-        <b>Net added amounts: </b>
+        <b>{t("forms.liquidity.net_amounts", "Net added amounts")}: </b>
         <div style={{ color: appConfig.YES_COLOR }}>
           {haveTeamNames ? yes_team : 'YES'}: {Number(isFirstIssue ? amountInPenniesWithoutFee * probabilities.yes.value / 100 / 10 ** reserve_decimals : yesReserveAmount / 10 ** reserve_decimals).toFixed(reserve_decimals)} {reserve_symbol} {!isFirstIssue && <>({Number((yesReserveAmount / amountInPenniesWithoutFee) * 100).toFixed(2)}%)</>}
         </div>
@@ -419,15 +422,15 @@ export const AddLiquidityForm = ({ yes_team, no_team, visible }) => {
       </div>}
 
       <div className="metaWrap">
-        {meta?.issue_fee !== 0 && needsIssueFeeForLiquidity ? <div><span className="metaLabel">Issue fee</span>: {+Number(meta.issue_fee / 10 ** reserve_decimals).toFixed(reserve_decimals)} {reserve_symbol}</div> : null}
+        {meta?.issue_fee !== 0 && needsIssueFeeForLiquidity ? <div><span className="metaLabel">{t("meta_trans.issue_fee", "Issue fee")}</span>: {+Number(meta.issue_fee / 10 ** reserve_decimals).toFixed(reserve_decimals)} {reserve_symbol}</div> : null}
         {(fromToken.network !== "Obyte" && estimate) ? <div style={{ marginTop: 20 }}>
-          {counterstake_assistant_fee ? <div><span className="metaLabel"><a href="https://counterstake.org" target="_blank" rel="noopener">Counterstake</a> fee</span>: {+Number(counterstake_assistant_fee).toFixed(fromToken.decimals)} {fromToken.symbol}</div> : null}
-          {(fromToken.network !== "Obyte" && estimate && fromToken.foreign_asset !== reserve_asset) ? <div><span className="metaLabel"><a href="https://oswap.io" target="_blank" rel="noopener">Oswap</a> rate</span>: 1 {fromToken.symbol} ≈ {+Number(estimate / (reserveAmount.value * 0.99)).toFixed(reserve_decimals)} {reserve_symbol}</div> : null}
+          {counterstake_assistant_fee ? <div><span className="metaLabel"><Trans i18nKey="meta_trans.cs_fee"><a href="https://counterstake.org" target="_blank" rel="noopener">Counterstake</a> fee</Trans></span>: {+Number(counterstake_assistant_fee).toFixed(fromToken.decimals)} {fromToken.symbol}</div> : null}
+          {(fromToken.network !== "Obyte" && estimate && fromToken.foreign_asset !== reserve_asset) ? <div><span className="metaLabel"><Trans i18nKey="meta_trans.oswap_rate"><a href="https://oswap.io" target="_blank" rel="noopener">Oswap</a> rate</Trans></span>: 1 {fromToken.symbol} ≈ {+Number(estimate / (reserveAmount.value * 0.99)).toFixed(reserve_decimals)} {reserve_symbol}</div> : null}
         </div> : null}
       </div>
 
       {isFirstIssue && percentSum !== 100 && <div style={{ marginTop: 20 }}>
-        <Alert type="error" message="The percentage sum must be equal to 100" />
+        <Alert type="error" message={t("forms.liquidity.sum_100", "The percentage sum must be equal to 100")} />
       </div>}
     </Form.Item>
     }
@@ -435,16 +438,16 @@ export const AddLiquidityForm = ({ yes_team, no_team, visible }) => {
     {!metamaskInstalled && fromToken.network !== "Obyte" && <Form.Item>
       <Alert
         type="error"
-        message="MetaMask not installed!"
-        description={<span>Please <a href="https://metamask.io/download/" style={{ color: "#fff", textDecoration: 'underline' }} target="_blank" rel="noopener">install</a> it in your browser.</span>}
+        message={t("forms.common.no_metamask", "MetaMask not installed!")}
+        description={<Trans i18nKey="forms.common.install_metamask">Please <a href="https://metamask.io/download/" style={{ color: "#fff", textDecoration: 'underline' }} target="_blank" rel="noopener">install</a> it in your browser.</Trans>}
       />
     </Form.Item>}
 
     {!walletAddress && fromToken.network !== "Obyte" && <Form.Item>
       <Alert
         type="error"
-        message="You have not added your Obyte wallet to the site!"
-        description={<span>If you don't have it yet, please <a href="https://obyte.org/#download" target="_blank" rel="noopener">install</a> and <WalletModal type="link" styles={{ fontSize: 16 }}>add</WalletModal> it. It is to this wallet that the purchased assets will come.</span>}
+        message={t("forms.common.no_obyte_wallet", "You have not added your Obyte wallet to the site!")}
+        description={<Trans i18nKey="forms.common.install_obyte">If you don't have it yet, please <a href="https://obyte.org/#download" target="_blank" rel="noopener">install</a> and <WalletModal type="link" styles={{ fontSize: 16 }}>add</WalletModal> it. It is to this wallet that the purchased assets will come.</Trans>}
       />
     </Form.Item>}
 
@@ -457,8 +460,8 @@ export const AddLiquidityForm = ({ yes_team, no_team, visible }) => {
 
     <Form.Item>
       {fromToken.network === "Obyte"
-        ? <QRButton size="large" type="primary" disabled={!valid || !probabilitiesAreValid} onClick={addLiquidity} href={link}>Send{(reserveAmount.valid && reserveAmount.value) ? ` ${reserveAmount.value} ${reserve_symbol}` : ''}</QRButton>
-        : <Button size="large" type="primary" onClick={buyViaEVM} disabled={!metamaskInstalled || !walletAddress || !reserveAmount.valid || !Number(reserveAmount.value) || estimateError || !probabilitiesAreValid}>Send{(reserveAmount.valid && reserveAmount.value) ? ` ${reserveAmount.value}` : ''} {fromToken.symbol}</Button>}
+        ? <QRButton size="large" type="primary" disabled={!valid || !probabilitiesAreValid} onClick={addLiquidity} href={link}>{t("forms.common.send", "Send")}{(reserveAmount.valid && reserveAmount.value) ? ` ${reserveAmount.value} ${reserve_symbol}` : ''}</QRButton>
+        : <Button size="large" type="primary" onClick={buyViaEVM} disabled={!metamaskInstalled || !walletAddress || !reserveAmount.valid || !Number(reserveAmount.value) || estimateError || !probabilitiesAreValid}>{t("forms.common.send", "Send")}{(reserveAmount.valid && reserveAmount.value) ? ` ${reserveAmount.value}` : ''} {fromToken.symbol}</Button>}
     </Form.Item>
 
     {isFirstIssue && valid && <div style={{ display: 'flex', justifyContent: 'center' }}>

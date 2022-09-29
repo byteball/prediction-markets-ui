@@ -8,8 +8,9 @@ import { Img } from "react-image";
 import moment from "moment";
 import { debounce, isNaN } from "lodash";
 import ReactGA from "react-ga";
+import { useTranslation } from "react-i18next";
 
-import { paramList } from "./CreateForm";
+import { getParamList } from "./CreateForm";
 import { generateLink, generateTextEvent } from "utils";
 
 import styles from "components/PredictionList/PredictionItem.module.css";
@@ -20,6 +21,8 @@ import appConfig from "appConfig";
 const f = (x) => (~(x + "").indexOf(".") ? (x + "").split(".")[1].length : 0);
 
 export const CreateNowForm = ({ feed_name, event_date, expect_datafeed_value, yes_team_id, no_team_id, yes_team, no_team, oracle, expect_comparison, waiting_period_length, quiet_period = 0 }) => {
+  const paramList = getParamList();
+
   const [issueFee, setIssueFee] = useState({ value: paramList.issue_fee.initValue !== undefined ? paramList.issue_fee.initValue : '', valid: paramList.issue_fee.initValue !== undefined });
   const [redeemFee, setRedeemFee] = useState({ value: paramList.redeem_fee.initValue !== undefined ? paramList.redeem_fee.initValue : '', valid: paramList.redeem_fee.initValue !== undefined });
   const [arbProfitFee, setArbProfitFee] = useState({ value: paramList.arb_profit_fee.initValue !== undefined ? paramList.arb_profit_fee.initValue : '', valid: paramList.arb_profit_fee.initValue !== undefined });
@@ -43,7 +46,7 @@ export const CreateNowForm = ({ feed_name, event_date, expect_datafeed_value, ye
   const reserveAssets = useSelector(selectReserveAssets);
 
   const dispatch = useDispatch();
-
+  const { t } = useTranslation();
   useEffect(() => {
     handleChangeFeedName(feed_name);
   }, [feed_name]);
@@ -204,7 +207,7 @@ export const CreateNowForm = ({ feed_name, event_date, expect_datafeed_value, ye
         </div>
       </Col>
     </Row> : <Row style={{ minHeight: 77 }}>
-      <Typography.Title level={5} >{event}</Typography.Title>
+      <Typography.Title level={5}>{event}</Typography.Title>
     </Row>}
 
     <Row gutter={16}>
@@ -212,11 +215,11 @@ export const CreateNowForm = ({ feed_name, event_date, expect_datafeed_value, ye
         <Col xs={{ span: 24 }} md={{ span: 24 }}>
           <Row gutter={8}>
             <Col flex="150px" style={{ fontSize: 18 }}>
-              <div style={{ height: 38, display: 'flex', alignItems: 'center' }}><span>Market pair</span></div>
+              <div style={{ height: 38, display: 'flex', alignItems: 'center' }}><span>{t("forms.create_now.market_pair", "Market pair")}</span></div>
             </Col>
 
             <Col flex="auto">
-              <Form.Item extra={currentFeedValue.loading ? 'Loading rate...' : <span style={{ color: currentFeedValue.value ? 'green' : 'red' }}>{currentFeedValue.value ? `Current rate: ${currentFeedValue.value} ${dataFeedCurrency}` : 'Pair not found'}</span>} validateStatus={feedName.value !== '' ? (feedName.valid ? 'success' : 'error') : undefined}>
+              <Form.Item extra={currentFeedValue.loading ? 'Loading rate...' : <span style={{ color: currentFeedValue.value ? 'green' : 'red' }}>{currentFeedValue.value ? t("forms.create_now.current_rate", "Current rate: {{value}} {{symbol}}", { value: currentFeedValue.value, symbol: dataFeedCurrency }) : t("forms.create_now.no_pair", 'Pair not found')}</span>} validateStatus={feedName.value !== '' ? (feedName.valid ? 'success' : 'error') : undefined}>
                 <AutoComplete
                   autoComplete="off"
                   placeholder={paramList.feed_name.placeholder}
@@ -235,7 +238,7 @@ export const CreateNowForm = ({ feed_name, event_date, expect_datafeed_value, ye
         <Col xs={{ span: 24 }} md={{ span: 24 }}>
           <Row gutter={8}>
             <Col flex="150px" style={{ fontSize: 18 }}>
-              <div style={{ height: 38, display: 'flex', alignItems: 'center' }}><span>to be above</span></div>
+              <div style={{ height: 38, display: 'flex', alignItems: 'center' }}><span>{t("forms.create_now.be_above", "to be above")}</span></div>
             </Col>
             <Col flex="auto">
               <Form.Item validateStatus={datafeedValue.value !== '' ? (datafeedValue.valid ? 'success' : 'error') : undefined} >
@@ -248,7 +251,7 @@ export const CreateNowForm = ({ feed_name, event_date, expect_datafeed_value, ye
         <Col xs={{ span: 24 }} md={{ span: 24 }}>
           <Row gutter={8}>
             <Col flex="150px" style={{ fontSize: 18 }}>
-              <div style={{ height: 38, display: 'flex', alignItems: 'center' }}><span>on</span></div>
+              <div style={{ height: 38, display: 'flex', alignItems: 'center' }}><span>{t("forms.create_now.on", "on")}</span></div>
             </Col>
             <Col flex="auto">
               <Form.Item help={eventDate.value !== '' && !eventDate.valid ? paramList.event_date.errorMessage : ''} validateStatus={eventDate.value !== '' ? (eventDate.valid ? 'success' : 'error') : undefined}>
@@ -260,7 +263,7 @@ export const CreateNowForm = ({ feed_name, event_date, expect_datafeed_value, ye
       </>}
 
       <Col xs={{ span: 24 }} md={{ span: 24 }}>
-        <Form.Item validateStatus='success' label={<FormLabel info={paramList.reserve_asset.description}>Reserve asset</FormLabel>}>
+        <Form.Item validateStatus='success' label={<FormLabel info={paramList.reserve_asset.description}>{paramList.reserve_asset.name}</FormLabel>}>
           <Select onChange={(ev) => handleChangeValue(ev, 'reserve_asset')} size="large" value={reserveAsset.value}>
             {!reserveAssets && <Select.Option value='base'>GBYTE</Select.Option>}
             {reserveAssets && Object.entries(reserveAssets).map(([asset, { symbol }]) => <Select.Option key={asset} value={asset}>{symbol}</Select.Option>)}
@@ -269,30 +272,30 @@ export const CreateNowForm = ({ feed_name, event_date, expect_datafeed_value, ye
       </Col>
 
       <Col xs={{ span: 24 }} md={{ span: 24 }}>
-        <Form.Item validateStatus={issueFee.value !== '' ? (issueFee.valid ? 'success' : 'error') : undefined} label={<FormLabel info={paramList.issue_fee.description}>Issue fee</FormLabel>}>
+        <Form.Item validateStatus={issueFee.value !== '' ? (issueFee.valid ? 'success' : 'error') : undefined} label={<FormLabel info={paramList.issue_fee.description}>{paramList.issue_fee.name}</FormLabel>}>
           <Input size="large" suffix={<span>%</span>} placeholder={paramList.issue_fee.placeholder} value={issueFee.value} onChange={(ev) => handleChangeValue(ev, 'issue_fee')} />
         </Form.Item>
       </Col>
 
       <Col xs={{ span: 24 }} md={{ span: 24 }}>
-        <Form.Item validateStatus={redeemFee.value !== '' ? (redeemFee.valid ? 'success' : 'error') : undefined} label={<FormLabel info={paramList.redeem_fee.description}>Redeem fee</FormLabel>}>
+        <Form.Item validateStatus={redeemFee.value !== '' ? (redeemFee.valid ? 'success' : 'error') : undefined} label={<FormLabel info={paramList.redeem_fee.description}>{paramList.redeem_fee.name}</FormLabel>}>
           <Input size="large" suffix={<span>%</span>} placeholder={paramList.redeem_fee.placeholder} value={redeemFee.value} onChange={(ev) => handleChangeValue(ev, 'redeem_fee')} />
         </Form.Item>
       </Col>
 
       <Col xs={{ span: 24 }} md={{ span: 24 }}>
-        <Form.Item validateStatus={arbProfitFee.value !== '' ? (arbProfitFee.valid ? 'success' : 'error') : undefined} label={<FormLabel info={paramList.arb_profit_fee.description}>Arbitrageur profit fee</FormLabel>}>
+        <Form.Item validateStatus={arbProfitFee.value !== '' ? (arbProfitFee.valid ? 'success' : 'error') : undefined} label={<FormLabel info={paramList.arb_profit_fee.description}>{paramList.arb_profit_fee.name}</FormLabel>}>
           <Input size="large" suffix={<span>%</span>} placeholder={paramList.arb_profit_fee.placeholder} value={arbProfitFee.value} onChange={(ev) => handleChangeValue(ev, 'arb_profit_fee')} />
         </Form.Item>
       </Col>
 
       {type !== 'sport' && <Col xs={{ span: 24 }} md={{ span: 24 }}>
-          <Form.Item validateStatus={quietPeriod.value !== '' ? (quietPeriod.valid ? 'success' : 'error') : undefined} label={<FormLabel value={quietPeriod.valid ? quietPeriod.value : 0} info={paramList.quiet_period.description}>Quiet period (in hours)</FormLabel>}>
-            <Input size="large" placeholder={paramList.quiet_period.placeholder} onChange={(ev) => handleChangeValue(ev, 'quiet_period')} value={quietPeriod.value} />
-          </Form.Item>
-        </Col>}
+        <Form.Item validateStatus={quietPeriod.value !== '' ? (quietPeriod.valid ? 'success' : 'error') : undefined} label={<FormLabel value={quietPeriod.valid ? quietPeriod.value : 0} info={paramList.quiet_period.description}>{paramList.quiet_period.name}</FormLabel>}>
+          <Input size="large" placeholder={paramList.quiet_period.placeholder} onChange={(ev) => handleChangeValue(ev, 'quiet_period')} value={quietPeriod.value} />
+        </Form.Item>
+      </Col>}
     </Row>
 
-    <QRButton href={link} type="primary" disabled={!issueFee.valid || !redeemFee.valid || !arbProfitFee.valid || (type === 'currency' && (!eventDate.valid || !datafeedValue.valid || !customOracle.valid || currentFeedValue.loading))} onClick={create} size="large">Create</QRButton>
+    <QRButton href={link} type="primary" disabled={!issueFee.valid || !redeemFee.valid || !arbProfitFee.valid || (type === 'currency' && (!eventDate.valid || !datafeedValue.valid || !customOracle.valid || currentFeedValue.loading))} onClick={create} size="large">{t("forms.common.create", "Create")}</QRButton>
   </Form >
 }

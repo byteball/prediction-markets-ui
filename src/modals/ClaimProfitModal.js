@@ -2,6 +2,7 @@ import { Button, Drawer, Typography } from "antd";
 import { useState } from "react";
 import { useSelector } from "react-redux";
 import { Helmet } from "react-helmet-async";
+import { useTranslation } from "react-i18next";
 
 import { ClaimProfitForm } from "forms";
 import { useWindowSize } from "hooks";
@@ -30,15 +31,17 @@ export const ClaimProfitModal = ({ disabled, yes_team, no_team }) => {
   const decimals = (winner === 'yes' ? yes_decimals : (winner === 'no' ? no_decimals : draw_decimals) || 0);
   const asset = (winner === 'yes' ? yes_asset : (winner === 'no' ? no_asset : draw_asset) || 0);
   const symbol = (winner === 'yes' ? yes_symbol : (winner === 'no' ? no_symbol : draw_symbol) || 0);
+  const winnerView = winner === 'yes' ? yes_team || 'Yes' : (winner === 'no' ? no_team || 'No' : 'Draw');
 
   const [width] = useWindowSize();
+  const { t } = useTranslation();
 
   const open = () => setVisible(true);
   const close = () => setVisible(false);
 
   return <>
-    {visible && <Helmet title="Prophet prediction markets — Claim profit" />}
-    <Button type="primary" size="large" disabled={disabled} onClick={open}>Claim profit</Button>
+    {visible && <Helmet title={`Prophet prediction markets — ${t("modals.claim_profit.title", "Claim profit")}`} />}
+    <Button type="primary" size="large" disabled={disabled} onClick={open}>{t("modals.claim_profit.title", "Claim profit")}</Button>
     {status === 'loaded' && <Drawer
       width={width > 640 ? 640 : width}
       placement="right"
@@ -46,10 +49,10 @@ export const ClaimProfitModal = ({ disabled, yes_team, no_team }) => {
       visible={visible}
       onClose={close}
     >
-      <Title level={2}>Claim profit</Title>
+      <Title level={2}>{t("modals.claim_profit.title", "Claim profit")}</Title>
 
       <Typography.Paragraph type="secondary">
-        "{winner === 'yes' ? yes_team || 'Yes' : (winner === 'no' ? no_team || 'No' : 'Draw')}" was the right choice and you can collect your winnings
+        {t("modals.claim_profit.winner_desc", '"{{winner}}" was the right choice and you can collect your winnings', { winner: winnerView })}
       </Typography.Paragraph>
 
       <ClaimProfitForm
