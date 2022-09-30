@@ -2,6 +2,7 @@ import { Button, List } from "antd";
 import moment from "moment";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { Trans, useTranslation } from "react-i18next";
 
 import { selectActiveAddress, selectActiveMarketParams, selectActiveRecentEvents, selectActiveRecentEventsCount } from "store/slices/activeSlice";
 import { loadMoreRecentEvents } from "store/thunks/loadMoreRecentEvents";
@@ -14,11 +15,11 @@ const limitStep = 5;
 
 export const RecentEvents = () => {
   const [data, setData] = useState([]);
-
+  const { t } = useTranslation();
   const address = useSelector(selectActiveAddress);
   const notSortedData = useSelector(selectActiveRecentEvents);
   const count = useSelector(selectActiveRecentEventsCount);
-  
+
   const dispatch = useDispatch();
 
   const { reserve_decimals, reserve_symbol, yes_symbol, no_symbol, draw_symbol, yes_decimals, no_decimals, draw_decimals, allow_draw } = useSelector(selectActiveMarketParams);
@@ -29,7 +30,7 @@ export const RecentEvents = () => {
 
   const showMoreButton = data.length < count;
   const currentPage = Math.trunc(data.length / limitStep);
-  
+
   const loadMore = () => {
     dispatch(loadMoreRecentEvents({ address, page: currentPage + 1 }))
   };
@@ -43,18 +44,27 @@ export const RecentEvents = () => {
     const drawAmount = allow_draw ? +Number(Math.abs(draw_amount) / 10 ** reserve_decimals).toFixed(draw_decimals) : '';
 
     if (type === 'add_liquidity' || type === 'buy_by_type') {
-      const action = type === 'add_liquidity' ? 'add liquidity' : 'buy';
-      Event = <span>
-        <a href={`https://${appConfig.ENVIRONMENT === 'testnet' ? 'testnet' : ''}explorer.obyte.org/address/${trigger_address}`} target="_blank" rel="noopener">{trigger_address.slice(0, 16)}...</a> sent {reserveAmount} {reserve_symbol} to {action} {yes_amount !== 0 ? <span style={{ color: appConfig.YES_COLOR }}>{` ${yesAmount} ${yes_symbol}`}</span> : ''} {no_amount !== 0 ? <span style={{ color: appConfig.NO_COLOR }}>{` ${noAmount} ${no_symbol}`}</span> : ''}{draw_amount !== 0 ? <span style={{ color: appConfig.DRAW_COLOR }}>{` ${drawAmount} ${draw_symbol}`}</span> : ''}
-      </span>
+      const count = <>{yes_amount !== 0 ? <span style={{ color: appConfig.YES_COLOR }}>{` ${yesAmount} ${yes_symbol}`}</span> : ''} {no_amount !== 0 ? <span style={{ color: appConfig.NO_COLOR }}>{` ${noAmount} ${no_symbol}`}</span> : ''}{draw_amount !== 0 ? <span style={{ color: appConfig.DRAW_COLOR }}>{` ${drawAmount} ${draw_symbol}`}</span> : ''}</>;
+
+      if (type === 'add_liquidity') {
+        Event = <Trans i18nKey="recent_events.add_liquidity">
+          <a href={`https://${appConfig.ENVIRONMENT === 'testnet' ? 'testnet' : ''}explorer.obyte.org/address/${trigger_address}`} target="_blank" rel="noopener">{{address: trigger_address.slice(0, 16)}}...</a> sent {{amount: reserveAmount}} {{symbol: reserve_symbol}} to add liquidity {count}
+        </Trans>
+      } else {
+        Event = <Trans i18nKey="recent_events.buy">
+          <a href={`https://${appConfig.ENVIRONMENT === 'testnet' ? 'testnet' : ''}explorer.obyte.org/address/${trigger_address}`} target="_blank" rel="noopener">{{address: trigger_address.slice(0, 16)}}...</a> sent {{amount: reserveAmount}} {{symbol: reserve_symbol}} to buy {count}
+        </Trans>
+      }
     } else if (type === 'redeem') {
-      Event = <span>
-        <a href={`https://${appConfig.ENVIRONMENT === 'testnet' ? 'testnet' : ''}explorer.obyte.org/address/${trigger_address}`} target="_blank" rel="noopener">{trigger_address.slice(0, 16)}...</a> sold {yes_amount !== 0 ? <span style={{ color: appConfig.YES_COLOR }}>{` ${yesAmount} ${yes_symbol}`}</span> : ''} {no_amount !== 0 ? <span style={{ color: appConfig.NO_COLOR }}>{` ${noAmount} ${no_symbol}`}</span> : ''}{draw_amount !== 0 ? <span style={{ color: appConfig.DRAW_COLOR }}>{` ${drawAmount} ${draw_symbol}`}</span> : ''} for {reserveAmount} {reserve_symbol}
-      </span>
+      const count = <>{yes_amount !== 0 ? <span style={{ color: appConfig.YES_COLOR }}>{` ${yesAmount} ${yes_symbol}`}</span> : ''} {no_amount !== 0 ? <span style={{ color: appConfig.NO_COLOR }}>{` ${noAmount} ${no_symbol}`}</span> : ''}{draw_amount !== 0 ? <span style={{ color: appConfig.DRAW_COLOR }}>{` ${drawAmount} ${draw_symbol}`}</span> : ''}</>;
+
+      Event = <Trans i18nKey="recent_events.redeem">
+        <a href={`https://${appConfig.ENVIRONMENT === 'testnet' ? 'testnet' : ''}explorer.obyte.org/address/${trigger_address}`} target="_blank" rel="noopener">{{ address: trigger_address.slice(0, 16) }}...</a> sold {count} for {{ amount: reserveAmount }} {{ symbol: reserve_symbol }}
+      </Trans>
     } else if (type === 'claim_profit') {
-      Event = <span>
-        <a href={`https://${appConfig.ENVIRONMENT === 'testnet' ? 'testnet' : ''}explorer.obyte.org/address/${trigger_address}`} target="_blank" rel="noopener">{trigger_address.slice(0, 16)}...</a> profited {reserveAmount} {reserve_symbol}
-      </span>
+      Event = <Trans i18nKey="recent_events.claim_profit">
+        <a href={`https://${appConfig.ENVIRONMENT === 'testnet' ? 'testnet' : ''}explorer.obyte.org/address/${trigger_address}`} target="_blank" rel="noopener">{{ address: trigger_address.slice(0, 16) }}...</a> profited {{ amount: reserveAmount }} {{ symbol: reserve_symbol }}
+      </Trans>
     }
 
     return (<div className={styles.eventWrap}>
@@ -67,8 +77,8 @@ export const RecentEvents = () => {
     dataSource={data}
     renderItem={RecentEventItem}
     className={styles.eventList}
-    loadMore={showMoreButton ? <div className={styles.moreButtonWrap}><Button onClick={loadMore}>Show more</Button></div> : null}
-    locale={{ emptyText: 'No events' }}
+    loadMore={showMoreButton ? <div className={styles.moreButtonWrap}><Button onClick={loadMore}>{t("recent_events.show_more", 'Show more')}</Button></div> : null}
+    locale={{ emptyText: t('recent_events.no_events', 'No events') }}
     size="large"
   />
 }

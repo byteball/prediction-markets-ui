@@ -11,6 +11,7 @@ import Countdown from "antd/lib/statistic/Countdown";
 import { Img } from 'react-image';
 import { Helmet } from "react-helmet-async";
 import { kebabCase } from "lodash";
+import { Trans, useTranslation } from "react-i18next";
 
 import {
   selectActiveCurrencyCandles,
@@ -109,6 +110,7 @@ export const MarketPage = () => {
   }
 
   const dispatch = useDispatch();
+  const { t } = useTranslation();
 
   const [chartType, setChartType] = useState('prices')
   const [visibleTradeModal, setVisibleTradeModal] = useState(false);
@@ -246,25 +248,25 @@ export const MarketPage = () => {
   }, []);
 
   if (params.event_date - quiet_period > now) {
-    tradeStatus = "TRADING";
+    tradeStatus = t("common.status.trading", 'trading').toUpperCase();
     tradeStatusColor = appConfig.YES_COLOR;
     tradeTimerExpiry = params.event_date;
     tradeIsActive = true;
     showCommitResultButton = false;
   } else if (params.event_date > now) {
-    tradeStatus = "QUIET PERIOD";
+    tradeStatus = t("common.status.quiet_period", 'quiet period').toUpperCase();
     tradeStatusColor = '#e58e26';
   } else if (result) {
-    tradeStatus = "CLAIMING PROFIT";
+    tradeStatus = t("common.status.claiming", 'Claiming profit').toUpperCase();
     showClaimProfitButton = true;
     tradeStatusColor = appConfig.YES_COLOR;
   } else if (params.event_date + params.waiting_period_length > now) {
-    tradeStatus = "WAITING FOR RESULTS";
+    tradeStatus = t("common.status.waiting", 'Waiting for results').toUpperCase();
     tradeStatusColor = '#e58e26';
     tradeTimerExpiry = params.event_date + params.waiting_period_length;
     showCommitResultButton = true;
   } else {
-    tradeStatus = "RESUMED TRADING";
+    tradeStatus = t("common.status.resumed", "Resumed trading").toUpperCase();
     tradeStatusColor = appConfig.YES_COLOR;
     showCommitResultButton = true;
     tradeIsActive = true;
@@ -303,24 +305,24 @@ export const MarketPage = () => {
     const no_team_name = teams.no.name;
 
     if (priceOrOdds === 'price') {
-      yesTooltip = `The price of the ${yes_team_name} token. If ${yes_team_name} wins, all funds paid by buyers of all tokens will be divided among ${yes_team_name} token holders.`;
-      noTooltip = `The price of the ${no_team_name} token. If ${no_team_name} wins, all funds paid by buyers of all tokens will be divided among ${no_team_name} token holders.`;
-      drawTooltip = `The price of the draw token. In case of a draw, all funds paid by buyers of all tokens will be divided among draw token holders.`;
+      yesTooltip = t('pages.market.sport_price_tooltip', 'The price of the {{team_name}} token. If {{team_name}} wins, all funds paid by buyers of all tokens will be divided among {{team_name}} token holders.', { team_name: yes_team_name })
+      yesTooltip = t('pages.market.sport_price_tooltip', 'The price of the {{team_name}} token. If {{team_name}} wins, all funds paid by buyers of all tokens will be divided among {{team_name}} token holders.', { team_name: no_team_name })
+      drawTooltip = t('pages.market.sport_price_tooltip_draw', 'The price of the draw token. In case of a draw, all funds paid by buyers of all tokens will be divided among draw token holders.');
     } else {
-      yesTooltip = `The multiple you receive if you bet on ${yes_team_name} and it wins, assuming the odds don’t change.`;
-      noTooltip = `The multiple you receive if you bet on ${no_team_name} and it wins, assuming the odds don’t change.`;
-      drawTooltip = "The multiple you receive if you bet on draw and your bet wins, assuming the odds don’t change.";
+      yesTooltip = t('pages.market.sport_odds_tooltip', 'The multiple you receive if you bet on {{team_name}} and it wins, assuming the odds don’t change.', { team_name: yes_team_name });
+      noTooltip = t('pages.market.sport_odds_tooltip', 'The multiple you receive if you bet on {{team_name}} and it wins, assuming the odds don’t change.', { team_name: no_team_name });
+      drawTooltip = t('pages.market.sport_odds_tooltip_draw', "The multiple you receive if you bet on draw and your bet wins, assuming the odds don’t change.");
     }
 
   } else {
     if (priceOrOdds === 'price') {
-      yesTooltip = "The price of the token that represents the “Yes” outcome. If this outcome wins, all funds paid by buyers of all tokens will be divided among “Yes” token holders.";
-      noTooltip = "The price of the token that represents the “No” outcome. If this outcome wins, all funds paid by buyers of all tokens will be divided among “No” token holders.";
-      drawTooltip = "The price of the token that represents the “Draw” outcome. If this outcome wins, all funds paid by buyers of all tokens will be divided among “Draw” token holders.";
+      yesTooltip = t('pages.market.price_tooltip', "The price of the token that represents the “{{type}}” outcome. If this outcome wins, all funds paid by buyers of all tokens will be divided among “{{type}}” token holders.", { type: "Yes" });
+      noTooltip = t('pages.market.price_tooltip', "The price of the token that represents the “{{type}}” outcome. If this outcome wins, all funds paid by buyers of all tokens will be divided among “{{type}}” token holders.", { type: "No" });
+      drawTooltip = t('pages.market.price_tooltip', "The price of the token that represents the “{{type}}” outcome. If this outcome wins, all funds paid by buyers of all tokens will be divided among “{{type}}” token holders.", { type: "Draw" });
     } else {
-      yesTooltip = "The multiple you receive if you bet on “Yes” outcome and it wins, assuming the odds don’t change.";
-      noTooltip = "The multiple you receive if you bet on “No” outcome and it wins, assuming the odds don’t change.";
-      drawTooltip = "The multiple you receive if you bet on “Draw” outcome and it wins, assuming the odds don’t change.";
+      yesTooltip = t('pages.market.odds_tooltip', "The multiple you receive if you bet on “{{type}}” outcome and it wins, assuming the odds don’t change.", { type: "Yes" });
+      noTooltip = t('pages.market.odds_tooltip', "The multiple you receive if you bet on “{{type}}” outcome and it wins, assuming the odds don’t change.", { type: "No" });
+      drawTooltip = t('pages.market.odds_tooltip', "The multiple you receive if you bet on “{{type}}” outcome and it wins, assuming the odds don’t change.", { type: "Draw" });
     }
   }
 
@@ -347,9 +349,9 @@ export const MarketPage = () => {
       drawSubValueView = `$${drawPriceInUSD}`;
     }
   } else if (priceOrOdds === 'odds' && yes_odds && no_odds && draw_odds && yesOddsView && noOddsView && drawOddsView) {
-    yesSubValueView = `Bookmaker odds: x${yes_odds}`;
-    noSubValueView = `Bookmaker odds: x${no_odds}`;
-    drawSubValueView = `Bookmaker odds: x${draw_odds}`;
+    yesSubValueView = t('pages.market.bookmaker_odds', `Bookmaker odds: x{{odds}}`, { odds: yes_odds });
+    noSubValueView = t('pages.market.bookmaker_odds', `Bookmaker odds: x{{odds}}`, { odds: no_odds });
+    drawSubValueView = t('pages.market.bookmaker_odds', `Bookmaker odds: x{{odds}}`, { odds: draw_odds });
   }
 
 
@@ -405,7 +407,7 @@ export const MarketPage = () => {
             yes_team={teams?.yes?.name}
             no_team={teams?.no?.name}
           />
-          {showCommitResultButton && (datafeedValue ? <QRButton type="primary" size="large" href={commitResultLink}>Commit result</QRButton> : <Tooltip title="Oracle has not published results yet"><Button size="large" disabled={true}>Commit result</Button></Tooltip>)}
+          {showCommitResultButton && (datafeedValue ? <QRButton type="primary" size="large" href={commitResultLink}>{t('pages.market.commit_result', "Commit result")}</QRButton> : <Tooltip title={t('pages.market.not_published', "Oracle has not published results yet")}><Button size="large" disabled={true}>{t('pages.market.commit_result', "Commit result")}</Button></Tooltip>)}
           {showClaimProfitButton && <ClaimProfitModal
             yes_team={teams?.yes?.name}
             no_team={teams?.no?.name}
@@ -414,7 +416,7 @@ export const MarketPage = () => {
         </Space>
       </Row>
 
-      {!appConfig.KNOWN_ORACLES.includes(oracle) && <Alert showIcon message={<span>This market uses an oracle <a style={{ color: '#fff' }} href={`https://${appConfig.ENVIRONMENT === 'testnet' ? 'testnet' : ''}explorer.obyte.org/#${oracle}`} target="_blank" rel="noopener">{oracle}</a> that is unknown to this website, trade with care.</span>} type="warning" />}
+      {!appConfig.KNOWN_ORACLES.includes(oracle) && <Alert showIcon message={<Trans i18nKey="pages.market.unknown_oracle">This market uses an oracle <a style={{ color: '#fff' }} href={`https://${appConfig.ENVIRONMENT === 'testnet' ? 'testnet' : ''}explorer.obyte.org/#${oracle}`} target="_blank" rel="noopener">{oracle}</a> that is unknown to this website, trade with care.</Trans>} type="warning" />}
 
       {isCurrencyMarket && currencyCandles.length > 0 && <CurrencyChart data={currencyCandles} params={params} />}
 
@@ -458,27 +460,27 @@ export const MarketPage = () => {
 
           {(isCurrencyMarket && currencyCurrentValue) ? <Col lg={{ span: 8 }} md={{ span: 12 }} xs={{ span: 24 }} style={{ marginBottom: 30 }}>
             <StatsCard
-              title="Current value"
-              tooltip={`The latest value of the data feed ${params.feed_name}`}
+              title={t('pages.market.cards.current.title', "Current value")}
+              tooltip={t('pages.market.cards.current.desc', "The latest value of the data feed {{feed_name}}", { feed_name: params.feed_name })}
               value={+currencyCurrentValue.toFixed(9)} />
           </Col> : null}
 
           <Col lg={{ span: 8 }} md={{ span: 12 }} xs={{ span: 24 }} style={{ marginBottom: 30 }}>
             <StatsCard
-              title="Reserve"
+              title={t('pages.market.cards.reserve.title', "Reserve")}
               subValue={reserve_rate ? viewReserveInUSD : undefined}
-              tooltip="Total amount invested in all outcomes"
+              tooltip={t('pages.market.cards.reserve.desc', "Total amount invested in all outcomes")}
               value={<span>{viewReserve} <small>{reserve_symbol}</small></span>} />
           </Col>
 
           <Col lg={{ span: 8 }} md={{ span: 12 }} xs={{ span: 24 }} style={{ marginBottom: 30 }}>
             <StatsCard
-              title="time to expiration"
-              tooltip="The period while you can make your bets, or exit them if you changed your mind"
+              title={t('pages.market.cards.expiration_time.title', "time to expiration")}
+              tooltip={t('pages.market.cards.expiration_time.desc', "The period while you can make your bets, or exit them if you changed your mind")}
               value={tradeTimerExpiry ? <Countdown
                 value={moment.unix(tradeTimerExpiry)}
                 format="DD [days] HH:mm:ss" /> : '-'}
-              subValue={<span>STATUS: <span style={{ color: tradeStatusColor, textTransform: 'uppercase' }}>{tradeStatus}</span></span>} />
+              subValue={<span>{t('pages.market.status', "status").toUpperCase()}: <span style={{ color: tradeStatusColor, textTransform: 'uppercase' }}>{tradeStatus}</span></span>} />
           </Col>
         </Row>
       </div>
@@ -486,21 +488,21 @@ export const MarketPage = () => {
       {dataForChart.length > 0 && <div>
         <div className={styles.typeChartSelectorWrap}>
           <Radio.Group value={chartType} className={styles.typeChartSelector} onChange={(ev) => setChartType(ev.target.value)}>
-            <Radio.Button value="prices">Prices</Radio.Button>
-            <Radio.Button value="supplies">Supplies</Radio.Button>
-            <Radio.Button value="fee">Fee accumulation</Radio.Button>
-            <Radio.Button value="apy">{!result ? 'Estimated ' : ''}APY</Radio.Button>
+            <Radio.Button value="prices">{t('pages.market.chart.prices', "Prices")}</Radio.Button>
+            <Radio.Button value="supplies">{t('pages.market.chart.supplies', "Supplies")}</Radio.Button>
+            <Radio.Button value="fee">{t('pages.market.chart.fee', "Fee accumulation")}</Radio.Button>
+            <Radio.Button value="apy">{!result ? t('pages.market.chart.estimated_apy', "Estimated APY") : t('pages.market.chart.apy', "APY")}</Radio.Button>
           </Radio.Group>
         </div>
         <Line {...chartConfig} data={dataForChart} />
         {chartType === 'apy' && <div className={styles.apyChartDescWrap}>
           <div>
-            Liquidity provision date
+            {t('pages.market.chart.liquidity_date', "Liquidity provision date")}
           </div>
           <div className={styles.apyChartDesc}>
             {committed_at
-              ? "APY that would be earned if an infinitesimal amount of liquidity were added on the date on the chart and held until the outcome was published."
-              : "Estimated APY that would be earned if an infinitesimal amount of liquidity were added on the date on the chart and held until the event date. The estimation assumes that trading activity stays the same as it has been so far."}
+              ? t('pages.market.chart.apy_desc', "APY that would be earned if an infinitesimal amount of liquidity were added on the date on the chart and held until the outcome was published.")
+              : t('pages.market.chart.estimated_apy_desc', "Estimated APY that would be earned if an infinitesimal amount of liquidity were added on the date on the chart and held until the event date. The estimation assumes that trading activity stays the same as it has been so far.")}
           </div>
         </div>}
       </div>}
@@ -508,17 +510,18 @@ export const MarketPage = () => {
       <div style={{ marginTop: 50 }}>
         <Row gutter={10} align="middle" justify="space-between">
           <Col md={{ span: showMarketSizePie ? 12 : 24 }} xs={{ span: 24 }}>
-            <h2 style={{ fontSize: 28 }}>Make money from liquidity provision</h2>
+            <h2 style={{ fontSize: 28 }}>{t('pages.market.apy.title', "Make money from liquidity provision")}</h2>
             <Typography.Paragraph>
-              {reserve !== 0 && <span>Every trade is charged a fee which is added to the market’s pool (see the fee accumulation chart above).</span>} Earn a share of these fees by buying all tokens in the same proportions they are already issued. One of the tokens will win, and you’ll get a share of the trading fees collected after you invested.
+              {reserve !== 0 && <span>{t('pages.market.apy.every_trade', "Every trade is charged a fee which is added to the market’s pool (see the fee accumulation chart above).")}</span>}
+              {t('pages.market.apy.earn', "Earn a share of these fees by buying all tokens in the same proportions they are already issued. One of the tokens will win, and you’ll get a share of the trading fees collected after you invested.")}
             </Typography.Paragraph>
             <Typography.Paragraph>
-              By buying all tokens without changing their proportions you are not betting on any outcome but taking a market-neutral position instead and adding liquidity to the market. This is safe if the current proportions reflect the true probabilities.
+              {t('pages.market.apy.by_buying', "By buying all tokens without changing their proportions you are not betting on any outcome but taking a market-neutral position instead and adding liquidity to the market. This is safe if the current proportions reflect the true probabilities.")}
             </Typography.Paragraph>
 
             <div className={styles.apyWrap}>
-              <div className={styles.apyPanel}>Liquidity provision APY since the pool was started: {apyView}%</div>
-              <div className={styles.apyDesc}>The APY estimation is for the first LP assuming the trading activity stays the same as it has been so far. Later LPs earn from fewer trades, and the trading activity can change in the future, so the actual APY can be significantly different.</div>
+              <div className={styles.apyPanel}>{t('pages.market.apy.block', "Liquidity provision APY since the pool was started: {{percent}}%", { percent: apyView })}</div>
+              <div className={styles.apyDesc}>{t('pages.market.apy.block_desc', "The APY estimation is for the first LP assuming the trading activity stays the same as it has been so far. Later LPs earn from fewer trades, and the trading activity can change in the future, so the actual APY can be significantly different.")}</div>
             </div>
 
             <AddLiquidityModal disabled={!tradeIsActive} yes_team={teams?.yes?.name} no_team={teams?.no?.name} />
@@ -540,7 +543,7 @@ export const MarketPage = () => {
       </div>
 
       <div>
-        <h2 style={{ marginBottom: 15, marginTop: 50, fontSize: 28 }}>Recent events</h2>
+        <h2 style={{ marginBottom: 15, marginTop: 50, fontSize: 28 }}>{t('pages.market.recent_events', "Recent events")}</h2>
         <RecentEvents />
       </div>
 

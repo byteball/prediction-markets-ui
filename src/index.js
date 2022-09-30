@@ -10,6 +10,7 @@ import getStore from "./store";
 import AppRouter from 'AppRouter';
 import appConfig from 'appConfig';
 
+import './locale/index';
 import './index.css';
 
 export const { store, persistor } = getStore();

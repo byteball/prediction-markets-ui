@@ -1,4 +1,5 @@
 import { truncate } from "lodash";
+import { capitalizeFirstLetter } from "./capitalizeFirstLetter";
 import { encodeData } from "./encodeData";
 import { generateLink } from "./generateLink";
 import { generateTextEvent } from "./generateTextEvent";
@@ -17,5 +18,6 @@ export {
   generateTextEvent,
   truncate,
   getEstimatedAPY,
-  transformChampionshipName
+  transformChampionshipName,
+  capitalizeFirstLetter
 }

@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Row, Col, Button, Drawer, Space } from "antd";
 import { Link } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 
 import { MainMenu } from "components/MainMenu/MainMenu";
 import { SocialLinks } from "components/SocialLinks/SocialLinks";
@@ -15,6 +16,7 @@ export const Header = () => {
 	const [showMenu, setShowMenu] = useState(false);
 
 	const changeVisible = () => setShowMenu((v) => !v);
+	const { t } = useTranslation();
 
 	return <div className={styles.header}>
 		<div>
@@ -24,7 +26,7 @@ export const Header = () => {
 						<img className={styles.logo} src="/logo.svg" alt="Prophet" />
 						<div>
 							<div className={styles.name}>Prophet</div>
-							<small className={styles.desc}>Prediction markets</small>
+							<small className={styles.desc}>{t("header.description", "Prediction markets")}</small>
 						</div>
 					</Link>
 				</Col>
@@ -40,7 +42,7 @@ export const Header = () => {
 						</Space>
 					</Col>
 				</> : <>
-					<Button onClick={changeVisible} size="large">Menu</Button>
+					<Button onClick={changeVisible} size="large">{t("header.menu", "Menu")}</Button>
 					<Drawer width={width >= 320 ? 320 : width} visible={showMenu} onClose={changeVisible} bodyStyle={{ width: '100%', textAlign: 'center', display: 'flex', flexDirection: 'column', maxHeight: 'calc(100vh - 50px)' }}>
 						<div className={styles.mainMenuWrap}>
 							<MainMenu direction="vertical" />

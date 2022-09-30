@@ -4,8 +4,9 @@ import QRButton from "obyte-qr-button";
 import { memo, useEffect, useRef, useState } from "react";
 import { useSelector } from "react-redux";
 import ReactGA from "react-ga";
+import { useTranslation } from "react-i18next";
 
-import { TransactionMeta } from "components/TransactionMeta/TransactionMeta";
+import { TransactionEstimation } from "components/TransactionEstimation/TransactionEstimation";
 import {
   selectActiveAddress,
   selectActiveMarketParams,
@@ -31,6 +32,7 @@ export const RedeemForm = memo(({ type, yes_team, no_team, amount, setAmount }) 
   const [payoutAmount, setPayoutAmount] = useState({ value: undefined, valid: true });
 
   const btnRef = useRef();
+  const { t } = useTranslation();
 
   const { yes_symbol, no_symbol, draw_symbol, allow_draw, reserve_symbol, reserve_decimals, yes_decimals, no_decimals, draw_decimals } = params;
   const { yes_asset, no_asset, draw_asset } = stateVars;
@@ -116,13 +118,13 @@ export const RedeemForm = memo(({ type, yes_team, no_team, amount, setAmount }) 
     <Row gutter={8}>
       <Col md={{ span: type ? 24 : 6 }} xs={{ span: 24 }}>
         <Form.Item>
-          <Input placeholder="Amount" suffix={<span style={{ maxWidth: '100%', overflow: 'hidden' }}>{truncate(type ? (yes_team && no_team) ? `${(currentToken?.type === 'draw' ? 'Draw' : (currentToken?.type === 'yes' ? yes_team : no_team))} (${currentToken?.symbol})` : `${currentToken?.symbol} ${(currentToken?.type && currentToken?.type !== 'reserve') ? '(' + currentToken?.type.toUpperCase() + '-token)' : ''}` : "", { length: 18 })}</span>} value={amount.value} onChange={handleChangeAmount} onKeyDown={(ev) => ev.key === 'Enter' ? btnRef.current.click() : null} />
+          <Input placeholder={t("forms.common.amount", "Amount")} suffix={<span style={{ maxWidth: '100%', overflow: 'hidden' }}>{truncate(type ? (yes_team && no_team) ? `${(currentToken?.type === 'draw' ? 'Draw' : (currentToken?.type === 'yes' ? yes_team : no_team))} (${currentToken?.symbol})` : `${currentToken?.symbol} ${(currentToken?.type && currentToken?.type !== 'reserve') ? '(' + currentToken?.type.toUpperCase() + '-token)' : ''}` : "", { length: 18 })}</span>} value={amount.value} onChange={handleChangeAmount} onKeyDown={(ev) => ev.key === 'Enter' ? btnRef.current.click() : null} />
         </Form.Item>
       </Col>
 
       {!type ? <Col md={{ span: 18 }} xs={{ span: 24 }}>
         <Form.Item>
-          <Select placeholder="Select a get token" value={currentToken?.asset} onChange={handleChangeCurrentToken}>
+          <Select placeholder={t("forms.common.select_token", "Select token")} value={currentToken?.asset} onChange={handleChangeCurrentToken}>
             {tokens?.map(({ asset, symbol, type }) => (<Select.Option key={`to_${asset}`} value={asset}>
               {(yes_team && no_team) ? <>{(type === 'draw' ? 'Draw' : (type === 'yes' ? yes_team : no_team))} ({symbol})</> : <>{symbol} {(type && type !== 'reserve') ? '(' + type.toUpperCase() + '-token)' : ''}</>}
             </Select.Option>))}
@@ -132,9 +134,9 @@ export const RedeemForm = memo(({ type, yes_team, no_team, amount, setAmount }) 
     </Row>
 
     {meta && payoutAmount.value > 0 && <Form.Item>
-      <div style={{ fontSize: 18, paddingBottom: 10 }}>You get {+Number((payoutAmount.value) / 10 ** reserve_decimals).toFixed(reserve_decimals)} {reserve_symbol}</div>
+      <div style={{ fontSize: 18, paddingBottom: 10 }}>{t("forms.common.you_get", "You get")} {+Number((payoutAmount.value) / 10 ** reserve_decimals).toFixed(reserve_decimals)} {reserve_symbol}</div>
 
-      <TransactionMeta
+      <TransactionEstimation
         meta={meta}
         params={params}
         tokenType={currentToken?.type}
@@ -144,13 +146,13 @@ export const RedeemForm = memo(({ type, yes_team, no_team, amount, setAmount }) 
 
     {(meta && payoutAmount.value <= 0) ? <Form.Item>
       <Alert
-        message="The price would change too much, try a smaller amount"
+        message={t("forms.redeem.price_change", "The price would change too much, try a smaller amount")}
         type="error"
       />
     </Form.Item> : null}
 
     <Form.Item>
-      <QRButton ref={btnRef} href={link} disabled={!amount.valid || !Number(amount.value) || payoutAmount.value <= 0} type="primary" onClick={redeem}>Send {amount.valid && Number(amount.value) ? Number(amount.value) : ''} {truncate(currentToken.symbol, { length: 14 })}</QRButton>
+      <QRButton ref={btnRef} href={link} disabled={!amount.valid || !Number(amount.value) || payoutAmount.value <= 0} type="primary" onClick={redeem}>{t("forms.common.send", "Send")} {amount.valid && Number(amount.value) ? Number(amount.value) : ''} {truncate(currentToken.symbol, { length: 14 })}</QRButton>
     </Form.Item>
   </Form>
 })

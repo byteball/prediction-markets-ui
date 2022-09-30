@@ -6,6 +6,7 @@ import moment from 'moment';
 import { useSelector } from 'react-redux';
 import { kebabCase, min } from 'lodash';
 import { Img } from 'react-image';
+import { useTranslation } from "react-i18next";
 
 import { selectPriceOrOdds, selectReservesRate } from 'store/slices/settingsSlice';
 
@@ -22,6 +23,7 @@ const max_display_decimals = 5;
 export const PredictionItem = ({ reserve_asset = 'base', aa_address, reserve = 0, reserve_decimals = 0, yes_price = 0, no_price = 0, draw_price = 0, allow_draw, event_date, candles, reserve_symbol, yes_symbol, result, waiting_period_length, feed_name, expect_datafeed_value, datafeed_value, oracle, comparison, yes_team_id, no_team_id, yes_team, no_team, supply_yes = 0, supply_no = 0, supply_draw = 0, preview, apy = 0, quiet_period = 0 }) => {
   const infoWrapRef = useRef();
   const [width] = useWindowSize();
+  const { t } = useTranslation();
 
   const [infoHeight, setInfoHeight] = useState();
   const [dataForChart, setDataForChart] = useState([]);
@@ -80,7 +82,7 @@ export const PredictionItem = ({ reserve_asset = 'base', aa_address, reserve = 0
   const yesPriceView = +Number(yes_price).toPrecision(max_display_decimals);
   const noPriceView = +Number(no_price).toPrecision(max_display_decimals);
   const drawPriceView = +Number(draw_price).toPrecision(max_display_decimals);
-  const apyView = apy ? (apy < 1000 ? `Liquidity provider APY: ${Number(apy).toFixed(2)}%` : 'APY not shown') : 'APY not available yet';
+  const apyView = apy ? (apy < 1000 ? t("prediction_item.lp_apy", `Liquidity provider APY: {{apy}}%`, {apy: `${Number(apy).toFixed(2)}`}) : t("prediction_item.apy_not_shown", 'APY not shown')) : t("prediction_item.apy_not_available", 'APY not available yet');
 
   const eventView = generateTextEvent({
     event_date,
@@ -108,13 +110,13 @@ export const PredictionItem = ({ reserve_asset = 'base', aa_address, reserve = 0
 
   if (isExpiry) {
     if (result) {
-      status = 'Claiming profit';
+      status = t("common.status.claiming", 'Claiming profit');
       color = appConfig.YES_COLOR
     } else {
       if (now > (event_date + waiting_period_length)) {
-        status = 'Resumed trading';
+        status = t("common.status.resumed", 'Resumed trading');
       } else {
-        status = 'Waiting for results';
+        status = t("common.status.waiting", 'Waiting for results');
         color = '#e58e26'
       }
     }
@@ -207,19 +209,19 @@ export const PredictionItem = ({ reserve_asset = 'base', aa_address, reserve = 0
     }
 
   } else if (result) {
-    yesValue = 'LOSER';
-    noValue = 'LOSER';
+    yesValue = t('common.loser', 'LOSER');
+    noValue = t('common.loser', 'LOSER');
 
     if (allow_draw) {
-      drawValue = 'LOSER';
+      drawValue = t('common.loser', 'LOSER');
     }
 
     if (result === 'yes') {
-      yesValue = supply_yes ? (priceOrOdds === 'price' ? `${winnerPriceView} ${reserve_symbol}` : `x${winnerOddsView}`) : 'WINNER';
+      yesValue = supply_yes ? (priceOrOdds === 'price' ? `${winnerPriceView} ${reserve_symbol}` : `x${winnerOddsView}`) : t('common.winner', 'WINNER');
     } else if (result === 'no') {
-      noValue = supply_no ? (priceOrOdds === 'price' ? `${winnerPriceView} ${reserve_symbol}` : `x${winnerOddsView}`) : 'WINNER';
+      noValue = supply_no ? (priceOrOdds === 'price' ? `${winnerPriceView} ${reserve_symbol}` : `x${winnerOddsView}`) : t('common.winner', 'WINNER');
     } else if (result === 'draw' && allow_draw) {
-      drawValue = supply_draw ? (priceOrOdds === 'price' ? `${winnerPriceView} ${reserve_symbol}` : `x${winnerOddsView}`) : 'WINNER';
+      drawValue = supply_draw ? (priceOrOdds === 'price' ? `${winnerPriceView} ${reserve_symbol}` : `x${winnerOddsView}`) : t('common.winner', 'WINNER');
     }
   }
 

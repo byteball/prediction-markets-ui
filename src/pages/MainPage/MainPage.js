@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { Col, Empty, Row, Spin } from "antd";
 import { useSelector } from "react-redux";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
+import { Trans, useTranslation } from "react-i18next";
 
 import { Layout } from "components/Layout/Layout";
 import { PredictionList } from "components/PredictionList/PredictionList";
@@ -13,6 +14,7 @@ import { getTabNameByType } from "utils/getTabNameByType";
 
 import styles from "./MainPage.module.css";
 import { Helmet } from "react-helmet-async";
+import { capitalizeFirstLetter } from "utils";
 
 export const MainPage = () => {
 	const markets = useSelector(selectAllMarkets);
@@ -21,6 +23,7 @@ export const MainPage = () => {
 	const { category, particle: particleFromUrl } = useParams();
 	const navigate = useNavigate();
 	const location = useLocation();
+	const { t } = useTranslation();
 
 	const [marketType, setMarketType] = useState('all');
 	const [particle, setParticle] = useState('all');
@@ -28,10 +31,10 @@ export const MainPage = () => {
 
 	const sportTypes = Object.keys(championships);
 
-	const switchActionsData = [{ value: 'all', text: 'All' }];
+	const switchActionsData = [{ value: 'all', text: t('common.all', "All") }];
 
 	sportTypes.forEach((type) => switchActionsData.push(({ value: type, text: getTabNameByType(type) })))
-	switchActionsData.push({ value: 'currency', text: '📈 Currency' }, { value: 'misc', text: 'Misc' })
+	switchActionsData.push({ value: 'currency', text: `📈 ${t('common.currency', "Currency")}` }, { value: 'misc', text: t('common.misc', "Misc") })
 
 	useEffect(() => {
 		// init params from url
@@ -115,10 +118,14 @@ export const MainPage = () => {
 			<Row className={styles.headerWrap}>
 				<Col xs={{ span: 24 }} md={{ span: 24 }}>
 					<h1 className={styles.mainHeader}>
-						Decentralized <span className={styles.select}>prediction markets</span>
+						<Trans i18nKey="pages.main.title">
+							Decentralized <span className={styles.select}>prediction markets</span>
+						</Trans>
 					</h1>
 					<h2 className={styles.description}>
-						<p>Sports betting, binary options, and other bets on future events</p>
+						<Trans i18nKey="pages.main.subtitle">
+							<p>Sports betting, binary options, and other bets on future events</p>
+						</Trans>
 					</h2>
 				</Col>
 			</Row>
@@ -130,7 +137,7 @@ export const MainPage = () => {
 					<PredictionList type={marketType} particle={particle} setParticle={handleParticle} />
 				</div>
 			</div> : <div>
-				<Empty image={Empty.PRESENTED_IMAGE_SIMPLE} description="There are no markets" />
+				<Empty image={Empty.PRESENTED_IMAGE_SIMPLE} description={capitalizeFirstLetter(t('common.no_markets', "no markets"))} />
 			</div>}
 		</Layout>
 	</div>
