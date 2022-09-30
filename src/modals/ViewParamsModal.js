@@ -50,8 +50,8 @@ export const ViewParamsModal = ({ reserve_asset, allow_draw, oracle, feed_name, 
       <p><b>{paramList.datafeed_value.name}: </b>{datafeed_value}</p>
       {allow_draw && <p><b>{paramList.datafeed_draw_value.name}: </b>{datafeed_draw_value}</p>}
       <p><b>{paramList.event_date.name}: </b>{moment.unix(event_date).format('lll')}</p>
-      <p><b>{paramList.waiting_period_length.name}: </b>{+Number(waiting_period_length / (24 * 3600)).toFixed(3)} days</p>
-      <p><b>{paramList.quiet_period.name}: </b>{+Number(quiet_period / 3600).toFixed(3)} hours</p>
+      <p><b>{paramList.waiting_period_length.name}: </b>{+Number(waiting_period_length / (24 * 3600)).toFixed(3)} {t("common.days", "days")}</p>
+      <p><b>{paramList.quiet_period.name}: </b>{+Number(quiet_period / 3600).toFixed(3)} {t("common.hours", "hours")}</p>
       <p><b>{paramList.issue_fee.name}: </b>{issue_fee * 100}%</p>
       <p><b>{paramList.redeem_fee.name}: </b>{redeem_fee * 100}%</p>
       <p><b>{paramList.arb_profit_fee.name} </b>{arb_profit_tax * 100}%</p>

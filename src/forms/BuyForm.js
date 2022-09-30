@@ -17,7 +17,7 @@ import { get_result_for_buying_by_type } from "utils/getExchangeResult";
 import { selectTokensByNetwork } from "store/slices/bridgesSlice";
 import { generateLink } from "utils";
 
-import { TransactionMeta } from "components/TransactionMeta/TransactionMeta";
+import { TransactionEstimation } from "components/TransactionEstimation/TransactionEstimation";
 import { WalletModal } from "modals";
 
 import appConfig from "appConfig";
@@ -224,7 +224,7 @@ export const BuyForm = ({ type, yes_team, no_team, amount, setAmount }) => {
         </Col>
         <Col md={{ span: 16 }} xs={{ span: 24 }}>
           <Form.Item>
-            <Select size="large" placeholder="Select a get token" value={currentToken?.asset} onChange={(toAsset) => setCurrentToken(tokens.find(({ asset }) => asset === toAsset))}>
+            <Select size="large" placeholder={t("forms.common.select_token", "Select token")} value={currentToken?.asset} onChange={(toAsset) => setCurrentToken(tokens.find(({ asset }) => asset === toAsset))}>
               {tokens?.map(({ asset, symbol, type }) => (<Select.Option key={`to_${asset}`} value={asset}>
                 {(yes_team && no_team) ? <>{(type === 'draw' ? 'Draw' : (type === 'yes' ? yes_team : no_team))} ({symbol})</> : <>{symbol} {(type && type !== 'reserve') ? '(' + type.toUpperCase() + '-token)' : ''}</>}
               </Select.Option>))}
@@ -237,7 +237,7 @@ export const BuyForm = ({ type, yes_team, no_team, amount, setAmount }) => {
     </Row>
 
     {meta && (fromToken.network === 'Obyte' || !estimateError) && <Form.Item className="metaWrap">
-      <TransactionMeta
+      <TransactionEstimation
         meta={meta}
         params={params}
         tokenType={currentToken?.type}
@@ -246,8 +246,8 @@ export const BuyForm = ({ type, yes_team, no_team, amount, setAmount }) => {
         no_team={no_team}
       />
       {(fromToken.network !== "Obyte" && estimate) ? <div style={{ marginTop: 20 }}>
-        {counterstake_assistant_fee ? <div><span className="metaLabel"><Trans i18nKey="meta_trans.cs_fee"><a href="https://counterstake.org" target="_blank" rel="noopener">Counterstake</a> fee</Trans></span>: {+Number(counterstake_assistant_fee).toFixed(fromToken.decimals)} {fromToken.symbol}</div> : null}
-        {(fromToken.network !== "Obyte" && estimate && fromToken.foreign_asset !== reserve_asset) ? <div><span className="metaLabel"><Trans i18nKey="meta_trans.oswap_rate"><a href="https://oswap.io" target="_blank" rel="noopener">Oswap</a> rate</Trans></span>: 1 {fromToken.symbol} ≈ {+Number(estimate / amount.value).toFixed(reserve_decimals)} {reserve_symbol}</div> : null}
+        {counterstake_assistant_fee ? <div><span className="metaLabel"><Trans i18nKey="transaction_estimation.cs_fee"><a href="https://counterstake.org" target="_blank" rel="noopener">Counterstake</a> fee</Trans></span>: {+Number(counterstake_assistant_fee).toFixed(fromToken.decimals)} {fromToken.symbol}</div> : null}
+        {(fromToken.network !== "Obyte" && estimate && fromToken.foreign_asset !== reserve_asset) ? <div><span className="metaLabel"><Trans i18nKey="transaction_estimation.oswap_rate"><a href="https://oswap.io" target="_blank" rel="noopener">Oswap</a> rate</Trans></span>: 1 {fromToken.symbol} ≈ {+Number(estimate / amount.value).toFixed(reserve_decimals)} {reserve_symbol}</div> : null}
       </div> : <div />}
     </Form.Item>}
 

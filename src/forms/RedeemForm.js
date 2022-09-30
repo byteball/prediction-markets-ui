@@ -6,7 +6,7 @@ import { useSelector } from "react-redux";
 import ReactGA from "react-ga";
 import { useTranslation } from "react-i18next";
 
-import { TransactionMeta } from "components/TransactionMeta/TransactionMeta";
+import { TransactionEstimation } from "components/TransactionEstimation/TransactionEstimation";
 import {
   selectActiveAddress,
   selectActiveMarketParams,
@@ -124,7 +124,7 @@ export const RedeemForm = memo(({ type, yes_team, no_team, amount, setAmount }) 
 
       {!type ? <Col md={{ span: 18 }} xs={{ span: 24 }}>
         <Form.Item>
-          <Select placeholder={t("forms.redeem.select_get", "Select a get token")} value={currentToken?.asset} onChange={handleChangeCurrentToken}>
+          <Select placeholder={t("forms.common.select_token", "Select token")} value={currentToken?.asset} onChange={handleChangeCurrentToken}>
             {tokens?.map(({ asset, symbol, type }) => (<Select.Option key={`to_${asset}`} value={asset}>
               {(yes_team && no_team) ? <>{(type === 'draw' ? 'Draw' : (type === 'yes' ? yes_team : no_team))} ({symbol})</> : <>{symbol} {(type && type !== 'reserve') ? '(' + type.toUpperCase() + '-token)' : ''}</>}
             </Select.Option>))}
@@ -136,7 +136,7 @@ export const RedeemForm = memo(({ type, yes_team, no_team, amount, setAmount }) 
     {meta && payoutAmount.value > 0 && <Form.Item>
       <div style={{ fontSize: 18, paddingBottom: 10 }}>{t("forms.common.you_get", "You get")} {+Number((payoutAmount.value) / 10 ** reserve_decimals).toFixed(reserve_decimals)} {reserve_symbol}</div>
 
-      <TransactionMeta
+      <TransactionEstimation
         meta={meta}
         params={params}
         tokenType={currentToken?.type}

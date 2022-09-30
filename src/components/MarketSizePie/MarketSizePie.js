@@ -58,7 +58,7 @@ export const MarketSizePie = ({ teams, reserve_decimals, stateVars = {}, reserve
                 const value = items[0]?.data.value;
 
                 return <Trans i18nKey="market_size_pie.tooltip">
-                    <div style={{ padding: 5, textAlign: 'center' }}>Invested capital in {{name}}:
+                    <div style={{ padding: 5, textAlign: 'center' }}>Capital invested in {{name}}:
                         <div style={{ marginTop: 5 }}>{{value}} <small>{{reserve_symbol}}</small></div>
                     </div>
                 </Trans>
