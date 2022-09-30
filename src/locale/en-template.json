@@ -26,6 +26,8 @@
     "misc": "Misc",
     "yes": "yes",
     "no": "no",
+    "days": "days",
+    "hours": "hours",
     "all": "All",
     "currency": "Currency"
   },
@@ -42,7 +44,7 @@
     "faq": "F.A.Q."
   },
   "market_size_pie": {
-    "tooltip": "<0>Invested capital in {{name}}:<3>{{value}} <2>{{reserve_symbol}}</2></3></0>"
+    "tooltip": "<0>Capital invested in {{name}}:<3>{{value}} <2>{{reserve_symbol}}</2></3></0>"
   },
   "prediction_item": {
     "lp_apy": "Liquidity provider APY: {{apy}}%",
@@ -61,9 +63,9 @@
     "show_more": "Show more",
     "no_events": "No events"
   },
-  "meta_trans": {
-    "outcome_sp_draw_desc": "if the game ends with a draw",
-    "outcome_sp_desc": "if {{team_name}} wins",
+  "transaction_estimation": {
+    "outcome_sport_draw_desc": "if the game ends with a draw",
+    "outcome_sport_desc": "if {{team_name}} wins",
     "outcome_other_desc": "if the outcome is {{token_name}}",
     "estimated_winnings": "Estimated winnings",
     "new_price": "New price",
@@ -97,6 +99,7 @@
       "install_obyte": "If you don't have it yet, please <1>install</1> and <3>add</3> it. It is to this wallet that the purchased assets will come.",
       "send": "Send",
       "you_get": "You get",
+      "select_token": "Select token",
       "not_valid_amount": "Not valid amount",
       "max_value": "Max value",
       "amount": "Amount",
@@ -180,7 +183,6 @@
       "on": "on"
     },
     "redeem": {
-      "select_get": "Select a get token",
       "price_change": "The price would change too much, try a smaller amount"
     }
   },
