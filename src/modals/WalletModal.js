@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import obyte from "obyte";
 import { Helmet } from "react-helmet-async";
 import ReactGA from "react-ga";
+import { Trans, useTranslation } from "react-i18next";
 
 import { selectWalletAddress } from "store/slices/settingsSlice";
 import { changeWalletAddress } from "store/thunks/changeWalletAddress";
@@ -17,6 +18,7 @@ export const WalletModal = ({ children = "WALLET", type = "default", styles = {}
   const buttonRef = useRef(null);
   const inputRef = useRef(null);
 
+  const { t } = useTranslation();
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -69,7 +71,7 @@ export const WalletModal = ({ children = "WALLET", type = "default", styles = {}
   const btnStyles = type === "link" ? { padding: 0, ...styles } : { ...styles };
 
   return <>
-    {visible && <Helmet title="Prophet prediction markets — Wallet" />}
+    {visible && <Helmet title={`Prophet prediction markets — ${t("modals.wallet.title", "Wallet")}`} />}
     <Button onClick={changeVisible} size="large" type={type} style={btnStyles}>{currentWalletAddress ? `${currentWalletAddress.slice(0, 7)}...` : children}</Button>
 
     <Modal
@@ -77,14 +79,14 @@ export const WalletModal = ({ children = "WALLET", type = "default", styles = {}
       onCancel={changeVisible}
       footer={null}
     >
-      <Typography.Title level={3}>Wallet</Typography.Title>
+      <Typography.Title level={3}>{t("modals.wallet.title", "Wallet")}</Typography.Title>
       <Form size="large">
         <Form.Item validateStatus={walletAddress.value === "" ? "" : (walletAddress.valid ? "success" : "error")} extra={<small style={{ fontSize: 12 }}>
-          <a href="https://obyte.org/#download" target="_blank" rel="noopener">Install Obyte wallet</a> if you don't have one yet, and copy/paste your address here.
+          <Trans i18nKey="modals.wallet.install_obyte"><a href="https://obyte.org/#download" target="_blank" rel="noopener">Install Obyte wallet</a> if you don't have one yet, and copy/paste your address here.</Trans>
         </small>}>
-          <Input autoFocus={true} value={walletAddress.value} placeholder="Wallet address (Example: WMFLGI2GLAB2...)" onChange={handleWalletAddress} onKeyDown={handleEnter} ref={inputRef} />
+          <Input autoFocus={true} value={walletAddress.value} placeholder={t("modals.wallet.placeholder", "Wallet address (Example: WMFLGI2GLAB2...)")} onChange={handleWalletAddress} onKeyDown={handleEnter} ref={inputRef} />
         </Form.Item>
-        <Button type="primary" ref={buttonRef} onClick={saveWallet} disabled={!walletAddress.valid || (currentWalletAddress ? currentWalletAddress === walletAddress.value : false)}>Save</Button>
+        <Button type="primary" ref={buttonRef} onClick={saveWallet} disabled={!walletAddress.valid || (currentWalletAddress ? currentWalletAddress === walletAddress.value : false)}>{t("modals.wallet.save", "Save")}</Button>
       </Form>
     </Modal>
   </>

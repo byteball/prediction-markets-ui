@@ -1,5 +1,6 @@
 import { Pie } from "@ant-design/plots"
 import { useEffect, useState } from "react";
+import { Trans } from 'react-i18next';
 
 import { getMarketPriceByType } from "utils";
 
@@ -53,8 +54,14 @@ export const MarketSizePie = ({ teams, reserve_decimals, stateVars = {}, reserve
         },
         tooltip: {
             customContent: (_, items) => {
-                return <div style={{ padding: 5, textAlign: 'center' }}>Invested capital in {haveTeamNames ? (items[0]?.data.type === 'YES' ? teams.yes.name : (items[0]?.data.type === 'NO' ? teams.no.name : 'DRAW')) : items[0]?.data.type + ' tokens'}:
-                    <div style={{ marginTop: 5 }}>{items[0]?.data.value} <small>{reserve_symbol}</small></div></div>
+                const name = haveTeamNames ? (items[0]?.data.type === 'YES' ? teams.yes.name : (items[0]?.data.type === 'NO' ? teams.no.name : 'DRAW')) : items[0]?.data.type + ' tokens';
+                const value = items[0]?.data.value;
+
+                return <Trans i18nKey="market_size_pie.tooltip">
+                    <div style={{ padding: 5, textAlign: 'center' }}>Capital invested in {{name}}:
+                        <div style={{ marginTop: 5 }}>{{value}} <small>{{reserve_symbol}}</small></div>
+                    </div>
+                </Trans>
             }
         },
         pieStyle: {

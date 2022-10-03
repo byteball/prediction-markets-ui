@@ -1,0 +1,357 @@
+{
+  "oracles": {
+    "cryptocurrency": "Oráculo de los precios de la criptomoneda",
+    "sports": "Oráculo de deportes",
+    "metal": "Oráculo del exchange de metales preciosos",
+    "sports_oracle": "Oráculo de deportes"
+  },
+  "common": {
+    "received_request": "Recibida tu solicitud. La interfaz se actualizará después de que la transacción se estabilice.",
+    "status": {
+      "claiming": "Obteniendo ganancia",
+      "resumed": "Trading continuado",
+      "waiting": "Esperando resultados",
+      "trading": "trading",
+      "quiet_period": "periodo de descanso"
+    },
+    "loser": "PERDEDOR",
+    "winner": "GANADOR",
+    "no_markets": "sin mercados",
+    "no_markets_type": "no hay mercados {{type}}",
+    "buy": "comprar",
+    "sell": "vender",
+    "errors": {
+      "transaction_fail": "La transacción fallaría. Por favor, comprueba que tienes suficiente saldo"
+    },
+    "misc": "Misc",
+    "yes": "si",
+    "no": "no",
+    "days": "días",
+    "hours": "horas",
+    "all": "Todo",
+    "currency": "Moneda"
+  },
+  "footer": {
+    "time_zone": "Todas las fechas están en tu zona horaria local (UTC{{timeZoneView}}) a menos que se indique lo contrario",
+    "disclaimer": "El sitio web Prophet.ooo (“Sitio”) es sólo para fines informativos y educativos. El Sitio muestra los mercados de predicción existentes desplegados en el DAG de Obyte y es una interfaz gráfica de usuario para tanto visualizar datos de actividad en cadena como para interactuar con agentes autónomos directamente de tu propia cartera. Prophet.ooo no se hace cargo de los activos criptográficos de los usuarios y no aloja ni resuelve ningún mercado. El Sitio hace todo lo posible para garantizar la exactitud de la información mostrada, sin embargo, no existen garantías de exactitud y la información se proporciona tal cual. Ninguno de los materiales del sitio está destinado a ser, ni constituye, una solicitud, recomendar u ofrecer comprar o vender cualquier seguridad, mercancía, interés, derivado, producto financiero o instrumento. Los usuarios son responsables de cumplir con todas las leyes aplicables y deben llevar a cabo su propio análisis y consulta con asesores profesionales antes de comprometerse con cualquier mercado."
+  },
+  "header": {
+    "description": "Mercados de predicción",
+    "menu": "Menú"
+  },
+  "main_menu": {
+    "create": "Crear nuevo monedero",
+    "faq": "Preguntas frecuentes"
+  },
+  "market_size_pie": {
+    "tooltip": "<0>Capital invertido en {{name}}:<3>{{value}} <2>{{reserve_symbol}}</2></3></0>"
+  },
+  "prediction_item": {
+    "lp_apy": "Proveedor de liquidez: {{apy}}%",
+    "apy_not_shown": "APY no mostrado",
+    "apy_not_available": "APY no disponible todavía"
+  },
+  "prediction_list": {
+    "title_create": "crear nuevos mercados",
+    "title_calendar": "calendario de próximos partidos"
+  },
+  "recent_events": {
+    "add_liquidity": "<0>{{address}}...</0> envió {{amount}} {{symbol}} para añadir liquidez {count}",
+    "buy": "<0>{{address}}...</0> envió {{amount}} {{symbol}} para comprar {count}",
+    "redeem": "<0>{{address}}...</0> vendió {count} por {{amount}} {{symbol}}",
+    "claim_profit": "<0>{{address}}...</0> ganó {{amount}} {{symbol}}",
+    "show_more": "Mostrar más",
+    "no_events": "No hay eventos"
+  },
+  "transaction_estimation": {
+    "outcome_sport_draw_desc": "si el juego termina con un empate",
+    "outcome_sport_desc": "si {{team_name}} gana",
+    "outcome_other_desc": "si el resultado es {{token_name}}",
+    "estimated_winnings": "Ganancias estimadas",
+    "new_price": "Nuevo precio",
+    "new_odds": "Nuevas probabilidades",
+    "total_fee": "Comisión total",
+    "hide_details": "ocultar detalles",
+    "show_details": "mostrar detalles",
+    "arb_profit_tax": "Tasa de ganancia de arbitraje",
+    "issue_fee": "Tasa de emisión",
+    "sell_fee": "Tasa de venta",
+    "network_fee": "Comisión de red",
+    "cs_fee": "<0>Comisión de Counterstake</0>",
+    "oswap_rate": "<0>Tasa de Oswap</0>"
+  },
+  "view_price_switcher": {
+    "desc": "Cambia entre los precios mostrados de las fichas Si/No/Draw y las probabilidades (como es común en apuestas deportivas)",
+    "odds": "probabilidades",
+    "prices": "precios"
+  },
+  "forms": {
+    "liquidity": {
+      "outcome_probabilities": "Probabilidades de resultado",
+      "suggested_probabilities": "Las probabilidades sugeridas se basan en las probabilidades de los proveedores actuales",
+      "net_amounts": "Cantidades netas agregadas",
+      "sum_100": "La suma del porcentaje debe ser igual a 100"
+    },
+    "common": {
+      "no_metamask": "¡MetaMask no instalada!",
+      "install_metamask": "Por favor, instálala <1></1> en tu navegador.",
+      "no_obyte_wallet": "¡No has añadido tu billetera Obyte al sitio!",
+      "install_obyte": "Si aún no lo tienes, por favor <1>instálala</1> y <3>añádela</3>. Es a esta cartera a la que vendrán los activos comprados.",
+      "send": "Enviar",
+      "you_get": "Obtienes",
+      "select_token": "Elige token",
+      "not_valid_amount": "Monto no válido",
+      "max_value": "Valor máximo",
+      "amount": "Monto",
+      "create": "Crear"
+    },
+    "buy": {
+      "stake_amount": "Monto de Staking"
+    },
+    "claim_profit": {
+      "max": "max",
+      "claim_profit": "Reclamar ganancias"
+    },
+    "create": {
+      "allow_draw": {
+        "name": "Permitir empate",
+        "desc": "Si permitir un tercer resultado junto con Sí y No. Es común en algunos deportes."
+      },
+      "oracle": {
+        "name": "Oráculo",
+        "desc": "Dirección del oráculo que publicará el resultado",
+        "error_msg": "La dirección del oráculo no es válida."
+      },
+      "feed_name": {
+        "name": "Nombre de alimentador",
+        "desc": "Nombre del alimentador de datos publicado por el oráculo"
+      },
+      "reserve_asset": {
+        "name": "Activo de reserva",
+        "desc": "El activo utilizado para hacer apuestas sobre los resultados.\nLas ganancias son pagadas en el mismo activo."
+      },
+      "comparison": {
+        "name": "Comparativa",
+        "desc": "Cómo se comparará el valor real del alimentador de datos publicado por el oráculo con el \"Valor del alimentador de datos\""
+      },
+      "datafeed_value": {
+        "name": "Valor del alimentador de datos",
+        "desc": "El valor de la referencia que se comparará con el valor real del alimentador de datos"
+      },
+      "datafeed_draw_value": {
+        "name": "Extraer valor del alimentador de datos",
+        "desc": "El valor de empate que se comparará con el valor real del alimentador de datos"
+      },
+      "event_date": {
+        "name": "Fecha del evento",
+        "desc": "La fecha futura en la que el evento (como un evento deportivo, elecciones, o una medición de un tipo de cambio de divisa) debe suceder. El trading se detiene en esta fecha y hora.",
+        "placeholder": "Seleccione una fecha",
+        "error_msg": "Has elegido el día pasado o presente."
+      },
+      "waiting_period_length": {
+        "name": "Duración del período de espera (en días)",
+        "desc": "Cuántos días después de la fecha del evento esperar a que el oráculo publique el resultado. Si el oráculo no publica durante este período, el trading se reanuda."
+      },
+      "issue_fee": {
+        "name": "Tasa de emisión",
+        "desc": "La comisión cargada al comprar tokens. Los tokens representan apuestas en resultados específicos. La comisión se añade a la piscina y se añade a las ganacias de los titulares de la ficha ganadora."
+      },
+      "redeem_fee": {
+        "name": "Cargo de canje",
+        "desc": "La comisión cargada al vender tokens mientras que el trading está activo (normalmente, antes del evento). Al igual que la comisión de emisión, la comisión se añade a la piscina y aumenta los ingresos de los titulares de la ficha ganadora."
+      },
+      "arb_profit_fee": {
+        "name": "Cargo por ganancias del árbitro",
+        "desc": "La cuota cargada del beneficio implícito del árbitro, asumiendo que compran o venden tokens para arbitrar contra otros mercados donde se negocia el mismo evento. El beneficio implícito es proporcional al cambio de precios causado por la operación. Al igual que otras tasas, esta cuota se añade a la piscina y se añade a los ingresos de los titulares del token ganador."
+      },
+      "quiet_period": {
+        "name": "Período de silencio (en horas)",
+        "desc": "El trading se detiene {{hours}} horas antes del evento"
+      },
+      "category_desc": "Tipo de mercado. Existen interfaces personalizadas para deportes y monedas.",
+      "category": "Categoría",
+      "calendar_currency_desc": "Crear mercados para eventos monetarios es más fácil encontrarlos en el <1>calendario</1> en la página principal",
+      "preview_desc": "Así es como se verá el mercado que quieres crear",
+      "preview": "Vista previa",
+      "calendar_sport_desc": "Para crear mercados para eventos deportivos, encuéntralos en el <1>calendario</1> en la página principal"
+    },
+    "create_now": {
+      "market_pair": "Par del mercado",
+      "current_rate": "Tasa actual: {{value}} {{symbol}}",
+      "no_pair": "Par no encontrado",
+      "be_above": "para estar arriba",
+      "on": "sobre"
+    },
+    "redeem": {
+      "price_change": "El precio cambiaría demasiado, prueba una cantidad menor"
+    }
+  },
+  "modals": {
+    "add_liquidity": {
+      "title": "Añadir liquidez"
+    },
+    "claim_profit": {
+      "title": "Reclamar ganancias",
+      "winner_desc": "\"{{winner}}\" era la elección correcta y puedes recoger tus ganancias"
+    },
+    "create_now": {
+      "title": "Crea mercado"
+    },
+    "trade": {
+      "title": "Intercambiar",
+      "liquidity_first": "Por favor añade liquidez primero"
+    },
+    "view_params": {
+      "title": "Ver parámetros",
+      "explorer": "Ver en el explorador"
+    },
+    "wallet": {
+      "title": "Billetera",
+      "install_obyte": "<0>Instala la billetera de Obyte</0> si no tienes una todavía, y copia/pega tu dirección aquí.",
+      "placeholder": "Dirección de la billetera (Ejemplo: WMFLGI2GLAB2...)",
+      "save": "Guardar"
+    }
+  },
+  "pages": {
+    "create": {
+      "title": "Crear nuevo mercado de predicciones",
+      "short_title": "Crear nuevo mercado",
+      "successfully": "Mercado de predicciones creado con éxito",
+      "go_to_market": "Ir al mercado",
+      "creating": "Creando mercado de predicciones",
+      "waiting": "Esperando la estabilización..."
+    },
+    "faq": {
+      "title": "Preguntas frecuentes",
+      "items": {
+        "1": {
+          "question": "¿Para quién es este sitio?",
+          "answer": "<0>Este sitio está pensado para dos grupos de usuarios:</0><1><0>Appstadores que desean ganar dinero anticipando correctamente los resultados de varios eventos. Los tipos de eventos incluyen deportes, cambio de divisas, política y muchos otros. </0><1>Proveedores de liquidez que desean ganar dinero proporcionando liquidez a los mercados de predicciones y ganando comisiones de transacción pagadas por los apistadores.</1></1>"
+        },
+        "2": {
+          "question": "¿Cómo ganan dinero los apostadores?",
+          "answer": "<0>Compran las fichas del resultado que creen. Por ejemplo, si hay un juego próximo entre el equipo A y el equipo B, y el apostador piensa que el equipo A va a ganar, compran las fichas del equipo A. Si su predicción resulta ser correcta (gana el equipo A) todo el dinero apostado por todos los apostadores se distribuye entre los que han apostado por el resultado correcto, por ejemplo, ellos recuperan su dinero, además de una parte del dinero apostado en los resultados equivocados (equipo B y empate). Si pierden, pierden su apuesta. </0><1>Las apuestas también pueden ganar dinero comprando/vendiendo tokens que creen que están mal pagados. Por ejemplo, si ven que un token del equipo A está siendo vendido por un precio que no refleja la verdadera probabilidad de que el equipo A gane, pueden comprar/vender la ficha o vender/comprar las fichas opuestas (equipo B y dibujar). </1><2>Las apuestas también participan en la provisión de liquidez y ganan una porción de las comisiones pagadas por otros apostadores que intercambiaron <1>después</1> de ellos. Obtienen esta parte sólo si su resultado gana, y amplifica sus ganancias.</2>"
+        },
+        "3": {
+          "question": "¿Cómo ganan dinero los proveedores de liquidez?",
+          "answer": "<0>Proveedores de liquidez ganan dinero comprando todos los tokens (equipo A, equipo B, y dibujar) en proporciones que reflejen las probabilidades de los resultados correspondientes y obtienen una parte de las comisiones pagadas por otros operadores que compraron o vendieron cualquier ficha <1>después</1> de ellos. A diferencia de los apostadores, no apuestan a ningún resultado específico, sino que en su lugar apuestan a <3>todos</3> los resultados y obtienen su parte de comisiones en cualquier caso. Si las acciones de las fichas son correctas, la provisión de liquidez es una actividad de riesgo relativamente baja. y el riesgo es proporcional a la desviación de las proporciones simbólicas de las probabilidades verdaderas. </0><1>La provisión de liquidez mejora las condiciones de intercambio para los apostadores y fomenta más operación, por lo tanto más comisiones. Cuanto más liquidez esté comprometida en un mercado, menor será la variación al comprar o vender tokens.</1>"
+        },
+        "4": {
+          "question": "He hecho una apuesta y ahora he cambiado de opinión. ¿Puedo salir de la apuesta?",
+          "answer": "<0>Sí, puedes vender los tokens que representan tu apuesta mientras el trading sigue activo (ver abajo sobre el periodo de trading). Alternativamente, puedes comprar los tokens opuestos que complementan tu apuesta (si compraste el equipo A antes, puede comprar el equipo B y empate ahora), esto hará su posición neutral y actuará como proveedor de liquidez a partir de ahora. Hay cargos involucrados en ambos casos y si la cuota de venta es mayor que la de compra (este es el predeterminado), comprar los tokens opuestos podría ser una idea mejor. </0>"
+        },
+        "5": {
+          "question": "¿Cuándo puedo hacer/salir de mis apuestas?",
+          "answer": "<0>Para los deportes y la mayoría de los otros mercados, las operaciones están activas hasta la fecha del evento (para los deportes, es el comienzo del juego). En los mercados de divisas, también hay un <1>período de silencio</1> antes de la fecha del evento, y las operaciones se detienen con cierta antelación. Por ejemplo, en un mercado \"¿Estará por encima de $30,000 el 1 de septiembre de 2022 UTC? las operaciones se detendrán un tiempo antes del 1 de septiembre de 2022 UTC para proteger las apuestas de los usuarios ya que es poco probable que el tipo de cambio haga grandes movimientos en un corto período de tiempo y el resultado se hace casi seguro algún tiempo antes de la fecha especificada. </0>"
+        },
+        "6": {
+          "question": "¿Está permitido el trading dentro del juego?",
+          "answer": "<0>No. Debido a la forma en que se determinan los precios del token, las ganancias de los apostadores que no intercambian durante el juego perjudicarían a las ganancias en Prophet. Sin embargo, puedes listar los tokens en <1>ODEX exchange descentralizado</1> e intercambiarlos allí con otros traders dentro de juego. Esto no afectará a las ganancias de aquellos que prefieren hacer sus apuestas y esperar al resultado final.</0>"
+        },
+        "7": {
+          "question": "¿Cuáles son las comisiones?",
+          "answer": "<0>Las comisiones son fijadas por los creadores del mercado y varían según el mercado. Por defecto es del 1% para comprar tokens y del 2% para venderlos. Las comisiones no se aplican si comercias con los tokens en otros lugares, por ejemplo, en <1>ODEX</1>. No hay comisiones por retirar tus ganancias después de que el resultado se conozca. </0><1>También hay una comisión adicional llamada <1>tasa de ganancias de arbitraje</1> que es proporcional al cambio de precio causado por la operación. Cuando nuestros mercados son arbitrados contra mercados similares en otras plataformas, este impuesto ayuda a recaudar la mayor parte del beneficio del arbitrajista en favor de los proveedores de liquidez. El impuesto por defecto sobre la tasa de ganancias de arbitraje es del 90%.</1>"
+        },
+        "8": {
+          "question": "¿Son los precios de los tokens iguales a las probabilidades que el mercado cree?",
+          "answer": "<0>No, reflejan las probabilidades pero no son iguales a ellas. Las acciones del capital total invertidas en tokens específicas son, en cambio, iguales a las creencias del mercado sobre sus probabilidades. Se muestran en el gráfico en la página del mercado. </0><1>El capital invertido en una token es proporcional tanto al precio del token como al número de tokens emitidas, y el número de tokens es proporcional a su precio, por lo que el capital (y la probabilidad) es proporcional al precio del token <1>al cuadrado</1>. La suma de los precios del token al cuadrado no es exactamente 1, está por encima de 1 y crece a medida que las operaciones continúan debido a las comisiones acumuladas. </1>"
+        },
+        "9": {
+          "question": "¿Cómo son tasadas las tokens?",
+          "answer": "<0>Las tokens son emitidas en un curva de unión y los precios dependen de la cantidad de tokens ya emitidas. Emitir (comprar) más tokens que representan una apuesta sobre un resultado específico (por ejemplo equipo A gana) sube su precio y baja el precio de las tokens que representan todos los resultados distintos (equipo B pierde o empate). Vender esas mismas tokens hace lo contrario.</0><1>La curva de unión es una fórmula que vincula el suministro de tokens (<1>s</1><2>si</2>,<4>s</4><5>no</5>, y <7>s</7><8>empate</8>) con el capital total invertido en todas las tokens (la reserva, definida como <10>r</10>):</1><2><0>r</0> &nbsp; = &nbsp;<2>c </2> &nbsp;<4>&radic;<1>&nbsp;<1>s</1><2><0>si</0></2><3><0>2</0></3> + <5>s</5><6><0>no</0></6><7><0>2</0></7> + <9>s</9><10><0>empate</0></10><11><0>2</0></11>&nbsp;</1></4></2><3>donde <1>c</1> es un coeficiente que empieza por 1 y gradualmente crece para para representar las comisiones reunidas.</3><4>El precio de la token-SI que representa la apuesta de que el evento realmente pasará es luego determinada como una derivada parcial por <1>s</1><2>si</2>:</4><5><0><0>p</0><1><0>si</0></1> &nbsp; = &nbsp;<3>c </3> &nbsp;&nbsp;</0><1><0><0>s</0><1><0>si</0></1></0><1><0>&radic;<1>&nbsp;<1>s</1><2><0>si</0></2><3><0>2</0></3> + <5>s</5><6><0>no</0></6><7><0>2</0></7> + <9>s</9><10><0>empate</0></10><11><0>2</0></11>&nbsp;</1></0></1></1></5><6> y fórmulas similares para las tokens NO y EMPATE.</6><7>Gracias a la curva de unión, tenemos precios continuos y es siempre posible comprar o vender cualquier tokens, por ejemplo siempre hay liquidez disponible.</7><8>La curva de unión es implementada por un <1>Agente Autónomo</1>, y el AA actua como un corredor de apuestas automático y decentralizado que automáticamente ajusta los precios en respuesta a la demanda cambiante. LPs actuan como accionistas del corredor de apuestas descentralizado, y comparten sus ganancias.</8>"
+        },
+        "10": {
+          "question": "¿Cómo difiere Prophet de otras plataformas de prediciendo del mercado?",
+          "answer": "<0>La mayoría de las otras plataformas de predicción del mercado también emiten tokens SI y NO que representan los resultados correspondientes, Sin embargo, estas plataformas hacen que los usuarios intercambien entre sí en un exchange con lista de órdenes. Esto dificulta el arranque de liquidez sin una gran comunidad de traders. Incluso con una gran comunidad, falta liquidez en los mercados menos populares.</0><1>Prophet, en su lugar, emite tokens sobre una curva de unión. Esto significa que los traders están operando contra la piscina (lo cual se implementa como un <1>Agente Autonómico</1> &mdash; AA) en lugar de entre sí, y la liquidez está siempre disponible. </1><2>Prophet compara con otras plataformas del mercado de predicciones como AMM (fabricante automático del mercado) DEXes comparan contra DEXes de lista de órdenes. Estos últimos siempre han estado luchando por ganar tracción debido a la baja liquidez, mientras que los DEXes de AMM (como Uniswap) vieron mucha más adopción. </2><3>Sin embargo, a diferencia de otras plataformas de predicción del mercado, los números de tokens SI y NO emitidos por los AAs de Prophet no son iguales, y sus precios no son iguales a las probabilidades implícitas del mercado, lo que hace que sea un poco más difícil leer el mercado. Además, los precios de los tokens se mueven en un rango más estricto que reduce las oportunidades de beneficiarse de importantes movimientos de precios. Creemos que estas desventajas no son significativas, ya que en la práctica la mayoría de las operaciones se realizan en un rango estrecho y las probabilidades se calculan fácilmente como las cantidades de capital apostadas en los resultados correspondientes. </3><4>También es importante que Prophet funcione en <1>Obyte</1> &mdash; una plataforma de criptomonedas basada en DAG, que es inmune al abuso y manipulación de mineros (conocido como MEV &mdash; valor extraible por mineros) que afecta a blockchains. Por lo tanto, al operar con los tokens de predicción, se minimizan los riesgos de ataques front-running, sandwich, retraso en la transacción o reordenación y otros ataques.</4>"
+        },
+        "11": {
+          "question": "¿Quién opera Prophet?",
+          "answer": "<0>Nadie. Cada mercado es operado por su propio <1>Agente Autónomo</1> que es una pieza de código autónomo (como su nombre implica) inmutable que se ejecuta en Obyte DAG de manera totalmente sin humanos. Nadie puede detenerlos, nadie puede intervenir con su funcionamiento, su código, así como toda su actividad, son totalmente transparentes. </0><1>Cualquiera puede iniciar un nuevo mercado y estará disponible inmediatamente para todos. </1><2>Este sitio web es de código abierto y cualquiera puede iniciar cualquier número de copias de este sitio web en cualquier parte del mundo descargando su código desde <1>github</1>. </2><3>Al participar en este sitio web, usted se compromete con los Agentes Autónomos a los que el sitio web ofrece una interfaz, no con ninguna compañía, organización o individuo. No hay ningún contrato. Usted no adquiere ningún derecho u obligación hacia nadie, y nadie adquiere ningún derecho u obligación hacia usted.</3>"
+        },
+        "12": {
+          "question": "¿Cuáles son las fuentes de datos sobre los resultados?",
+          "answer": "<0>Varían de un mercado a otro. Para los mercados deportivos y de divisas, los datos son proporcionados por proveedores de datos deportivos como <1>football-data. rg</1>, criptomonedas e intercambios forex. Los datos son luego enviados a Obyte DAG por oráculos operados por reconocidos miembros de la comunidad Obyte. Cualquiera puede crear cualquier mercado y utilizar cualquier oráculo que quiera. Este sitio web muestra una advertencia si el oráculo no es uno de los conocidos. Usted tiene que confiar en el operador de oráculos que publica el verdadero resultado (sin embargo, si no lo hacen, todo el mundo puede verlo). También es posible usar oráculos descentralizados para eliminar completamente cualquier requisito de confianza.</0>"
+        },
+        "13": {
+          "question": "Mi predicción ganó, ¿cómo recibo mi pago?",
+          "answer": "<0>Tienes que reclamarlo del mercado donde has hecho tu apuesta. El mercado debe estar en el estado de \"Recalamando Ganancias\". Si todavía está en estado de \"Esperando resultados\", entonces el mercado no ha recibido el resultado todavía. Si el oráculo ya ha publicado el resultado, puede hacer clic en el botón \"Comprometerse\" para que el mercado compruebe el resultado del oráculo y cambie al estado de \"Reclamando ganancias\". Una vez en estado de \"Reclamando ganancias\", Usted puede reclamar su ganancia enviando los tokens ganadores a la AA del mercado y recibiendo su parte del saldo total del mercado. </0>"
+        },
+        "14": {
+          "question": "¿Qué es el estado de \"Trading continuado\"?",
+          "answer": "<0>Un mercado puede entrar en este estado si el resultado final no fue comprometido con el mercado dentro del tiempo asignado (5 días por defecto). Esto puede suceder por ejemplo, si el oráculo no pudo publicar el resultado, lo que es probable si el juego fue cancelado o pospuesto. Para no bloquear los fondos del usuario de forma indefinida, el mercado reanuda las operaciones después de que caduque el período de espera para permitir a los poseedores de fichas venderlas. </0>"
+        },
+        "15": {
+          "question": "¿Puedo hacer apuestas si no tengo fondos en Obyte?",
+          "answer": "<0>Sí, si tienes fondos en Ethereum, BSC o Polígono. Prophet está integrado con otras redes usando <1>Counterstake SDK</1> que permite enviar fondos desde otras redes a dapps en Obyte. Puedes hacer apuestas con USDC, ETH, o WBTC, y se enviarán automáticamente a través del <3>Puente Counterstake</3>, luego convertido al token requerido vía <5>Oswap.io</5> y enviado a Prophet. Sin embargo, todavía necesitas tener la billetera Obyte para recibir los tokens que has comprado y obtener beneficios después.</0>"
+        },
+        "16": {
+          "question": "¿Qué formato de probabilidades se muestra en el sitio web?",
+          "answer": "<0>Usamos probabilidades decimales. Muestra el multiplicador aplicado a tu apuesta si tu apuesta gana. También es posible ver los precios del token cambiando el formato de visualización en la esquina superior derecha.</0>"
+        }
+      }
+    },
+    "main": {
+      "title": "Mercados descentralizados <1>de predicción</1>",
+      "subtitle": "<0>Apuestas deportivas, opciones binarias y otras apuestas en eventos futuros</0>"
+    },
+    "market": {
+      "sport_price_tooltip": "El precio del token {{team_name}}. Si gana {{team_name}}, todos los fondos pagados por los compradores de todos los tokens se dividirán entre los que tengan tokens {{team_name}}.",
+      "sport_price_tooltip_draw": "El precio del token empate. En caso de empate, todos los fondos pagados por los compradores de todos los tokens se dividirán entre los poseedores de tokens de empate.",
+      "sport_odds_tooltip": "El múltiplo que recibes si apuestas en {{team_name}} y gana, asumiendo que las probabilidades no cambian.",
+      "sport_odds_tooltip_draw": "El múltiplo que usted recibe si apuesta al empate y tu apuesta gana, asumiendo que las probabilidades no cambian.",
+      "price_tooltip": "El precio del token que representa el resultado “{{type}}”. Si este resultado gana, todos los fondos pagados por los compradores de todos los tokens se dividirán entre los tenedores de tokens de “{{type}}”.",
+      "odds_tooltip": "El múltiplo que recibes si apuestas al resultado de “{{type}}” y este gana, asumiendo que las probabilidades no cambian.",
+      "bookmaker_odds": "Probabilidad del corredor de apuestas: x{{odds}}",
+      "commit_result": "Resultado del commit",
+      "not_published": "El oráculo aún no ha publicado resultados",
+      "unknown_oracle": "Este mercado utiliza un oráculo <1>{oracle}</1> que es desconocido para este sitio web, haz trading con cuidado.",
+      "cards": {
+        "current": {
+          "title": "Valor actual",
+          "desc": "El último valor del alimentador de datos {{feed_name}}"
+        },
+        "reserve": {
+          "title": "Reserva",
+          "desc": "Cantidad total invertida en todos los resultados"
+        },
+        "expiration_time": {
+          "title": "tiempo para que expire",
+          "desc": "El periodo mientras que puedes hacer apuestas, o salir si cambiaste de opinión"
+        }
+      },
+      "status": "estado",
+      "chart": {
+        "prices": "Precios",
+        "supplies": "Suministros",
+        "fee": "Acumulación de comisiones",
+        "estimated_apy": "APY estimado",
+        "apy": "APY",
+        "liquidity_date": "Fecha de provisión de liquidez",
+        "apy_desc": "APY que se ganaría si se añadiera una cantidad muy pequeña de liquidez en la fecha del gráfico y se mantuviera hasta que se publicara el resultado.",
+        "estimated_apy_desc": "APY estimado que se ganaría si se añadiera una cantidad muy pequeña de liquidez en la fecha del gráfico y se mantuviera hasta la fecha del evento. La estimación supone que la actividad de trading se mantiene igual que hasta ahora."
+      },
+      "apy": {
+        "title": "Ganar dinero con la provisión de liquidez",
+        "every_trade": "A cada operación se le cobra una comisión que se añade al fondo del mercado (ver la tabla de acumulación de tasas de arriba).",
+        "earn": "Gana una parte de estas comisiones comprando todos los tokens en las mismas proporciones que ya se han emitido. Uno de los tokens ganará, y obtendrás una parte de las comisiones de trading recaudadas después de que hayas invertido.",
+        "by_buying": "Al comprar todos los tokens sin cambiar sus proporciones no estarás apostando a ningún resultado, sino tomando una posición neutral del mercado y añadiendo liquidez al mercado. Esto es seguro si las proporciones actuales reflejan las probabilidades verdaderas.",
+        "block": "Provision de liquidez APY desde que se inició la piscina: {{percent}}%",
+        "block_desc": "La estimación de APY es para el primer LP asumiendo que la actividad de trading se mantiene igual que hasta ahora. Más adelante los LPs ganan por menos operaciones, y la actividad de trading puede cambiar en el futuro, por lo que la APY real puede ser significativamente diferente."
+      },
+      "recent_events": "Eventos recientes"
+    }
+  },
+  "event": {
+    "currency_text": "¿Será {{from_currency}} {{comparisonText}} {{value}} {{to_currency}} en {{expiry_date}}{{UTC}}?",
+    "sport_text": "{{yes_team}} contra {{no_team}} en {{expiry_date}}{{UTC}}",
+    "other_text": "¿Será {{feed_name}} {{comparisonText}} {{value}} en {{expiry_date}}{{UTC}}?",
+    "comparisons": {
+      "above": "arriba",
+      "below": "abajo",
+      "above_or_equal": "arriba o igual",
+      "below_or_equal": "menor o igual",
+      "equal": "igual",
+      "not_equal": "no igual"
+    }
+  }
+}

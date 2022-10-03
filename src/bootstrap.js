@@ -16,6 +16,7 @@ import { loadEVMTokens } from "store/thunks/loadEVMTokens";
 import { loadUserBalance } from "store/thunks/loadUserBalance";
 import { addRecentEvent } from "store/thunks/addRecentEvent";
 
+import i18n from "locale";
 import config from "appConfig";
 
 const getAAPayload = (messages = []) => messages.find(m => m.app === 'data')?.payload || {};
@@ -67,7 +68,7 @@ export const bootstrap = async () => {
 
     const { body, subject } = result[1];
     const state = store.getState();
-    if (subject === "joint" && state.settings.walletAddress){
+    if (subject === "joint" && state.settings.walletAddress) {
       store.dispatch(loadUserBalance(state.settings.walletAddress));
     } else if (body) {
       if (body.aa_address === config.FACTORY_AAS[config.FACTORY_AAS.length - 1]) {
@@ -211,7 +212,7 @@ export const bootstrap = async () => {
 
     } else if (subject === "light/aa_request" && state.settings.walletAddress && author === state.settings.walletAddress) {
       notification.info({
-        message: "Received your request. The interface will update after the transaction stabilizes.",
+        message: i18n.t("common.received_request", "Received your request. The interface will update after the transaction stabilizes."),
         placement: 'top'
       })
     }

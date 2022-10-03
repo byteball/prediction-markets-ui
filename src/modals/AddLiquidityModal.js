@@ -3,6 +3,7 @@ import { useState } from "react";
 import { useSelector } from "react-redux";
 import { Helmet } from "react-helmet-async";
 import ReactGA from "react-ga";
+import { useTranslation } from "react-i18next";
 
 import { useWindowSize } from "hooks";
 import { AddLiquidityForm } from "forms";
@@ -15,6 +16,7 @@ export const AddLiquidityModal = ({ disabled, yes_team, no_team }) => {
 
   const status = useSelector(selectActiveMarketStatus);
   const [width] = useWindowSize();
+  const { t } = useTranslation();
 
   const open = () => {
     setVisible(true);
@@ -28,8 +30,8 @@ export const AddLiquidityModal = ({ disabled, yes_team, no_team }) => {
   const close = () => setVisible(false);
 
   return <>
-    {visible && <Helmet title="Prophet prediction markets — Add liquidity" />}
-    <Button type="primary" size="large" disabled={disabled} onClick={open}>Add liquidity</Button>
+    {visible && <Helmet title={`Prophet prediction markets — ${t("modals.add_liquidity.title", "Add liquidity")}`} />}
+    <Button type="primary" size="large" disabled={disabled} onClick={open}>{t("modals.add_liquidity.title", "Add liquidity")}</Button>
 
     {status === 'loaded' && <Drawer
       width={width > 640 ? 640 : width}
@@ -39,7 +41,7 @@ export const AddLiquidityModal = ({ disabled, yes_team, no_team }) => {
       onClose={close}
     >
 
-      <Title level={2}>Add liquidity</Title>
+      <Title level={2}>{t("modals.add_liquidity.title", "Add liquidity")}</Title>
       <AddLiquidityForm
         yes_team={yes_team}
         no_team={no_team}
