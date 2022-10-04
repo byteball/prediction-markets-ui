@@ -186,7 +186,7 @@ export const PredictionList = ({ type = 'all', particle = 'all', setParticle }) 
         locale={{ emptyText: type === 'all' ? t("common.no_markets", 'no markets') : t("common.no_markets_type", 'no {{type}} markets', { type }) }}
         renderItem={(data) => <PredictionItem {...data} particle={particle} type={type} />}
         loadMore={fullDataSource.length < ((type in championships) ? countOfSportMarkets : maxCount) && <div className={styles.loadMoreWrap}>
-          <Button onClick={() => dispatch(loadMarketsInCache({ championship, page: currentPage + 1, type }))}>Load more</Button>
+          <Button onClick={() => dispatch(loadMarketsInCache({ championship, page: currentPage + 1, type }))}>{t("common.load_more", 'Load more')}</Button>
         </div>}
       />
 
@@ -204,7 +204,7 @@ export const PredictionList = ({ type = 'all', particle = 'all', setParticle }) 
           locale={{ emptyText: type === 'all' ? t("common.no_markets", 'no markets') : t("common.no_markets_type", 'no {{type}} markets', { type }) }}
           renderItem={(data) => <PredictionItem {...data} particle={particle} type={type} />}
           loadMore={fullCalendarDataSource.length < calendarMaxCount && <div className={styles.loadMoreWrap}>
-            <Button onClick={loadCalendarMore}>Load more</Button>
+            <Button onClick={loadCalendarMore}>{t("common.load_more", 'Load more')}</Button>
           </div>}
         />
       </div> : <div className={styles.spinWrap}>

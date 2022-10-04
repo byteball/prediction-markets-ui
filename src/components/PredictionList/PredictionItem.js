@@ -8,7 +8,7 @@ import { kebabCase, min } from 'lodash';
 import { Img } from 'react-image';
 import { useTranslation } from "react-i18next";
 
-import { selectPriceOrOdds, selectReservesRate } from 'store/slices/settingsSlice';
+import { selectLanguage, selectPriceOrOdds, selectReservesRate } from 'store/slices/settingsSlice';
 
 import { CreateNowModal } from "modals";
 import { generateTextEvent } from "utils";
@@ -43,6 +43,7 @@ export const PredictionItem = ({ reserve_asset = 'base', aa_address, reserve = 0
 
   const reservesRates = useSelector(selectReservesRate);
   const priceOrOdds = useSelector(selectPriceOrOdds);
+  const lang = useSelector(selectLanguage);
 
   const now = moment.utc().unix();
   const isExpiry = now > event_date;
@@ -133,7 +134,8 @@ export const PredictionItem = ({ reserve_asset = 'base', aa_address, reserve = 0
   const SecondWrapper = exists && !preview ? Link : Fragment;
 
   const seoText = kebabCase(eventViewUTC);
-  const secondWrapperProps = exists ? { to: `/market/${seoText}-${aa_address}` } : {};
+  const langPath = (!lang || lang === 'en') ? '' : `/${lang}`;
+  const secondWrapperProps = exists ? { to: `${langPath}/market/${seoText}-${aa_address}` } : {};
 
   // calc odds
   let yesOddsView = 0;
@@ -225,6 +227,8 @@ export const PredictionItem = ({ reserve_asset = 'base', aa_address, reserve = 0
     }
   }
 
+  const priceOrOddsView = priceOrOdds === 'odds' ? t("common.odds", "odds") : t("common.price", "price");
+
   return <Wrapper {...wrapperProps}>
     <SecondWrapper {...secondWrapperProps}>
       <Card className={styles.itemWrap} style={{ opacity: isExpiry ? 0.5 : 1 }}>
@@ -257,7 +261,7 @@ export const PredictionItem = ({ reserve_asset = 'base', aa_address, reserve = 0
                     <small>{moment.unix(event_date).format('MMM D, h:mm A')}</small>
                   </div>
                   {(exists && allow_draw && (drawOddsView || result) && width >= 576) ? <div style={{ color: appConfig.DRAW_COLOR }}>
-                    <div className={styles.team}><small>draw</small></div>
+                    <div className={styles.team}><small>{t('common.draw', 'draw')}</small></div>
                     <div style={{ color: appConfig.DRAW_COLOR }}><span className={styles.price}>{drawValue}</span></div>
                   </div> : null}
                 </Col>
@@ -290,28 +294,28 @@ export const PredictionItem = ({ reserve_asset = 'base', aa_address, reserve = 0
             {exists && !isSportMarket && <Row className={styles.infoWrap} gutter={10}>
               <Col md={{ span: 6 }} xs={{ span: 12 }}>
                 <div>
-                  <div className={styles.infoTitle}>reserve</div>
+                  <div className={styles.infoTitle}>{t("pages.market.cards.reserve.title", "Reserve")}</div>
                   <div>{reserveView} <small>{reserve_symbol}</small></div>
                   {(priceOrOdds === 'price' && currentReserveRate && !result) ? <div className={styles.infoValueInDollar}>${+Number(reserveView * currentReserveRate).toFixed(2)}</div> : null}
                 </div>
               </Col>
               <Col md={{ span: 6 }} xs={{ span: 12 }}>
                 <div style={{ color: appConfig.YES_COLOR }}>
-                  <div className={styles.infoTitle}>yes {priceOrOdds}</div>
+                  <div className={styles.infoTitle}>{t('common.yes', 'yes')} {priceOrOddsView}</div>
                   <div style={{ fontSize: 13 }}>{yesValue}</div>
                   {yesSubValue ? <div className={styles.infoValueInDollar}>{yesSubValue}</div> : null}
                 </div>
               </Col>
               <Col md={{ span: 6 }} xs={{ span: 12 }}>
                 <div style={{ color: appConfig.NO_COLOR }}>
-                  <div className={styles.infoTitle}>no {priceOrOdds}</div>
+                  <div className={styles.infoTitle}>{t('common.no', 'no')} {priceOrOddsView}</div>
                   <div style={{ fontSize: 13 }}>{noValue}</div>
                   {noSubValue ? <div className={styles.infoValueInDollar}>{noSubValue}</div> : null}
                 </div>
               </Col>
               <Col md={{ span: 6 }} xs={{ span: 12 }}>
                 {allow_draw ? <div>
-                  <div className={styles.infoTitle}>draw {priceOrOdds}</div>
+                  <div className={styles.infoTitle}>{t('common.draw', 'draw')} {priceOrOddsView}</div>
                   <div style={{ color: appConfig.DRAW_COLOR }}>
                     <div style={{ fontSize: 13 }}>{drawValue}</div>
                     {drawSubValue ? <div className={styles.infoValueInDollar}>{drawSubValue}</div> : null}

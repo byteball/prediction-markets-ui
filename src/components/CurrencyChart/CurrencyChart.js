@@ -2,17 +2,21 @@ import { Stock } from '@ant-design/plots';
 import moment from 'moment';
 
 import appConfig from 'appConfig';
+import { useSelector } from 'react-redux';
+import { selectLanguage } from 'store/slices/settingsSlice';
 
 export const CurrencyChart = ({ data, params }) => {
   const { datafeed_value, waiting_period_length, event_date } = params;
   const momentFormat = (event_date + waiting_period_length - moment.utc().unix() <= 7 * 24 * 3600) ? 'lll' : 'll';
+  const lang = useSelector(selectLanguage);
 
-  const transformedData = data.map(({ time, open, close, high, low }) => ({
-    time: moment.unix(time).format(momentFormat),
+  const transformedData = data.map(({ time, open, close, high, low, lang }) => ({
+    time: moment.unix(time).locale('en').format(momentFormat),
     open: +Number(open).toPrecision(6),
     close: +Number(close).toPrecision(6),
     high: +Number(high).toPrecision(6),
     low: +Number(low).toPrecision(6),
+    
   }));
 
   const config = {

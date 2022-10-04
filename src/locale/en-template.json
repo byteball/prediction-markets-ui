@@ -16,16 +16,20 @@
     },
     "loser": "LOSER",
     "winner": "WINNER",
+    "odds": "odds",
+    "price": "price",
+    "draw": "draw",
+    "yes": "yes",
+    "no": "no",
     "no_markets": "no markets",
     "no_markets_type": "no {{type}} markets",
+    "load_more": "Load more",
     "buy": "buy",
     "sell": "sell",
     "errors": {
       "transaction_fail": "The transaction would fail. Please check that you have sufficient balance"
     },
     "misc": "Misc",
-    "yes": "yes",
-    "no": "no",
     "days": "days",
     "hours": "hours",
     "all": "All",
@@ -33,7 +37,8 @@
   },
   "footer": {
     "time_zone": "All dates are in your local timezone (UTC{{timeZoneView}}) unless indicated otherwise",
-    "disclaimer": "The Prophet.ooo website (“Site”) is for informational and educational purposes only. The Site displays the existing prediction markets deployed on the Obyte DAG and is a graphical user interface for both visualizing data from on-chain activity and interacting with autonomous agents directly from your own wallets.  Prophet.ooo takes no custody of users' crypto assets and does not host or resolve any markets. The Site makes best effort to ensure  accuracy of the displayed information however there are no guarantees of accuracy and the information is provided as is. None of the material on the Site is intended to be, nor does it constitute, a solicitation, recommendation or offer to buy or sell any security, commodity, interest, derivative, financial product or instrument. Users are responsible for complying with all applicable laws and should conduct their own analysis and consult with professional advisors prior to engaging with any markets."
+    "disclaimer": "The Prophet.ooo website (“Site”) is for informational and educational purposes only. The Site displays the existing prediction markets deployed on the Obyte DAG and is a graphical user interface for both visualizing data from on-chain activity and interacting with autonomous agents directly from your own wallets.  Prophet.ooo takes no custody of users' crypto assets and does not host or resolve any markets. The Site makes best effort to ensure  accuracy of the displayed information however there are no guarantees of accuracy and the information is provided as is. None of the material on the Site is intended to be, nor does it constitute, a solicitation, recommendation or offer to buy or sell any security, commodity, interest, derivative, financial product or instrument. Users are responsible for complying with all applicable laws and should conduct their own analysis and consult with professional advisors prior to engaging with any markets.",
+    "copy": "&copy; {{year}} <3>Obyte</3>, all rights reserved"
   },
   "header": {
     "description": "Prediction markets",
@@ -51,14 +56,143 @@
     "apy_not_shown": "APY not shown",
     "apy_not_available": "APY not available yet"
   },
+  "pages": {
+    "market": {
+      "cards": {
+        "reserve": {
+          "title": "Reserve",
+          "desc": "Total amount invested in all outcomes"
+        },
+        "current": {
+          "title": "Current value",
+          "desc": "The latest value of the data feed {{feed_name}}"
+        },
+        "expiration_time": {
+          "title": "time to expiration",
+          "desc": "The period while you can make your bets, or exit them if you changed your mind"
+        }
+      },
+      "sport_price_tooltip": "The price of the {{team_name}} token. If {{team_name}} wins, all funds paid by buyers of all tokens will be divided among {{team_name}} token holders.",
+      "sport_price_tooltip_draw": "The price of the draw token. In case of a draw, all funds paid by buyers of all tokens will be divided among draw token holders.",
+      "sport_odds_tooltip": "The multiple you receive if you bet on {{team_name}} and it wins, assuming the odds don’t change.",
+      "sport_odds_tooltip_draw": "The multiple you receive if you bet on draw and your bet wins, assuming the odds don’t change.",
+      "price_tooltip": "The price of the token that represents the “{{type}}” outcome. If this outcome wins, all funds paid by buyers of all tokens will be divided among “{{type}}” token holders.",
+      "odds_tooltip": "The multiple you receive if you bet on “{{type}}” outcome and it wins, assuming the odds don’t change.",
+      "bookmaker_odds": "Bookmaker odds: x{{odds}}",
+      "commit_result": "Commit result",
+      "not_published": "Oracle has not published results yet",
+      "unknown_oracle": "This market uses an oracle <1>{oracle}</1> that is unknown to this website, trade with care.",
+      "status": "status",
+      "chart": {
+        "prices": "Prices",
+        "supplies": "Supplies",
+        "fee": "Fee accumulation",
+        "estimated_apy": "Estimated APY",
+        "apy": "APY",
+        "liquidity_date": "Liquidity provision date",
+        "apy_desc": "APY that would be earned if an infinitesimal amount of liquidity were added on the date on the chart and held until the outcome was published.",
+        "estimated_apy_desc": "Estimated APY that would be earned if an infinitesimal amount of liquidity were added on the date on the chart and held until the event date. The estimation assumes that trading activity stays the same as it has been so far."
+      },
+      "apy": {
+        "title": "Make money from liquidity provision",
+        "every_trade": "Every trade is charged a fee which is added to the market’s pool (see the fee accumulation chart above).",
+        "earn": "Earn a share of these fees by buying all tokens in the same proportions they are already issued. One of the tokens will win, and you’ll get a share of the trading fees collected after you invested.",
+        "by_buying": "By buying all tokens without changing their proportions you are not betting on any outcome but taking a market-neutral position instead and adding liquidity to the market. This is safe if the current proportions reflect the true probabilities.",
+        "block": "Liquidity provision APY since the pool was started: {{percent}}%",
+        "block_desc": "The APY estimation is for the first LP assuming the trading activity stays the same as it has been so far. Later LPs earn from fewer trades, and the trading activity can change in the future, so the actual APY can be significantly different."
+      },
+      "recent_events": "Recent events"
+    },
+    "create": {
+      "title": "Create new prediction market",
+      "short_title": "Create new market",
+      "successfully": "Prediction market created successfully",
+      "go_to_market": "Go to the market",
+      "creating": "Creating prediction market",
+      "waiting": "Waiting for stabilization..."
+    },
+    "faq": {
+      "title": "F.A.Q.",
+      "items": {
+        "1": {
+          "question": "Who is this site for?",
+          "answer": "<0>This site is meant for two groups of users:</0><1><0>Bettors wishing to make money by correctly predicting the outcomes of various events. The types of events include sports, currency exchange rates, politics, and many others.</0><1>Liquidity providers wishing to make money by providing liquidity to prediction markets and earning transaction fees paid by bettors.</1></1>"
+        },
+        "2": {
+          "question": "How do bettors make money?",
+          "answer": "<0>They buy the tokens of the outcome they believe. For example, if there is an upcoming game between team A and team B, and the bettor thinks that team A is going to win, they buy the tokens of team A. If their prediction turns out to be correct (team A wins) all the money staked by all the bettors are distributed among those who staked on the correct outcome, i.e. they get their money back, plus a share of the money staked on the wrong outcomes (team B and draw). If their outcome loses, they lose their stake.</0><1>Bettors can also make money by buying/selling tokens that they believe are mispriced. For example, if they see that a token of team A is being sold for a price that doesn't reflect the true probability of team A winning, they can buy/sell the token or sell/buy the opposite tokens (team B and draw).</1><2>Bettors also participate in liquidity provision and earn a portion of the fees paid by other bettors who traded <1>after</1> them. They get this share only if their outcome wins, and it amplifies their winnings.</2>"
+        },
+        "3": {
+          "question": "How do liquidity providers make money?",
+          "answer": "<0>Liquidity providers make money by buying all tokens (team A, team B, and draw) in proportions that reflect the probabilities of the corresponding outcomes and get a share of the fees paid by other traders who bought or sold any tokens <1>after</1> them. Unlike bettors, they do not bet on any specific outcome but instead bet on <3>all</3> outcomes and get their share of fees in any case. If the shares of the tokens are correct, liquidity provision is relatively low-risk activity, and the risk is proportional to the deviation of the token proportions from the true probabilities.</0><1>Liquidity provision improves the trading conditions for bettors and encourages more trading, hence more fees. The more liquidity is committed to a market, the less is the slippage when buying or selling tokens.</1>"
+        },
+        "4": {
+          "question": "I made a bet and now I changed my mind. Can I exit the bet?",
+          "answer": "<0>Yes, you can sell the tokens that represent your bet while trading is still active (see below about the trading period). Alternatively, you can buy the opposite tokens that complement your bet (if you bought team A before, you can buy team B and draw now), this will make your position neutral and you'll act as a liquidity provider from now on. There are fees involved in both cases and if the sell fee is larger than the buy fee (this is the default), buying the opposite tokens might be a better idea.</0>"
+        },
+        "5": {
+          "question": "When can I make/exit my bets?",
+          "answer": "<0>For sports and most other markets, trading is active up to the date of the event (for sports, that's the start of the game). In currency markets, there is also a <1>quiet period</1> before the date of the event, and trading stops some time in advance. For example, in a market \"Will BTC be above $30,000 on Sep 1, 2022 UTC?\" trading will stop some time before Sep 1, 2022 UTC to protect the bets of the users as the exchange rate is unlikely to make large movements in a short period of time and the outcome becomes almost certain some time before the specified date.</0>"
+        },
+        "6": {
+          "question": "Is in-game trading allowed?",
+          "answer": "<0>No. Due to the way the token prices are determined, in-game trading on Prophet would hurt the winnings of the bettors who do not trade during the game. However, you can list the tokens on <1>ODEX decentralized exchange</1> and trade them there against other in-game traders. This won't affect the winnings of those who prefer to make their bets and wait for the final outcome.</0>"
+        },
+        "7": {
+          "question": "What are the fees?",
+          "answer": "<0>The fees are set by the market creators and vary by market. The default is 1% for buying tokens and 2% for selling them. The fees do not apply if you trade the tokens elsewhere, e.g. on <1>ODEX</1>. There are no fees for withdrawing your winnings after the outcome becomes known.</0><1>There is also an additional fee called <1>arbitrageur profit tax</1> which is proportional to the price change caused by the trade. When our markets are arbitraged against similar markets on other platforms, this tax helps to collect most of the arbitrageur profit in favor of the liquidity providers. The default arb profit tax is 90%.</1>"
+        },
+        "8": {
+          "question": "Are token prices equal to the probabilities that the market believes?",
+          "answer": "<0>No, they reflect the probabilities but are not equal to them. The shares of the total capital invested in specific tokens are instead equal to the market's beliefs of their probabilities. They are displayed in the pie chart on the market's page.</0><1>The capital invested in a token is proportional to both the token price and the number of issued tokens, and the number of tokens is proportional to their price, so the capital (and the probability) is proportional to the token's price <1>squared</1>. The sum of the squared token prices is not exactly 1, it is above 1 and grows as trading goes on due to the accrued fees.</1>"
+        },
+        "9": {
+          "question": "How are the tokens priced?",
+          "answer": "<0>The tokens are issued on a bonding curve and their prices depend on the numbers of tokens already issued. Issuing (buying) more tokens that represent a bet on the specific outcome (e.g. team A wins) increases their price and decreases the prices of the tokens that represent all other outcomes (team B wins and draw). Selling the same tokens does the opposite.</0><1>The bonding curve is a formula that links the token supplies (<1>s</1><2>yes</2>, <4>s</4><5>no</5>, and <7>s</7><8>draw</8>) to the total capital invested in all tokens (the reserve, denoted as <10>r</10>):</1><2><0>r</0> &nbsp; = &nbsp;<2>c </2> &nbsp;<4>&radic;<1>&nbsp;<1>s</1><2><0>yes</0></2><3><0>2</0></3> + <5>s</5><6><0>no</0></6><7><0>2</0></7> + <9>s</9><10><0>draw</0></10><11><0>2</0></11>&nbsp;</1></4></2><3>where <1>c</1> is a coefficient that starts with 1 and gradually grows to account for the accrued fees.</3><4>The price of the YES-token that represents a bet that the event will actually happen is then determined as a partial derivative by <1>s</1><2>yes</2>:</4><5><0><0>p</0><1><0>yes</0></1> &nbsp; = &nbsp;<3>c </3> &nbsp;&nbsp;</0><1><0><0>s</0><1><0>yes</0></1></0><1><0>&radic;<1>&nbsp;<1>s</1><2><0>yes</0></2><3><0>2</0></3> + <5>s</5><6><0>no</0></6><7><0>2</0></7> + <9>s</9><10><0>draw</0></10><11><0>2</0></11>&nbsp;</1></0></1></1></5><6>and similar formulas for the prices of NO and DRAW tokens.</6><7>Thanks to the bonding curve, we have continuous pricing and it is always possible to buy or sell any tokens, i.e. liquidity is always available.</7><8>The bonding curve is implemented by an <1>Autonomous Agent</1>, and the AA acts like a decentralized automated bookmaker that automatically adjusts its prices in response to the changing demand. LPs act like shareholders of the decentralized bookmaker, and share its profits.</8>"
+        },
+        "10": {
+          "question": "How is Prophet different from other prediction market platforms?",
+          "answer": "<0>Most other prediction market platforms also issue YES and NO tokens that represent the corresponding outcomes, however these platforms make users trade against each other on an orderbook exchange. This makes it difficult to bootstrap liquidity without a large trader community. Even with a large community, liquidity is lacking in the less popular markets.</0><1>Prophet issues tokens on a bonding curve instead. This means that traders are trading against the pool (which is implemented as an <1>Autonomous Agent</1> &mdash; AA) rather than against each other, and liquidity is always available.</1><2>Prophet compares against other prediction market platforms as AMM (automated market maker) DEXes compare against orderbook DEXes. The latter have always been struggling to gain traction due to low liquidity while AMM DEXes (like Uniswap) saw a lot more adoption.</2><3>However, unlike other prediction market platforms, the numbers of YES and NO tokens issued by Prophet AAs are not equal, and their prices are not equal to market-implied probabilities, which makes it slightly harder to read the market. Also, the prices of the tokens move in a tighter range which reduces the opportunities to profit from significant price movements. We believe these downsides are not significant as in practice most trading happens in a narrow range and the probabilities are easily estimated as the amounts of capital staked on the corresponding outcomes.</3><4>It's also important that Prophet works on <1>Obyte</1> &mdash; a DAG based cryptocurrency platform, which is immune to miner abuse and manipulation (known as MEV &mdash; miner extractable value) that affects blockchains. Therefore, when trading the prediction tokens, the risks of front-running, sandwich attacks, transaction delay or reordering and other attacks are minimized.</4>"
+        },
+        "11": {
+          "question": "Who operates Prophet?",
+          "answer": "<0>Nobody. Every market is operated by its own <1>Autonomous Agent</1> which is a piece of autonomous (as the name implies) immutable code running on Obyte DAG in totally manless manner. Nobody can stop them, nobody can intervene with their operation. Their code, as well as all their activity, are fully transparent.</0><1>Anyone can start a new market and it becomes immediately available to everyone.</1><2>This website is open-source and anyone can start any number of copies of this website anywhere in the world by downloading its code from <1>github</1>.</2><3>By engaging with this website, you are engaging with the Autonomous Agents the website offers an interface to, not with any companies, organizations, or individuals. There is no contract. You do not acquire any rights or obligations towards anyone, and nobody acquires any rights or obligations towards you.</3>"
+        },
+        "12": {
+          "question": "What are the sources of data about outcomes?",
+          "answer": "<0>They vary from market to market. For sports and currency markets, the data is provided by sports data providers such as <1>football-data.org</1>, cryptocurrency, and forex exchanges. The data is then posted to Obyte DAG by oracles operated by well-known Obyte community members. Anyone can create any market and use any oracle they like. This website displays a warning if the oracle is not among the known ones. You do have to trust the oracle operator that they post the true outcome (however, if they don't, everybody can see that). It is also possible to use decentralized oracles to completely remove any trust requirements.</0>"
+        },
+        "13": {
+          "question": "My prediction won, how do I get my payout?",
+          "answer": "<0>You have to claim it from the market where you made your bet. The market should be in \"Claiming profit\" state. If it is still in \"Waiting for results\" state then the market hasn't received the outcome yet. If the oracle has already posted the outcome, you can click the \"Commit\" button for the market to check the oracle's outcome and transition to \"Claiming profit\" state. Once in \"Claiming profit\" state, you can claim your profit by sending the winning tokens to the market's AA and receiving your share of the market's total balance.</0>"
+        },
+        "14": {
+          "question": "What is 'Resumed trading' state?",
+          "answer": "<0>A market can enter this state if the final outcome was not committed to the market within the allotted time (5 days by default). This can happen e.g. if the oracle failed to post the outcome, which is likely if the game was cancelled or postponed. In order not to lock user funds indefinitely, the market resumes trading after the waiting period expires in order to allow the token holders to sell them.</0>"
+        },
+        "15": {
+          "question": "Can I make bets if I have no funds on Obyte?",
+          "answer": "<0>Yes, you can, if you have funds on Ethereum, BSC, or Polygon. Prophet is integrated with other networks using <1>Counterstake SDK</1> that allows to seamlessly send funds cross-chain to dapps on Obyte. You can make bets with USDC, ETH, or WBTC, and they will be automatically sent through <3>Counterstake Bridge</3>, then converted to the required token via <5>Oswap.io</5> and sent to Prophet. However, you still need to have Obyte wallet in order to receive the tokens you bought and to claim profit afterwards.</0>"
+        },
+        "16": {
+          "question": "What format of odds do you display on the website?",
+          "answer": "<0>We use decimal odds. They show the multiplier applied to your stake if your bet wins. It is possible to see the token prices as well by switching the display format in the upper right corner.</0>"
+        }
+      }
+    },
+    "main": {
+      "title": "Decentralized <1>prediction markets</1>",
+      "subtitle": "<0>Sports betting, binary options, and other bets on future events</0>"
+    }
+  },
   "prediction_list": {
     "title_create": "create new markets",
     "title_calendar": "calendar of upcoming matches"
   },
   "recent_events": {
-    "add_liquidity": "<0>{{address}}...</0> sent {{amount}} {{symbol}} to add liquidity {count}",
-    "buy": "<0>{{address}}...</0> sent {{amount}} {{symbol}} to buy {count}",
-    "redeem": "<0>{{address}}...</0> sold {count} for {{amount}} {{symbol}}",
+    "add_liquidity": "<0>{{address}}...</0> sent {{amount}} {{symbol}} to add liquidity <6></6>",
+    "buy": "<0>{{address}}...</0> sent {{amount}} {{symbol}} to buy <6></6>",
+    "redeem": "<0>{{address}}...</0> sold <2></2> for {{amount}} {{symbol}}",
     "claim_profit": "<0>{{address}}...</0> profited {{amount}} {{symbol}}",
     "show_more": "Show more",
     "no_events": "No events"
@@ -210,135 +344,6 @@
       "install_obyte": "<0>Install Obyte wallet</0> if you don't have one yet, and copy/paste your address here.",
       "placeholder": "Wallet address (Example: WMFLGI2GLAB2...)",
       "save": "Save"
-    }
-  },
-  "pages": {
-    "create": {
-      "title": "Create new prediction market",
-      "short_title": "Create new market",
-      "successfully": "Prediction market created successfully",
-      "go_to_market": "Go to the market",
-      "creating": "Creating prediction market",
-      "waiting": "Waiting for stabilization..."
-    },
-    "faq": {
-      "title": "F.A.Q.",
-      "items": {
-        "1": {
-          "question": "Who is this site for?",
-          "answer": "<0>This site is meant for two groups of users:</0><1><0>Bettors wishing to make money by correctly predicting the outcomes of various events. The types of events include sports, currency exchange rates, politics, and many others.</0><1>Liquidity providers wishing to make money by providing liquidity to prediction markets and earning transaction fees paid by bettors.</1></1>"
-        },
-        "2": {
-          "question": "How do bettors make money?",
-          "answer": "<0>They buy the tokens of the outcome they believe. For example, if there is an upcoming game between team A and team B, and the bettor thinks that team A is going to win, they buy the tokens of team A. If their prediction turns out to be correct (team A wins) all the money staked by all the bettors are distributed among those who staked on the correct outcome, i.e. they get their money back, plus a share of the money staked on the wrong outcomes (team B and draw). If their outcome loses, they lose their stake.</0><1>Bettors can also make money by buying/selling tokens that they believe are mispriced. For example, if they see that a token of team A is being sold for a price that doesn't reflect the true probability of team A winning, they can buy/sell the token or sell/buy the opposite tokens (team B and draw).</1><2>Bettors also participate in liquidity provision and earn a portion of the fees paid by other bettors who traded <1>after</1> them. They get this share only if their outcome wins, and it amplifies their winnings.</2>"
-        },
-        "3": {
-          "question": "How do liquidity providers make money?",
-          "answer": "<0>Liquidity providers make money by buying all tokens (team A, team B, and draw) in proportions that reflect the probabilities of the corresponding outcomes and get a share of the fees paid by other traders who bought or sold any tokens <1>after</1> them. Unlike bettors, they do not bet on any specific outcome but instead bet on <3>all</3> outcomes and get their share of fees in any case. If the shares of the tokens are correct, liquidity provision is relatively low-risk activity, and the risk is proportional to the deviation of the token proportions from the true probabilities.</0><1>Liquidity provision improves the trading conditions for bettors and encourages more trading, hence more fees. The more liquidity is committed to a market, the less is the slippage when buying or selling tokens.</1>"
-        },
-        "4": {
-          "question": "I made a bet and now I changed my mind. Can I exit the bet?",
-          "answer": "<0>Yes, you can sell the tokens that represent your bet while trading is still active (see below about the trading period). Alternatively, you can buy the opposite tokens that complement your bet (if you bought team A before, you can buy team B and draw now), this will make your position neutral and you'll act as a liquidity provider from now on. There are fees involved in both cases and if the sell fee is larger than the buy fee (this is the default), buying the opposite tokens might be a better idea.</0>"
-        },
-        "5": {
-          "question": "When can I make/exit my bets?",
-          "answer": "<0>For sports and most other markets, trading is active up to the date of the event (for sports, that's the start of the game). In currency markets, there is also a <1>quiet period</1> before the date of the event, and trading stops some time in advance. For example, in a market \"Will BTC be above $30,000 on Sep 1, 2022 UTC?\" trading will stop some time before Sep 1, 2022 UTC to protect the bets of the users as the exchange rate is unlikely to make large movements in a short period of time and the outcome becomes almost certain some time before the specified date.</0>"
-        },
-        "6": {
-          "question": "Is in-game trading allowed?",
-          "answer": "<0>No. Due to the way the token prices are determined, in-game trading on Prophet would hurt the winnings of the bettors who do not trade during the game. However, you can list the tokens on <1>ODEX decentralized exchange</1> and trade them there against other in-game traders. This won't affect the winnings of those who prefer to make their bets and wait for the final outcome.</0>"
-        },
-        "7": {
-          "question": "What are the fees?",
-          "answer": "<0>The fees are set by the market creators and vary by market. The default is 1% for buying tokens and 2% for selling them. The fees do not apply if you trade the tokens elsewhere, e.g. on <1>ODEX</1>. There are no fees for withdrawing your winnings after the outcome becomes known.</0><1>There is also an additional fee called <1>arbitrageur profit tax</1> which is proportional to the price change caused by the trade. When our markets are arbitraged against similar markets on other platforms, this tax helps to collect most of the arbitrageur profit in favor of the liquidity providers. The default arb profit tax is 90%.</1>"
-        },
-        "8": {
-          "question": "Are token prices equal to the probabilities that the market believes?",
-          "answer": "<0>No, they reflect the probabilities but are not equal to them. The shares of the total capital invested in specific tokens are instead equal to the market's beliefs of their probabilities. They are displayed in the pie chart on the market's page.</0><1>The capital invested in a token is proportional to both the token price and the number of issued tokens, and the number of tokens is proportional to their price, so the capital (and the probability) is proportional to the token's price <1>squared</1>. The sum of the squared token prices is not exactly 1, it is above 1 and grows as trading goes on due to the accrued fees.</1>"
-        },
-        "9": {
-          "question": "How are the tokens priced?",
-          "answer": "<0>The tokens are issued on a bonding curve and their prices depend on the numbers of tokens already issued. Issuing (buying) more tokens that represent a bet on the specific outcome (e.g. team A wins) increases their price and decreases the prices of the tokens that represent all other outcomes (team B wins and draw). Selling the same tokens does the opposite.</0><1>The bonding curve is a formula that links the token supplies (<1>s</1><2>yes</2>, <4>s</4><5>no</5>, and <7>s</7><8>draw</8>) to the total capital invested in all tokens (the reserve, denoted as <10>r</10>):</1><2><0>r</0> &nbsp; = &nbsp;<2>c </2> &nbsp;<4>&radic;<1>&nbsp;<1>s</1><2><0>yes</0></2><3><0>2</0></3> + <5>s</5><6><0>no</0></6><7><0>2</0></7> + <9>s</9><10><0>draw</0></10><11><0>2</0></11>&nbsp;</1></4></2><3>where <1>c</1> is a coefficient that starts with 1 and gradually grows to account for the accrued fees.</3><4>The price of the YES-token that represents a bet that the event will actually happen is then determined as a partial derivative by <1>s</1><2>yes</2>:</4><5><0><0>p</0><1><0>yes</0></1> &nbsp; = &nbsp;<3>c </3> &nbsp;&nbsp;</0><1><0><0>s</0><1><0>yes</0></1></0><1><0>&radic;<1>&nbsp;<1>s</1><2><0>yes</0></2><3><0>2</0></3> + <5>s</5><6><0>no</0></6><7><0>2</0></7> + <9>s</9><10><0>draw</0></10><11><0>2</0></11>&nbsp;</1></0></1></1></5><6>and similar formulas for the prices of NO and DRAW tokens.</6><7>Thanks to the bonding curve, we have continuous pricing and it is always possible to buy or sell any tokens, i.e. liquidity is always available.</7><8>The bonding curve is implemented by an <1>Autonomous Agent</1>, and the AA acts like a decentralized automated bookmaker that automatically adjusts its prices in response to the changing demand. LPs act like shareholders of the decentralized bookmaker, and share its profits.</8>"
-        },
-        "10": {
-          "question": "How is Prophet different from other prediction market platforms?",
-          "answer": "<0>Most other prediction market platforms also issue YES and NO tokens that represent the corresponding outcomes, however these platforms make users trade against each other on an orderbook exchange. This makes it difficult to bootstrap liquidity without a large trader community. Even with a large community, liquidity is lacking in the less popular markets.</0><1>Prophet issues tokens on a bonding curve instead. This means that traders are trading against the pool (which is implemented as an <1>Autonomous Agent</1> &mdash; AA) rather than against each other, and liquidity is always available.</1><2>Prophet compares against other prediction market platforms as AMM (automated market maker) DEXes compare against orderbook DEXes. The latter have always been struggling to gain traction due to low liquidity while AMM DEXes (like Uniswap) saw a lot more adoption.</2><3>However, unlike other prediction market platforms, the numbers of YES and NO tokens issued by Prophet AAs are not equal, and their prices are not equal to market-implied probabilities, which makes it slightly harder to read the market. Also, the prices of the tokens move in a tighter range which reduces the opportunities to profit from significant price movements. We believe these downsides are not significant as in practice most trading happens in a narrow range and the probabilities are easily estimated as the amounts of capital staked on the corresponding outcomes.</3><4>It's also important that Prophet works on <1>Obyte</1> &mdash; a DAG based cryptocurrency platform, which is immune to miner abuse and manipulation (known as MEV &mdash; miner extractable value) that affects blockchains. Therefore, when trading the prediction tokens, the risks of front-running, sandwich attacks, transaction delay or reordering and other attacks are minimized.</4>"
-        },
-        "11": {
-          "question": "Who operates Prophet?",
-          "answer": "<0>Nobody. Every market is operated by its own <1>Autonomous Agent</1> which is a piece of autonomous (as the name implies) immutable code running on Obyte DAG in totally manless manner. Nobody can stop them, nobody can intervene with their operation. Their code, as well as all their activity, are fully transparent.</0><1>Anyone can start a new market and it becomes immediately available to everyone.</1><2>This website is open-source and anyone can start any number of copies of this website anywhere in the world by downloading its code from <1>github</1>.</2><3>By engaging with this website, you are engaging with the Autonomous Agents the website offers an interface to, not with any companies, organizations, or individuals. There is no contract. You do not acquire any rights or obligations towards anyone, and nobody acquires any rights or obligations towards you.</3>"
-        },
-        "12": {
-          "question": "What are the sources of data about outcomes?",
-          "answer": "<0>They vary from market to market. For sports and currency markets, the data is provided by sports data providers such as <1>football-data.org</1>, cryptocurrency, and forex exchanges. The data is then posted to Obyte DAG by oracles operated by well-known Obyte community members. Anyone can create any market and use any oracle they like. This website displays a warning if the oracle is not among the known ones. You do have to trust the oracle operator that they post the true outcome (however, if they don't, everybody can see that). It is also possible to use decentralized oracles to completely remove any trust requirements.</0>"
-        },
-        "13": {
-          "question": "My prediction won, how do I get my payout?",
-          "answer": "<0>You have to claim it from the market where you made your bet. The market should be in \"Claiming profit\" state. If it is still in \"Waiting for results\" state then the market hasn't received the outcome yet. If the oracle has already posted the outcome, you can click the \"Commit\" button for the market to check the oracle's outcome and transition to \"Claiming profit\" state. Once in \"Claiming profit\" state, you can claim your profit by sending the winning tokens to the market's AA and receiving your share of the market's total balance.</0>"
-        },
-        "14": {
-          "question": "What is 'Resumed trading' state?",
-          "answer": "<0>A market can enter this state if the final outcome was not committed to the market within the allotted time (5 days by default). This can happen e.g. if the oracle failed to post the outcome, which is likely if the game was cancelled or postponed. In order not to lock user funds indefinitely, the market resumes trading after the waiting period expires in order to allow the token holders to sell them.</0>"
-        },
-        "15": {
-          "question": "Can I make bets if I have no funds on Obyte?",
-          "answer": "<0>Yes, you can, if you have funds on Ethereum, BSC, or Polygon. Prophet is integrated with other networks using <1>Counterstake SDK</1> that allows to seamlessly send funds cross-chain to dapps on Obyte. You can make bets with USDC, ETH, or WBTC, and they will be automatically sent through <3>Counterstake Bridge</3>, then converted to the required token via <5>Oswap.io</5> and sent to Prophet. However, you still need to have Obyte wallet in order to receive the tokens you bought and to claim profit afterwards.</0>"
-        },
-        "16": {
-          "question": "What format of odds do you display on the website?",
-          "answer": "<0>We use decimal odds. They show the multiplier applied to your stake if your bet wins. It is possible to see the token prices as well by switching the display format in the upper right corner.</0>"
-        }
-      }
-    },
-    "main": {
-      "title": "Decentralized <1>prediction markets</1>",
-      "subtitle": "<0>Sports betting, binary options, and other bets on future events</0>"
-    },
-    "market": {
-      "sport_price_tooltip": "The price of the {{team_name}} token. If {{team_name}} wins, all funds paid by buyers of all tokens will be divided among {{team_name}} token holders.",
-      "sport_price_tooltip_draw": "The price of the draw token. In case of a draw, all funds paid by buyers of all tokens will be divided among draw token holders.",
-      "sport_odds_tooltip": "The multiple you receive if you bet on {{team_name}} and it wins, assuming the odds don’t change.",
-      "sport_odds_tooltip_draw": "The multiple you receive if you bet on draw and your bet wins, assuming the odds don’t change.",
-      "price_tooltip": "The price of the token that represents the “{{type}}” outcome. If this outcome wins, all funds paid by buyers of all tokens will be divided among “{{type}}” token holders.",
-      "odds_tooltip": "The multiple you receive if you bet on “{{type}}” outcome and it wins, assuming the odds don’t change.",
-      "bookmaker_odds": "Bookmaker odds: x{{odds}}",
-      "commit_result": "Commit result",
-      "not_published": "Oracle has not published results yet",
-      "unknown_oracle": "This market uses an oracle <1>{oracle}</1> that is unknown to this website, trade with care.",
-      "cards": {
-        "current": {
-          "title": "Current value",
-          "desc": "The latest value of the data feed {{feed_name}}"
-        },
-        "reserve": {
-          "title": "Reserve",
-          "desc": "Total amount invested in all outcomes"
-        },
-        "expiration_time": {
-          "title": "time to expiration",
-          "desc": "The period while you can make your bets, or exit them if you changed your mind"
-        }
-      },
-      "status": "status",
-      "chart": {
-        "prices": "Prices",
-        "supplies": "Supplies",
-        "fee": "Fee accumulation",
-        "estimated_apy": "Estimated APY",
-        "apy": "APY",
-        "liquidity_date": "Liquidity provision date",
-        "apy_desc": "APY that would be earned if an infinitesimal amount of liquidity were added on the date on the chart and held until the outcome was published.",
-        "estimated_apy_desc": "Estimated APY that would be earned if an infinitesimal amount of liquidity were added on the date on the chart and held until the event date. The estimation assumes that trading activity stays the same as it has been so far."
-      },
-      "apy": {
-        "title": "Make money from liquidity provision",
-        "every_trade": "Every trade is charged a fee which is added to the market’s pool (see the fee accumulation chart above).",
-        "earn": "Earn a share of these fees by buying all tokens in the same proportions they are already issued. One of the tokens will win, and you’ll get a share of the trading fees collected after you invested.",
-        "by_buying": "By buying all tokens without changing their proportions you are not betting on any outcome but taking a market-neutral position instead and adding liquidity to the market. This is safe if the current proportions reflect the true probabilities.",
-        "block": "Liquidity provision APY since the pool was started: {{percent}}%",
-        "block_desc": "The APY estimation is for the first LP assuming the trading activity stays the same as it has been so far. Later LPs earn from fewer trades, and the trading activity can change in the future, so the actual APY can be significantly different."
-      },
-      "recent_events": "Recent events"
     }
   },
   "event": {

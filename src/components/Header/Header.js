@@ -10,6 +10,7 @@ import { useWindowSize } from "hooks";
 import { WalletModal } from "modals";
 
 import styles from "./Header.module.css";
+import { SelectLanguage } from "components/SelectLanguage/SelectLanguage";
 
 export const Header = () => {
 	const [width] = useWindowSize();
@@ -30,15 +31,18 @@ export const Header = () => {
 						</div>
 					</Link>
 				</Col>
-				{width >= 780 ? <>
+				{width >= 990 ? <>
 					<Col>
-						<Space size="large">
+						<Space size="large" align="baseline">
 							<MainMenu />
 							<WalletModal />
 
 							<div className={styles.priceSwitcherWrap}>
 								<ViewPriceSwitcher />
 							</div>
+							{/* <div style={{ marginTop: 2 }}> */}
+								<SelectLanguage />
+							{/* </div> */}
 						</Space>
 					</Col>
 				</> : <>
@@ -53,6 +57,11 @@ export const Header = () => {
 						<div className={styles.switcherWrap}>
 							<ViewPriceSwitcher />
 						</div>
+
+						<div className={styles.languageWrap}>
+							<SelectLanguage />
+						</div>
+
 						<div className={styles.socialLinksWrap}>
 							<SocialLinks size="small" />
 						</div>

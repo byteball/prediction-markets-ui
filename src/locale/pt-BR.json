@@ -29,7 +29,9 @@
     "days": "dias",
     "hours": "horas",
     "all": "Todos",
-    "currency": "Moeda"
+    "currency": "Moeda",
+    "price": "preço",
+    "odds": "probabilidades"
   },
   "footer": {
     "time_zone": "Todas as datas estão em seu fuso horário local (UTC{{timeZoneView}}), a menos que indicado de outra maneira",
@@ -56,9 +58,9 @@
     "title_calendar": "calendário dos próximos jogos"
   },
   "recent_events": {
-    "add_liquidity": "<0>{{address}}...</0> enviou {{amount}} {{symbol}} para adicionar liquidez {count}",
-    "buy": "<0>{{address}}...</0> enviou {{amount}} {{symbol}} para comprar {count}",
-    "redeem": "<0>{{address}}...</0> vendeu {count} por {{amount}} {{symbol}}",
+    "add_liquidity": "<0>{{address}}...</0> enviou {{amount}} {{symbol}} para adicionar liquidez <6></6>",
+    "buy": "<0>{{address}}...</0> enviou {{amount}} {{symbol}} para comprar <6></6>",
+    "redeem": "<0>{{address}}...</0> vendeu <2></2> por {{amount}} {{symbol}}",
     "claim_profit": "<0>{{address}}...</0> lucrou {{amount}} {{symbol}}",
     "show_more": "Mostrar mais",
     "no_events": "Sem eventos"

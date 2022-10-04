@@ -24,7 +24,7 @@ import {
   selectActiveTeams
 } from "store/slices/activeSlice";
 import { setActiveMarket } from "store/thunks/setActiveMarket";
-import { selectPriceOrOdds, selectReserveAssets, selectReservesRate } from "store/slices/settingsSlice";
+import { selectLanguage, selectPriceOrOdds, selectReserveAssets, selectReservesRate } from "store/slices/settingsSlice";
 import { getMarketPriceByType, generateLink, generateTextEvent, getEstimatedAPY, transformChampionshipName } from "utils";
 import { RecentEvents } from "components/RecentEvents/RecentEvents";
 import { CurrencyChart } from "components/CurrencyChart/CurrencyChart";
@@ -126,7 +126,7 @@ export const MarketPage = () => {
   const teams = useSelector(selectActiveTeams);
   const currencyCandles = useSelector(selectActiveCurrencyCandles);
   const currencyCurrentValue = useSelector(selectActiveCurrencyCurrentValue);
-
+  const lang = useSelector(selectLanguage);
   const params = useSelector(selectActiveMarketParams);
 
   const priceOrOdds = useSelector(selectPriceOrOdds);
@@ -424,7 +424,7 @@ export const MarketPage = () => {
         <Row gutter={30}>
           <Col lg={{ span: 8 }} md={{ span: 12 }} xs={{ span: 24 }} style={{ marginBottom: 30 }}>
             <StatsCard
-              title={`${haveTeamNames ? teams.yes.name : 'Yes'}`}
+              title={`${haveTeamNames ? teams.yes.name : t('common.yes', 'yes')}`}
               tooltip={yesTooltip}
               reserve={reserve}
               isWinner={result ? result === 'yes' : undefined}
@@ -436,7 +436,7 @@ export const MarketPage = () => {
 
           {allow_draw ? <Col lg={{ span: 8 }} md={{ span: 12 }} xs={{ span: 24 }} style={{ marginBottom: 30 }}>
             <StatsCard
-              title="Draw"
+              title={t('common.draw', 'draw')}
               tooltip={drawTooltip}
               reserve={reserve}
               isWinner={result ? result === 'draw' : undefined}
@@ -448,7 +448,7 @@ export const MarketPage = () => {
 
           <Col lg={{ span: 8 }} md={{ span: 12 }} xs={{ span: 24 }} style={{ marginBottom: 30 }}>
             <StatsCard
-              title={`${haveTeamNames ? teams.no.name : 'No'}`}
+              title={`${haveTeamNames ? teams.no.name : t('common.no', 'no')}`}
               tooltip={noTooltip}
               reserve={reserve}
               isWinner={result ? result === 'no' : undefined}

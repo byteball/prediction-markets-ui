@@ -72,7 +72,7 @@ export const WalletModal = ({ children = "WALLET", type = "default", styles = {}
 
   return <>
     {visible && <Helmet title={`Prophet prediction markets — ${t("modals.wallet.title", "Wallet")}`} />}
-    <Button onClick={changeVisible} size="large" type={type} style={btnStyles}>{currentWalletAddress ? `${currentWalletAddress.slice(0, 7)}...` : children}</Button>
+    <Button onClick={changeVisible} size="large" type={type} style={btnStyles}>{currentWalletAddress ? `${currentWalletAddress.slice(0, 7)}...` : (children === "WALLET" ? t("modals.wallet.title", "Wallet") : children)}</Button>
 
     <Modal
       visible={visible}

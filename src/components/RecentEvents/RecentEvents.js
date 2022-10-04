@@ -44,22 +44,22 @@ export const RecentEvents = () => {
     const drawAmount = allow_draw ? +Number(Math.abs(draw_amount) / 10 ** reserve_decimals).toFixed(draw_decimals) : '';
 
     if (type === 'add_liquidity' || type === 'buy_by_type') {
-      const count = <>{yes_amount !== 0 ? <span style={{ color: appConfig.YES_COLOR }}>{` ${yesAmount} ${yes_symbol}`}</span> : ''} {no_amount !== 0 ? <span style={{ color: appConfig.NO_COLOR }}>{` ${noAmount} ${no_symbol}`}</span> : ''}{draw_amount !== 0 ? <span style={{ color: appConfig.DRAW_COLOR }}>{` ${drawAmount} ${draw_symbol}`}</span> : ''}</>;
+      const Count = () => <>{yes_amount !== 0 ? <span style={{ color: appConfig.YES_COLOR }}>{` ${yesAmount} ${yes_symbol}`}</span> : ''} {no_amount !== 0 ? <span style={{ color: appConfig.NO_COLOR }}>{` ${noAmount} ${no_symbol}`}</span> : ''}{draw_amount !== 0 ? <span style={{ color: appConfig.DRAW_COLOR }}>{` ${drawAmount} ${draw_symbol}`}</span> : ''}</>;
 
       if (type === 'add_liquidity') {
         Event = <Trans i18nKey="recent_events.add_liquidity">
-          <a href={`https://${appConfig.ENVIRONMENT === 'testnet' ? 'testnet' : ''}explorer.obyte.org/address/${trigger_address}`} target="_blank" rel="noopener">{{address: trigger_address.slice(0, 16)}}...</a> sent {{amount: reserveAmount}} {{symbol: reserve_symbol}} to add liquidity {count}
+          <a href={`https://${appConfig.ENVIRONMENT === 'testnet' ? 'testnet' : ''}explorer.obyte.org/address/${trigger_address}`} target="_blank" rel="noopener">{{address: trigger_address.slice(0, 16)}}...</a> sent {{amount: reserveAmount}} {{symbol: reserve_symbol}} to add liquidity <Count />
         </Trans>
       } else {
         Event = <Trans i18nKey="recent_events.buy">
-          <a href={`https://${appConfig.ENVIRONMENT === 'testnet' ? 'testnet' : ''}explorer.obyte.org/address/${trigger_address}`} target="_blank" rel="noopener">{{address: trigger_address.slice(0, 16)}}...</a> sent {{amount: reserveAmount}} {{symbol: reserve_symbol}} to buy {count}
+          <a href={`https://${appConfig.ENVIRONMENT === 'testnet' ? 'testnet' : ''}explorer.obyte.org/address/${trigger_address}`} target="_blank" rel="noopener">{{address: trigger_address.slice(0, 16)}}...</a> sent {{amount: reserveAmount}} {{symbol: reserve_symbol}} to buy <Count />
         </Trans>
       }
     } else if (type === 'redeem') {
-      const count = <>{yes_amount !== 0 ? <span style={{ color: appConfig.YES_COLOR }}>{` ${yesAmount} ${yes_symbol}`}</span> : ''} {no_amount !== 0 ? <span style={{ color: appConfig.NO_COLOR }}>{` ${noAmount} ${no_symbol}`}</span> : ''}{draw_amount !== 0 ? <span style={{ color: appConfig.DRAW_COLOR }}>{` ${drawAmount} ${draw_symbol}`}</span> : ''}</>;
+      const Count = () => <>{yes_amount !== 0 ? <span style={{ color: appConfig.YES_COLOR }}>{` ${yesAmount} ${yes_symbol}`}</span> : ''} {no_amount !== 0 ? <span style={{ color: appConfig.NO_COLOR }}>{` ${noAmount} ${no_symbol}`}</span> : ''}{draw_amount !== 0 ? <span style={{ color: appConfig.DRAW_COLOR }}>{` ${drawAmount} ${draw_symbol}`}</span> : ''}</>;
 
       Event = <Trans i18nKey="recent_events.redeem">
-        <a href={`https://${appConfig.ENVIRONMENT === 'testnet' ? 'testnet' : ''}explorer.obyte.org/address/${trigger_address}`} target="_blank" rel="noopener">{{ address: trigger_address.slice(0, 16) }}...</a> sold {count} for {{ amount: reserveAmount }} {{ symbol: reserve_symbol }}
+        <a href={`https://${appConfig.ENVIRONMENT === 'testnet' ? 'testnet' : ''}explorer.obyte.org/address/${trigger_address}`} target="_blank" rel="noopener">{{ address: trigger_address.slice(0, 16) }}...</a> sold <Count /> for {{ amount: reserveAmount }} {{ symbol: reserve_symbol }}
       </Trans>
     } else if (type === 'claim_profit') {
       Event = <Trans i18nKey="recent_events.claim_profit">
