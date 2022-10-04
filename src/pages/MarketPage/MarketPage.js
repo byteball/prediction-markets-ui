@@ -377,7 +377,7 @@ export const MarketPage = () => {
           </Col>
 
           <Col md={{ span: 8 }} xs={{ span: 8 }} style={{ textAlign: 'center' }}>
-            <b className={styles.vs}>VS</b>
+            <b className={styles.vs}>{t('common.vs', 'VS')}</b>
             <div>
               {moment.unix(event_date).format('MMM D, h:mm A')}
             </div>

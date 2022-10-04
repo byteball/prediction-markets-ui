@@ -18,9 +18,11 @@
     "winner": "WINNER",
     "odds": "odds",
     "price": "price",
+    "vs": "VS",
     "draw": "draw",
     "yes": "yes",
     "no": "no",
+    "all_sport": "All {{sport}}",
     "no_markets": "no markets",
     "no_markets_type": "no {{type}} markets",
     "load_more": "Load more",
@@ -33,7 +35,8 @@
     "days": "days",
     "hours": "hours",
     "all": "All",
-    "currency": "Currency"
+    "currency": "Currency",
+    "soccer": "soccer"
   },
   "footer": {
     "time_zone": "All dates are in your local timezone (UTC{{timeZoneView}}) unless indicated otherwise",

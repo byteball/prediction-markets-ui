@@ -22,7 +22,7 @@ import { selectMarketsCache } from "store/slices/cacheSlice";
 import { loadMarketsInCache } from "store/thunks/loadMarketsInCache";
 import { loadCurrencyCalendarCache } from "store/thunks/loadCurrencyCalendarCache";
 
-import { getEmojiByType, transformChampionshipName } from "utils";
+import { getEmojiByType, transformChampionshipName, getSportNameByType } from "utils";
 import { historyInstance } from "historyInstance";
 import backend from "services/backend";
 
@@ -101,7 +101,7 @@ export const PredictionList = ({ type = 'all', particle = 'all', setParticle }) 
   }, [type, actualCurrency]);
 
   const getActionList = useCallback(() => ([
-    { value: 'all', text: `${getEmojiByType(type)} All soccer` },
+    { value: 'all', text: `${getEmojiByType(type)} ${t('common.all_sport', 'All {{sport}}', { sport: getSportNameByType(type) })}` },
     ...championships[type]?.map(({ name, code, emblem }) => ({ value: code, text: transformChampionshipName(name, code), iconLink: emblem }))
   ]), [championships, type]);
 
