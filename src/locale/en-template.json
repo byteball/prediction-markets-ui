@@ -178,7 +178,8 @@
           "question": "What format of odds do you display on the website?",
           "answer": "<0>We use decimal odds. They show the multiplier applied to your stake if your bet wins. It is possible to see the token prices as well by switching the display format in the upper right corner.</0>"
         }
-      }
+      },
+      "other_questions": "Other questions? Ask on <1>Obyte discord</1>."
     },
     "main": {
       "title": "Decentralized <1>prediction markets</1>",
