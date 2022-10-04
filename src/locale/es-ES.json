@@ -29,9 +29,7 @@
     "days": "días",
     "hours": "horas",
     "all": "Todo",
-    "currency": "Moneda",
-    "price": "precio",
-    "odds": "probabilidades"
+    "currency": "Divisa"
   },
   "footer": {
     "time_zone": "Todas las fechas están en tu zona horaria local (UTC{{timeZoneView}}) a menos que se indique lo contrario",
@@ -42,7 +40,7 @@
     "menu": "Menú"
   },
   "main_menu": {
-    "create": "Crear nuevo monedero",
+    "create": "Crear nuevo mercado",
     "faq": "Preguntas frecuentes"
   },
   "market_size_pie": {
@@ -71,7 +69,7 @@
     "outcome_other_desc": "si el resultado es {{token_name}}",
     "estimated_winnings": "Ganancias estimadas",
     "new_price": "Nuevo precio",
-    "new_odds": "Nuevas probabilidades",
+    "new_odds": "Nuevas cuotas",
     "total_fee": "Comisión total",
     "hide_details": "ocultar detalles",
     "show_details": "mostrar detalles",
@@ -83,14 +81,14 @@
     "oswap_rate": "<0>Tasa de Oswap</0>"
   },
   "view_price_switcher": {
-    "desc": "Cambia entre los precios mostrados de las fichas Si/No/Draw y las probabilidades (como es común en apuestas deportivas)",
-    "odds": "probabilidades",
+    "desc": "Cambia entre los precios mostrados de las fichas Si/No/Empate y las cuotas (como es común en apuestas deportivas)",
+    "odds": "cuotas",
     "prices": "precios"
   },
   "forms": {
     "liquidity": {
       "outcome_probabilities": "Probabilidades de resultado",
-      "suggested_probabilities": "Las probabilidades sugeridas se basan en las probabilidades de los proveedores actuales",
+      "suggested_probabilities": "Las cuotas sugeridas se basan en las cuotas de los proveedores actuales",
       "net_amounts": "Cantidades netas agregadas",
       "sum_100": "La suma del porcentaje debe ser igual a 100"
     },
@@ -200,7 +198,7 @@
       "title": "Crea mercado"
     },
     "trade": {
-      "title": "Intercambiar",
+      "title": "Operar",
       "liquidity_first": "Por favor añade liquidez primero"
     },
     "view_params": {
@@ -287,8 +285,8 @@
           "answer": "<0>Sí, si tienes fondos en Ethereum, BSC o Polígono. Prophet está integrado con otras redes usando <1>Counterstake SDK</1> que permite enviar fondos desde otras redes a dapps en Obyte. Puedes hacer apuestas con USDC, ETH, o WBTC, y se enviarán automáticamente a través del <3>Puente Counterstake</3>, luego convertido al token requerido vía <5>Oswap.io</5> y enviado a Prophet. Sin embargo, todavía necesitas tener la billetera Obyte para recibir los tokens que has comprado y obtener beneficios después.</0>"
         },
         "16": {
-          "question": "¿Qué formato de probabilidades se muestra en el sitio web?",
-          "answer": "<0>Usamos probabilidades decimales. Muestra el multiplicador aplicado a tu apuesta si tu apuesta gana. También es posible ver los precios del token cambiando el formato de visualización en la esquina superior derecha.</0>"
+          "question": "¿Qué formato de cuotas se muestra en el sitio web?",
+          "answer": "<0>Usamos cuotas decimales. Muestra el multiplicador aplicado a tu apuesta si tu apuesta gana. También es posible ver los precios del token cambiando el formato de visualización en la esquina superior derecha.</0>"
         }
       }
     },
@@ -299,11 +297,11 @@
     "market": {
       "sport_price_tooltip": "El precio del token {{team_name}}. Si gana {{team_name}}, todos los fondos pagados por los compradores de todos los tokens se dividirán entre los que tengan tokens {{team_name}}.",
       "sport_price_tooltip_draw": "El precio del token empate. En caso de empate, todos los fondos pagados por los compradores de todos los tokens se dividirán entre los poseedores de tokens de empate.",
-      "sport_odds_tooltip": "El múltiplo que recibes si apuestas en {{team_name}} y gana, asumiendo que las probabilidades no cambian.",
-      "sport_odds_tooltip_draw": "El múltiplo que usted recibe si apuesta al empate y tu apuesta gana, asumiendo que las probabilidades no cambian.",
+      "sport_odds_tooltip": "El múltiplo que recibes si apuestas en {{team_name}} y gana, asumiendo que las cuotas no cambian.",
+      "sport_odds_tooltip_draw": "El múltiplo que usted recibe si apuesta al empate y tu apuesta gana, asumiendo que las cuotas no cambian.",
       "price_tooltip": "El precio del token que representa el resultado “{{type}}”. Si este resultado gana, todos los fondos pagados por los compradores de todos los tokens se dividirán entre los tenedores de tokens de “{{type}}”.",
-      "odds_tooltip": "El múltiplo que recibes si apuestas al resultado de “{{type}}” y este gana, asumiendo que las probabilidades no cambian.",
-      "bookmaker_odds": "Probabilidad del corredor de apuestas: x{{odds}}",
+      "odds_tooltip": "El múltiplo que recibes si apuestas al resultado de “{{type}}” y este gana, asumiendo que las cuotas no cambian.",
+      "bookmaker_odds": "Cuotas del corredor: x{{odds}}",
       "commit_result": "Resultado del commit",
       "not_published": "El oráculo aún no ha publicado resultados",
       "unknown_oracle": "Este mercado utiliza un oráculo <1>{oracle}</1> que es desconocido para este sitio web, haz trading con cuidado.",
