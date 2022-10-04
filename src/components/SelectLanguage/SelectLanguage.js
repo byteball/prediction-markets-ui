@@ -17,6 +17,10 @@ export const langs = [
     flag: usa
   },
   {
+    name: "zh",
+    flag: cn
+  },
+  {
     name: "es",
     flag: es
   },
@@ -24,10 +28,6 @@ export const langs = [
     name: "pt",
     flag: br
   },
-  {
-    name: "zh",
-    flag: cn
-  }
 ];
 
 export const SelectLanguage = () => {
