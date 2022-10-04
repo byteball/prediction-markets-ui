@@ -29,9 +29,7 @@
     "days": "dias",
     "hours": "horas",
     "all": "Todos",
-    "currency": "Moeda",
-    "price": "preço",
-    "odds": "probabilidades"
+    "currency": "Moeda"
   },
   "footer": {
     "time_zone": "Todas as datas estão em seu fuso horário local (UTC{{timeZoneView}}), a menos que indicado de outra maneira",
