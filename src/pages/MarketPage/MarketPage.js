@@ -366,7 +366,7 @@ export const MarketPage = () => {
       <link rel="canonical" href={`${window.location.protocol + '//' + window.location.host}/market/${seoText}-${address}`} />
     </Helmet>
     <div style={{ marginTop: 50 }}>
-      <h1 className={styles.event} style={{ maxWidth: 860 }}>{event}</h1>
+      <h1 className={styles.event}>{event}</h1>
       {(teams.yes === null || teams.no === null) ? null : <div style={{ margin: '30px 0', width: '100%' }}>
         <Row>
           <Col md={{ span: 8 }} xs={{ span: 8 }} style={{ textAlign: 'center' }}>

@@ -18,7 +18,7 @@ import {
 } from "store/slices/activeSlice";
 import { selectTokensByNetwork } from "store/slices/bridgesSlice";
 import { selectWalletAddress } from "store/slices/settingsSlice";
-import { generateLink, getExchangeResult, getMarketPriceByType } from "utils";
+import { capitalizeFirstLetter, generateLink, getExchangeResult, getMarketPriceByType } from "utils";
 import { WalletModal } from "modals";
 
 const f = (x) => (~(x + "").indexOf(".") ? (x + "").split(".")[1].length : 0);
@@ -79,9 +79,9 @@ export const AddLiquidityForm = ({ yes_team, no_team, visible }) => {
     const new_den = Math.sqrt(yesAmount * yesAmount + noAmount * noAmount + drawAmount * drawAmount);
 
     if (reserveAmount.valid && reserveAmount.value && Number(reserveAmount.value) > 0 && percentSum === 100) {
-      yesOdds = (Number(probabilities.yes.value) !== 0) ? `odds: x${+((amountInPenniesWithoutFee / yesAmount) / (yesAmount / new_den)).toFixed(4)}` : '';
-      noOdds = (Number(probabilities.no.value) !== 0) ? `odds: x${+((amountInPenniesWithoutFee / noAmount) / (noAmount / new_den)).toFixed(4)}` : '';
-      drawOdds = (Number(drawPercent) !== 0) ? `odds: x${+((amountInPenniesWithoutFee / drawAmount) / (drawAmount / new_den)).toFixed(4)}` : '';
+      yesOdds = (Number(probabilities.yes.value) !== 0) ? `${t('common.odds', 'odds')}: x${+((amountInPenniesWithoutFee / yesAmount) / (yesAmount / new_den)).toFixed(4)}` : '';
+      noOdds = (Number(probabilities.no.value) !== 0) ? `${t('common.odds', 'odds')}: x${+((amountInPenniesWithoutFee / noAmount) / (noAmount / new_den)).toFixed(4)}` : '';
+      drawOdds = (Number(drawPercent) !== 0) ? `${t('common.odds', 'odds')}: x${+((amountInPenniesWithoutFee / drawAmount) / (drawAmount / new_den)).toFixed(4)}` : '';
     }
 
   } else {
@@ -390,7 +390,7 @@ export const AddLiquidityForm = ({ yes_team, no_team, visible }) => {
         </Col>
 
         {allow_draw && <Col md={{ span: 8 }} xs={{ span: 24 }}>
-          <Form.Item extra={<span style={{ color: appConfig.DRAW_COLOR }}>{drawOdds}</span>} label={<small>DRAW</small>}>
+          <Form.Item extra={<span style={{ color: appConfig.DRAW_COLOR }}>{drawOdds}</span>} label={<small>{t("common.draw", "draw").toUpperCase()}</small>}>
             <Input size="large" disabled={true} value={floorDecimals(drawPercent, 2)} placeholder="ex. 20" suffix='%' />
           </Form.Item>
         </Col>}
@@ -409,15 +409,15 @@ export const AddLiquidityForm = ({ yes_team, no_team, visible }) => {
       {!isFirstIssue && <div style={{ marginBottom: 15 }}>
         <b>{t("forms.liquidity.net_amounts", "Net added amounts")}: </b>
         <div style={{ color: appConfig.YES_COLOR }}>
-          {haveTeamNames ? yes_team : 'YES'}: {Number(isFirstIssue ? amountInPenniesWithoutFee * probabilities.yes.value / 100 / 10 ** reserve_decimals : yesReserveAmount / 10 ** reserve_decimals).toFixed(reserve_decimals)} {reserve_symbol} {!isFirstIssue && <>({Number((yesReserveAmount / amountInPenniesWithoutFee) * 100).toFixed(2)}%)</>}
+          {haveTeamNames ? yes_team : t("common.yes", "yes").toUpperCase()}: {Number(isFirstIssue ? amountInPenniesWithoutFee * probabilities.yes.value / 100 / 10 ** reserve_decimals : yesReserveAmount / 10 ** reserve_decimals).toFixed(reserve_decimals)} {reserve_symbol} {!isFirstIssue && <>({Number((yesReserveAmount / amountInPenniesWithoutFee) * 100).toFixed(2)}%)</>}
         </div>
 
         <div style={{ color: appConfig.NO_COLOR }}>
-          {haveTeamNames ? no_team : 'NO'}: {Number(isFirstIssue ? amountInPenniesWithoutFee * probabilities.no.value / 100 / 10 ** reserve_decimals : noReserveAmount / 10 ** reserve_decimals).toFixed(reserve_decimals)} {reserve_symbol} {!isFirstIssue && <>({Number((noReserveAmount / amountInPenniesWithoutFee) * 100).toFixed(2)}%)</>}
+          {haveTeamNames ? no_team : t("common.no", "no").toUpperCase()}: {Number(isFirstIssue ? amountInPenniesWithoutFee * probabilities.no.value / 100 / 10 ** reserve_decimals : noReserveAmount / 10 ** reserve_decimals).toFixed(reserve_decimals)} {reserve_symbol} {!isFirstIssue && <>({Number((noReserveAmount / amountInPenniesWithoutFee) * 100).toFixed(2)}%)</>}
         </div>
 
         {allow_draw && <div style={{ color: appConfig.DRAW_COLOR }}>
-          {haveTeamNames ? 'Draw' : 'DRAW'}: {Number(isFirstIssue ? amountInPenniesWithoutFee * drawPercent / 100 / 10 ** reserve_decimals : drawReserveAmount / 10 ** reserve_decimals).toFixed(reserve_decimals)} {reserve_symbol}  {!isFirstIssue && <>({Number((drawReserveAmount / amountInPenniesWithoutFee) * 100).toFixed(2)}%)</>}
+          {haveTeamNames ? capitalizeFirstLetter(t("common.draw", "draw")) : t("common.draw", "draw").toUpperCase()}: {Number(isFirstIssue ? amountInPenniesWithoutFee * drawPercent / 100 / 10 ** reserve_decimals : drawReserveAmount / 10 ** reserve_decimals).toFixed(reserve_decimals)} {reserve_symbol}  {!isFirstIssue && <>({Number((drawReserveAmount / amountInPenniesWithoutFee) * 100).toFixed(2)}%)</>}
         </div>}
       </div>}
 
