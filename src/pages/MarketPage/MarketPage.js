@@ -368,7 +368,7 @@ export const MarketPage = () => {
     <div style={{ marginTop: 50 }}>
       <h1 className={styles.event} style={{ maxWidth: 860 }}>{event}</h1>
       {(teams.yes === null || teams.no === null) ? null : <div style={{ margin: '30px 0', width: '100%' }}>
-        <Row align="middle">
+        <Row>
           <Col md={{ span: 8 }} xs={{ span: 8 }} style={{ textAlign: 'center' }}>
             <Img src={[`https://crests.football-data.org/${teams.yes.id}.svg`, `https://crests.football-data.org/${teams.yes.id}.png`]} width={'50%'} style={{ maxWidth: 120 }} />
             <div style={{ paddingTop: 10, lineHeight: 1 }}>
@@ -376,7 +376,7 @@ export const MarketPage = () => {
             </div>
           </Col>
 
-          <Col md={{ span: 8 }} xs={{ span: 8 }} style={{ textAlign: 'center' }}>
+          <Col md={{ span: 8 }} xs={{ span: 8 }} style={{ textAlign: 'center', alignSelf: 'center' }}>
             <b className={styles.vs}>{t('common.vs', 'VS')}</b>
             <div>
               {moment.unix(event_date).format('MMM D, h:mm A')}
