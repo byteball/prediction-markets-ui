@@ -40,7 +40,7 @@ export const SelectLanguage = () => {
   return (
     <Select style={{ width: "100%" }} dropdownStyle={{ margin: 20 }} bordered={false} value={lang || "en"} size="large" onChange={(value) => {
       dispatch(changeLanguage(value));
-      historyInstance.replace((lang && value !== "en" ? "/" + value : "/") + (urlWithoutLang !== "/" ? urlWithoutLang : ""))
+      historyInstance.replace((lang && value !== "en" ? "/" + value : (urlWithoutLang ? "" : "/")) + (urlWithoutLang !== "/" ? urlWithoutLang : ""))
     }}>
       {langs.map((lang) => <Select.Option key={lang.name} style={{ paddingLeft: 20, paddingRight: 20 }} value={lang.name}><div><img alt={lang.name} src={lang.flag} style={{ border: "1px solid #ddd" }} width="30" /></div></Select.Option>)}
     </Select>
