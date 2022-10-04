@@ -7,7 +7,7 @@ export const CurrencyChart = ({ data, params }) => {
   const { datafeed_value, waiting_period_length, event_date } = params;
   const momentFormat = (event_date + waiting_period_length - moment.utc().unix() <= 7 * 24 * 3600) ? 'lll' : 'll';
 
-  const transformedData = data.map(({ time, open, close, high, low, lang }) => ({
+  const transformedData = data.map(({ time, open, close, high, low }) => ({
     time: moment.unix(time).locale('en').format(momentFormat),
     open: +Number(open).toPrecision(6),
     close: +Number(close).toPrecision(6),
