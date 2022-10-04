@@ -17,7 +17,6 @@ import styles from "./MainPage.module.css";
 import { Helmet } from "react-helmet-async";
 import { capitalizeFirstLetter } from "utils";
 
-
 export const MainPage = () => {
 	const markets = useSelector(selectAllMarkets);
 	const allMarketsStatus = useSelector(selectAllMarketsStatus);

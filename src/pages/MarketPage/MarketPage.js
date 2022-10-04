@@ -126,6 +126,7 @@ export const MarketPage = () => {
   const teams = useSelector(selectActiveTeams);
   const currencyCandles = useSelector(selectActiveCurrencyCandles);
   const currencyCurrentValue = useSelector(selectActiveCurrencyCurrentValue);
+
   const params = useSelector(selectActiveMarketParams);
 
   const priceOrOdds = useSelector(selectPriceOrOdds);

@@ -12,8 +12,7 @@ export const CurrencyChart = ({ data, params }) => {
     open: +Number(open).toPrecision(6),
     close: +Number(close).toPrecision(6),
     high: +Number(high).toPrecision(6),
-    low: +Number(low).toPrecision(6),
-    
+    low: +Number(low).toPrecision(6), 
   }));
 
   const config = {

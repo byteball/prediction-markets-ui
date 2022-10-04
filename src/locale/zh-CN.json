@@ -56,9 +56,9 @@
     "title_calendar": "即将到来的比赛日历"
   },
   "recent_events": {
-    "add_liquidity": "<0>{{address}}...</0> 发送 {{amount}} {{symbol}} 以添加流动资金 {count}",
-    "buy": "<0>{{address}}...</0> 发送 {{amount}} {{symbol}} 来购买 {count}",
-    "redeem": "<0>{{address}}...</0> 为{{amount}} {{symbol}} 售出 {count}",
+    "add_liquidity": "<0>{{address}}...</0> 发送 {{amount}} {{symbol}} 以添加流动资金 <6></6>",
+    "buy": "<0>{{address}}...</0> 发送 {{amount}} {{symbol}} 来购买 <6></6>",
+    "redeem": "<0>{{address}}...</0> 为{{amount}} {{symbol}} 售出 <2></2>",
     "claim_profit": "<0>{{address}}...</0> 获利 {{amount}} {{symbol}}",
     "show_more": "显示更多",
     "no_events": "无事件"

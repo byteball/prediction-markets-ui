@@ -40,10 +40,9 @@ const AppRouter = () => {
   langNames.push('/');
 
   return <HelmetProvider>
-
     <HistoryRouter history={historyInstance}>
       <Routes>
-        {langNames.map(lng => (<Route key={lng} path={`/${lng}`}>
+        {langNames.map(languageCode => (<Route key={languageCode} path={`/${languageCode}`}>
           <Route path="" element={<MainPage />} />
           <Route path=":category" element={<MainPage />} />
           <Route path=":category/:particle" element={<MainPage />} />
