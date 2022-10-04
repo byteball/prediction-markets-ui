@@ -29,7 +29,9 @@
     "days": "días",
     "hours": "horas",
     "all": "Todo",
-    "currency": "Divisa"
+    "currency": "Divisa",
+    "price": "precio",
+    "odds": "cuotas"
   },
   "footer": {
     "time_zone": "Todas las fechas están en tu zona horaria local (UTC{{timeZoneView}}) a menos que se indique lo contrario",
