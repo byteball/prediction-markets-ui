@@ -6,6 +6,7 @@ import moment from "moment";
 
 import 'moment/locale/es';
 import 'moment/locale/pt';
+import 'moment/locale/zh-cn';
 
 import { CreatePage, MainPage, MarketPage, FaqPage } from "pages";
 import { historyInstance } from "historyInstance";
@@ -23,14 +24,14 @@ const AppRouter = () => {
 
       if (firstPath && langs.find((lang) => lang.name === firstPath)) {
         dispatch(changeLanguage(firstPath));
-        moment.locale(firstPath);
+        moment.locale(firstPath === 'zh' ? 'zh-cn' : firstPath);
       } else {
         dispatch(changeLanguage("en"));
         moment.locale("en");
       }
     } else {
       i18.changeLanguage(lang);
-      moment.locale(lang);
+      moment.locale(lang === 'zh' ? 'zh-cn' : lang);
     }
 
   }, [lang]);
@@ -39,19 +40,19 @@ const AppRouter = () => {
   langNames.push('/');
 
   return <HelmetProvider>
-   
-      <HistoryRouter history={historyInstance}>
-        <Routes>
-          {langNames.map(lng => (<Route key={lng} path={`/${lng}`}>
-            <Route path="" element={<MainPage />} />
-            <Route path=":category" element={<MainPage />} />
-            <Route path=":category/:particle" element={<MainPage />} />
-            <Route path="create" element={<CreatePage />} />
-            <Route path="faq" element={<FaqPage />} />
-            <Route path="market/*" element={<MarketPage />} />
-          </Route>))}
-        </Routes>
-      </HistoryRouter>
+
+    <HistoryRouter history={historyInstance}>
+      <Routes>
+        {langNames.map(lng => (<Route key={lng} path={`/${lng}`}>
+          <Route path="" element={<MainPage />} />
+          <Route path=":category" element={<MainPage />} />
+          <Route path=":category/:particle" element={<MainPage />} />
+          <Route path="create" element={<CreatePage />} />
+          <Route path="faq" element={<FaqPage />} />
+          <Route path="market/*" element={<MarketPage />} />
+        </Route>))}
+      </Routes>
+    </HistoryRouter>
   </HelmetProvider>
 }
 

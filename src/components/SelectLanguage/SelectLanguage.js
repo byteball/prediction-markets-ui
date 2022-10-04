@@ -9,6 +9,7 @@ import { changeLanguage } from "store/slices/settingsSlice";
 import usa from "./flags/usa.svg"
 import es from "./flags/es.svg";
 import br from "./flags/br.svg";
+import cn from "./flags/cn.svg";
 
 export const langs = [
   {
@@ -23,6 +24,10 @@ export const langs = [
     name: "pt",
     flag: br
   },
+  {
+    name: "zh",
+    flag: cn
+  }
 ];
 
 export const SelectLanguage = () => {

@@ -24,7 +24,7 @@ import {
   selectActiveTeams
 } from "store/slices/activeSlice";
 import { setActiveMarket } from "store/thunks/setActiveMarket";
-import { selectLanguage, selectPriceOrOdds, selectReserveAssets, selectReservesRate } from "store/slices/settingsSlice";
+import { selectPriceOrOdds, selectReserveAssets, selectReservesRate } from "store/slices/settingsSlice";
 import { getMarketPriceByType, generateLink, generateTextEvent, getEstimatedAPY, transformChampionshipName } from "utils";
 import { RecentEvents } from "components/RecentEvents/RecentEvents";
 import { CurrencyChart } from "components/CurrencyChart/CurrencyChart";
@@ -126,7 +126,6 @@ export const MarketPage = () => {
   const teams = useSelector(selectActiveTeams);
   const currencyCandles = useSelector(selectActiveCurrencyCandles);
   const currencyCurrentValue = useSelector(selectActiveCurrencyCurrentValue);
-  const lang = useSelector(selectLanguage);
   const params = useSelector(selectActiveMarketParams);
 
   const priceOrOdds = useSelector(selectPriceOrOdds);
