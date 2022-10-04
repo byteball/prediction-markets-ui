@@ -22,7 +22,7 @@ import { selectMarketsCache } from "store/slices/cacheSlice";
 import { loadMarketsInCache } from "store/thunks/loadMarketsInCache";
 import { loadCurrencyCalendarCache } from "store/thunks/loadCurrencyCalendarCache";
 
-import { getEmojiByType, transformChampionshipName } from "utils";
+import { getEmojiByType, transformChampionshipName, getSportNameByType } from "utils";
 import { historyInstance } from "historyInstance";
 import backend from "services/backend";
 
@@ -101,7 +101,7 @@ export const PredictionList = ({ type = 'all', particle = 'all', setParticle }) 
   }, [type, actualCurrency]);
 
   const getActionList = useCallback(() => ([
-    { value: 'all', text: `${getEmojiByType(type)} All soccer` },
+    { value: 'all', text: `${getEmojiByType(type)} ${t('common.all_sport', 'All {{sport}}', { sport: getSportNameByType(type) })}` },
     ...championships[type]?.map(({ name, code, emblem }) => ({ value: code, text: transformChampionshipName(name, code), iconLink: emblem }))
   ]), [championships, type]);
 
@@ -186,7 +186,7 @@ export const PredictionList = ({ type = 'all', particle = 'all', setParticle }) 
         locale={{ emptyText: type === 'all' ? t("common.no_markets", 'no markets') : t("common.no_markets_type", 'no {{type}} markets', { type }) }}
         renderItem={(data) => <PredictionItem {...data} particle={particle} type={type} />}
         loadMore={fullDataSource.length < ((type in championships) ? countOfSportMarkets : maxCount) && <div className={styles.loadMoreWrap}>
-          <Button onClick={() => dispatch(loadMarketsInCache({ championship, page: currentPage + 1, type }))}>Load more</Button>
+          <Button onClick={() => dispatch(loadMarketsInCache({ championship, page: currentPage + 1, type }))}>{t("common.load_more", 'Load more')}</Button>
         </div>}
       />
 
@@ -204,7 +204,7 @@ export const PredictionList = ({ type = 'all', particle = 'all', setParticle }) 
           locale={{ emptyText: type === 'all' ? t("common.no_markets", 'no markets') : t("common.no_markets_type", 'no {{type}} markets', { type }) }}
           renderItem={(data) => <PredictionItem {...data} particle={particle} type={type} />}
           loadMore={fullCalendarDataSource.length < calendarMaxCount && <div className={styles.loadMoreWrap}>
-            <Button onClick={loadCalendarMore}>Load more</Button>
+            <Button onClick={loadCalendarMore}>{t("common.load_more", 'Load more')}</Button>
           </div>}
         />
       </div> : <div className={styles.spinWrap}>

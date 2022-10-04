@@ -191,7 +191,7 @@ export const CreateNowForm = ({ feed_name, event_date, expect_datafeed_value, ye
       </Col>
 
       <Col sm={{ span: 8 }} xs={{ span: 24 }} style={{ textAlign: 'center' }} className={styles.draw}>
-        <b style={{ fontSize: 24 }}>VS</b>
+        <b style={{ fontSize: 24 }}>{t('common.vs', 'VS')}</b>
         <div>
           <small>{moment.unix(event_date).format('lll')}</small>
         </div>

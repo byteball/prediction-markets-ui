@@ -9,6 +9,7 @@ import { PredictionList } from "components/PredictionList/PredictionList";
 import { SwitchActions } from "components/SwitchActions/SwitchActions";
 
 import { selectAllMarkets, selectAllMarketsStatus, selectChampionships } from "store/slices/marketsSlice";
+import { selectLanguage } from "store/slices/settingsSlice";
 
 import { getTabNameByType } from "utils/getTabNameByType";
 
@@ -20,6 +21,7 @@ export const MainPage = () => {
 	const markets = useSelector(selectAllMarkets);
 	const allMarketsStatus = useSelector(selectAllMarketsStatus);
 	const championships = useSelector(selectChampionships);
+	const lang = useSelector(selectLanguage);
 	const { category, particle: particleFromUrl } = useParams();
 	const navigate = useNavigate();
 	const location = useLocation();
@@ -30,6 +32,7 @@ export const MainPage = () => {
 	const [inited, setInited] = useState(false);
 
 	const sportTypes = Object.keys(championships);
+	const langPath = (!lang || lang === 'en') ? '' : `/${lang}`;
 
 	const switchActionsData = [{ value: 'all', text: t('common.all', "All") }];
 
@@ -87,13 +90,13 @@ export const MainPage = () => {
 			}
 
 			if (type === 'all' || !type) {
-				navigate('/');
+				navigate(`${langPath}/`);
 
 			} else if (['all', 'misc', 'currency'].includes(type)) {
-				navigate(`/${type}`);
+				navigate(`${langPath}/${type}`);
 
 			} else {
-				navigate(`/${type}/all`)
+				navigate(`${langPath}/${type}/all`)
 			}
 		}
 
@@ -102,7 +105,7 @@ export const MainPage = () => {
 	const handleParticle = (particle) => {
 		if (inited) {
 			setParticle(particle);
-			navigate(`/${marketType}/${particle}`)
+			navigate(`${langPath}/${marketType}/${particle}`)
 		}
 	}
 

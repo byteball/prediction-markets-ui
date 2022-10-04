@@ -6,6 +6,8 @@ import { useTranslation } from "react-i18next";
 import { MainMenu } from "components/MainMenu/MainMenu";
 import { SocialLinks } from "components/SocialLinks/SocialLinks";
 import { ViewPriceSwitcher } from "components/ViewPriceSwitcher/ViewPriceSwitcher";
+import { SelectLanguage } from "components/SelectLanguage/SelectLanguage";
+
 import { useWindowSize } from "hooks";
 import { WalletModal } from "modals";
 
@@ -30,15 +32,16 @@ export const Header = () => {
 						</div>
 					</Link>
 				</Col>
-				{width >= 780 ? <>
+				{width >= 990 ? <>
 					<Col>
-						<Space size="large">
+						<Space size="large" align="baseline">
 							<MainMenu />
 							<WalletModal />
 
 							<div className={styles.priceSwitcherWrap}>
 								<ViewPriceSwitcher />
 							</div>
+							<SelectLanguage />
 						</Space>
 					</Col>
 				</> : <>
@@ -53,6 +56,11 @@ export const Header = () => {
 						<div className={styles.switcherWrap}>
 							<ViewPriceSwitcher />
 						</div>
+
+						<div className={styles.languageWrap}>
+							<SelectLanguage />
+						</div>
+
 						<div className={styles.socialLinksWrap}>
 							<SocialLinks size="small" />
 						</div>

@@ -6,7 +6,7 @@ import { generateTextEvent } from "./generateTextEvent";
 import { getEstimatedAPY } from "./getEstimatedAPY";
 import { getExchangeResult } from "./getExchangeResult";
 import { getMarketPriceByType } from "./getMarketPriceByType";
-import { getEmojiByType } from "./getTabNameByType";
+import { getEmojiByType, getSportNameByType } from "./getTabNameByType";
 import { transformChampionshipName } from "./transformChampionshipName";
 
 export {
@@ -19,5 +19,6 @@ export {
   truncate,
   getEstimatedAPY,
   transformChampionshipName,
-  capitalizeFirstLetter
+  capitalizeFirstLetter,
+  getSportNameByType
 }
