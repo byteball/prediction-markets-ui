@@ -155,6 +155,6 @@ export const FaqPage = () => {
       </Collapse>
     </div>
 
-    <div className={styles.otherQuestionsWrap}>Other questions? Ask on <a href="https://discord.obyte.org" target="_blank" rel="noopener">Obyte discord</a>.</div>
+    <div className={styles.otherQuestionsWrap}><Trans i18nKey="pages.faq.other_questions">Other questions? Ask on <a href="https://discord.obyte.org" target="_blank" rel="noopener">Obyte discord</a>.</Trans></div>
   </Layout>)
 }

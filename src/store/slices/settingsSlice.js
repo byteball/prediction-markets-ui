@@ -13,7 +13,8 @@ export const settingsSlice = createSlice({
     reserveRateUpdateTime: 0,
     reserveAssets: {},
     sportsCalendar: [],
-    priceOrOdds: 'odds'
+    priceOrOdds: 'odds',
+    lang: null
   },
   reducers: {
     saveCreationOrder: (state, action) => {
@@ -44,6 +45,9 @@ export const settingsSlice = createSlice({
       } else {
         state.priceOrOdds = 'odds';
       }
+    },
+    changeLanguage: (state, action) => {
+      state.lang = action.payload;
     }
   },
   extraReducers: {
@@ -69,7 +73,8 @@ export const {
   removeCreationOrder,
   updateCreationOrder,
   cancelRegSymbol,
-  changeViewType
+  changeViewType,
+  changeLanguage
 } = settingsSlice.actions;
 
 export default settingsSlice.reducer;
@@ -82,4 +87,5 @@ export const selectCreationOrder = state => state.settings.creationOrder;
 export const selectReserveAssets = state => state.settings.reserveAssets;
 export const selectReservesRate = state => state.settings.reserveRates;
 export const selectWalletAddress = state => state.settings.walletAddress;
+export const selectLanguage = state => state.settings.lang;
 export const selectPriceOrOdds = state => state.settings.priceOrOdds || "odds";

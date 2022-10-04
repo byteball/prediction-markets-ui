@@ -368,7 +368,7 @@ export const MarketPage = () => {
     <div style={{ marginTop: 50 }}>
       <h1 className={styles.event} style={{ maxWidth: 860 }}>{event}</h1>
       {(teams.yes === null || teams.no === null) ? null : <div style={{ margin: '30px 0', width: '100%' }}>
-        <Row align="middle">
+        <Row>
           <Col md={{ span: 8 }} xs={{ span: 8 }} style={{ textAlign: 'center' }}>
             <Img src={[`https://crests.football-data.org/${teams.yes.id}.svg`, `https://crests.football-data.org/${teams.yes.id}.png`]} width={'50%'} style={{ maxWidth: 120 }} />
             <div style={{ paddingTop: 10, lineHeight: 1 }}>
@@ -376,8 +376,8 @@ export const MarketPage = () => {
             </div>
           </Col>
 
-          <Col md={{ span: 8 }} xs={{ span: 8 }} style={{ textAlign: 'center' }}>
-            <b className={styles.vs}>VS</b>
+          <Col md={{ span: 8 }} xs={{ span: 8 }} style={{ textAlign: 'center', alignSelf: 'center' }}>
+            <b className={styles.vs}>{t('common.vs', 'VS')}</b>
             <div>
               {moment.unix(event_date).format('MMM D, h:mm A')}
             </div>
@@ -424,7 +424,7 @@ export const MarketPage = () => {
         <Row gutter={30}>
           <Col lg={{ span: 8 }} md={{ span: 12 }} xs={{ span: 24 }} style={{ marginBottom: 30 }}>
             <StatsCard
-              title={`${haveTeamNames ? teams.yes.name : 'Yes'}`}
+              title={`${haveTeamNames ? teams.yes.name : t('common.yes', 'yes')}`}
               tooltip={yesTooltip}
               reserve={reserve}
               isWinner={result ? result === 'yes' : undefined}
@@ -436,7 +436,7 @@ export const MarketPage = () => {
 
           {allow_draw ? <Col lg={{ span: 8 }} md={{ span: 12 }} xs={{ span: 24 }} style={{ marginBottom: 30 }}>
             <StatsCard
-              title="Draw"
+              title={t('common.draw', 'draw')}
               tooltip={drawTooltip}
               reserve={reserve}
               isWinner={result ? result === 'draw' : undefined}
@@ -448,7 +448,7 @@ export const MarketPage = () => {
 
           <Col lg={{ span: 8 }} md={{ span: 12 }} xs={{ span: 24 }} style={{ marginBottom: 30 }}>
             <StatsCard
-              title={`${haveTeamNames ? teams.no.name : 'No'}`}
+              title={`${haveTeamNames ? teams.no.name : t('common.no', 'no')}`}
               tooltip={noTooltip}
               reserve={reserve}
               isWinner={result ? result === 'no' : undefined}
