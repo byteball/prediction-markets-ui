@@ -6,11 +6,12 @@ import { useTranslation } from "react-i18next";
 import { MainMenu } from "components/MainMenu/MainMenu";
 import { SocialLinks } from "components/SocialLinks/SocialLinks";
 import { ViewPriceSwitcher } from "components/ViewPriceSwitcher/ViewPriceSwitcher";
+import { SelectLanguage } from "components/SelectLanguage/SelectLanguage";
+
 import { useWindowSize } from "hooks";
 import { WalletModal } from "modals";
 
 import styles from "./Header.module.css";
-import { SelectLanguage } from "components/SelectLanguage/SelectLanguage";
 
 export const Header = () => {
 	const [width] = useWindowSize();
