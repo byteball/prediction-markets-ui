@@ -479,7 +479,7 @@ export const MarketPage = () => {
               tooltip={t('pages.market.cards.expiration_time.desc', "The period while you can make your bets, or exit them if you changed your mind")}
               value={tradeTimerExpiry ? <Countdown
                 value={moment.unix(tradeTimerExpiry)}
-                format="DD [days] HH:mm:ss" /> : '-'}
+                format={`DD [${t('common.days', 'days')}] HH:mm:ss`} /> : '-'}
               subValue={<span>{t('pages.market.status', "status").toUpperCase()}: <span style={{ color: tradeStatusColor, textTransform: 'uppercase' }}>{tradeStatus}</span></span>} />
           </Col>
         </Row>

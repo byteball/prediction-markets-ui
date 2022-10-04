@@ -384,7 +384,7 @@ export const AddLiquidityForm = ({ yes_team, no_team, visible }) => {
       <p>{t("forms.liquidity.outcome_probabilities", "Outcome probabilities")}</p>
       <Row gutter={8}>
         <Col md={{ span: allow_draw ? 8 : 12 }} xs={{ span: 24 }}>
-          <Form.Item extra={<span style={{ color: appConfig.YES_COLOR }}>{yesOdds}</span>} label={<small>{haveTeamNames ? `${yes_team}` : 'YES'}</small>}>
+          <Form.Item extra={<span style={{ color: appConfig.YES_COLOR }}>{yesOdds}</span>} label={<Typography.Text ellipsis><small>{haveTeamNames ? `${yes_team}` : 'YES'}</small></Typography.Text>}>
             <Input size="large" value={probabilities.yes.value} placeholder="ex. 65" suffix='%' onChange={(ev) => handleChangeProbability(ev, 'yes')} />
           </Form.Item>
         </Col>
@@ -396,7 +396,7 @@ export const AddLiquidityForm = ({ yes_team, no_team, visible }) => {
         </Col>}
 
         <Col md={{ span: allow_draw ? 8 : 12 }} xs={{ span: 24 }}>
-          <Form.Item extra={<span style={{ color: appConfig.NO_COLOR }}>{noOdds}</span>} label={<small>{haveTeamNames ? `${no_team}` : 'NO'}</small>}>
+          <Form.Item extra={<span style={{ color: appConfig.NO_COLOR }}>{noOdds}</span>} label={<Typography.Text ellipsis><small>{haveTeamNames ? `${no_team}` : 'NO'}</small></Typography.Text>}>
             <Input size="large" value={probabilities.no.value} placeholder={`ex. ${allow_draw ? 15 : 35}`} suffix='%' onChange={(ev) => handleChangeProbability(ev, 'no')} />
           </Form.Item>
         </Col>
