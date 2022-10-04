@@ -40,9 +40,7 @@ export const Header = () => {
 							<div className={styles.priceSwitcherWrap}>
 								<ViewPriceSwitcher />
 							</div>
-							{/* <div style={{ marginTop: 2 }}> */}
-								<SelectLanguage />
-							{/* </div> */}
+							<SelectLanguage />
 						</Space>
 					</Col>
 				</> : <>

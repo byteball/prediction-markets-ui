@@ -74,8 +74,8 @@
   }
 
   .crests {
-    width: 40%;
-    max-width: 120px;
+    max-width: 70%;
+    object-fit: contain;
   }
 
   .itemWrap :global(.ant-card-body) {
@@ -101,9 +101,8 @@
 
 @media (max-width: 400px) {
   .crests {
-    width: 30%;
+    max-width: 70%;
     min-width: 50px;
-    max-width: 100px;
   }
 }
 
