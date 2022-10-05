@@ -81,7 +81,7 @@
       "sport_odds_tooltip_draw": "O múltiplo que você recebe se apostar no empate se sua aposta ganhar, supondo que as probabilidades não mudem.",
       "price_tooltip": "O preço do token que representa o resultado “{{type}}”. Se este resultado ganhar, todos os fundos pagos pelos compradores de todos os tokens serão divididos entre os detentores dos tokens “{{type}}”.",
       "odds_tooltip": "O múltiplo que você recebe se apostar no resultado “{{type}}” e ele ganha, assumindo que as probabilidades não mudam.",
-      "bookmaker_odds": "Probabilidades da casa de apostas: x{{odds}}",
+      "bookmaker_odds": "Apostas: x{{odds}}",
       "commit_result": "Comprometer resultado",
       "not_published": "O oráculo ainda não publicou resultados",
       "unknown_oracle": "Esse mercado utiliza um oráculo <1>{oracle}</1> que é desconhecido para este site, negocie com cuidado.",
