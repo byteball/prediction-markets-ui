@@ -1,10 +1,4 @@
 {
-  "oracles": {
-    "cryptocurrency": "Oráculo de preços das criptomoedas",
-    "sports": "Oráculo esportivo",
-    "metal": "Oráculo de taxas de câmbio de metais preciosos",
-    "sports_oracle": "Oráculo esportivo"
-  },
   "common": {
     "received_request": "Recebemos seu pedido. A \"interface\" será atualizada depois que a transação se estabilizar.",
     "status": {
@@ -36,6 +30,7 @@
     "hours": "horas",
     "all": "Todos",
     "currency": "Moeda",
+    "sport": "Esporte",
     "soccer": "Futebol"
   },
   "footer": {
@@ -192,6 +187,14 @@
   "prediction_list": {
     "title_create": "criar novos mercados",
     "title_calendar": "calendário dos próximos jogos"
+  },
+  "qr_button": {
+    "title": "<0>Escaneia este QR code <1></1> com seu celular</0>",
+    "download_title": "Baixar carteira Obyte",
+    "tooltip": "Isso abrirá sua carteira Obyte instalada neste computador e enviará a transação",
+    "tooltip_mob": "Envie a transação do seu celular",
+    "install": "Instale a carteira Obyte para [ios] ou [android] se você ainda não tiver uma",
+    "obyte_in": "Obyte em"
   },
   "recent_events": {
     "add_liquidity": "<0>{{address}}...</0> enviou {{amount}} {{symbol}} para adicionar liquidez <6></6>",
@@ -362,5 +365,10 @@
       "equal": "igual",
       "not_equal": "não é igual"
     }
+  },
+  "oracles": {
+    "cryptocurrency": "Oráculo de preços das criptomoedas",
+    "metal": "Oráculo de taxas de câmbio de metais preciosos",
+    "sports": "Oráculo esportivo"
   }
 }

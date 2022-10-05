@@ -1,10 +1,4 @@
 {
-  "oracles": {
-    "cryptocurrency": "Cryptocurrency prices oracle",
-    "sports": "Sports oracle",
-    "metal": "Precious metal exchange rates oracle",
-    "sports_oracle": "Sports oracle"
-  },
   "common": {
     "received_request": "Received your request. The interface will update after the transaction stabilizes.",
     "status": {
@@ -36,6 +30,7 @@
     "hours": "hours",
     "all": "All",
     "currency": "Currency",
+    "sport": "sport",
     "soccer": "soccer"
   },
   "footer": {
@@ -192,6 +187,14 @@
   "prediction_list": {
     "title_create": "create new markets",
     "title_calendar": "calendar of upcoming matches"
+  },
+  "qr_button": {
+    "title": "<0>Scan this QR code <1></1> with your mobile phone</0>",
+    "download_title": "Download Obyte wallet",
+    "tooltip": "This will open your Obyte wallet installed on this computer and send the transaction",
+    "tooltip_mob": "Send the transaction from your mobile phone",
+    "install": "Install Obyte wallet for [ios] or [android] if you don't have one yet",
+    "obyte_in": "Obyte in"
   },
   "recent_events": {
     "add_liquidity": "<0>{{address}}...</0> sent {{amount}} {{symbol}} to add liquidity <6></6>",
@@ -362,5 +365,10 @@
       "equal": "equal",
       "not_equal": "not equal"
     }
+  },
+  "oracles": {
+    "cryptocurrency": "Cryptocurrency prices oracle",
+    "metal": "Precious metal exchange rates oracle",
+    "sports": "Sports oracle"
   }
 }

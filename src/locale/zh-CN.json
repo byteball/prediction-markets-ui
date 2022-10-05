@@ -1,10 +1,4 @@
 {
-  "oracles": {
-    "cryptocurrency": "加密货币价格预言机",
-    "sports": "体育预言机",
-    "metal": "精准金属交易汇率预言机",
-    "sports_oracle": "体育预言机"
-  },
   "common": {
     "received_request": "收到你的请求. 交易稳定后界面会更新.",
     "status": {
@@ -36,6 +30,7 @@
     "hours": "小时",
     "all": "所有",
     "currency": "货币",
+    "sport": "体育",
     "soccer": "足球"
   },
   "footer": {
@@ -192,6 +187,14 @@
   "prediction_list": {
     "title_create": "创建新的市场",
     "title_calendar": "即将到来的比赛日历"
+  },
+  "qr_button": {
+    "title": "<0>用您的手机扫描这个二维码<1></1></0>",
+    "download_title": "下载Obyte钱包",
+    "tooltip": "这将打开您安装在此计算机上的Obyte钱包并发送交易",
+    "tooltip_mob": "从您的手机发送交易",
+    "install": "如果你还没有Obyte 钱包请在 [ios] 或 [android] 手机上安装",
+    "obyte_in": "Obyte在"
   },
   "recent_events": {
     "add_liquidity": "<0>{{address}}...</0> 发送 {{amount}} {{symbol}} 以添加流动资金 <6></6>",
@@ -362,5 +365,10 @@
       "equal": "等于",
       "not_equal": "不等于"
     }
+  },
+  "oracles": {
+    "cryptocurrency": "加密货币价格预言机",
+    "metal": "精准金属交易汇率预言机",
+    "sports": "体育预言机"
   }
 }

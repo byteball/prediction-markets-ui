@@ -3,7 +3,7 @@ import { FormLabel } from "components/FormLabel/FormLabel";
 import { useEffect, useMemo, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { saveCreationOrder, selectReserveAssets } from "store/slices/settingsSlice";
-import QRButton from "obyte-qr-button";
+import { QRButton } from "components/QRButton/QRButton";
 import { Img } from "react-image";
 import moment from "moment";
 import { debounce, isNaN } from "lodash";
