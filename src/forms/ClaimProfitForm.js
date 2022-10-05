@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { Form, Input, Typography } from "antd";
-import QRButton from "obyte-qr-button";
+import { QRButton } from "components/QRButton/QRButton";
 import { useTranslation } from "react-i18next";
 
 import { generateLink, truncate } from "utils";

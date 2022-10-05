@@ -2,8 +2,7 @@
   "oracles": {
     "cryptocurrency": "Oráculo de preços das criptomoedas",
     "sports": "Oráculo esportivo",
-    "metal": "Oráculo de taxas de câmbio de metais preciosos",
-    "sports_oracle": "Oráculo esportivo"
+    "metal": "Oráculo de taxas de câmbio de metais preciosos"
   },
   "common": {
     "received_request": "Recebemos seu pedido. A \"interface\" será atualizada depois que a transação se estabilizar.",

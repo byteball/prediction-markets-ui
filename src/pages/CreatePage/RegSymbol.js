@@ -3,7 +3,7 @@ import { Steps, Input, Form, Button, Space } from "antd";
 import client from "services/obyte";
 import { isBoolean } from "lodash";
 import { useSelector } from "react-redux";
-import QRButton from "obyte-qr-button";
+import { QRButton } from "components/QRButton/QRButton";
 import moment from "moment";
 import { Helmet } from "react-helmet-async";
 

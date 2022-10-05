@@ -4,14 +4,14 @@ import obyte from "obyte";
 import { isEmpty, isNumber } from "lodash";
 import moment from "moment";
 import { useDispatch, useSelector } from "react-redux";
-import QRButton from "obyte-qr-button";
+import { QRButton } from "components/QRButton/QRButton";
 import ReactGA from "react-ga";
 
 import { FormLabel } from "components/FormLabel/FormLabel";
 import { saveCreationOrder, selectReserveAssets } from "store/slices/settingsSlice";
 import appConfig from "appConfig";
 import { PredictionItem } from "components/PredictionList/PredictionItem";
-import { generateLink } from "utils";
+import { generateLink, getCategoryName, getOracleName } from "utils";
 import { Link } from "react-router-dom";
 import i18n from "locale";
 import { Trans, useTranslation } from "react-i18next";
@@ -261,7 +261,7 @@ export const CreateForm = () => {
             className='firstBigLetter'
             onChange={handleChangeCategory}
             showSearch={true}>
-            {Object.keys(appConfig.CATEGORIES).map((category) => <Select.Option key={category} className="firstBigLetter" value={category}>{category}</Select.Option>)}
+            {Object.keys(appConfig.CATEGORIES).map((category) => <Select.Option key={category} className="firstBigLetter" value={category}>{getCategoryName(category)}</Select.Option>)}
             <Select.Option key="misc" value="misc">{t("common.misc", "Misc")}</Select.Option>
           </Select>
         </Form.Item>
@@ -284,7 +284,7 @@ export const CreateForm = () => {
         <Col xs={{ span: 24 }} md={{ span: 12 }}>
           <Form.Item help={(oracle.value !== '' && !oracle.valid) ? paramList.oracle.errorMessage : ''} validateStatus={oracle.value !== '' ? (oracle.valid ? 'success' : 'error') : undefined} label={<FormLabel info={paramList.oracle.description}>{paramList.oracle.name}</FormLabel>}>
             {infoByCurrentCategory.oracles ? <Select onChange={(value) => handleChangeValue(value, 'oracle')} size="large" value={oracle.value}>
-              {infoByCurrentCategory.oracles.map(({ address, name }) => <Select.Option key={address} value={address}>{name} ({address})</Select.Option>)}
+              {infoByCurrentCategory.oracles.map(({ address }) => <Select.Option key={address} value={address}>{getOracleName(category.value, address)} ({address})</Select.Option>)}
             </Select> : <Input size="large" onChange={(ev) => handleChangeValue(ev.target.value, 'oracle')} value={oracle.value} placeholder={paramList.oracle.placeholder} />}
           </Form.Item>
         </Col>
