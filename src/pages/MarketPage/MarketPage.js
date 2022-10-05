@@ -6,7 +6,7 @@ import { useLocation } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import moment from 'moment';
-import QRButton from "obyte-qr-button";
+import { QRButton } from "components/QRButton/QRButton";
 import Countdown from "antd/lib/statistic/Countdown";
 import { Img } from 'react-image';
 import { Helmet } from "react-helmet-async";

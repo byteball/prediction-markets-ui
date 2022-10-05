@@ -3,7 +3,7 @@ import { Alert, Button, Col, Form, Input, Row, Select, Spin, notification, Typog
 import appConfig from "appConfig";
 import { estimateOutput, transferEVM2Obyte } from "counterstake-sdk";
 import { isNumber } from "lodash";
-import QRButton from "obyte-qr-button";
+import { QRButton } from "components/QRButton/QRButton";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import ReactGA from "react-ga";

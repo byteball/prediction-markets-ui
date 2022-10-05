@@ -1,6 +1,6 @@
 import { Form, Select, Input, Alert, Spin, Row, Col, Typography } from "antd";
 import { isNaN } from "lodash";
-import QRButton from "obyte-qr-button";
+import { QRButton } from "components/QRButton/QRButton";
 import { memo, useEffect, useRef, useState } from "react";
 import { useSelector } from "react-redux";
 import ReactGA from "react-ga";

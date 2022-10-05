@@ -1,6 +1,6 @@
 import { Form, Select, Input, Spin, Col, Row, Button, Alert, notification } from "antd";
 import { isNaN } from "lodash";
-import QRButton from "obyte-qr-button";
+import { QRButton } from "components/QRButton/QRButton";
 import { useEffect, useRef, useState } from "react";
 import { useSelector } from "react-redux";
 import { estimateOutput, transferEVM2Obyte } from "counterstake-sdk";

@@ -8,6 +8,8 @@ import { getExchangeResult } from "./getExchangeResult";
 import { getMarketPriceByType } from "./getMarketPriceByType";
 import { getEmojiByType, getSportNameByType } from "./getTabNameByType";
 import { transformChampionshipName } from "./transformChampionshipName";
+import { getOracleName } from "./getOracleName";
+import { getCategoryName } from "./getCategoryName";
 
 export {
   encodeData,
@@ -20,5 +22,7 @@ export {
   getEstimatedAPY,
   transformChampionshipName,
   capitalizeFirstLetter,
-  getSportNameByType
+  getSportNameByType,
+  getOracleName,
+  getCategoryName
 }

@@ -2,8 +2,7 @@
   "oracles": {
     "cryptocurrency": "Oráculo de los precios de la criptomoneda",
     "sports": "Oráculo de deportes",
-    "metal": "Oráculo del exchange de metales preciosos",
-    "sports_oracle": "Oráculo de deportes"
+    "metal": "Oráculo del exchange de metales preciosos"
   },
   "common": {
     "received_request": "Recibida tu solicitud. La interfaz se actualizará después de que la transacción se estabilice.",
@@ -192,6 +191,14 @@
   "prediction_list": {
     "title_create": "crear nuevos mercados",
     "title_calendar": "calendario de próximos partidos"
+  },
+  "qr_button": {
+    "title": "<0>Escanea este código QR <1></1> con tu teléfono móvil</0>",
+    "download_title": "Descargar la billetera Obyte",
+    "tooltip": "Esto abrirá tu billetera Obyte instalada en este equipo y enviará la transacción",
+    "tooltip_mob": "Envía la transacción desde tu teléfono móvil",
+    "install": "Instala la billetera Obyte para [ios] o [android] si aún no tienes una",
+    "obyte_in": "Obyte en"
   },
   "recent_events": {
     "add_liquidity": "<0>{{address}}...</0> envió {{amount}} {{symbol}} para añadir liquidez <6></6>",
