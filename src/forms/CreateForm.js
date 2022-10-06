@@ -11,7 +11,7 @@ import { FormLabel } from "components/FormLabel/FormLabel";
 import { saveCreationOrder, selectReserveAssets } from "store/slices/settingsSlice";
 import appConfig from "appConfig";
 import { PredictionItem } from "components/PredictionList/PredictionItem";
-import { generateLink, getCategoryName, getOracleName } from "utils";
+import { capitalizeFirstLetter, generateLink, getCategoryName, getOracleName } from "utils";
 import { Link } from "react-router-dom";
 import i18n from "locale";
 import { Trans, useTranslation } from "react-i18next";
@@ -261,7 +261,7 @@ export const CreateForm = () => {
             className='firstBigLetter'
             onChange={handleChangeCategory}
             showSearch={true}>
-            {Object.keys(appConfig.CATEGORIES).map((category) => <Select.Option key={category} className="firstBigLetter" value={category}>{getCategoryName(category)}</Select.Option>)}
+            {Object.keys(appConfig.CATEGORIES).map((category) => <Select.Option key={category} className="firstBigLetter" value={category}>{capitalizeFirstLetter(getCategoryName(category))}</Select.Option>)}
             <Select.Option key="misc" value="misc">{t("common.misc", "Misc")}</Select.Option>
           </Select>
         </Form.Item>
