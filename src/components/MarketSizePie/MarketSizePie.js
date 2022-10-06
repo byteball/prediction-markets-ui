@@ -1,6 +1,6 @@
 import { Pie } from "@ant-design/plots"
 import { useEffect, useState } from "react";
-import { Trans } from 'react-i18next';
+import { Trans, useTranslation } from 'react-i18next';
 
 import { getMarketPriceByType } from "utils";
 
@@ -8,6 +8,7 @@ import appConfig from "appConfig";
 
 export const MarketSizePie = ({ teams, reserve_decimals, stateVars = {}, reserve_symbol, allow_draw = false, oracle }) => {
     const [dataForPie, setDataForPie] = useState([]);
+    const { t } = useTranslation();
 
     const isSportMarket = !!appConfig.CATEGORIES.sport.oracles.find(({ address }) => address === oracle);
     const haveTeamNames = isSportMarket && teams?.yes?.name && teams?.no?.name;
@@ -25,10 +26,27 @@ export const MarketSizePie = ({ teams, reserve_decimals, stateVars = {}, reserve
         animation: false,
         label: {
             type: 'inner',
-            content: (item) => item.percent > 0.1 ? `${haveTeamNames ? (item.type === 'YES' ? teams.yes.name : (item.type === 'NO' ? teams.no.name : 'DRAW')) : item.type + ' tokens'}
-          ${item.value} ${reserve_symbol}
-          ${Number(item.percent * 100).toPrecision(4)}% 
-          ` : '',
+            content: (item) => {
+                if (item.percent <= 0.1) return '';
+                let viewTypeView = '';
+
+                if (!haveTeamNames) {
+                    if (item.type === 'YES') {
+                        viewTypeView = t('common.yes', 'yes').toUpperCase();
+                    } else if (item.type === 'NO') {
+                        viewTypeView = t('common.no', 'no').toUpperCase();
+                    } else {
+                        viewTypeView = t('common.draw', 'draw').toUpperCase();
+                    }
+                }
+
+                const tokenType = haveTeamNames ? (item.type === 'YES' ? teams.yes.name : (item.type === 'NO' ? teams.no.name : 'DRAW')) : t('common.type_tokens', "{{type}} tokens", { type: viewTypeView });
+
+                return t('market_size.label', `{{type}}
+                {{value}} {{symbol}}
+                {{percent}}% 
+                `, { type: tokenType, value: item.value, symbol: reserve_symbol, percent: Number(item.percent * 100).toPrecision(4) });
+            },
             style: {
                 fontSize: 12,
                 textAlign: "center",
@@ -58,8 +76,8 @@ export const MarketSizePie = ({ teams, reserve_decimals, stateVars = {}, reserve
                 const value = items[0]?.data.value;
 
                 return <Trans i18nKey="market_size_pie.tooltip">
-                    <div style={{ padding: 5, textAlign: 'center' }}>Capital invested in {{name}}:
-                        <div style={{ marginTop: 5 }}>{{value}} <small>{{reserve_symbol}}</small></div>
+                    <div style={{ padding: 5, textAlign: 'center' }}>Capital invested in {{ name }}:
+                        <div style={{ marginTop: 5 }}>{{ value }} <small>{{ reserve_symbol }}</small></div>
                     </div>
                 </Trans>
             }

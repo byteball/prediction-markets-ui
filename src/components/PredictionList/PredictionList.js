@@ -157,7 +157,7 @@ export const PredictionList = ({ type = 'all', particle = 'all', setParticle }) 
 
   useEffect(() => {
     if (fullCalendarDataSource.length > 0 && location.hash === "#calendar" && calendarRef.current && !loading && !inited && !['all', 'misc'].includes(type)) {
-      calendarRef.current.scrollIntoView({ behavior: "smooth", alignToTop: false, block: "center" });
+      calendarRef.current.scrollIntoView({ behavior: "smooth", alignToTop: false, block: "start" });
       setInited(true);
     } else if (loading && ['all', 'misc'].includes(type)) {
       setInited(true)
@@ -190,13 +190,13 @@ export const PredictionList = ({ type = 'all', particle = 'all', setParticle }) 
         </div>}
       />
 
-      {(type in championships || type === 'currency') && <div><Divider dashed className={styles.calendarHeader}>{type === 'currency' ? t("prediction_list.title_create", 'create new markets') : t("prediction_list.title_calendar", 'calendar of upcoming matches')}</Divider></div>}
+      {(type in championships || type === 'currency') && <div ref={calendarRef}><Divider dashed className={styles.calendarHeader}>{type === 'currency' ? t("prediction_list.title_create", 'create new markets') : t("prediction_list.title_calendar", 'calendar of upcoming matches')}</Divider></div>}
 
       {type === 'currency' && popularCurrencies.length > 0 && <div>
         <SwitchActions small={true} value={actualCurrency} data={getCurrencyCalendarActionList()} onChange={(currency) => setActualCurrency(currency)} />
       </div>}
 
-      {(type in championships || type === 'currency') && (fullCalendarDataSource.length > 0 ? <div ref={calendarRef}>
+      {(type in championships || type === 'currency') && (fullCalendarDataSource.length > 0 ? <div>
         <List
           dataSource={fullCalendarDataSource}
           style={{ marginTop: 10 }}

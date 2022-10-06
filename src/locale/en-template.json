@@ -1,6 +1,11 @@
 {
   "common": {
     "received_request": "Received your request. The interface will update after the transaction stabilizes.",
+    "yes": "yes",
+    "no": "no",
+    "draw": "draw",
+    "type_tokens": "{{type}} tokens",
+    "type_token": "{{type}} token",
     "status": {
       "claiming": "Claiming profit",
       "resumed": "Resumed trading",
@@ -13,9 +18,6 @@
     "odds": "odds",
     "price": "price",
     "vs": "VS",
-    "draw": "draw",
-    "yes": "yes",
-    "no": "no",
     "all_sport": "All {{sport}}",
     "no_markets": "no markets",
     "no_markets_type": "no {{type}} markets",
@@ -46,10 +48,14 @@
     "create": "Create new market",
     "faq": "F.A.Q."
   },
+  "market_size": {
+    "label": "{{type}}\n                {{value}} {{symbol}}\n                {{percent}}% \n                "
+  },
   "market_size_pie": {
     "tooltip": "<0>Capital invested in {{name}}:<3>{{value}} <2>{{reserve_symbol}}</2></3></0>"
   },
   "prediction_item": {
+    "chart_tooltip": "{{token}} price - {{value}} {{symbol}}",
     "lp_apy": "Liquidity provider APY: {{apy}}%",
     "apy_not_shown": "APY not shown",
     "apy_not_available": "APY not available yet"

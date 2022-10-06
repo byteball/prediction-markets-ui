@@ -7,6 +7,7 @@ import { Trans, useTranslation } from "react-i18next";
 import { selectActiveAddress, selectActiveMarketParams, selectActiveRecentEvents, selectActiveRecentEventsCount } from "store/slices/activeSlice";
 import { loadMoreRecentEvents } from "store/thunks/loadMoreRecentEvents";
 
+import i18n from "locale";
 import appConfig from "appConfig";
 
 import styles from "./RecentEvents.module.css";
@@ -42,6 +43,7 @@ export const RecentEvents = () => {
     const yesAmount = +Number(Math.abs(yes_amount) / 10 ** reserve_decimals).toFixed(yes_decimals);
     const noAmount = +Number(Math.abs(no_amount) / 10 ** reserve_decimals).toFixed(no_decimals);
     const drawAmount = allow_draw ? +Number(Math.abs(draw_amount) / 10 ** reserve_decimals).toFixed(draw_decimals) : '';
+    const format = i18n.language === "ru" ? "D MMMM gggg [в] LT" : "LLL";
 
     if (type === 'add_liquidity' || type === 'buy_by_type') {
       const Count = () => <>{yes_amount !== 0 ? <span style={{ color: appConfig.YES_COLOR }}>{` ${yesAmount} ${yes_symbol}`}</span> : ''} {no_amount !== 0 ? <span style={{ color: appConfig.NO_COLOR }}>{` ${noAmount} ${no_symbol}`}</span> : ''}{draw_amount !== 0 ? <span style={{ color: appConfig.DRAW_COLOR }}>{` ${drawAmount} ${draw_symbol}`}</span> : ''}</>;
@@ -69,7 +71,7 @@ export const RecentEvents = () => {
 
     return (<div className={styles.eventWrap}>
       <div key={`ev-${timestamp}`}>{Event}</div>
-      <a href={`https://${appConfig.ENVIRONMENT === 'testnet' ? 'testnet' : ''}explorer.obyte.org/${trigger_unit}`} target="_blank" rel="noopener" className={styles.timestamp}>{moment.unix(timestamp).format("LLL")}</a>
+      <a href={`https://${appConfig.ENVIRONMENT === 'testnet' ? 'testnet' : ''}explorer.obyte.org/${trigger_unit}`} target="_blank" rel="noopener" className={styles.timestamp}>{moment.unix(timestamp).format(format)}</a>
     </div>)
   }
 

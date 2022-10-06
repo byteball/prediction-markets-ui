@@ -31,8 +31,10 @@ import { CurrencyChart } from "components/CurrencyChart/CurrencyChart";
 import { MarketSizePie } from "components/MarketSizePie/MarketSizePie";
 import { AddLiquidityModal, ClaimProfitModal, ViewParamsModal, TradeModal } from "modals";
 
-import styles from './MarketPage.module.css';
+import i18n from "locale";
 import appConfig from "appConfig";
+
+import styles from './MarketPage.module.css';
 
 const SECONDS_IN_YEAR = 31536000;
 
@@ -379,7 +381,7 @@ export const MarketPage = () => {
           <Col md={{ span: 8 }} xs={{ span: 8 }} style={{ textAlign: 'center', alignSelf: 'center' }}>
             <b className={styles.vs}>{t('common.vs', 'VS')}</b>
             <div>
-              {moment.unix(event_date).format('MMM D, h:mm A')}
+              {moment.unix(event_date).format(i18n.language === 'ru' ? 'D MMM LT' : 'MMM D, LT')}
             </div>
             {league && league_emblem && <div><Tooltip title={leagueView}><img className={styles.league} src={league_emblem} alt={leagueView} /></Tooltip></div>}
           </Col>

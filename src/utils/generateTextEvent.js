@@ -3,8 +3,9 @@ import moment from "moment";
 import appConfig from "appConfig";
 import i18n from "locale";
 
-export const generateTextEvent = ({ oracle, event_date, feed_name, datafeed_value, comparison, isUTC = false, yes_team_name, no_team_name }) => { // params
-    const expiry_date = isUTC ? moment.unix(event_date).utc().format("LLL") : moment.unix(event_date).format("LLL");
+export const generateTextEvent = ({ oracle, event_date, feed_name, datafeed_value, comparison, isUTC = false, yes_team_name, no_team_name }) => { // params    
+    const format = i18n.language === "ru" ? "D MMMM gggg [в] LT" : "LLL";
+    const expiry_date = isUTC ? moment.unix(event_date).utc().format(format) : moment.unix(event_date).format(format);
     const comparisonText = getComparisonText(comparison);
 
     if (appConfig.CATEGORIES.currency.oracles.find(({ address }) => address === oracle)) {
