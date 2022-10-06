@@ -1,9 +1,4 @@
 {
-  "oracles": {
-    "cryptocurrency": "Oráculo de los precios de la criptomoneda",
-    "sports": "Oráculo de deportes",
-    "metal": "Oráculo del exchange de metales preciosos"
-  },
   "common": {
     "received_request": "Recibida tu solicitud. La interfaz se actualizará después de que la transacción se estabilice.",
     "status": {
@@ -35,6 +30,7 @@
     "hours": "horas",
     "all": "Todo",
     "currency": "Divisa",
+    "sport": "deporte",
     "soccer": "fútbol"
   },
   "footer": {
@@ -54,7 +50,7 @@
     "tooltip": "<0>Capital invertido en {{name}}:<3>{{value}} <2>{{reserve_symbol}}</2></3></0>"
   },
   "prediction_item": {
-    "lp_apy": "Proveedor de liquidez: {{apy}}%",
+    "lp_apy": "Proveedor de liquidez APY: {{apy}}%",
     "apy_not_shown": "APY no mostrado",
     "apy_not_available": "APY no disponible todavía"
   },
@@ -195,7 +191,7 @@
   "qr_button": {
     "title": "<0>Escanea este código QR <1></1> con tu teléfono móvil</0>",
     "download_title": "Descargar la billetera Obyte",
-    "tooltip": "Esto abrirá tu billetera Obyte instalada en este equipo y enviará la transacción",
+    "tooltip": "Esto abrirá su cartera Obyte instalada en este equipo y enviará la transacción",
     "tooltip_mob": "Envía la transacción desde tu teléfono móvil",
     "install": "Instala la billetera Obyte para [ios] o [android] si aún no tienes una",
     "obyte_in": "Obyte en"
@@ -369,5 +365,10 @@
       "equal": "igual",
       "not_equal": "no igual"
     }
+  },
+  "oracles": {
+    "cryptocurrency": "Oráculo de los precios de la criptomoneda",
+    "metal": "Oráculo del exchange de metales preciosos",
+    "sports": "Oráculo de deportes"
   }
 }
