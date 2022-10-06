@@ -28,19 +28,19 @@ export const MarketSizePie = ({ teams, reserve_decimals, stateVars = {}, reserve
             type: 'inner',
             content: (item) => {
                 if (item.percent <= 0.1) return '';
-                let viewTypeView = '';
+                let typeView = '';
 
                 if (!haveTeamNames) {
                     if (item.type === 'YES') {
-                        viewTypeView = t('common.yes', 'yes').toUpperCase();
+                        typeView = t('common.yes', 'yes').toUpperCase();
                     } else if (item.type === 'NO') {
-                        viewTypeView = t('common.no', 'no').toUpperCase();
+                        typeView = t('common.no', 'no').toUpperCase();
                     } else {
-                        viewTypeView = t('common.draw', 'draw').toUpperCase();
+                        typeView = t('common.draw', 'draw').toUpperCase();
                     }
                 }
 
-                const tokenType = haveTeamNames ? (item.type === 'YES' ? teams.yes.name : (item.type === 'NO' ? teams.no.name : 'DRAW')) : t('common.type_tokens', "{{type}} tokens", { type: viewTypeView });
+                const tokenType = haveTeamNames ? (item.type === 'YES' ? teams.yes.name : (item.type === 'NO' ? teams.no.name : 'DRAW')) : t('common.type_tokens', "{{type}} tokens", { type: typeView });
 
                 return t('market_size.label', `{{type}}
                 {{value}} {{symbol}}
