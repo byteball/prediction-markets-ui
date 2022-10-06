@@ -381,7 +381,7 @@ export const MarketPage = () => {
           <Col md={{ span: 8 }} xs={{ span: 8 }} style={{ textAlign: 'center', alignSelf: 'center' }}>
             <b className={styles.vs}>{t('common.vs', 'VS')}</b>
             <div>
-              {moment.unix(event_date).format(i18n.language === 'ru' ? 'D MMM LT' : 'MMM D, LT')}
+              {moment.unix(event_date).format(i18n.language === 'en' ? 'MMM D, LT' : 'D MMM LT')}
             </div>
             {league && league_emblem && <div><Tooltip title={leagueView}><img className={styles.league} src={league_emblem} alt={leagueView} /></Tooltip></div>}
           </Col>

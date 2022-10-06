@@ -262,7 +262,7 @@ export const PredictionItem = ({ reserve_asset = 'base', aa_address, reserve = 0
                 <Col sm={{ span: 8 }} xs={{ span: 8 }} style={{ textAlign: 'center' }} className={styles.draw}>
                   <b style={{ fontSize: 24 }}>{t('common.vs', 'VS')}</b>
                   <div className={styles.time}>
-                    <small>{moment.unix(event_date).format(i18n.language === 'ru' ? 'D MMM LT' : 'MMM D, LT')}</small>
+                    <small>{moment.unix(event_date).format(i18n.language === 'en' ? 'MMM D, LT' :'D MMM LT' )}</small>
                   </div>
                   {(exists && allow_draw && (drawOddsView || result) && width >= 576) ? <div style={{ color: appConfig.DRAW_COLOR }}>
                     <div className={styles.team}><small>{t('common.draw', 'draw')}</small></div>
