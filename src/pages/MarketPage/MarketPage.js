@@ -514,7 +514,7 @@ export const MarketPage = () => {
           <Col md={{ span: showMarketSizePie ? 12 : 24 }} xs={{ span: 24 }}>
             <h2 style={{ fontSize: 28 }}>{t('pages.market.apy.title', "Make money from liquidity provision")}</h2>
             <Typography.Paragraph>
-              {reserve !== 0 && <span>{t('pages.market.apy.every_trade', "Every trade is charged a fee which is added to the market’s pool (see the fee accumulation chart above).")}</span>}
+              {reserve !== 0 && <span>{t('pages.market.apy.every_trade', "Every trade is charged a fee which is added to the market’s pool (see the fee accumulation chart above).")} </span>}
               {t('pages.market.apy.earn', "Earn a share of these fees by buying all tokens in the same proportions they are already issued. One of the tokens will win, and you’ll get a share of the trading fees collected after you invested.")}
             </Typography.Paragraph>
             <Typography.Paragraph>
