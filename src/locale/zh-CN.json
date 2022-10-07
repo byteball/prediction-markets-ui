@@ -199,7 +199,7 @@
   "recent_events": {
     "add_liquidity": "<0>{{address}}...</0> 发送 {{amount}} {{symbol}} 以添加流动资金 <6></6>",
     "buy": "<0>{{address}}...</0> 发送 {{amount}} {{symbol}} 来购买<6></6>",
-    "redeem": "<0>{{address}}...</0> 售出<2></2>{{amount}} {{symbol}}",
+    "redeem": "<0>{{address}}...</0> 售出<2></2> {{amount}} {{symbol}}",
     "claim_profit": "<0>{{address}}...</0> 获利 {{amount}} {{symbol}}",
     "show_more": "显示更多",
     "no_events": "无事件"
