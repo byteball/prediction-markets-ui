@@ -54,7 +54,7 @@ const getConfig = (chartType, teams) => ({
   color: ({ type }) => {
     if (chartType === 'apy') return appConfig.YES_COLOR;
 
-    return (type === 'NO' || type === teams?.no?.name) ? appConfig.NO_COLOR : (type === 'YES' || type === teams?.yes?.name) ? appConfig.YES_COLOR : appConfig.DRAW_COLOR;
+    return (type === i18n.t("common.no", "no").toUpperCase() || type === teams?.no?.name) ? appConfig.NO_COLOR : (type === i18n.t("common.yes", "yes").toUpperCase() || type === teams?.yes?.name) ? appConfig.YES_COLOR : appConfig.DRAW_COLOR;
   },
   yAxis: {
     label: {
@@ -204,12 +204,12 @@ export const MarketPage = () => {
 
       if (chartType === 'prices') {
         data.push(
-          { date, value: yes_price, type: teams?.yes?.name || "YES", currencySymbol: reserve_symbol, chartType, symbol: yes_symbol },
-          { date, value: no_price, type: teams?.no?.name || "NO", currencySymbol: reserve_symbol, chartType, symbol: no_symbol }
+          { date, value: yes_price, type: teams?.yes?.name || i18n.t("common.yes", "yes").toUpperCase(), currencySymbol: reserve_symbol, chartType, symbol: yes_symbol },
+          { date, value: no_price, type: teams?.no?.name || i18n.t("common.no", "no").toUpperCase(), currencySymbol: reserve_symbol, chartType, symbol: no_symbol }
         );
 
         if (allow_draw) {
-          data.push({ date, value: draw_price, type: "DRAW", currencySymbol: reserve_symbol, chartType, symbol: draw_symbol })
+          data.push({ date, value: draw_price, type: i18n.t("common.draw", "draw").toUpperCase(), currencySymbol: reserve_symbol, chartType, symbol: draw_symbol })
         }
       } else if (chartType === 'fee') {
         data.push(
@@ -226,18 +226,18 @@ export const MarketPage = () => {
         data.push({ date, value: apy, chartType });
       } else {
         data.push(
-          { date, value: +Number(supply_yes / 10 ** yes_decimals).toFixed(yes_decimals), type: teams?.yes?.name || "YES", currencySymbol: yes_symbol, chartType },
-          { date, value: +Number(supply_no / 10 ** no_decimals).toFixed(no_decimals), type: teams?.no?.name || "NO", currencySymbol: no_symbol, chartType }
+          { date, value: +Number(supply_yes / 10 ** yes_decimals).toFixed(yes_decimals), type: teams?.yes?.name || i18n.t("common.yes", "yes").toUpperCase(), currencySymbol: yes_symbol, chartType },
+          { date, value: +Number(supply_no / 10 ** no_decimals).toFixed(no_decimals), type: teams?.no?.name || i18n.t("common.no", "no").toUpperCase(), currencySymbol: no_symbol, chartType }
         );
 
         if (allow_draw) {
-          data.push({ date, value: +Number(supply_draw / 10 ** draw_decimals).toFixed(draw_decimals), type: "DRAW", currencySymbol: draw_symbol, chartType },)
+          data.push({ date, value: +Number(supply_draw / 10 ** draw_decimals).toFixed(draw_decimals), type: i18n.t("common.draw", "draw").toUpperCase(), currencySymbol: draw_symbol, chartType },)
         }
       }
     });
 
     setDataForChart(data);
-  }, [candles, chartType, address, reservesRate, teams]);
+  }, [candles, chartType, address, reservesRate, teams, i18n.language]);
 
   useEffect(() => {
     const intervalId = setInterval(() => setNow(moment.utc().unix()), 10000);
