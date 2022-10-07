@@ -74,14 +74,14 @@ export const FaqPage = () => {
           </Trans>
         </Panel>
         <Panel header={t("pages.faq.items.9.question", "How are the tokens priced?")} key="9">
-          <Trans i18nKey="pages.faq.items.9.answer">
+          <Trans shouldUnescape={true} i18nKey="pages.faq.items.9.answer">
             <p>The tokens are issued on a bonding curve and their prices depend on the numbers of tokens already issued. Issuing (buying) more tokens that represent a bet on the specific outcome (e.g. team A wins) increases their price and decreases the prices of the tokens that represent all other outcomes (team B wins and draw). Selling the same tokens does the opposite.</p>
             <p>The bonding curve is a formula that links the token supplies (<i>s</i><sub>yes</sub>, <i>s</i><sub>no</sub>, and <i>s</i><sub>draw</sub>) to the total capital invested in all tokens (the reserve, denoted as <i>r</i>):</p>
             <p style={{ fontSize: "larger" }}>
               <i>r</i> &nbsp; = &nbsp;
               <i>c </i> &nbsp;
               <span style={{ whiteSpace: "nowrap", verticalAlign: 'middle' }}>
-                &radic;<span style={{ borderTop: '1px solid #fff' }}>&nbsp;<i>s</i><sub><small>yes</small></sub><sup><small>2</small></sup> + <i>s</i><sub><small>no</small></sub><sup><small>2</small></sup> + <i>s</i><sub><small>draw</small></sub><sup><small>2</small></sup>&nbsp;</span>
+                √<span style={{ borderTop: '1px solid #fff' }}>&nbsp;<i>s</i><sub><small>yes</small></sub><sup><small>2</small></sup> + <i>s</i><sub><small>no</small></sub><sup><small>2</small></sup> + <i>s</i><sub><small>draw</small></sub><sup><small>2</small></sup>&nbsp;</span>
               </span>
             </p>
             <p>where <i>c</i> is a coefficient that starts with 1 and gradually grows to account for the accrued fees.</p>
@@ -98,7 +98,7 @@ export const FaqPage = () => {
                 </div>
                 <div style={{ borderTop: '1px solid #fff', paddingTop: 5 }}>
                   <span style={{ whiteSpace: "nowrap" }}>
-                    &radic;<span style={{ borderTop: '1px solid #fff' }}>&nbsp;<i>s</i><sub><small>yes</small></sub><sup><small>2</small></sup> + <i>s</i><sub><small>no</small></sub><sup><small>2</small></sup> + <i>s</i><sub><small>draw</small></sub><sup><small>2</small></sup>&nbsp;</span>
+                    √<span style={{ borderTop: '1px solid #fff' }}>&nbsp;<i>s</i><sub><small>yes</small></sub><sup><small>2</small></sup> + <i>s</i><sub><small>no</small></sub><sup><small>2</small></sup> + <i>s</i><sub><small>draw</small></sub><sup><small>2</small></sup>&nbsp;</span>
                   </span>
                 </div>
               </div>
@@ -111,12 +111,12 @@ export const FaqPage = () => {
           </Trans>
         </Panel>
         <Panel header={t("pages.faq.items.10.question", "How is Prophet different from other prediction market platforms?")} key="10">
-          <Trans i18nKey="pages.faq.items.10.answer">
+          <Trans shouldUnescape={true} i18nKey="pages.faq.items.10.answer">
             <p>Most other prediction market platforms also issue YES and NO tokens that represent the corresponding outcomes, however these platforms make users trade against each other on an orderbook exchange. This makes it difficult to bootstrap liquidity without a large trader community. Even with a large community, liquidity is lacking in the less popular markets.</p>
-            <p>Prophet issues tokens on a bonding curve instead. This means that traders are trading against the pool (which is implemented as an <a href="https://obyte.org/platform/autonomous-agents" target="_blank" rel="noopener">Autonomous Agent</a> &mdash; AA) rather than against each other, and liquidity is always available.</p>
+            <p>Prophet issues tokens on a bonding curve instead. This means that traders are trading against the pool (which is implemented as an <a href="https://obyte.org/platform/autonomous-agents" target="_blank" rel="noopener">Autonomous Agent</a> —AA) rather than against each other, and liquidity is always available.</p>
             <p>Prophet compares against other prediction market platforms as AMM (automated market maker) DEXes compare against orderbook DEXes. The latter have always been struggling to gain traction due to low liquidity while AMM DEXes (like Uniswap) saw a lot more adoption.</p>
             <p>However, unlike other prediction market platforms, the numbers of YES and NO tokens issued by Prophet AAs are not equal, and their prices are not equal to market-implied probabilities, which makes it slightly harder to read the market. Also, the prices of the tokens move in a tighter range which reduces the opportunities to profit from significant price movements. We believe these downsides are not significant as in practice most trading happens in a narrow range and the probabilities are easily estimated as the amounts of capital staked on the corresponding outcomes.</p>
-            <p>It's also important that Prophet works on <a href="https://obyte.org" target="_blank" rel="noopener">Obyte</a> &mdash; a DAG based cryptocurrency platform, which is immune to miner abuse and manipulation (known as MEV &mdash; miner extractable value) that affects blockchains. Therefore, when trading the prediction tokens, the risks of front-running, sandwich attacks, transaction delay or reordering and other attacks are minimized.</p>
+            <p>It's also important that Prophet works on <a href="https://obyte.org" target="_blank" rel="noopener">Obyte</a> — a DAG based cryptocurrency platform, which is immune to miner abuse and manipulation (known as MEV —miner extractable value) that affects blockchains. Therefore, when trading the prediction tokens, the risks of front-running, sandwich attacks, transaction delay or reordering and other attacks are minimized.</p>
           </Trans>
         </Panel>
         <Panel header={t("pages.faq.items.11.question", "Who operates Prophet?")} key="11">
