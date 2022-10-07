@@ -6,7 +6,7 @@ import moment from 'moment';
 import { useSelector } from 'react-redux';
 import { kebabCase, min } from 'lodash';
 import { Img } from 'react-image';
-import { useTranslation } from "react-i18next";
+import { Trans, useTranslation } from "react-i18next";
 
 import { selectLanguage, selectPriceOrOdds, selectReservesRate } from 'store/slices/settingsSlice';
 
@@ -14,6 +14,7 @@ import { CreateNowModal } from "modals";
 import { generateTextEvent } from "utils";
 import { useWindowSize } from "hooks";
 
+import i18n from "locale";
 import appConfig from "appConfig";
 
 import styles from "./PredictionItem.module.css";
@@ -61,7 +62,10 @@ export const PredictionItem = ({ reserve_asset = 'base', aa_address, reserve = 0
         customContent: (_, data) => {
           if (data && data[0]) {
             const { value } = data[0];
-            return <span>{yes_team || yes_symbol || "YES-token"} price - {+Number(+value + minValue).toFixed(max_display_decimals)} {reserve_symbol}</span>
+            const tokenView = yes_team || yes_symbol || t("common.type_token", "{{type}} token", { type: t("common.yes", "yes").toUpperCase() });
+            const valueView = +Number(+value + minValue).toFixed(max_display_decimals);
+
+            return <Trans i18nKey="prediction_item.chart_tooltip">{{ token: tokenView }} price - {{ value: valueView }} {{ symbol: reserve_symbol }}</Trans>
           }
         }
       }
@@ -83,7 +87,7 @@ export const PredictionItem = ({ reserve_asset = 'base', aa_address, reserve = 0
   const yesPriceView = +Number(yes_price).toPrecision(max_display_decimals);
   const noPriceView = +Number(no_price).toPrecision(max_display_decimals);
   const drawPriceView = +Number(draw_price).toPrecision(max_display_decimals);
-  const apyView = apy ? (apy < 1000 ? t("prediction_item.lp_apy", `Liquidity provider APY: {{apy}}%`, {apy: `${Number(apy).toFixed(2)}`}) : t("prediction_item.apy_not_shown", 'APY not shown')) : t("prediction_item.apy_not_available", 'APY not available yet');
+  const apyView = apy ? (apy < 1000 ? t("prediction_item.lp_apy", `Liquidity provider APY: {{apy}}%`, { apy: `${Number(apy).toFixed(2)}` }) : t("prediction_item.apy_not_shown", 'APY not shown')) : t("prediction_item.apy_not_available", 'APY not available yet');
 
   const eventView = generateTextEvent({
     event_date,
@@ -258,7 +262,7 @@ export const PredictionItem = ({ reserve_asset = 'base', aa_address, reserve = 0
                 <Col sm={{ span: 8 }} xs={{ span: 8 }} style={{ textAlign: 'center' }} className={styles.draw}>
                   <b style={{ fontSize: 24 }}>{t('common.vs', 'VS')}</b>
                   <div className={styles.time}>
-                    <small>{moment.unix(event_date).format('MMM D, h:mm A')}</small>
+                    <small>{moment.unix(event_date).format(i18n.language === "en" ? 'MMM DD, LT' : i18n.language === "zh" ? 'MMM Do LT' : 'D MMM LT')}</small>
                   </div>
                   {(exists && allow_draw && (drawOddsView || result) && width >= 576) ? <div style={{ color: appConfig.DRAW_COLOR }}>
                     <div className={styles.team}><small>{t('common.draw', 'draw')}</small></div>

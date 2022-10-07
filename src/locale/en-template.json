@@ -1,6 +1,11 @@
 {
   "common": {
     "received_request": "Received your request. The interface will update after the transaction stabilizes.",
+    "yes": "yes",
+    "no": "no",
+    "draw": "draw",
+    "type_tokens": "{{type}} tokens",
+    "type_token": "{{type}} token",
     "status": {
       "claiming": "Claiming profit",
       "resumed": "Resumed trading",
@@ -13,9 +18,6 @@
     "odds": "odds",
     "price": "price",
     "vs": "VS",
-    "draw": "draw",
-    "yes": "yes",
-    "no": "no",
     "all_sport": "All {{sport}}",
     "no_markets": "no markets",
     "no_markets_type": "no {{type}} markets",
@@ -46,10 +48,14 @@
     "create": "Create new market",
     "faq": "F.A.Q."
   },
+  "market_size": {
+    "label": "{{type}}\n                {{value}} {{symbol}}\n                {{percent}}% \n                "
+  },
   "market_size_pie": {
     "tooltip": "<0>Capital invested in {{name}}:<3>{{value}} <2>{{reserve_symbol}}</2></3></0>"
   },
   "prediction_item": {
+    "chart_tooltip": "{{token}} price - {{value}} {{symbol}}",
     "lp_apy": "Liquidity provider APY: {{apy}}%",
     "apy_not_shown": "APY not shown",
     "apy_not_available": "APY not available yet"
@@ -146,11 +152,11 @@
         },
         "9": {
           "question": "How are the tokens priced?",
-          "answer": "<0>The tokens are issued on a bonding curve and their prices depend on the numbers of tokens already issued. Issuing (buying) more tokens that represent a bet on the specific outcome (e.g. team A wins) increases their price and decreases the prices of the tokens that represent all other outcomes (team B wins and draw). Selling the same tokens does the opposite.</0><1>The bonding curve is a formula that links the token supplies (<1>s</1><2>yes</2>, <4>s</4><5>no</5>, and <7>s</7><8>draw</8>) to the total capital invested in all tokens (the reserve, denoted as <10>r</10>):</1><2><0>r</0> &nbsp; = &nbsp;<2>c </2> &nbsp;<4>&radic;<1>&nbsp;<1>s</1><2><0>yes</0></2><3><0>2</0></3> + <5>s</5><6><0>no</0></6><7><0>2</0></7> + <9>s</9><10><0>draw</0></10><11><0>2</0></11>&nbsp;</1></4></2><3>where <1>c</1> is a coefficient that starts with 1 and gradually grows to account for the accrued fees.</3><4>The price of the YES-token that represents a bet that the event will actually happen is then determined as a partial derivative by <1>s</1><2>yes</2>:</4><5><0><0>p</0><1><0>yes</0></1> &nbsp; = &nbsp;<3>c </3> &nbsp;&nbsp;</0><1><0><0>s</0><1><0>yes</0></1></0><1><0>&radic;<1>&nbsp;<1>s</1><2><0>yes</0></2><3><0>2</0></3> + <5>s</5><6><0>no</0></6><7><0>2</0></7> + <9>s</9><10><0>draw</0></10><11><0>2</0></11>&nbsp;</1></0></1></1></5><6>and similar formulas for the prices of NO and DRAW tokens.</6><7>Thanks to the bonding curve, we have continuous pricing and it is always possible to buy or sell any tokens, i.e. liquidity is always available.</7><8>The bonding curve is implemented by an <1>Autonomous Agent</1>, and the AA acts like a decentralized automated bookmaker that automatically adjusts its prices in response to the changing demand. LPs act like shareholders of the decentralized bookmaker, and share its profits.</8>"
+          "answer": "<0>The tokens are issued on a bonding curve and their prices depend on the numbers of tokens already issued. Issuing (buying) more tokens that represent a bet on the specific outcome (e.g. team A wins) increases their price and decreases the prices of the tokens that represent all other outcomes (team B wins and draw). Selling the same tokens does the opposite.</0><1>The bonding curve is a formula that links the token supplies (<1>s</1><2>yes</2>, <4>s</4><5>no</5>, and <7>s</7><8>draw</8>) to the total capital invested in all tokens (the reserve, denoted as <10>r</10>):</1><2><0>r</0> &nbsp; = &nbsp;<2>c </2> &nbsp;<4>√<1>&nbsp;<1>s</1><2><0>yes</0></2><3><0>2</0></3> + <5>s</5><6><0>no</0></6><7><0>2</0></7> + <9>s</9><10><0>draw</0></10><11><0>2</0></11>&nbsp;</1></4></2><3>where <1>c</1> is a coefficient that starts with 1 and gradually grows to account for the accrued fees.</3><4>The price of the YES-token that represents a bet that the event will actually happen is then determined as a partial derivative by <1>s</1><2>yes</2>:</4><5><0><0>p</0><1><0>yes</0></1> &nbsp; = &nbsp;<3>c </3> &nbsp;&nbsp;</0><1><0><0>s</0><1><0>yes</0></1></0><1><0>√<1>&nbsp;<1>s</1><2><0>yes</0></2><3><0>2</0></3> + <5>s</5><6><0>no</0></6><7><0>2</0></7> + <9>s</9><10><0>draw</0></10><11><0>2</0></11>&nbsp;</1></0></1></1></5><6>and similar formulas for the prices of NO and DRAW tokens.</6><7>Thanks to the bonding curve, we have continuous pricing and it is always possible to buy or sell any tokens, i.e. liquidity is always available.</7><8>The bonding curve is implemented by an <1>Autonomous Agent</1>, and the AA acts like a decentralized automated bookmaker that automatically adjusts its prices in response to the changing demand. LPs act like shareholders of the decentralized bookmaker, and share its profits.</8>"
         },
         "10": {
           "question": "How is Prophet different from other prediction market platforms?",
-          "answer": "<0>Most other prediction market platforms also issue YES and NO tokens that represent the corresponding outcomes, however these platforms make users trade against each other on an orderbook exchange. This makes it difficult to bootstrap liquidity without a large trader community. Even with a large community, liquidity is lacking in the less popular markets.</0><1>Prophet issues tokens on a bonding curve instead. This means that traders are trading against the pool (which is implemented as an <1>Autonomous Agent</1> &mdash; AA) rather than against each other, and liquidity is always available.</1><2>Prophet compares against other prediction market platforms as AMM (automated market maker) DEXes compare against orderbook DEXes. The latter have always been struggling to gain traction due to low liquidity while AMM DEXes (like Uniswap) saw a lot more adoption.</2><3>However, unlike other prediction market platforms, the numbers of YES and NO tokens issued by Prophet AAs are not equal, and their prices are not equal to market-implied probabilities, which makes it slightly harder to read the market. Also, the prices of the tokens move in a tighter range which reduces the opportunities to profit from significant price movements. We believe these downsides are not significant as in practice most trading happens in a narrow range and the probabilities are easily estimated as the amounts of capital staked on the corresponding outcomes.</3><4>It's also important that Prophet works on <1>Obyte</1> &mdash; a DAG based cryptocurrency platform, which is immune to miner abuse and manipulation (known as MEV &mdash; miner extractable value) that affects blockchains. Therefore, when trading the prediction tokens, the risks of front-running, sandwich attacks, transaction delay or reordering and other attacks are minimized.</4>"
+          "answer": "<0>Most other prediction market platforms also issue YES and NO tokens that represent the corresponding outcomes, however these platforms make users trade against each other on an orderbook exchange. This makes it difficult to bootstrap liquidity without a large trader community. Even with a large community, liquidity is lacking in the less popular markets.</0><1>Prophet issues tokens on a bonding curve instead. This means that traders are trading against the pool (which is implemented as an <1>Autonomous Agent</1> — AA) rather than against each other, and liquidity is always available.</1><2>Prophet compares against other prediction market platforms as AMM (automated market maker) DEXes compare against orderbook DEXes. The latter have always been struggling to gain traction due to low liquidity while AMM DEXes (like Uniswap) saw a lot more adoption.</2><3>However, unlike other prediction market platforms, the numbers of YES and NO tokens issued by Prophet AAs are not equal, and their prices are not equal to market-implied probabilities, which makes it slightly harder to read the market. Also, the prices of the tokens move in a tighter range which reduces the opportunities to profit from significant price movements. We believe these downsides are not significant as in practice most trading happens in a narrow range and the probabilities are easily estimated as the amounts of capital staked on the corresponding outcomes.</3><4>It's also important that Prophet works on <1>Obyte</1> — a DAG based cryptocurrency platform, which is immune to miner abuse and manipulation (known as MEV — miner extractable value) that affects blockchains. Therefore, when trading the prediction tokens, the risks of front-running, sandwich attacks, transaction delay or reordering and other attacks are minimized.</4>"
         },
         "11": {
           "question": "Who operates Prophet?",
@@ -370,5 +376,24 @@
     "cryptocurrency": "Cryptocurrency prices oracle",
     "metal": "Precious metal exchange rates oracle",
     "sports": "Sports oracle"
+  },
+  "championships": {
+    "soccer": {
+      "ELC": "England championship",
+      "CL": "UEFA Champions League",
+      "BL1": "Bundesliga",
+      "FL1": "Ligue 1",
+      "WC": "FIFA World Cup",
+      "CSL": "Chinese Super League",
+      "BSA": "Campeonato Brasileiro Série A",
+      "ASL": "Liga Profesional",
+      "DED": "Eredivisie",
+      "PD": "Primera Division",
+      "PPL": "Primeira Liga",
+      "BSB": "Campeonato Brasileiro Série B",
+      "SA": "Serie A",
+      "PL": "Premier League",
+      "CLI": "Copa Libertadores"
+    }
   }
 }

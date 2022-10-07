@@ -22,7 +22,7 @@ import { selectMarketsCache } from "store/slices/cacheSlice";
 import { loadMarketsInCache } from "store/thunks/loadMarketsInCache";
 import { loadCurrencyCalendarCache } from "store/thunks/loadCurrencyCalendarCache";
 
-import { getEmojiByType, transformChampionshipName, getSportNameByType } from "utils";
+import { getEmojiByType, transformChampionshipName, getSportNameByType, getCategoryName } from "utils";
 import { historyInstance } from "historyInstance";
 import backend from "services/backend";
 
@@ -157,7 +157,7 @@ export const PredictionList = ({ type = 'all', particle = 'all', setParticle }) 
 
   useEffect(() => {
     if (fullCalendarDataSource.length > 0 && location.hash === "#calendar" && calendarRef.current && !loading && !inited && !['all', 'misc'].includes(type)) {
-      calendarRef.current.scrollIntoView({ behavior: "smooth", alignToTop: false, block: "center" });
+      calendarRef.current.scrollIntoView({ behavior: "smooth", alignToTop: false, block: "start" });
       setInited(true);
     } else if (loading && ['all', 'misc'].includes(type)) {
       setInited(true)
@@ -183,20 +183,20 @@ export const PredictionList = ({ type = 'all', particle = 'all', setParticle }) 
         dataSource={fullDataSource}
         style={{ marginBottom: 50 }}
         rowKey={(item) => `${type}-${item.aa_address}`}
-        locale={{ emptyText: type === 'all' ? t("common.no_markets", 'no markets') : t("common.no_markets_type", 'no {{type}} markets', { type }) }}
+        locale={{ emptyText: type === 'all' ? t("common.no_markets", 'no markets') : t("common.no_markets_type", 'no {{type}} markets', { type: getCategoryName(type).toLowerCase() }) }}
         renderItem={(data) => <PredictionItem {...data} particle={particle} type={type} />}
         loadMore={fullDataSource.length < ((type in championships) ? countOfSportMarkets : maxCount) && <div className={styles.loadMoreWrap}>
           <Button onClick={() => dispatch(loadMarketsInCache({ championship, page: currentPage + 1, type }))}>{t("common.load_more", 'Load more')}</Button>
         </div>}
       />
 
-      {(type in championships || type === 'currency') && <div><Divider dashed className={styles.calendarHeader}>{type === 'currency' ? t("prediction_list.title_create", 'create new markets') : t("prediction_list.title_calendar", 'calendar of upcoming matches')}</Divider></div>}
+      {(type in championships || type === 'currency') && <div ref={calendarRef}><Divider dashed className={styles.calendarHeader}>{type === 'currency' ? t("prediction_list.title_create", 'create new markets') : t("prediction_list.title_calendar", 'calendar of upcoming matches')}</Divider></div>}
 
       {type === 'currency' && popularCurrencies.length > 0 && <div>
         <SwitchActions small={true} value={actualCurrency} data={getCurrencyCalendarActionList()} onChange={(currency) => setActualCurrency(currency)} />
       </div>}
 
-      {(type in championships || type === 'currency') && (fullCalendarDataSource.length > 0 ? <div ref={calendarRef}>
+      {(type in championships || type === 'currency') && (fullCalendarDataSource.length > 0 ? <div>
         <List
           dataSource={fullCalendarDataSource}
           style={{ marginTop: 10 }}

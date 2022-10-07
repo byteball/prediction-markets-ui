@@ -31,8 +31,10 @@ import { CurrencyChart } from "components/CurrencyChart/CurrencyChart";
 import { MarketSizePie } from "components/MarketSizePie/MarketSizePie";
 import { AddLiquidityModal, ClaimProfitModal, ViewParamsModal, TradeModal } from "modals";
 
-import styles from './MarketPage.module.css';
+import i18n from "locale";
 import appConfig from "appConfig";
+
+import styles from './MarketPage.module.css';
 
 const SECONDS_IN_YEAR = 31536000;
 
@@ -52,7 +54,7 @@ const getConfig = (chartType, teams) => ({
   color: ({ type }) => {
     if (chartType === 'apy') return appConfig.YES_COLOR;
 
-    return (type === 'NO' || type === teams?.no?.name) ? appConfig.NO_COLOR : (type === 'YES' || type === teams?.yes?.name) ? appConfig.YES_COLOR : appConfig.DRAW_COLOR;
+    return (type === i18n.t("common.no", "no").toUpperCase() || type === teams?.no?.name) ? appConfig.NO_COLOR : (type === i18n.t("common.yes", "yes").toUpperCase() || type === teams?.yes?.name) ? appConfig.YES_COLOR : appConfig.DRAW_COLOR;
   },
   yAxis: {
     label: {
@@ -202,12 +204,12 @@ export const MarketPage = () => {
 
       if (chartType === 'prices') {
         data.push(
-          { date, value: yes_price, type: teams?.yes?.name || "YES", currencySymbol: reserve_symbol, chartType, symbol: yes_symbol },
-          { date, value: no_price, type: teams?.no?.name || "NO", currencySymbol: reserve_symbol, chartType, symbol: no_symbol }
+          { date, value: yes_price, type: teams?.yes?.name || i18n.t("common.yes", "yes").toUpperCase(), currencySymbol: reserve_symbol, chartType, symbol: yes_symbol },
+          { date, value: no_price, type: teams?.no?.name || i18n.t("common.no", "no").toUpperCase(), currencySymbol: reserve_symbol, chartType, symbol: no_symbol }
         );
 
         if (allow_draw) {
-          data.push({ date, value: draw_price, type: "DRAW", currencySymbol: reserve_symbol, chartType, symbol: draw_symbol })
+          data.push({ date, value: draw_price, type: i18n.t("common.draw", "draw").toUpperCase(), currencySymbol: reserve_symbol, chartType, symbol: draw_symbol })
         }
       } else if (chartType === 'fee') {
         data.push(
@@ -224,18 +226,18 @@ export const MarketPage = () => {
         data.push({ date, value: apy, chartType });
       } else {
         data.push(
-          { date, value: +Number(supply_yes / 10 ** yes_decimals).toFixed(yes_decimals), type: teams?.yes?.name || "YES", currencySymbol: yes_symbol, chartType },
-          { date, value: +Number(supply_no / 10 ** no_decimals).toFixed(no_decimals), type: teams?.no?.name || "NO", currencySymbol: no_symbol, chartType }
+          { date, value: +Number(supply_yes / 10 ** yes_decimals).toFixed(yes_decimals), type: teams?.yes?.name || i18n.t("common.yes", "yes").toUpperCase(), currencySymbol: yes_symbol, chartType },
+          { date, value: +Number(supply_no / 10 ** no_decimals).toFixed(no_decimals), type: teams?.no?.name || i18n.t("common.no", "no").toUpperCase(), currencySymbol: no_symbol, chartType }
         );
 
         if (allow_draw) {
-          data.push({ date, value: +Number(supply_draw / 10 ** draw_decimals).toFixed(draw_decimals), type: "DRAW", currencySymbol: draw_symbol, chartType },)
+          data.push({ date, value: +Number(supply_draw / 10 ** draw_decimals).toFixed(draw_decimals), type: i18n.t("common.draw", "draw").toUpperCase(), currencySymbol: draw_symbol, chartType },)
         }
       }
     });
 
     setDataForChart(data);
-  }, [candles, chartType, address, reservesRate, teams]);
+  }, [candles, chartType, address, reservesRate, teams, i18n.language]);
 
   useEffect(() => {
     const intervalId = setInterval(() => setNow(moment.utc().unix()), 10000);
@@ -379,7 +381,7 @@ export const MarketPage = () => {
           <Col md={{ span: 8 }} xs={{ span: 8 }} style={{ textAlign: 'center', alignSelf: 'center' }}>
             <b className={styles.vs}>{t('common.vs', 'VS')}</b>
             <div>
-              {moment.unix(event_date).format('MMM D, h:mm A')}
+              {moment.unix(event_date).format(i18n.language === "en" ? 'MMM DD, LT' : i18n.language === "zh" ? 'MMM Do LT' : 'D MMM LT')}
             </div>
             {league && league_emblem && <div><Tooltip title={leagueView}><img className={styles.league} src={league_emblem} alt={leagueView} /></Tooltip></div>}
           </Col>
@@ -512,7 +514,7 @@ export const MarketPage = () => {
           <Col md={{ span: showMarketSizePie ? 12 : 24 }} xs={{ span: 24 }}>
             <h2 style={{ fontSize: 28 }}>{t('pages.market.apy.title', "Make money from liquidity provision")}</h2>
             <Typography.Paragraph>
-              {reserve !== 0 && <span>{t('pages.market.apy.every_trade', "Every trade is charged a fee which is added to the market’s pool (see the fee accumulation chart above).")}</span>}
+              {reserve !== 0 && <span>{t('pages.market.apy.every_trade', "Every trade is charged a fee which is added to the market’s pool (see the fee accumulation chart above).")} </span>}
               {t('pages.market.apy.earn', "Earn a share of these fees by buying all tokens in the same proportions they are already issued. One of the tokens will win, and you’ll get a share of the trading fees collected after you invested.")}
             </Typography.Paragraph>
             <Typography.Paragraph>
