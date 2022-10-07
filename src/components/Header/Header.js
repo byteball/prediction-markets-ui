@@ -58,7 +58,7 @@ export const Header = () => {
 						</div>
 
 						<div className={styles.languageWrap}>
-							<SelectLanguage />
+							<SelectLanguage action={() => setShowMenu(false)} />
 						</div>
 
 						<div className={styles.socialLinksWrap}>

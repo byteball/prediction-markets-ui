@@ -376,5 +376,24 @@
     "cryptocurrency": "Cryptocurrency prices oracle",
     "metal": "Precious metal exchange rates oracle",
     "sports": "Sports oracle"
+  },
+  "championships": {
+    "soccer": {
+      "ELC": "England championship",
+      "CL": "UEFA Champions League",
+      "BL1": "Bundesliga",
+      "FL1": "Ligue 1",
+      "WC": "FIFA World Cup",
+      "CSL": "Chinese Super League",
+      "BSA": "Campeonato Brasileiro Série A",
+      "ASL": "Liga Profesional",
+      "DED": "Eredivisie",
+      "PD": "Primera Division",
+      "PPL": "Primeira Liga",
+      "BSB": "Campeonato Brasileiro Série B",
+      "SA": "Serie A",
+      "PL": "Premier League",
+      "CLI": "Copa Libertadores"
+    }
   }
 }
