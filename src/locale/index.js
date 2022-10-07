@@ -3,6 +3,7 @@ import { initReactI18next } from "react-i18next";
 import es from "./es-ES.json";
 import pt from "./pt-BR.json";
 import zh from "./zh-CN.json";
+import ru from "./ru-RU.json";
 
 // import  translations  from "./translations";
 // the translations
@@ -20,6 +21,9 @@ i18n
       },
       zh: {
         translation: zh
+      },
+      ru: {
+        translation: ru
       },
     },
     lng: "en",

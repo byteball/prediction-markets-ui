@@ -3,6 +3,7 @@ import { Col, Empty, Row, Spin } from "antd";
 import { useSelector } from "react-redux";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { Trans, useTranslation } from "react-i18next";
+import { Helmet } from "react-helmet-async";
 
 import { Layout } from "components/Layout/Layout";
 import { PredictionList } from "components/PredictionList/PredictionList";
@@ -14,8 +15,9 @@ import { selectLanguage } from "store/slices/settingsSlice";
 import { getTabNameByType } from "utils/getTabNameByType";
 
 import styles from "./MainPage.module.css";
-import { Helmet } from "react-helmet-async";
 import { capitalizeFirstLetter } from "utils";
+import i18n from "locale";
+import { useWindowSize } from "hooks";
 
 export const MainPage = () => {
 	const markets = useSelector(selectAllMarkets);
@@ -26,6 +28,7 @@ export const MainPage = () => {
 	const navigate = useNavigate();
 	const location = useLocation();
 	const { t } = useTranslation();
+	const [width] = useWindowSize();
 
 	const [marketType, setMarketType] = useState('all');
 	const [particle, setParticle] = useState('all');
@@ -120,7 +123,7 @@ export const MainPage = () => {
 		<Layout>
 			<Row className={styles.headerWrap}>
 				<Col xs={{ span: 24 }} md={{ span: 24 }}>
-					<h1 className={styles.mainHeader}>
+					<h1 className={styles.mainHeader} style={{ fontSize: (["en", "zh"].includes(i18n.language) || width >= 600) ? (width >= 600 ? 42 : 36) : (width >= 400 ? 28 : 22) }}>
 						<Trans i18nKey="pages.main.title">
 							Decentralized <span className={styles.select}>prediction markets</span>
 						</Trans>

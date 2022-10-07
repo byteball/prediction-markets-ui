@@ -1,9 +1,10 @@
+import { memo } from 'react';
 import { Stock } from '@ant-design/plots';
 import moment from 'moment';
 
 import appConfig from 'appConfig';
 
-export const CurrencyChart = ({ data, params }) => {
+export const CurrencyChart = memo(({ data, params }) => {
   const { datafeed_value, waiting_period_length, event_date } = params;
   const momentFormat = (event_date + waiting_period_length - moment.utc().unix() <= 7 * 24 * 3600) ? 'lll' : 'll';
 
@@ -71,4 +72,4 @@ export const CurrencyChart = ({ data, params }) => {
   return <div style={{ margin: '20px 0' }}>
     <Stock {...config} />
   </div>
-}
+});
