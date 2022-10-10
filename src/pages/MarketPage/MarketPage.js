@@ -193,7 +193,7 @@ export const MarketPage = () => {
 
     const first_trade_at = first_trade_ts || created_at;
 
-    if (result || (event_date + params.waiting_period_length) > now) {
+    if (result || ((event_date + params.waiting_period_length) > now) && event_date <= now) {
       coef_end = coef * (1 - (needsIssueFeeForLiquidity ? issue_fee : 0));
     } else {
       coef_end = (coef * (1 - (needsIssueFeeForLiquidity ? issue_fee : 0))) ** (((committed_at || event_date) - first_trade_at) / (last_close_ts - first_trade_at));
