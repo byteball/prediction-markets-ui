@@ -1,6 +1,11 @@
 {
   "common": {
     "received_request": "Recebemos seu pedido. A \"interface\" será atualizada depois que a transação se estabilizar.",
+    "yes": "com",
+    "no": "sem",
+    "draw": "empate",
+    "type_tokens": "{{type}} tokens",
+    "type_token": "{{type}} token",
     "status": {
       "claiming": "Reivindicando lucro",
       "resumed": "Retomada da negociação",
@@ -13,9 +18,6 @@
     "odds": "Cotas",
     "price": "preço",
     "vs": "X",
-    "draw": "empate",
-    "yes": "com",
-    "no": "sem",
     "all_sport": "Todos",
     "no_markets": "não há mercados",
     "no_markets_type": "sem {{type}} mercados",
@@ -46,10 +48,14 @@
     "create": "Criar novo mercado",
     "faq": "Perguntas frequentes"
   },
+  "market_size": {
+    "label": "{{type}}\n                {{value}} {{symbol}}\n                {{percent}}% \n                "
+  },
   "market_size_pie": {
     "tooltip": "<0>Capital investido em {{name}}:<3>{{value}} <2>{{reserve_symbol}}</2></3></0>"
   },
   "prediction_item": {
+    "chart_tooltip": "{{token}} preço - {{value}} {{symbol}}",
     "lp_apy": "Fornecedor de liquidez APY: {{apy}}%",
     "apy_not_shown": "APY não exibido",
     "apy_not_available": "APY ainda não está disponível"
@@ -146,11 +152,11 @@
         },
         "9": {
           "question": "Como são fixados os preços dos tokens?",
-          "answer": "<0>Os tokens são emitidos em uma curva de títulos e seus preços dependem do número de tokens já emitidos. Emitir (comprar) mais tokens que representam uma aposta no resultado específico (por exemplo, a equipe A vence) aumenta seu preço e diminui os preços dos tokens que representam todos os outros resultados (a equipe B vence e empata). Vender os mesmos tokens faz o oposto.</0><1>A curva de ligação é uma fórmula que vincula os suprimentos de tokens (<1>s</1><2>sim</2>, <4>s</ 4><5>não</5> e <7>s</7><8>empate</8>) ao capital total investido em todos os tokens (a reserva, indicada como <10>r</10 >>):</1><2><0>r</0> &nbsp; = &nbsp;<2>c </2> &nbsp;<4>√<1>&nbsp;<1>s</1><2><0>sim</0></2><3>< 0>2</0></3> + <5>s</5><6><0>não</0></6><7><0>2</0></7> + <9>s</9><10><0>sorteio</0></10><11><0>2</0></11>&nbsp;</1></4>< /2><3>onde <1>c</1> é um coeficiente que começa com 1 e cresce gradualmente para contabilizar as taxas acumuladas.</3><4>O preço do token SIM que representa uma aposta que o evento realmente acontecerá é então determinado como uma derivada parcial por <1>s</1><2>sim</2>:</4><5><0><0>p</0>< 1><0>sim</0></1> &nbsp; = &nbsp;<3>c </3> &nbsp;&nbsp;</0><1><0><0>s</0><1><0>sim</0></1></ 0><1><0>√<1>&nbsp;<1>s</1><2><0>sim</0></2><3><0>2</0>< /3> + <5>s</5><6><0>não</0></6><7><0>2</0></7> + <9>s</9 ><10><0>desenhar</0></10><11><0>2</0></11>&nbsp;</1></0></1></1>< /5><6>e fórmulas semelhantes para os preços dos tokens NÃO e EMPATE.</6><7>Graças à curva de ligação, temos preços contínuos e sempre é possível comprar ou vender quaisquer tokens, ou seja, a liquidez está sempre disponível.</7><8>A curva de títulos é implementada por um <1>Agente Autônomo</1>, e o AA age como uma casa de apostas automatizada descentralizada que ajusta automaticamente seus preços em resposta à mudança da demanda. As LPs atuam como acionistas da casa de apostas descentralizada e compartilham seus lucros.</8>"
+          "answer": "<0>Os tokens são emitidos em uma curva de títulos e seus preços dependem do número de tokens já emitidos. Emitir (comprar) mais tokens que representam uma aposta no resultado específico (por exemplo, a equipe A vence) aumenta seu preço e diminui os preços das fichas que representam todos os outros resultados (a equipe B vence e empata). Vender os mesmos tokens faz o oposto.</0><1>A curva de ligação é uma fórmula que vincula os suprimentos de tokens (<1>s</1><2>com</2>, <4>s</ 4><5>sem</5> e <7>s</7><8>empate</8>) ao capital total investido em todos os tokens (a reserva, indicada como <10>r</10 >>):</1><2><0>r</0> &nbsp; = &nbsp;<2>c </2> &nbsp;<4>√<1>&nbsp;<1>s</1><2><0>sim</0></2><3><0 >2</0></3> + <5>s</5><6><0>não</0></6><7><0>2</0></7> + <9>s</9><10><0>sorteio</0></10><11><0>2</0></11>&nbsp;</1></4></ 2><3>onde <1>c</1> é um coeficiente que começa com 1 e cresce gradualmente para contabilizar as taxas acumuladas.</3><4>O preço do token COM que representa uma aposta que o evento realmente acontecerá é então determinado como uma derivada parcial por <1>s</1><2>sim</2>:</4><5><0><0>p</0><1 ><0>sim</0></1> &nbsp; = &nbsp;<3>c </3> &nbsp;&nbsp;</0><1><0><0>s</0><1><0>sim</0></1></ 0><1><0>√<1>&nbsp;<1>s</1><2><0>sim</0></2><3><0>2</0></ 3> + <5>s</5><6><0>não</0></6><7><0>2</0></7> + <9>s</9> <10><0>desenhar</0></10><11><0>2</0></11>&nbsp;</1></0></1></1></ 5><6>e fórmulas semelhantes para os preços dos tokens SEM e EMPATE.</6><7>Graças à curva de ligação, temos preços contínuos e sempre é possível comprar ou vender quaisquer tokens, ou seja, a liquidez é sempre disponível.</7><8>A curva de ligação é implementada por um <1>Agente Autônomo</1>, e o AA age como uma casa de apostas automatizada descentralizada que ajusta automaticamente seus preços em resposta à mudança da demanda. As LPs atuam como acionistas da casa de apostas descentralizada e compartilham seus lucros.</8>"
         },
         "10": {
           "question": "Qual é a diferença entre Prophet e outras plataformas de previsão de mercado?",
-          "answer": "<0>A maioria das outras plataformas de mercado de previsão também emite tokens SIM e NÃO que representam os resultados correspondentes, no entanto, essas plataformas fazem com que os usuários negociem uns contra os outros em uma bolsa de pedidos. Isso dificulta o bootstrap da liquidez sem uma grande comunidade de traders. Mesmo com uma grande comunidade, falta liquidez nos mercados menos populares.</0><1>Prophet emite tokens em uma curva de títulos. Isso significa que os traders estão negociando contra a piscina (que é implementado como um <1>Agente Autônomo</1> — AA) em vez de um contra o outro, e a liquidez está sempre disponível.</1><2>Prophet compara com outras plataformas de mercado de previsão como DEXs AMM (automated market maker) comparam-se com DEXs de livros de pedidos. Estes últimos sempre lutaram para ganhar força devido à baixa liquidez, enquanto os AMM DEXes (como o Uniswap) tiveram muito mais adoção.</2><3>No entanto, ao contrário de outras plataformas de mercado de previsão, os números de tokens SIM e NÃO emitidos por Prophet AA não são iguais, e seus preços não são iguais às probabilidades implícitas no mercado, o que torna um pouco mais difícil ler o mercado. Além disso, os preços dos tokens se movem em uma faixa mais estreita, o que reduz as oportunidades de lucrar com movimentos significativos de preços. Acreditamos que essas desvantagens não são significativas, pois, na prática, a maioria das negociações ocorre em um intervalo estreito e as probabilidades são facilmente estimadas como os valores de capital investidos nos resultados correspondentes.</3><4>Também é importante que o Prophet trabalhe em <1 >Obyte</1> — uma plataforma de criptomoeda baseada em DAG, que é imune ao abuso e manipulação de mineradores (conhecido como MEV — valor extraível do minerador) que afeta blockchains. Portanto, ao negociar os tokens de previsão, os riscos de front-running, ataques sanduíche, atraso ou reordenação de transações e outros ataques são minimizados.</4>"
+          "answer": "<0>A maioria das outras plataformas de mercado de previsão também emite tokens COM e SEM que representam os resultados correspondentes, no entanto, essas plataformas fazem com que os usuários negociem uns contra os outros em uma bolsa de pedidos. Isso dificulta o bootstrap da liquidez sem uma grande comunidade de traders. Mesmo com uma grande comunidade, falta liquidez nos mercados menos populares.</0><1>Prophet emite tokens em uma curva de títulos. Isso significa que os traders estão negociando contra a psicina (que é implementado como um <1>Agente Autônomo</1> — AA) em vez de um contra o outro, e a liquidez está sempre disponível.</1><2>Prophet compara com outros plataformas de mercado de previsão como DEXs AMM (automated market maker) comparam-se com DEXs de livros de pedidos. Estes últimos sempre lutaram para ganhar força devido à baixa liquidez, enquanto os AMM DEXes (como o Uniswap) tiveram muito mais adoção.</2><3>No entanto, ao contrário de outras plataformas de mercado de previsão, os números de tokens COM e SEM emitidos por Prophet AAs não são iguais, e seus preços não são iguais às probabilidades implícitas no mercado, o que torna um pouco mais difícil ler o mercado. Além disso, os preços dos tokens se movem em uma faixa mais estreita, o que reduz as oportunidades de lucrar com movimentos significativos de preços. Acreditamos que essas desvantagens não são significativas, pois, na prática, a maioria das negociações ocorre em um intervalo estreito e as probabilidades são facilmente estimadas como os valores de capital investidos nos resultados correspondentes.</3><4>Também é importante que o Profeta trabalhe em <1 >Obyte</1> — uma plataforma de criptomoeda baseada em DAG, que é imune ao abuso e manipulação de mineradores (conhecido como MEV — valor extraível do minerador) que afeta blockchains. Portanto, ao negociar os tokens de previsão, os riscos de front-running, ataques sanduíche, atraso ou reordenação de transações e outros ataques são minimizados.</4>"
         },
         "11": {
           "question": "Quem opera o Prophet?",
@@ -370,5 +376,24 @@
     "cryptocurrency": "Oráculo de preços das criptomoedas",
     "metal": "Oráculo de taxas de câmbio de metais preciosos",
     "sports": "Oráculo esportivo"
+  },
+  "championships": {
+    "soccer": {
+      "ELC": "England championship",
+      "CL": "UEFA Champions League",
+      "BL1": "Bundesliga",
+      "FL1": "Ligue 1",
+      "WC": "Copa do Mundo FIFA ",
+      "CSL": "Chinese Super League",
+      "BSA": "Campeonato Brasileiro Série A",
+      "ASL": "Liga Profesional",
+      "DED": "Eredivisie",
+      "PD": "La Liga",
+      "PPL": "Primeira Liga",
+      "BSB": "Campeonato Brasileiro Série B",
+      "SA": "Serie A",
+      "PL": "Premier League",
+      "CLI": "Copa Libertadores"
+    }
   }
 }
