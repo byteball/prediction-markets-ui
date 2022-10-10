@@ -43,7 +43,7 @@ export const RecentEvents = () => {
     const yesAmount = +Number(Math.abs(yes_amount) / 10 ** reserve_decimals).toFixed(yes_decimals);
     const noAmount = +Number(Math.abs(no_amount) / 10 ** reserve_decimals).toFixed(no_decimals);
     const drawAmount = allow_draw ? +Number(Math.abs(draw_amount) / 10 ** reserve_decimals).toFixed(draw_decimals) : '';
-    const format = i18n.language === "ru" ? "D MMMM gggg [в] LT" : "LLL";
+    const format = ["ru", "uk"].includes(i18n.language) ? "D MMMM gggg [в] LT" : "LLL";
 
     if (type === 'add_liquidity' || type === 'buy_by_type') {
       const Count = () => <>{yes_amount !== 0 ? <span style={{ color: appConfig.YES_COLOR }}>{` ${yesAmount} ${yes_symbol}`}</span> : ''} {no_amount !== 0 ? <span style={{ color: appConfig.NO_COLOR }}>{` ${noAmount} ${no_symbol}`}</span> : ''}{draw_amount !== 0 ? <span style={{ color: appConfig.DRAW_COLOR }}>{` ${drawAmount} ${draw_symbol}`}</span> : ''}</>;
