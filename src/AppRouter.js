@@ -8,6 +8,7 @@ import 'moment/locale/es';
 import 'moment/locale/pt';
 import 'moment/locale/zh-cn';
 import 'moment/locale/ru';
+import 'moment/locale/uk';
 
 import { CreatePage, MainPage, MarketPage, FaqPage } from "pages";
 import { historyInstance } from "historyInstance";
