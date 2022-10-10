@@ -4,7 +4,7 @@ import appConfig from "appConfig";
 import i18n from "locale";
 
 export const generateTextEvent = ({ oracle, event_date, feed_name, datafeed_value, comparison, isUTC = false, yes_team_name, no_team_name }) => { // params    
-    const format = i18n.language === "ru" ? "D MMMM gggg [в] LT" : "LLL";
+    const format = ["ru", "uk"].includes(i18n.language) ? "D MMMM gggg [в] LT" : "LLL";
     const expiry_date = isUTC ? moment.unix(event_date).utc().format(format) : moment.unix(event_date).format(format);
     const comparisonText = getComparisonText(comparison);
 

@@ -4,6 +4,7 @@ import es from "./es-ES.json";
 import pt from "./pt-BR.json";
 import zh from "./zh-CN.json";
 import ru from "./ru-RU.json";
+import uk from "./uk-UA.json";
 
 // import  translations  from "./translations";
 // the translations
@@ -24,6 +25,9 @@ i18n
       },
       ru: {
         translation: ru
+      },
+      uk: {
+        translation: uk
       },
     },
     lng: "en",
