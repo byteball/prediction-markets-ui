@@ -39,7 +39,7 @@ const AppRouter = () => {
   }, [lang]);
 
   const langNames = langs.map((lang) => lang.name);
-  langNames.push('/');
+  langNames.push('');
 
   return <HelmetProvider>
     <HistoryRouter history={historyInstance}>
