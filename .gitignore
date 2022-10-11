@@ -24,5 +24,4 @@ yarn-error.log*
 .env
 
 # lock files
-yarn.lock
 package-lock.json
