@@ -279,7 +279,7 @@ export const MarketPage = () => {
     }
   }, [address]);
 
-  if (status !== 'loaded' || !address || !actualReserveSymbol) return (<div style={{ margin: 20, display: 'flex', justifyContent: 'center' }}><Spin size="large" /></div>)
+  if (status !== 'loaded' || !address || !actualReserveSymbol) return (<div style={{ margin: 40, display: 'flex', justifyContent: 'center' }}><Spin size="large" /></div>)
 
   // calc odds
   let yesOddsView = 0;
