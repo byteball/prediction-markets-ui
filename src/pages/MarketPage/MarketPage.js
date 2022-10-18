@@ -1,5 +1,4 @@
 import { Row, Col, Space, Button, Radio, Spin, Tooltip, Typography, Alert } from "antd";
-import { Layout } from "components/Layout/Layout";
 import { StatsCard } from "components/StatsCard/StatsCard";
 import { Line } from '@ant-design/plots';
 import { useLocation } from "react-router-dom";
@@ -280,7 +279,7 @@ export const MarketPage = () => {
     }
   }, [address]);
 
-  if (status !== 'loaded' || !address || !actualReserveSymbol) return (<Layout> <div style={{ margin: 20, display: 'flex', justifyContent: 'center' }}><Spin size="large" /></div></Layout>)
+  if (status !== 'loaded' || !address || !actualReserveSymbol) return (<div style={{ margin: 20, display: 'flex', justifyContent: 'center' }}><Spin size="large" /></div>)
 
   // calc odds
   let yesOddsView = 0;
@@ -362,7 +361,7 @@ export const MarketPage = () => {
   const seoText = kebabCase(eventUTC);
   const leagueView = transformChampionshipName(league, params.feed_name.split('_')?.[0])
 
-  return <Layout>
+  return <>
     <Helmet>
       <title>Prophet prediction markets — {((teams.yes === null || teams.no === null) ? event : `${teams.yes.name} vs ${teams.no.name}`) + `, liquidity provider APY ${apy}%`}</title>
       <link rel="canonical" href={`${window.location.protocol + '//' + window.location.host}/market/${seoText}-${address}`} />
@@ -550,5 +549,5 @@ export const MarketPage = () => {
       </div>
 
     </div>
-  </Layout>
+  </>
 }

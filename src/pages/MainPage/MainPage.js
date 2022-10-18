@@ -5,7 +5,6 @@ import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { Trans, useTranslation } from "react-i18next";
 import { Helmet } from "react-helmet-async";
 
-import { Layout } from "components/Layout/Layout";
 import { PredictionList } from "components/PredictionList/PredictionList";
 import { SwitchActions } from "components/SwitchActions/SwitchActions";
 
@@ -120,31 +119,30 @@ export const MainPage = () => {
 
 	return <div>
 		<Helmet title={`Prophet prediction markets — ${actualChampionshipName || (marketType === 'misc' ? 'miscellaneous' : marketType)} markets`} />
-		<Layout>
-			<Row className={styles.headerWrap}>
-				<Col xs={{ span: 24 }} md={{ span: 24 }}>
-					<h1 className={styles.mainHeader} style={{ fontSize: (["en", "zh"].includes(i18n.language) || width >= 600) ? (width >= 600 ? 42 : 36) : (width >= 400 ? 28 : 22) }}>
-						<Trans i18nKey="pages.main.title">
-							Decentralized <span className={styles.select}>prediction markets</span>
-						</Trans>
-					</h1>
-					<h2 className={styles.description}>
-						<Trans i18nKey="pages.main.subtitle">
-							<p>Sports betting, binary options, and other bets on future events</p>
-						</Trans>
-					</h2>
-				</Col>
-			</Row>
 
-			{(markets.length > 0) ? <div className={styles.listWrap}>
-				<SwitchActions value={marketType} data={switchActionsData} onChange={handleMarketType} />
+		<Row className={styles.headerWrap}>
+			<Col xs={{ span: 24 }} md={{ span: 24 }}>
+				<h1 className={styles.mainHeader} style={{ fontSize: (["en", "zh"].includes(i18n.language) || width >= 600) ? (width >= 600 ? 42 : 36) : (width >= 400 ? 28 : 22) }}>
+					<Trans i18nKey="pages.main.title">
+						Decentralized <span className={styles.select}>prediction markets</span>
+					</Trans>
+				</h1>
+				<h2 className={styles.description}>
+					<Trans i18nKey="pages.main.subtitle">
+						<p>Sports betting, binary options, and other bets on future events</p>
+					</Trans>
+				</h2>
+			</Col>
+		</Row>
 
-				<div style={{ marginTop: 10 }}>
-					<PredictionList type={marketType} particle={particle} setParticle={handleParticle} />
-				</div>
-			</div> : <div>
-				<Empty image={Empty.PRESENTED_IMAGE_SIMPLE} description={capitalizeFirstLetter(t('common.no_markets', "no markets"))} />
-			</div>}
-		</Layout>
+		{(markets.length > 0) ? <div className={styles.listWrap}>
+			<SwitchActions value={marketType} data={switchActionsData} onChange={handleMarketType} />
+
+			<div style={{ marginTop: 10 }}>
+				<PredictionList type={marketType} particle={particle} setParticle={handleParticle} />
+			</div>
+		</div> : <div>
+			<Empty image={Empty.PRESENTED_IMAGE_SIMPLE} description={capitalizeFirstLetter(t('common.no_markets', "no markets"))} />
+		</div>}
 	</div>
 }
