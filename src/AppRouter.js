@@ -13,8 +13,11 @@ import 'moment/locale/uk';
 import { CreatePage, MainPage, MarketPage, FaqPage } from "pages";
 import { historyInstance } from "historyInstance";
 import { changeLanguage, selectLanguage } from "store/slices/settingsSlice";
-import i18 from './locale/index';
+
 import { langs } from "components/SelectLanguage/SelectLanguage";
+import { Layout } from "components/Layout/Layout";
+
+import i18 from './locale/index';
 
 const AppRouter = () => {
   const lang = useSelector(selectLanguage);
@@ -43,16 +46,18 @@ const AppRouter = () => {
 
   return <HelmetProvider>
     <HistoryRouter history={historyInstance}>
-      <Routes>
-        {langNames.map(languageCode => (<Route key={languageCode} path={`/${languageCode}`}>
-          <Route path="" element={<MainPage />} />
-          <Route path=":category" element={<MainPage />} />
-          <Route path=":category/:particle" element={<MainPage />} />
-          <Route path="create" element={<CreatePage />} />
-          <Route path="faq" element={<FaqPage />} />
-          <Route path="market/*" element={<MarketPage />} />
-        </Route>))}
-      </Routes>
+      <Layout>
+        <Routes>
+          {langNames.map(languageCode => (<Route key={languageCode} path={`/${languageCode}`}>
+            <Route path="" element={<MainPage />} />
+            <Route path=":category" element={<MainPage />} />
+            <Route path=":category/:particle" element={<MainPage />} />
+            <Route path="create" element={<CreatePage />} />
+            <Route path="faq" element={<FaqPage />} />
+            <Route path="market/*" element={<MarketPage />} />
+          </Route>))}
+        </Routes>
+      </Layout>
     </HistoryRouter>
   </HelmetProvider>
 }
