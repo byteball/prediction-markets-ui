@@ -15,7 +15,7 @@ export const Layout = memo(({ children }) => {
     let unlisten;
 
     if (appConfig.GA_ID) {
-      unlisten = historyInstance.listen(({ location, action, ...rest }) => {
+      unlisten = historyInstance.listen(({ location, action }) => {
         if (action === "PUSH" || action === "POP") {
           ReactGA.pageview(location.pathname);
         }
