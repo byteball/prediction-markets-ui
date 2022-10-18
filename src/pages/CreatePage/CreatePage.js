@@ -5,7 +5,6 @@ import { useEffect } from "react";
 import { Helmet } from "react-helmet-async";
 import { useTranslation } from "react-i18next";
 
-import { Layout } from "components/Layout/Layout"
 import { CreateForm } from "forms";
 import { removeCreationOrder, selectCreationOrder } from "store/slices/settingsSlice";
 import { WaitingPredictionMarket } from "./WaitingPredictionMarket";
@@ -22,7 +21,7 @@ export const CreatePage = () => {
 
   // const symbolsAlreadyReg = creationOrder ? (creationOrder.yes_symbol && creationOrder.no_symbol && (!creationOrder.data.allow_draw || creationOrder.draw_symbol)) || creationOrder.cancelRegSymbol : false;
 
-  return <Layout>
+  return <>
     <Typography.Title level={1}>{t("pages.create.title", "Create new prediction market")}</Typography.Title>
     <Helmet title={`Prophet prediction markets — ${t("pages.create.short_title", "Create new market")}`} />
 
@@ -33,5 +32,5 @@ export const CreatePage = () => {
           <Button onClick={() => dispatch(removeCreationOrder())}>{t("pages.create.go_to_market", "Go to the market")}</Button>
         </Link>} />}
     </div>}
-  </Layout>
+  </>
 }

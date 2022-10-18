@@ -3,8 +3,6 @@ import { Typography, Collapse } from "antd";
 import { Helmet } from "react-helmet-async";
 import { Trans, useTranslation } from "react-i18next";
 
-import { Layout } from "components/Layout/Layout";
-
 import styles from "./FaqPage.module.css";
 
 const { Panel } = Collapse;
@@ -12,7 +10,7 @@ const { Panel } = Collapse;
 export const FaqPage = () => {
   const { t } = useTranslation();
 
-  return (<Layout>
+  return (<>
     <Helmet title={`Prophet prediction markets — ${t("pages.faq.title", "F.A.Q.")}`} />
     <Typography.Title level={1}>{t("pages.faq.title", "F.A.Q.")}</Typography.Title>
     <div className="faq">
@@ -156,5 +154,5 @@ export const FaqPage = () => {
     </div>
 
     <div className={styles.otherQuestionsWrap}><Trans i18nKey="pages.faq.other_questions">Other questions? Ask on <a href="https://discord.obyte.org" target="_blank" rel="noopener">Obyte discord</a>.</Trans></div>
-  </Layout>)
+  </>)
 }
