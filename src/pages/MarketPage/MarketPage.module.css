@@ -105,9 +105,19 @@
   max-width: 800px;
 }
 
+.emblem {
+  object-fit: contain;
+  height: 100%;
+  max-width: 120px;
+}
+
+.emblemWrap {
+  height: calc(100% - 1em - 10px);
+  min-height: 120px;
+}
+
 /* Small devices (landscape phones, 576px and up) */
 @media (min-width: 576px) {
-
   .vs {
     font-size: 36px;
   }
@@ -121,11 +131,16 @@
   }
 }
 
-/* Large devices (desktops, 992px and up) */
-@media (min-width: 992px) {}
-
-/* Extra large devices (large desktops, 1200px and up) */
-@media (min-width: 1200px) {}
+@media (max-width: 480px) {
+  .emblem {
+    width: 70%;
+  }
+  
+  .emblemWrap {
+    min-height: auto;
+    max-height: 80px;
+  }
+}
 
 @media (max-width: 576px) {
   .event {

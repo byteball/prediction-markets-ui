@@ -245,7 +245,7 @@ export const PredictionItem = ({ reserve_asset = 'base', aa_address, reserve = 0
                 <Col sm={{ span: 8 }} xs={{ span: 8 }} style={{ textAlign: 'center' }}>
                   <Img unloader={<div />} src={[`https://crests.football-data.org/${yes_team_id}.svg`, `https://crests.football-data.org/${yes_team_id}.png`]}
                     className={styles.crests}
-                    container={(children) => <div style={{ position: 'relative' }}>
+                    container={(children) => <div style={{ position: 'relative', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
                       {children}
                       {result === 'yes' && <div style={{ position: 'absolute', right: 'calc(50% - 40px)', bottom: -10 }}>
                         <WinnerIcon />
@@ -275,7 +275,7 @@ export const PredictionItem = ({ reserve_asset = 'base', aa_address, reserve = 0
                     src={[`https://crests.football-data.org/${no_team_id}.svg`, `https://crests.football-data.org/${no_team_id}.png`]}
                     className={styles.crests}
                     unloader={<div />}
-                    container={(children) => <div style={{ position: 'relative' }}>
+                    container={(children) => <div style={{ position: 'relative', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
                       {children}
                       {result === 'no' && <div style={{ position: 'absolute', right: 'calc(50% - 40px)', bottom: -10 }}>
                         <WinnerIcon />
