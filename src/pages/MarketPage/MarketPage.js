@@ -371,7 +371,9 @@ export const MarketPage = () => {
       {(teams.yes === null || teams.no === null) ? null : <div style={{ margin: '30px 0', width: '100%' }}>
         <Row>
           <Col md={{ span: 8 }} xs={{ span: 8 }} style={{ textAlign: 'center' }}>
-            <Img src={[`https://crests.football-data.org/${teams.yes.id}.svg`, `https://crests.football-data.org/${teams.yes.id}.png`]} width={'50%'} style={{ maxWidth: 120 }} />
+            <div className={styles.emblemWrap}>
+              <Img src={[`https://crests.football-data.org/${teams.yes.id}.svg`, `https://crests.football-data.org/${teams.yes.id}.png`]} className={styles.emblem} />
+            </div>
             <div style={{ paddingTop: 10, lineHeight: 1 }}>
               <span style={{ color: appConfig.YES_COLOR }}>{teams.yes.name}</span>
             </div>
@@ -386,11 +388,9 @@ export const MarketPage = () => {
           </Col>
 
           <Col md={{ span: 8 }} xs={{ span: 8 }} style={{ textAlign: 'center' }}>
-            <Img
-              src={[`https://crests.football-data.org/${teams.no.id}.svg`, `https://crests.football-data.org/${teams.no.id}.png`]}
-              width={'50%'}
-              style={{ maxWidth: 120 }}
-            />
+            <div className={styles.emblemWrap}>
+              <Img src={[`https://crests.football-data.org/${teams.no.id}.svg`, `https://crests.football-data.org/${teams.no.id}.png`]} className={styles.emblem} />
+            </div>
             <div style={{ paddingTop: 10, lineHeight: 1 }}>
               <span style={{ color: appConfig.NO_COLOR }}>{teams.no.name}</span>
             </div>
@@ -399,7 +399,7 @@ export const MarketPage = () => {
       </div>}
 
       <Row justify="space-between" align="middle">
-        <Space size='large' wrap={true} style={{ marginBottom: 20 }}>
+        <Space size='large' wrap={true} style={{ marginBottom: 20, marginTop: 10 }}>
           <TradeModal
             visible={visibleTradeModal}
             setVisible={setVisibleTradeModal}
