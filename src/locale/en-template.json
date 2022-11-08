@@ -192,7 +192,8 @@
   },
   "prediction_list": {
     "title_create": "create new markets",
-    "title_calendar": "calendar of upcoming matches"
+    "title_calendar": "calendar of upcoming matches",
+    "no_events": "No upcoming events"
   },
   "qr_button": {
     "title": "<0>Scan this QR code <1></1> with your mobile phone</0>",
