@@ -332,10 +332,11 @@ export const MarketPage = () => {
 
   if (result && reserve) {
     const winnerSupply = result === 'yes' ? supply_yes : (result === 'no' ? supply_no : supply_draw);
+    const winnerPrice = result === 'yes' ? yesPrice : (result === 'no' ? noPrice : drawPrice);
 
     if (winnerSupply) {
       winnerPriceView = +Number(reserve / winnerSupply).toPrecision(5);
-      winnerOddsView = +Number(reserve / winnerSupply).toPrecision(5);
+      winnerOddsView = +Number(reserve / (winnerPrice * winnerSupply)).toPrecision(5);
     }
   }
 

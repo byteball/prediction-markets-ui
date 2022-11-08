@@ -208,7 +208,7 @@ export const PredictionList = ({ type = 'all', particle = 'all', setParticle }) 
           </div>}
         />
       </div> : <div className={styles.spinWrap}>
-        <Spin size="large" />
+        {loading ? <Spin size="large" /> : <span style={{ opacity: 0.6 }}>No upcoming events</span>}
       </div>)}
     </> : <div className={styles.spinWrap}>
       <Spin size="large" />

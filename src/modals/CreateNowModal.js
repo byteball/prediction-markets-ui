@@ -24,6 +24,7 @@ export const CreateNowModal = (props) => {
       width={width > 640 ? 640 : width}
       placement="right"
       size="large"
+      key={`${props.feed_name} ${props.event_date} ${props.expect_datafeed_value}`}
       visible={visible}
       onClose={close}
       autoFocus={true}
