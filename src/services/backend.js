@@ -94,6 +94,11 @@ class Backend {
     const odds = await this.axios.get(`/bookmaker_odds/${sport}/${feed_name}`);
     return odds?.data;
   }
+
+  getCrest = async (sport, competition, team_id) => {
+    const crest = await this.axios.get(`/crest/${sport}/${competition}/${team_id}`);
+    return crest?.data;
+  }
 }
 
 export default new Backend();
