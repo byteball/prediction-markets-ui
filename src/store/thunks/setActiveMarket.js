@@ -112,6 +112,8 @@ export const setActiveMarket = createAsyncThunk(
     let yes_odds = null;
     let no_odds = null;
     let draw_odds = null;
+    let yes_crest_url = null;
+    let no_crest_url = null;
 
     if (marketInList) {
       created_at = marketInList.created_at;
@@ -121,6 +123,8 @@ export const setActiveMarket = createAsyncThunk(
       yes_odds = marketInList.yes_odds || null;
       no_odds = marketInList.no_odds || null;
       draw_odds = marketInList.draw_odds || null;
+      yes_crest_url = marketInList.yes_crest_url || null;
+      no_crest_url = marketInList.no_crest_url || null;
     } else {
       const dates = await backend.getDates(address);
 
@@ -161,6 +165,10 @@ export const setActiveMarket = createAsyncThunk(
             backend.getTeam(sport[0], no_abbreviation)
           ]);
 
+          [yes_crest_url, no_crest_url] = await Promise.all([
+            backend.getCrest(sport[0], championship, yesTeam.id),
+            backend.getCrest(sport[0], championship, noTeam.id)
+          ]);
         } catch (e) {
           console.error('error get teams id');
         }
@@ -200,6 +208,8 @@ export const setActiveMarket = createAsyncThunk(
       yes_odds,
       no_odds,
       draw_odds,
+      yes_crest_url,
+      no_crest_url,
       league: {
         league_emblem,
         league

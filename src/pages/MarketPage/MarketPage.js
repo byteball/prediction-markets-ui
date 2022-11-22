@@ -134,7 +134,7 @@ export const MarketPage = () => {
 
   const chartConfig = getConfig(chartType, teams);
 
-  const { reserve_asset = 'base', allow_draw, quiet_period = 0, reserve_symbol, reserve_decimals, yes_decimals, no_decimals, draw_decimals, yes_symbol, no_symbol, draw_symbol, event_date, league, league_emblem, created_at, committed_at, oracle, base_aa, issue_fee, first_trade_ts, yes_odds = null, no_odds = null, draw_odds = null } = params;
+  const { reserve_asset = 'base', allow_draw, quiet_period = 0, reserve_symbol, reserve_decimals, yes_decimals, no_decimals, draw_decimals, yes_symbol, no_symbol, draw_symbol, event_date, league, league_emblem, created_at, committed_at, oracle, base_aa, issue_fee, first_trade_ts, yes_odds = null, no_odds = null, draw_odds = null, yes_crest_url = null, no_crest_url = null } = params;
 
   const actualReserveSymbol = reserveAssets[reserve_asset]?.symbol;
 
@@ -373,7 +373,7 @@ export const MarketPage = () => {
         <Row>
           <Col md={{ span: 8 }} xs={{ span: 8 }} style={{ textAlign: 'center' }}>
             <div className={styles.emblemWrap}>
-              <Img src={[`https://crests.football-data.org/${teams.yes.id}.svg`, `https://crests.football-data.org/${teams.yes.id}.png`]} className={styles.emblem} />
+              <Img src={yes_crest_url} className={styles.emblem} />
             </div>
             <div style={{ paddingTop: 10, lineHeight: 1 }}>
               <span style={{ color: appConfig.YES_COLOR }}>{teams.yes.name}</span>
@@ -390,7 +390,7 @@ export const MarketPage = () => {
 
           <Col md={{ span: 8 }} xs={{ span: 8 }} style={{ textAlign: 'center' }}>
             <div className={styles.emblemWrap}>
-              <Img src={[`https://crests.football-data.org/${teams.no.id}.svg`, `https://crests.football-data.org/${teams.no.id}.png`]} className={styles.emblem} />
+              <Img src={no_crest_url} className={styles.emblem} />
             </div>
             <div style={{ paddingTop: 10, lineHeight: 1 }}>
               <span style={{ color: appConfig.NO_COLOR }}>{teams.no.name}</span>
