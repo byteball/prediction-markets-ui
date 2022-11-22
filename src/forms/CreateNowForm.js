@@ -20,7 +20,7 @@ import appConfig from "appConfig";
 
 const f = (x) => (~(x + "").indexOf(".") ? (x + "").split(".")[1].length : 0);
 
-export const CreateNowForm = ({ feed_name, event_date, expect_datafeed_value, yes_team_id, no_team_id, yes_team, no_team, oracle, expect_comparison, waiting_period_length, quiet_period = 0 }) => {
+export const CreateNowForm = ({ feed_name, event_date, expect_datafeed_value, yes_team, no_team, oracle, expect_comparison, waiting_period_length, quiet_period = 0, yes_crest_url = null, no_crest_url = null }) => {
   const paramList = getParamList();
 
   const [issueFee, setIssueFee] = useState({ value: paramList.issue_fee.initValue !== undefined ? paramList.issue_fee.initValue : '', valid: paramList.issue_fee.initValue !== undefined });
@@ -184,7 +184,7 @@ export const CreateNowForm = ({ feed_name, event_date, expect_datafeed_value, ye
   return <Form layout="vertical">
     {type === 'sport' ? <Row gutter={8} align='middle' style={{ marginBottom: 20 }}>
       <Col sm={{ span: 8 }} xs={{ span: 24 }} style={{ textAlign: 'center' }}>
-        <Img src={[`https://crests.football-data.org/${yes_team_id}.svg`, `https://crests.football-data.org/${yes_team_id}.png`]} className={styles.crests} />
+        <Img src={yes_crest_url} className={styles.crests} />
         <div className={styles.teamWrap}>
           <Typography.Text style={{ color: appConfig.YES_COLOR, textOverflow: 'ellipsis', display: 'block' }} ellipsis={true}><small>{yes_team}</small></Typography.Text>
         </div>
@@ -199,7 +199,7 @@ export const CreateNowForm = ({ feed_name, event_date, expect_datafeed_value, ye
 
       <Col sm={{ span: 8 }} xs={{ span: 24 }} style={{ textAlign: 'center' }}>
         <Img
-          src={[`https://crests.football-data.org/${no_team_id}.svg`, `https://crests.football-data.org/${no_team_id}.png`]}
+          src={no_crest_url}
           className={styles.crests}
         />
         <div className={styles.teamWrap}>

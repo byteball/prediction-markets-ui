@@ -21,7 +21,7 @@ import styles from "./PredictionItem.module.css";
 
 const max_display_decimals = 5;
 
-export const PredictionItem = ({ reserve_asset = 'base', aa_address, reserve = 0, reserve_decimals = 0, yes_price = 0, no_price = 0, draw_price = 0, allow_draw, event_date, candles, reserve_symbol, yes_symbol, result, waiting_period_length, feed_name, expect_datafeed_value, datafeed_value, oracle, comparison, yes_team_id, no_team_id, yes_team, no_team, supply_yes = 0, supply_no = 0, supply_draw = 0, preview, apy = 0, quiet_period = 0 }) => {
+export const PredictionItem = ({ reserve_asset = 'base', aa_address, reserve = 0, reserve_decimals = 0, yes_price = 0, no_price = 0, draw_price = 0, allow_draw, event_date, candles, reserve_symbol, yes_symbol, result, waiting_period_length, feed_name, expect_datafeed_value, datafeed_value, oracle, comparison, yes_team_id, no_team_id, yes_team, no_team, supply_yes = 0, supply_no = 0, supply_draw = 0, preview, apy = 0, quiet_period = 0, yes_crest_url = null, no_crest_url = null }) => {
   const infoWrapRef = useRef();
   const [width] = useWindowSize();
   const { t } = useTranslation();
@@ -244,7 +244,7 @@ export const PredictionItem = ({ reserve_asset = 'base', aa_address, reserve = 0
             </div> : <div style={{ marginTop: 5 }}>
               <Row gutter={8} align={(exists && allow_draw && (drawOddsView || result) && width >= 576) ? "bottom" : 'middle'}>
                 <Col sm={{ span: 8 }} xs={{ span: 8 }} style={{ textAlign: 'center' }}>
-                  <Img unloader={<div />} src={[`https://crests.football-data.org/${yes_team_id}.svg`, `https://crests.football-data.org/${yes_team_id}.png`]}
+                  <Img unloader={<div />} src={yes_crest_url}
                     className={styles.crests}
                     container={(children) => <div style={{ position: 'relative', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
                       {children}
@@ -273,7 +273,7 @@ export const PredictionItem = ({ reserve_asset = 'base', aa_address, reserve = 0
 
                 <Col sm={{ span: 8 }} xs={{ span: 8 }} style={{ textAlign: 'center' }}>
                   <Img
-                    src={[`https://crests.football-data.org/${no_team_id}.svg`, `https://crests.football-data.org/${no_team_id}.png`]}
+                    src={no_crest_url}
                     className={styles.crests}
                     unloader={<div />}
                     container={(children) => <div style={{ position: 'relative', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
@@ -345,12 +345,12 @@ export const PredictionItem = ({ reserve_asset = 'base', aa_address, reserve = 0
                 event={eventView}
                 expect_datafeed_value={expect_datafeed_value}
                 waiting_period_length={waiting_period_length}
-                no_team_id={no_team_id}
                 no_team={no_team}
-                yes_team_id={yes_team_id}
                 yes_team={yes_team}
                 quiet_period={quiet_period}
                 comparison={comparison}
+                yes_crest_url={yes_crest_url}
+                no_crest_url={no_crest_url}
               />
             </div>
           </Col>}
