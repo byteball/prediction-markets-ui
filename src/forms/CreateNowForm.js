@@ -20,7 +20,7 @@ import appConfig from "appConfig";
 
 const f = (x) => (~(x + "").indexOf(".") ? (x + "").split(".")[1].length : 0);
 
-export const CreateNowForm = ({ feed_name, event_date, expect_datafeed_value, yes_team, no_team, oracle, expect_comparison, waiting_period_length, quiet_period = 0, yes_crest_url = null, no_crest_url = null }) => {
+export const CreateNowForm = ({ feed_name, event_date, expect_datafeed_value, yes_team, no_team, oracle, expect_comparison, waiting_period_length, quiet_period = 0, yes_crest_url = null, no_crest_url = null, league }) => {
   const paramList = getParamList();
 
   const [issueFee, setIssueFee] = useState({ value: paramList.issue_fee.initValue !== undefined ? paramList.issue_fee.initValue : '', valid: paramList.issue_fee.initValue !== undefined });
@@ -99,7 +99,7 @@ export const CreateNowForm = ({ feed_name, event_date, expect_datafeed_value, ye
     issue_fee: issueFee.value / 100,
     redeem_fee: redeemFee.value / 100,
     arb_profit_tax: arbProfitFee.value / 100,
-    allow_draw: type === 'sport' ? 1 : undefined,
+    allow_draw: type === 'sport' && league !== "FIFA World Cup" ? 1 : undefined,
     datafeed_draw_value: type === 'sport' ? 'draw' : undefined,
     reserve_asset: reserveAsset.value,
     quiet_period: (type === 'sport' ? 0 : quietPeriod.value) * 3600
