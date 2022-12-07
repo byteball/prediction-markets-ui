@@ -109,6 +109,7 @@
   object-fit: contain;
   height: 100%;
   max-width: 120px;
+  max-height: 100%;
 }
 
 .emblemWrap {
@@ -135,7 +136,7 @@
   .emblem {
     width: 70%;
   }
-  
+
   .emblemWrap {
     min-height: auto;
     max-height: 80px;
@@ -145,5 +146,20 @@
 @media (max-width: 576px) {
   .event {
     font-size: 26px;
+  }
+}
+
+/* safari only */
+@media not all and (min-resolution:.001dpcm) {
+  .emblem {
+    height: auto;
+    min-height: 100%;
+  }
+}
+
+@supports (font: -apple-system-body) and (-webkit-appearance: none) {
+  .emblem {
+    height: auto;
+    min-height: 100%;
   }
 }

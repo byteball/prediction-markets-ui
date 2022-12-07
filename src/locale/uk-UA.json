@@ -49,7 +49,7 @@
     "faq": "F.A.Q."
   },
   "market_size": {
-    "label": "{{type}}\n                {{value}} {{symbol}}\n                {{percent}}% \n                "
+    "label": "{{type}}\n{{value}} {{symbol}}\n{{percent}}% \n"
   },
   "market_size_pie": {
     "tooltip": "<0>Капітал, інвестований в {{name}}:<3>{{value}} <2>{{reserve_symbol}}</2></3></0>"

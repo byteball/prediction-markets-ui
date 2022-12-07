@@ -42,10 +42,7 @@ export const MarketSizePie = ({ teams, reserve_decimals, stateVars = {}, reserve
 
                 const tokenType = haveTeamNames ? (item.type === 'YES' ? teams.yes.name : (item.type === 'NO' ? teams.no.name : t('common.draw', 'draw').toUpperCase())) : t('common.type_tokens', "{{type}} tokens", { type: typeView });
 
-                return t('market_size.label', `{{type}}
-                {{value}} {{symbol}}
-                {{percent}}% 
-                `, { type: tokenType, value: item.value, symbol: reserve_symbol, percent: Number(item.percent * 100).toPrecision(4) });
+                return t('market_size.label', "{{type}}\n{{value}} {{symbol}}\n{{percent}}%", { type: tokenType, value: +Number(item.value).toFixed(4), symbol: reserve_symbol, percent: Number(item.percent * 100).toPrecision(4) });
             },
             style: {
                 fontSize: 12,
