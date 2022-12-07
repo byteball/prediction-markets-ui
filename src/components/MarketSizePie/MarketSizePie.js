@@ -46,6 +46,7 @@ export const MarketSizePie = ({ teams, reserve_decimals, stateVars = {}, reserve
             },
             style: {
                 fontSize: 12,
+                textAlign: "center",
                 fill: "#fff",
                 fontWeight: 'bold',
                 textStroke: '2px red'
