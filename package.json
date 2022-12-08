@@ -9,6 +9,7 @@
     "@fortawesome/fontawesome-svg-core": "^6.1.1",
     "@fortawesome/free-brands-svg-icons": "^6.1.1",
     "@fortawesome/react-fontawesome": "^0.1.18",
+    "@react-hook/resize-observer": "^1.2.6",
     "@reduxjs/toolkit": "^1.8.1",
     "antd": "^4.19.5",
     "axios": "^0.27.2",
