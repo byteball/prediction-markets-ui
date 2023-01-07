@@ -1,5 +1,6 @@
 import { Fragment, useEffect, useRef, useState } from "react";
 import { TinyLine } from '@ant-design/plots';
+import useResizeObserver from '@react-hook/resize-observer';
 import { Badge, Card, Col, Row, Typography } from "antd";
 import { Link } from "react-router-dom";
 import moment from 'moment';
@@ -46,6 +47,10 @@ export const PredictionItem = ({ reserve_asset = 'base', aa_address, reserve = 0
   const priceOrOdds = useSelector(selectPriceOrOdds);
   const lang = useSelector(selectLanguage);
 
+  useResizeObserver(infoWrapRef, (entry) => {
+    setInfoHeight(entry.target.clientHeight);
+  });
+
   const now = moment.utc().unix();
   const isExpiry = now > event_date;
   const exists = !!aa_address || preview;
@@ -73,14 +78,6 @@ export const PredictionItem = ({ reserve_asset = 'base', aa_address, reserve = 0
 
     setDataForChart(data.map((value) => value - minValue));
   }, [candles, yes_symbol]);
-
-  useEffect(() => {
-    const height = infoWrapRef.current.clientHeight;
-
-    if (height) {
-      setInfoHeight(height);
-    }
-  }, [infoWrapRef.current]);
 
   // views
   const reserveView = +Number(reserve / 10 ** reserve_decimals).toPrecision(max_display_decimals);
@@ -333,7 +330,7 @@ export const PredictionItem = ({ reserve_asset = 'base', aa_address, reserve = 0
             {apyView}
           </div>}
           {(exists || preview) ? (infoHeight && dataForChart.length > 0 && <Col md={{ span: 8 }} xs={{ span: 24 }} sm={{ span: 24 }} style={{ display: 'flex', alignItems: 'center' }}>
-            {width >= 768 && <div style={{ height: infoHeight * 0.7, width: '100%', boxSizing: 'border-box' }}>
+            {width >= 768 && <div style={{ height: infoHeight - 20, marginTop: 10, width: '100%', boxSizing: 'border-box' }}>
               <TinyLine {...config} data={dataForChart} />
             </div>}
           </Col>) : <Col md={{ span: 8 }} xs={{ span: 24 }} sm={{ span: 24 }}>
