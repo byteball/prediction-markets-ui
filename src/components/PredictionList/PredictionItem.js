@@ -22,7 +22,7 @@ import styles from "./PredictionItem.module.css";
 
 const max_display_decimals = 5;
 
-export const PredictionItem = ({ reserve_asset = 'base', aa_address, reserve = 0, reserve_decimals = 0, yes_price = 0, no_price = 0, draw_price = 0, allow_draw, event_date, candles, reserve_symbol, yes_symbol, result, waiting_period_length, feed_name, expect_datafeed_value, datafeed_value, oracle, comparison, yes_team_id, no_team_id, yes_team, no_team, supply_yes = 0, supply_no = 0, supply_draw = 0, preview, apy = 0, quiet_period = 0, yes_crest_url = null, no_crest_url = null, league }) => {
+export const PredictionItem = ({ reserve_asset = 'base', aa_address, reserve = 0, reserve_decimals = 0, yes_price = 0, no_price = 0, draw_price = 0, allow_draw, event_date, candles, reserve_symbol, yes_symbol, result, waiting_period_length, feed_name, expect_datafeed_value, datafeed_value, oracle, comparison, yes_team_id, no_team_id, yes_team, no_team, supply_yes = 0, supply_no = 0, supply_draw = 0, preview, apy = 0, quiet_period = 0, yes_crest_url = null, no_crest_url = null, league, coef }) => {
   const infoWrapRef = useRef();
   const [width] = useWindowSize();
   const { t } = useTranslation();
@@ -154,7 +154,7 @@ export const PredictionItem = ({ reserve_asset = 'base', aa_address, reserve = 0
 
   if (result && reserve) {
     const winnerSupply = result === 'yes' ? supply_yes : (result === 'no' ? supply_no : supply_draw);
-    const winnerPrice = result === 'yes' ? yes_price : (result === 'no' ? no_price : draw_price);
+    const winnerPrice = coef * (winnerSupply / Math.sqrt(supply_yes ** 2 + supply_no ** 2 + supply_draw ** 2));
 
     if (winnerSupply) {
       winnerPriceView = +Number(reserve / winnerSupply).toFixed(5);
@@ -292,8 +292,7 @@ export const PredictionItem = ({ reserve_asset = 'base', aa_address, reserve = 0
                 </Col>
               </Row>
             </div>}
-
-            {exists && !isSportMarket && <Row className={styles.infoWrap} gutter={10}>
+            {(exists && !isSportMarket) ? <Row className={styles.infoWrap} gutter={10}>
               <Col md={{ span: 6 }} xs={{ span: 12 }}>
                 <div>
                   <div className={styles.infoTitle}>{t("pages.market.cards.reserve.title", "Reserve")}</div>
@@ -324,15 +323,15 @@ export const PredictionItem = ({ reserve_asset = 'base', aa_address, reserve = 0
                   </div>
                 </div> : null}
               </Col>
-            </Row>}
+            </Row> : null}
           </Col>
           {width >= 768 && aa_address && <div className={styles.apyWrap}>
             {apyView}
           </div>}
           {(exists || preview) ? (infoHeight && dataForChart.length > 0 && <Col md={{ span: 8 }} xs={{ span: 24 }} sm={{ span: 24 }} style={{ display: 'flex', alignItems: 'center' }}>
-            {width >= 768 && <div style={{ height: infoHeight - 20, marginTop: 10, width: '100%', boxSizing: 'border-box' }}>
+            {width >= 768 ? <div style={{ height: infoHeight - 20, marginTop: 10, width: '100%', boxSizing: 'border-box' }}>
               <TinyLine {...config} data={dataForChart} />
-            </div>}
+            </div> : null}
           </Col>) : <Col md={{ span: 8 }} xs={{ span: 24 }} sm={{ span: 24 }}>
             <div className={styles.createNowWrap}>
               <CreateNowModal
