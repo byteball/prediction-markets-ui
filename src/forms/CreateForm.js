@@ -135,7 +135,7 @@ export const CreateForm = () => {
   const [issueFee, setIssueFee] = useState({ value: paramList.issue_fee.initValue !== undefined ? paramList.issue_fee.initValue : '', valid: paramList.issue_fee.initValue !== undefined });
   const [redeemFee, setRedeemFee] = useState({ value: paramList.redeem_fee.initValue !== undefined ? paramList.redeem_fee.initValue : '', valid: paramList.redeem_fee.initValue !== undefined });
   const [arbProfitFee, setArbProfitFee] = useState({ value: paramList.arb_profit_fee.initValue !== undefined ? paramList.arb_profit_fee.initValue : '', valid: paramList.arb_profit_fee.initValue !== undefined });
-  const [category, setCategory] = useState({ value: 'misc', valid: true });
+  const [category, setCategory] = useState({ value: 'sport', valid: true });
   const [quietPeriod, setQuietPeriod] = useState({ value: paramList.quiet_period.initValue !== undefined ? paramList.quiet_period.initValue : '', valid: paramList.quiet_period.initValue !== undefined });
 
   const reserveAssets = useSelector(selectReserveAssets);
