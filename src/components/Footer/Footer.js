@@ -23,7 +23,7 @@ export const Footer = () => {
     </div>
     <div className={styles.copy}>
     <Trans i18nKey="footer.copy">
-      © {{year}} <a className={styles.name} href="https://obyte.org" target="_blank" rel="noopener">Obyte</a>, all rights reserved
+      © 2022-{{year}} <a className={styles.name} href="https://obyte.org" target="_blank" rel="noopener">Obyte</a>, all rights reserved
     </Trans>
     </div>
     <div className={styles.socialWrap}>
