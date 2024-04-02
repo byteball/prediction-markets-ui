@@ -38,7 +38,7 @@
   "footer": {
     "time_zone": "Todas as datas estão em seu fuso horário local (UTC{{timeZoneView}}), a menos que indicado de outra maneira",
     "disclaimer": "O site Prophet.ooo (“Site”) é apenas para fins informativos e educacionais. O Site exibe os mercados de previsão existentes implantados no \"Obyte\" DAG e é uma interface gráfica do usuário para visualizar dados da atividade na cadeia e interagir com agentes autônomos diretamente de suas próprias carteiras. O Prophet.ooo não assume a custódia dos ativos criptográficos dos usuários e não hospeda ou resolve nenhum mercado. O Site se esforça ao máximo para garantir a precisão das informações exibidas, no entanto, não há garantias de precisão e as informações são fornecidas como estão. Nenhum material no Site pretende ser, nem constitui, uma solicitação, recomendação ou oferta para comprar ou vender qualquer título, \"commodity\", interesse, derivativo, produto financeiro ou instrumento. Os usuários são responsáveis por cumprir todas as leis aplicáveis e devem realizar sua própria análise e consultar consultores profissionais antes de se envolver em qualquer mercado.",
-    "copy": "© {{year}} <3>Obyte</3>, todos os direitos reservados"
+    "copy": "© 2022-{{year}} <3>Obyte</3>, todos os direitos reservados"
   },
   "header": {
     "description": "Mercados de previsão",
