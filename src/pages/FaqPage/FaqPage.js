@@ -79,7 +79,7 @@ export const FaqPage = () => {
         </div>
 
         <div className={styles.panel} key="9">
-          <div>{t("pages.faq.items.9.question", "How are the tokens priced?")}</div>
+          <h2>{t("pages.faq.items.9.question", "How are the tokens priced?")}</h2>
           <Trans shouldUnescape={true} i18nKey="pages.faq.items.9.answer">
             <p>The tokens are issued on a bonding curve and their prices depend on the numbers of tokens already issued. Issuing (buying) more tokens that represent a bet on the specific outcome (e.g. team A wins) increases their price and decreases the prices of the tokens that represent all other outcomes (team B wins and draw). Selling the same tokens does the opposite.</p>
             <p>The bonding curve is a formula that links the token supplies (<i>s</i><sub>yes</sub>, <i>s</i><sub>no</sub>, and <i>s</i><sub>draw</sub>) to the total capital invested in all tokens (the reserve, denoted as <i>r</i>):</p>
