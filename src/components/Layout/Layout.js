@@ -32,7 +32,7 @@ export const Layout = memo(({ children }) => {
   return <div>
     <div className="container" style={{ minHeight: '100vh' }}>
       <Header />
-      {children}
+      <div style={{ marginTop: 25 }}>{children}</div>
     </div>
 
     <div className="container">
