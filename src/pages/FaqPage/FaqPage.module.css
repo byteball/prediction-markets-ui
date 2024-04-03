@@ -16,6 +16,9 @@
   line-height: 25px;
   color: #dcdde1;
   margin-bottom: 35px;
+  background-color: #303030;
+  padding: 20px;
+  border-radius: 15px;
 }
 
 .panel ul {
@@ -38,6 +41,10 @@
 
 .panel p {
   margin-bottom: 10px;
+}
+
+.panel p:last-child {
+  margin-bottom: 0px;
 }
 
 .otherQuestionsWrap {
