@@ -21,11 +21,6 @@
   border-radius: 15px;
 }
 
-.panel ul {
-  list-style-type: none;
-  padding-left: 0;
-}
-
 .panel a {
   color: #2D72F6 !important;
   text-decoration: underline;
