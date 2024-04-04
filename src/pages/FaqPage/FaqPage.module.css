@@ -7,44 +7,39 @@
 
 .collapse {
   background-color: #141413;
+  max-width: 700px;
+  margin-top: 40px;
 }
 
-.panel ul {
-  list-style-type: none;
-  padding-left: 0;
+.panel {
+  font-size: 16px;
+  line-height: 25px;
+  color: #dcdde1;
+  margin-bottom: 35px;
+  background-color: #303030;
+  padding: 20px;
+  border-radius: 15px;
 }
 
 .panel a {
-  color: #333333 !important;
+  color: #2D72F6 !important;
   text-decoration: underline;
 }
 
-:global(.faq .ant-collapse-header) {
-  font-size: 18px !important;
-  line-height: 25px !important;
-  font-weight: 400 !important;
-  padding-top: 20px !important;
-  padding-bottom: 20px !important;
-  color: #fff !important;
-}
-
-:global(.faq .ant-collapse-content-box) {
-  font-size: 14px;
-  line-height: 25px;
+.panel h2 {
+  font-size: 24px;
+  line-height: 32px;
+  font-weight: bold;
   color: #fff;
+  margin-bottom: 20px;
 }
 
-:global(.faq .ant-collapse-item) {
-  background-color: #333 !important;
-  border-radius: 15px !important;
-  margin-bottom: 20px !important;
-  border-bottom: none !important;
-  color: #fff !important;
+.panel p {
+  margin-bottom: 20px;
 }
 
-.icon {
-  color: #2D72F6 !important;
-  font-size: 18px !important;
+.panel p:last-child {
+  margin-bottom: 0px;
 }
 
 .otherQuestionsWrap {

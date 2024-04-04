@@ -48,14 +48,14 @@ export const SelectLanguage = ({ action }) => {
   const urlWithoutLang = langs.find((lang) => lang.name.includes(pathname.split("/")[1])) ? pathname.slice(pathname.split("/")[1].length + 1) : pathname;
 
   return (
-    <Select style={{ width: "100%" }} dropdownStyle={{ margin: 20 }} bordered={false} value={lang || "en"} size="large" onChange={(value) => {
+    <Select virtual style={{ width: "100%" }} dropdownStyle={{ margin: 20 }} bordered={false} value={lang || "en"} size="large" onChange={(value) => {
       if (action) action();
       
       dispatch(changeLanguage(value));
 
       historyInstance.replace((lang && value !== "en" ? "/" + value : (urlWithoutLang ? "" : "/")) + (urlWithoutLang !== "/" ? urlWithoutLang : ""))
     }}>
-      {langs.map((lang) => <Select.Option key={lang.name} style={{ paddingLeft: 20, paddingRight: 20 }} value={lang.name}><div><img alt={lang.name} src={lang.flag} style={{ border: "1px solid #ddd" }} width="30" /></div></Select.Option>)}
+      {langs.map((lang) => <Select.Option key={lang.name} style={{ paddingLeft: 20, paddingRight: 20 }} value={lang.name}><a href={`/${lang.name}`} style={{pointerEvents: "none"}}><img alt={lang.name} src={lang.flag} style={{ border: "1px solid #ddd" }} width="30" /></a></Select.Option>)}
     </Select>
   )
 }
