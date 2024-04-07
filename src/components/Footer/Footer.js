@@ -1,5 +1,5 @@
 import moment from 'moment';
-import { Trans } from 'react-i18next';
+import { Trans, useTranslation } from 'react-i18next';
 
 import { SocialLinks } from "components/SocialLinks/SocialLinks";
 
@@ -9,6 +9,8 @@ export const Footer = () => {
   const year = new Date().getFullYear();
   const timeZone = moment().utcOffset() / 60;
   const timeZoneView = `${timeZone >= 0 ? '+' : '-'}${timeZone}`;
+
+  useTranslation();
 
   return <div className={styles.wrap}>
     <div className={styles.timeZoneWrap}>
