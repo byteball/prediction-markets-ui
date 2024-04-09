@@ -23,7 +23,7 @@ import {
   selectActiveTeams
 } from "store/slices/activeSlice";
 import { setActiveMarket } from "store/thunks/setActiveMarket";
-import { selectPriceOrOdds, selectReserveAssets, selectReservesRate } from "store/slices/settingsSlice";
+import { selectLanguage, selectPriceOrOdds, selectReserveAssets, selectReservesRate } from "store/slices/settingsSlice";
 import { getMarketPriceByType, generateLink, generateTextEvent, getEstimatedAPY, transformChampionshipName } from "utils";
 import { RecentEvents } from "components/RecentEvents/RecentEvents";
 import { CurrencyChart } from "components/CurrencyChart/CurrencyChart";
@@ -132,6 +132,8 @@ export const MarketPage = () => {
 
   const priceOrOdds = useSelector(selectPriceOrOdds);
 
+  const currentLang = useSelector(selectLanguage);
+  
   const chartConfig = getConfig(chartType, teams);
 
   const { reserve_asset = 'base', allow_draw, quiet_period = 0, reserve_symbol, reserve_decimals, yes_decimals, no_decimals, draw_decimals, yes_symbol, no_symbol, draw_symbol, event_date, league, league_emblem, created_at, committed_at, oracle, base_aa, issue_fee, first_trade_ts, yes_odds = null, no_odds = null, draw_odds = null, yes_crest_url = null, no_crest_url = null } = params;
@@ -364,7 +366,7 @@ export const MarketPage = () => {
   return <>
     <Helmet>
       <title>Prophet prediction markets — {((teams.yes === null || teams.no === null) ? event : `${teams.yes.name} vs ${teams.no.name}`) + `, liquidity provider APY ${apy}%`}</title>
-      <link rel="canonical" href={`${window.location.protocol + '//' + window.location.host}/market/${seoText}-${address}`} />
+      <link rel="canonical" href={`${window.location.protocol + '//' + window.location.host}/${currentLang !== 'en' ? currentLang + '/' : ''}market/${seoText}-${address}`} />
     </Helmet>
     <div style={{ marginTop: 50 }}>
       <h1 className={styles.event}>{event}</h1>
