@@ -2,12 +2,12 @@ import { langs } from "components/SelectLanguage/SelectLanguage";
 
 export const getAlternatePaths = (pathname) => {
     const origin = window.location.origin; // get current origin
-    const langList = langs.map(({ name }) => name).filter((lang) => lang !== 'en');
+    const langList = langs.map(({ name }) => name);
     
     const cleanUrlPath = pathname.split('/').filter((path) => !langList.includes(path)).join('/');
 
     // generate alternate paths for all languages
-    const paths = langList.map((lang) => ({ lang, href: `${origin}/${lang}${cleanUrlPath}` }));
+    const paths = langList.map((lang) => ({ lang, href: lang === 'en' ? `${origin}${cleanUrlPath}` : `${origin}/${lang}${cleanUrlPath}` }));
 
     // generate alternate path for default language
     paths.push({ lang: 'x-default', href: `${origin}${cleanUrlPath}` });
