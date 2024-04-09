@@ -10,6 +10,7 @@ import { getEmojiByType, getSportNameByType } from "./getTabNameByType";
 import { transformChampionshipName } from "./transformChampionshipName";
 import { getOracleName } from "./getOracleName";
 import { getCategoryName } from "./getCategoryName";
+import { getAlternatePaths, getAlternateMetaList } from "./getAlternatePaths";
 
 export {
   encodeData,
@@ -24,5 +25,7 @@ export {
   capitalizeFirstLetter,
   getSportNameByType,
   getOracleName,
-  getCategoryName
+  getCategoryName,
+  getAlternatePaths,
+  getAlternateMetaList
 }
