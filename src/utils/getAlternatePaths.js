@@ -18,5 +18,5 @@ export const getAlternatePaths = (pathname) => {
 export const getAlternateMetaList = (pathname) => {
     const alternatePaths = getAlternatePaths(pathname);
 
-	return alternatePaths.map(({ lang, href }) => <link rel="alternate" key={lang} hreflang={lang} href={href} />);
+	return alternatePaths.map(({ lang, href }) => <link rel="alternate" key={lang} hreflang={lang} href={href} data-rh="true" />);
 }
