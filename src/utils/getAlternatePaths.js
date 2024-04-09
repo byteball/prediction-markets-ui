@@ -2,7 +2,7 @@ import { langs } from "components/SelectLanguage/SelectLanguage";
 
 export const getAlternatePaths = (pathname) => {
     const origin = window.location.origin; // get current origin
-    const langList = langs.map(({ name }) => name);
+    const langList = langs.map(({ name }) => name).filter((lang) => lang !== 'en');
     
     const cleanUrlPath = pathname.split('/').filter((path) => !langList.includes(path)).join('/');
 
