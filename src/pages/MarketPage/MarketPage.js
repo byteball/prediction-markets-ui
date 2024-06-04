@@ -34,6 +34,7 @@ import i18n from "locale";
 import appConfig from "appConfig";
 
 import styles from './MarketPage.module.css';
+import { PageProvider } from "components/PageProvider/PageProvider";
 
 const SECONDS_IN_YEAR = 31536000;
 
@@ -133,7 +134,7 @@ export const MarketPage = () => {
   const priceOrOdds = useSelector(selectPriceOrOdds);
 
   const currentLang = useSelector(selectLanguage);
-  
+
   const chartConfig = getConfig(chartType, teams);
 
   const { reserve_asset = 'base', allow_draw, quiet_period = 0, reserve_symbol, reserve_decimals, yes_decimals, no_decimals, draw_decimals, yes_symbol, no_symbol, draw_symbol, event_date, league, league_emblem, created_at, committed_at, oracle, base_aa, issue_fee, first_trade_ts, yes_odds = null, no_odds = null, draw_odds = null, yes_crest_url = null, no_crest_url = null } = params;
@@ -364,6 +365,7 @@ export const MarketPage = () => {
   const leagueView = transformChampionshipName(league, params.feed_name.split('_')?.[0])
 
   return <>
+    <PageProvider />
     <Helmet>
       <title>Prophet prediction markets — {((teams.yes === null || teams.no === null) ? event : `${teams.yes.name} vs ${teams.no.name}`) + `, liquidity provider APY ${apy}%`}</title>
       <link rel="canonical" href={`${window.location.protocol + '//' + window.location.host}/${currentLang !== 'en' ? currentLang + '/' : ''}market/${seoText}-${address}`} />
