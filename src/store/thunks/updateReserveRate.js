@@ -2,7 +2,7 @@ import { createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
 import { isEmpty } from "lodash";
 
-import appConfig from "appConfig";
+import http from "services/http";
 
 export const updateReserveRate = createAsyncThunk(
   'updateReserveRate',
@@ -17,19 +17,7 @@ export const updateReserveRate = createAsyncThunk(
         rates[asset] = USD;
       }));
 
-      const basePrice = await axios.post(`https://${appConfig.ENVIRONMENT === "testnet" ? "testnet." : ""}obyte.org/api/get_data_feed`, {
-        oracles: [process.env.REACT_APP_CURRENCY_ORACLE],
-        feed_name: "GBYTE_USD"
-      }, {
-        headers: {
-          Accept: "application/json",
-          "Content-Type": "application/json",
-          "Access-Control-Allow-Origin": "*",
-          "Access-Control-Allow-Methods": "POST, GET, OPTIONS"
-        }
-      }).then((res) => res?.data?.data || 0);
-
-      rates.base = basePrice;
+      rates.base = await http.getDataFeed([process.env.REACT_APP_CURRENCY_ORACLE], "GBYTE_USD", 0);
 
       return rates;
     }

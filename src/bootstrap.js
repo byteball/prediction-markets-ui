@@ -7,7 +7,6 @@ import client from "services/obyte";
 import { updateStateForActualMarket, updateSymbolForActualMarket } from "store/slices/activeSlice";
 import { updateCreationOrder } from "store/slices/settingsSlice";
 import { loadMarkets } from "store/thunks/loadMarkets";
-import { loadReserveAssets } from "store/thunks/loadReserveAssets";
 import { setActiveMarket } from "store/thunks/setActiveMarket";
 import { checkCreationOrder } from "store/thunks/checkCreationOrder";
 import { checkDataFeed } from "store/thunks/checkDataFeed";
@@ -24,8 +23,6 @@ const getAAPayload = (messages = []) => messages.find(m => m.app === 'data')?.pa
 export const bootstrap = async () => {
   console.log("connect");
   // load data from backend
-  store.dispatch(loadMarkets());
-  store.dispatch(loadReserveAssets());
   store.dispatch(checkCreationOrder());
   store.dispatch(loadEVMTokens());
 
