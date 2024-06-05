@@ -17,6 +17,7 @@ import styles from "./MainPage.module.css";
 import { capitalizeFirstLetter } from "utils";
 import i18n from "locale";
 import { useWindowSize } from "hooks";
+import { PageProvider } from "components/PageProvider/PageProvider";
 
 export const MainPage = () => {
 	const markets = useSelector(selectAllMarkets);
@@ -118,6 +119,7 @@ export const MainPage = () => {
 	}
 
 	return <div>
+		<PageProvider />
 		<Helmet title={`Prophet prediction markets — ${actualChampionshipName || (marketType === 'misc' ? 'miscellaneous' : marketType)} markets`} />
 
 		<Row className={styles.headerWrap}>

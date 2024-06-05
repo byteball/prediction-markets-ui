@@ -11,6 +11,7 @@ import { transformChampionshipName } from "./transformChampionshipName";
 import { getOracleName } from "./getOracleName";
 import { getCategoryName } from "./getCategoryName";
 import { getAlternatePaths, getAlternateMetaList } from "./getAlternatePaths";
+import { botCheck } from "./botCheck";
 
 export {
   encodeData,
@@ -27,5 +28,6 @@ export {
   getOracleName,
   getCategoryName,
   getAlternatePaths,
-  getAlternateMetaList
+  getAlternateMetaList,
+  botCheck
 }

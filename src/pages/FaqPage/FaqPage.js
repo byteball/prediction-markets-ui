@@ -3,11 +3,13 @@ import { Helmet } from "react-helmet-async";
 import { Trans, useTranslation } from "react-i18next";
 
 import styles from "./FaqPage.module.css";
+import { PageProvider } from "components/PageProvider/PageProvider";
 
 export const FaqPage = () => {
   const { t } = useTranslation();
 
   return (<>
+    <PageProvider />
     <Helmet title={`Prophet prediction markets — ${t("pages.faq.title", "F.A.Q.")}`} />
     <Typography.Title level={1}>{t("pages.faq.title", "F.A.Q.")}</Typography.Title>
 
