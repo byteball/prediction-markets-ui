@@ -4,7 +4,6 @@ import axios from "axios";
 class httpHub {
     constructor() {
         this.hubUrl = `https://${appConfig.ENVIRONMENT === "testnet" ? "testnet." : ""}obyte.org/api`;
-        // this.getMethodEndpoint = (method) => `https://${appConfig.ENVIRONMENT === "testnet" ? "testnet." : ""}obyte.org/api/${method}`;
         this.client = new axios.create({
             method: "post",
             baseURL: this.hubUrl,
