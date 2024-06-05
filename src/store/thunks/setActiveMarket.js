@@ -5,6 +5,7 @@ import moment from "moment";
 
 import backend from "services/backend";
 import obyte from "services/obyte";
+import http from "services/http";
 
 import { setActiveMarketAddress } from "store/slices/activeSlice";
 
@@ -29,9 +30,10 @@ export const setActiveMarket = createAsyncThunk(
     const marketInList = state.markets.allMarkets?.find(({ aa_address }) => aa_address === address);
 
     const [aa, stateVars] = await Promise.all([
-      obyte.api.getDefinition(address),
-      obyte.api.getAaStateVars({ address })
+      http.getDefinition(address),
+      http.getStateVars(address)
     ])
+
 
     const base_aa = aa[1].base_aa;
     const reserve_asset = aa[1].params.reserve_asset || 'base';
@@ -54,12 +56,12 @@ export const setActiveMarket = createAsyncThunk(
 
     } else {
       tokensInfoGetters = [
-        obyte.api.getSymbolByAsset(tokenRegistry, stateVars.yes_asset).then(symbol => tokensInfo.yes_symbol = symbol),
-        obyte.api.getSymbolByAsset(tokenRegistry, stateVars.no_asset).then(symbol => tokensInfo.no_symbol = symbol),
-        obyte.api.getSymbolByAsset(tokenRegistry, reserve_asset).then(symbol => tokensInfo.reserve_symbol = symbol),
-        obyte.api.getDecimalsBySymbolOrAsset(tokenRegistry, stateVars.yes_asset).then(decimals => tokensInfo.yes_decimals = decimals).catch(() => tokensInfo.yes_decimals = null),
-        obyte.api.getDecimalsBySymbolOrAsset(tokenRegistry, stateVars.no_asset).then(decimals => tokensInfo.no_decimals = decimals).catch(() => tokensInfo.no_decimals = null),
-        obyte.api.getDecimalsBySymbolOrAsset(tokenRegistry, reserve_asset).then(decimals => tokensInfo.reserve_decimals = decimals).catch(() => tokensInfo.reserve_decimals = null),
+        http.getSymbolByAsset(tokenRegistry, stateVars.yes_asset).then(symbol => tokensInfo.yes_symbol = symbol),
+        http.getSymbolByAsset(tokenRegistry, stateVars.no_asset).then(symbol => tokensInfo.no_symbol = symbol),
+        http.getSymbolByAsset(tokenRegistry, reserve_asset).then(symbol => tokensInfo.reserve_symbol = symbol),
+        http.getDecimalsBySymbolOrAsset(tokenRegistry, stateVars.yes_asset).then(decimals => tokensInfo.yes_decimals = decimals).catch(() => tokensInfo.yes_decimals = null),
+        http.getDecimalsBySymbolOrAsset(tokenRegistry, stateVars.no_asset).then(decimals => tokensInfo.no_decimals = decimals).catch(() => tokensInfo.no_decimals = null),
+        http.getDecimalsBySymbolOrAsset(tokenRegistry, reserve_asset).then(decimals => tokensInfo.reserve_decimals = decimals).catch(() => tokensInfo.reserve_decimals = null),
       ]
     }
 
@@ -69,8 +71,8 @@ export const setActiveMarket = createAsyncThunk(
         tokensInfo.draw_decimals = marketInList.draw_decimals;
       } else {
         tokensInfoGetters.push(
-          obyte.api.getSymbolByAsset(tokenRegistry, stateVars.draw_asset).then(symbol => tokensInfo.draw_symbol = symbol),
-          obyte.api.getDecimalsBySymbolOrAsset(tokenRegistry, stateVars.draw_asset).then(decimals => tokensInfo.draw_decimals = decimals).catch(() => tokensInfo.draw_decimals = 0)
+          http.getSymbolByAsset(tokenRegistry, stateVars.draw_asset).then(symbol => tokensInfo.draw_symbol = symbol),
+          http.getDecimalsBySymbolOrAsset(tokenRegistry, stateVars.draw_asset).then(decimals => tokensInfo.draw_decimals = decimals).catch(() => tokensInfo.draw_decimals = 0)
         );
       }
     }
@@ -86,7 +88,7 @@ export const setActiveMarket = createAsyncThunk(
     const [dailyCandles, { data: recentEvents, count: recentEventsCount }, datafeedValue] = await Promise.all([
       backend.getDailyCandles(address).then((data) => data).catch(() => []),
       backend.getRecentEvents(address),
-      obyte.api.getDataFeed({ oracles: [params.oracle], feed_name: params.feed_name, ifnone: 'none' }),
+      http.getDataFeed([params.oracle], params.feed_name, 'none'),
       obyte.justsaying("light/new_aa_to_watch", {
         aa: address
       })
