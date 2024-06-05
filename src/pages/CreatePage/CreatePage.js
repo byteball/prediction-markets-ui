@@ -8,6 +8,7 @@ import { useTranslation } from "react-i18next";
 import { CreateForm } from "forms";
 import { removeCreationOrder, selectCreationOrder } from "store/slices/settingsSlice";
 import { WaitingPredictionMarket } from "./WaitingPredictionMarket";
+import { PageProvider } from "components/PageProvider/PageProvider";
 // import { RegisterSymbols } from "./RegSymbol";
 
 export const CreatePage = () => {
@@ -24,6 +25,8 @@ export const CreatePage = () => {
   return <>
     <Typography.Title level={1}>{t("pages.create.title", "Create new prediction market")}</Typography.Title>
     <Helmet title={`Prophet prediction markets — ${t("pages.create.short_title", "Create new market")}`} />
+
+    <PageProvider />
 
     {(!creationOrder || creationOrder.status === 'order') ? <CreateForm /> : <div>
       {(creationOrder.status === 'pending') && <WaitingPredictionMarket />}
