@@ -2,10 +2,11 @@ import { useNavigate } from "react-router-dom"
 import { Fragment, memo, useEffect } from "react";
 import moment from "moment";
 import { useDispatch, useSelector } from "react-redux";
+import { kebabCase } from "lodash";
 
 import { changeLanguage, selectLanguage } from "store/slices/settingsSlice";
 
-import { botCheck } from "utils";
+import { botCheck, generateTextEvent } from "utils";
 
 import { langs } from "components/SelectLanguage/SelectLanguage";
 
@@ -17,16 +18,13 @@ export const PageProvider = memo(() => {
     const lang = useSelector(selectLanguage);
     const dispatch = useDispatch()
     const navigate = useNavigate();
+    const { address: activeMarketAddress, params = {}, teams = {} } = useSelector((state) => state.active || {});
 
     useEffect(() => {
         const pathname = window.location.pathname;
         const langList = langs.map((lang) => lang.name);
         const languageInUrl = langList.includes(pathname.split("/")[1]) ? pathname.split("/")[1] : null;
-        let cleanedUrl = pathname;
-
-        if (languageInUrl) {
-            cleanedUrl = pathname.replace('/' + languageInUrl, "");
-        }
+        const cleanedUrl = cleanUrl(window.location.pathname, languageInUrl);
 
         if (!lang) {
             const languageFromBrowserSettings = navigator.language.split("-")[0];
@@ -64,6 +62,31 @@ export const PageProvider = memo(() => {
 
     }, [lang]);
 
+    useEffect(() => {
+        const pathname = window.location.pathname;
+        const langList = langs.map((lang) => lang.name);
+        const languageInUrl = langList.includes(pathname.split("/")[1]) ? pathname.split("/")[1] : null;
+        const cleanedUrl = cleanUrl(pathname, languageInUrl);
+
+        if (cleanedUrl.startsWith('/market/') && lang) {
+            if (activeMarketAddress) {
+                const addressInUrl = getWalletAddressFromUrl(cleanedUrl);
+                
+                if (addressInUrl && activeMarketAddress === addressInUrl) {
+                    const eventUTC = generateTextEvent({ ...params, yes_team_name: teams?.yes?.name, no_team_name: teams?.no?.name, isUTC: true });
+                    const seoText = kebabCase(eventUTC);
+                    const seoTextWithAddressFromUrl = decodeURIComponent(cleanedUrl.replace('/market/', ""));
+                    const newSeoTextWithAddress = `${seoText}-${activeMarketAddress}`;
+
+                    if (seoTextWithAddressFromUrl !== newSeoTextWithAddress) {
+                        navigate(`${lang !== "en" ? '/' + lang : ""}/market/${newSeoTextWithAddress}`, { replace: true });
+                    }
+                }
+
+            }
+        }
+    }, [activeMarketAddress, lang]);
+
     return Fragment;
 })
 
@@ -72,4 +95,27 @@ const getMomentLocaleByLanguageKey = (languageKey) => {
     if (languageKey === 'pt') return 'pt-br';
 
     return languageKey;
+}
+
+const cleanUrl = (url, languageInUrl) => {
+    let cleanedUrl = url;
+
+    if (languageInUrl) {
+        cleanedUrl = cleanedUrl.replace('/' + languageInUrl, "");
+    }
+
+    return cleanedUrl;
+}
+
+const getWalletAddressFromUrl = (url = "") => {
+    let address;
+
+    const regex = /(\w{32})$/;
+    const match = url.match(regex);
+
+    if (match) {
+        address = match[0];
+    }
+
+    return address;
 }
