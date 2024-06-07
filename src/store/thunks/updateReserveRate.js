@@ -20,7 +20,7 @@ export const updateReserveRate = createAsyncThunk(
       }).then(({ data }) => Object.entries(data).forEach(([symbol, { USD }]) => {
         const asset = Object.entries(assets).find(([_, item]) => item.symbol === symbol)[0];
         rates[asset] = USD;
-      }));
+      })).catch((error) => console.error(error));
 
       rates.base = await http.getDataFeed([process.env.REACT_APP_CURRENCY_ORACLE], "GBYTE_USD", 0);
 
