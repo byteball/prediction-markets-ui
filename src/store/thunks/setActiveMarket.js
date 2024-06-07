@@ -179,11 +179,10 @@ export const setActiveMarket = createAsyncThunk(
     } else if (isCurrencyMarket) {
       const [from, to] = params.feed_name.split("_");
       const toTsQueryParam = committed_at ? `&toTs=${committed_at}` : '';
-
+      const now = moment.utc().unix();
+      
       try {
-        if (from === 'GBYTE') {
-          console.log('from GBYTE');
-          
+        if (from === 'GBYTE' && params.event_date > now) {
           if ((state.settings?.baseOHLC?.expireTs || 0) > Math.floor(Date.now() / 1000)) {
             currencyCandles = state.settings?.baseOHLC?.data || [];
           } else {
@@ -207,7 +206,6 @@ export const setActiveMarket = createAsyncThunk(
           }).then(({ data }) => data?.market_data?.current_price?.usd);
 
         } else {
-
           const cryptocompare = await Promise.all([
             axios.get(`https://min-api.cryptocompare.com/data/v2/${isHourlyChart ? 'histohour' : 'histoday'}?fsym=${from}&tsym=${to}${toTsQueryParam}&limit=${isHourlyChart ? 168 : 30}`).then(({ data }) => data?.Data?.Data),
             axios.get(`https://min-api.cryptocompare.com/data/price?fsym=${from}&tsyms=${to}`).then(({ data }) => data?.[to])
