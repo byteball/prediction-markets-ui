@@ -192,7 +192,7 @@ export const setActiveMarket = createAsyncThunk(
                 "Access-Control-Allow-Origin": "*",
                 "Access-Control-Allow-Methods": "GET, OPTIONS"
               }
-            }).then(({ data }) => data.map(([ts, o, h, l, c]) => ({ time: Math.ceil(ts / 1000), open: o, high: h, low: l, close: c })));
+            }).then(({ data }) => data.map(([ts, o, h, l, c]) => ({ time: ts / 1000, open: o, high: h, low: l, close: c })));
 
             dispatch(saveBaseOHLC(ohlc));
 

@@ -5,8 +5,8 @@ import moment from 'moment';
 import appConfig from 'appConfig';
 
 export const CurrencyChart = memo(({ data, params }) => {
-  const { datafeed_value, waiting_period_length, event_date } = params;
-  const momentFormat = (event_date + waiting_period_length - moment.utc().unix() <= 7 * 24 * 3600) ? 'lll' : 'll';
+  const { datafeed_value, waiting_period_length, event_date, feed_name } = params;
+  const momentFormat = ((event_date + waiting_period_length - moment.utc().unix() <= 7 * 24 * 3600) || feed_name.split("_")?.[0] === "GBYTE") ? 'lll' : 'll';
 
   const transformedData = data.map(({ time, open, close, high, low }) => ({
     time: moment.unix(time).locale('en').format(momentFormat),
