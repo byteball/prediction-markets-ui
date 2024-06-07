@@ -13,6 +13,7 @@ import { kebabCase } from "lodash";
 import { Trans, useTranslation } from "react-i18next";
 
 import {
+  selectActiveAddress,
   selectActiveCurrencyCandles,
   selectActiveCurrencyCurrentValue,
   selectActiveDailyCandles,
@@ -125,6 +126,7 @@ export const MarketPage = () => {
   const candles = useSelector(selectActiveDailyCandles);
   const datafeedValue = useSelector(selectActiveDatafeedValue);
 
+  const activeAddress = useSelector(selectActiveAddress);
   const teams = useSelector(selectActiveTeams);
   const currencyCandles = useSelector(selectActiveCurrencyCandles);
   const currencyCurrentValue = useSelector(selectActiveCurrencyCurrentValue);
@@ -277,8 +279,8 @@ export const MarketPage = () => {
   }
 
   useEffect(() => {
-    if (address) {
-      dispatch(setActiveMarket(address))
+    if (address && activeAddress !== address) {
+      dispatch(setActiveMarket({ address }));
     }
   }, [address]);
 

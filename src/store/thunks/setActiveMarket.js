@@ -24,7 +24,7 @@ const initialParams = {
 
 export const setActiveMarket = createAsyncThunk(
   'setActiveMarket',
-  async (address, { dispatch, getState }) => {
+  async ({address}, { dispatch, getState }) => {
     dispatch(setActiveMarketAddress(address))
     const state = getState();
     const marketInList = state.markets.allMarkets?.find(({ aa_address }) => aa_address === address);
