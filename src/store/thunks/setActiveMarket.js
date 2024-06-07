@@ -8,6 +8,7 @@ import obyte from "services/obyte";
 import http from "services/http";
 
 import { setActiveMarketAddress } from "store/slices/activeSlice";
+import { saveBaseOHLC } from "store/slices/settingsSlice";
 
 import appConfig from "appConfig";
 
@@ -24,7 +25,7 @@ const initialParams = {
 
 export const setActiveMarket = createAsyncThunk(
   'setActiveMarket',
-  async ({address}, { dispatch, getState }) => {
+  async ({ address }, { dispatch, getState }) => {
     dispatch(setActiveMarketAddress(address))
     const state = getState();
     const marketInList = state.markets.allMarkets?.find(({ aa_address }) => aa_address === address);
@@ -181,12 +182,22 @@ export const setActiveMarket = createAsyncThunk(
 
       try {
         if (from === 'GBYTE') {
-          const ohlc = await axios.get(`https://api.coingecko.com/api/v3/coins/byteball/ohlc?vs_currency=usd&days=30`, {
-            headers: {
-              "Access-Control-Allow-Origin": "*",
-              "Access-Control-Allow-Methods": "GET, OPTIONS"
-            }
-          }).then(({ data }) => data.map(([ts, o, h, l, c]) => ({ time: Math.ceil(ts / 1000), open: o, high: h, low: l, close: c })));
+          console.log('from GBYTE');
+          
+          if ((state.settings?.baseOHLC?.expireTs || 0) > Math.floor(Date.now() / 1000)) {
+            currencyCandles = state.settings?.baseOHLC?.data || [];
+          } else {
+            const ohlc = await axios.get(`https://api.coingecko.com/api/v3/coins/byteball/ohlc?vs_currency=usd&days=30`, {
+              headers: {
+                "Access-Control-Allow-Origin": "*",
+                "Access-Control-Allow-Methods": "GET, OPTIONS"
+              }
+            }).then(({ data }) => data.map(([ts, o, h, l, c]) => ({ time: Math.ceil(ts / 1000), open: o, high: h, low: l, close: c })));
+
+            dispatch(saveBaseOHLC(ohlc));
+
+            currencyCandles = ohlc;
+          }
 
           currencyCurrentValue = await axios.get(`https://api.coingecko.com/api/v3/coins/byteball`, {
             headers: {
@@ -195,7 +206,6 @@ export const setActiveMarket = createAsyncThunk(
             }
           }).then(({ data }) => data?.market_data?.current_price?.usd);
 
-          currencyCandles = ohlc;
         } else {
 
           const cryptocompare = await Promise.all([
