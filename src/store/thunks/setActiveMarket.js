@@ -180,13 +180,32 @@ export const setActiveMarket = createAsyncThunk(
       const toTsQueryParam = committed_at ? `&toTs=${committed_at}` : '';
 
       try {
-        const cryptocompare = await Promise.all([
-          axios.get(`https://min-api.cryptocompare.com/data/v2/${isHourlyChart ? 'histohour' : 'histoday'}?fsym=${from}&tsym=${to}${toTsQueryParam}&limit=${isHourlyChart ? 168 : 30}`).then(({ data }) => data?.Data?.Data),
-          axios.get(`https://min-api.cryptocompare.com/data/price?fsym=${from}&tsyms=${to}`).then(({ data }) => data?.[to])
-        ]);
+        if (from === 'GBYTE') {
+          const ohlc = await axios.get(`https://api.coingecko.com/api/v3/coins/byteball/ohlc?vs_currency=usd&days=30`, {
+            headers: {
+              "Access-Control-Allow-Origin": "*",
+              "Access-Control-Allow-Methods": "GET, OPTIONS"
+            }
+          }).then(({ data }) => data.map(([ts, o, h, l, c]) => ({ time: Math.ceil(ts / 1000), open: o, high: h, low: l, close: c })));
 
-        currencyCandles = cryptocompare[0];
-        currencyCurrentValue = cryptocompare[1];
+          currencyCurrentValue = await axios.get(`https://api.coingecko.com/api/v3/coins/byteball`, {
+            headers: {
+              "Access-Control-Allow-Origin": "*",
+              "Access-Control-Allow-Methods": "GET, OPTIONS"
+            }
+          }).then(({ data }) => data?.market_data?.current_price?.usd);
+
+          currencyCandles = ohlc;
+        } else {
+
+          const cryptocompare = await Promise.all([
+            axios.get(`https://min-api.cryptocompare.com/data/v2/${isHourlyChart ? 'histohour' : 'histoday'}?fsym=${from}&tsym=${to}${toTsQueryParam}&limit=${isHourlyChart ? 168 : 30}`).then(({ data }) => data?.Data?.Data),
+            axios.get(`https://min-api.cryptocompare.com/data/price?fsym=${from}&tsyms=${to}`).then(({ data }) => data?.[to])
+          ]);
+
+          currencyCandles = cryptocompare[0];
+          currencyCurrentValue = cryptocompare[1];
+        }
       } catch {
         console.log(`no candles for ${from}->${to}`)
       }
