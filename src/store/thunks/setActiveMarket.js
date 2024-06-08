@@ -8,6 +8,7 @@ import obyte from "services/obyte";
 import http from "services/http";
 
 import { setActiveMarketAddress } from "store/slices/activeSlice";
+import { saveBaseOHLC } from "store/slices/settingsSlice";
 
 import appConfig from "appConfig";
 
@@ -24,7 +25,7 @@ const initialParams = {
 
 export const setActiveMarket = createAsyncThunk(
   'setActiveMarket',
-  async (address, { dispatch, getState }) => {
+  async ({ address }, { dispatch, getState }) => {
     dispatch(setActiveMarketAddress(address))
     const state = getState();
     const marketInList = state.markets.allMarkets?.find(({ aa_address }) => aa_address === address);
@@ -178,15 +179,41 @@ export const setActiveMarket = createAsyncThunk(
     } else if (isCurrencyMarket) {
       const [from, to] = params.feed_name.split("_");
       const toTsQueryParam = committed_at ? `&toTs=${committed_at}` : '';
-
+      const now = moment.utc().unix();
+      
       try {
-        const cryptocompare = await Promise.all([
-          axios.get(`https://min-api.cryptocompare.com/data/v2/${isHourlyChart ? 'histohour' : 'histoday'}?fsym=${from}&tsym=${to}${toTsQueryParam}&limit=${isHourlyChart ? 168 : 30}`).then(({ data }) => data?.Data?.Data),
-          axios.get(`https://min-api.cryptocompare.com/data/price?fsym=${from}&tsyms=${to}`).then(({ data }) => data?.[to])
-        ]);
+        if (from === 'GBYTE' && params.event_date > now) {
+          if ((state.settings?.baseOHLC?.expireTs || 0) > Math.floor(Date.now() / 1000)) {
+            currencyCandles = state.settings?.baseOHLC?.data || [];
+          } else {
+            const ohlc = await axios.get(`https://api.coingecko.com/api/v3/coins/byteball/ohlc?vs_currency=usd&days=30`, {
+              headers: {
+                "Access-Control-Allow-Origin": "*",
+                "Access-Control-Allow-Methods": "GET, OPTIONS"
+              }
+            }).then(({ data }) => data.map(([ts, o, h, l, c]) => ({ time: ts / 1000, open: o, high: h, low: l, close: c })));
 
-        currencyCandles = cryptocompare[0];
-        currencyCurrentValue = cryptocompare[1];
+            dispatch(saveBaseOHLC(ohlc));
+
+            currencyCandles = ohlc;
+          }
+
+          currencyCurrentValue = await axios.get(`https://api.coingecko.com/api/v3/coins/byteball`, {
+            headers: {
+              "Access-Control-Allow-Origin": "*",
+              "Access-Control-Allow-Methods": "GET, OPTIONS"
+            }
+          }).then(({ data }) => data?.market_data?.current_price?.usd);
+
+        } else {
+          const cryptocompare = await Promise.all([
+            axios.get(`https://min-api.cryptocompare.com/data/v2/${isHourlyChart ? 'histohour' : 'histoday'}?fsym=${from}&tsym=${to}${toTsQueryParam}&limit=${isHourlyChart ? 168 : 30}`).then(({ data }) => data?.Data?.Data),
+            axios.get(`https://min-api.cryptocompare.com/data/price?fsym=${from}&tsyms=${to}`).then(({ data }) => data?.[to])
+          ]);
+
+          currencyCandles = cryptocompare[0];
+          currencyCurrentValue = cryptocompare[1];
+        }
       } catch {
         console.log(`no candles for ${from}->${to}`)
       }
