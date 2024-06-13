@@ -14,6 +14,10 @@ export const settingsSlice = createSlice({
     reserveAssets: {},
     sportsCalendar: [],
     priceOrOdds: 'odds',
+    baseOHLC: {
+      data: [],
+      expireTs: 0
+    },
     lang: null
   },
   reducers: {
@@ -48,6 +52,12 @@ export const settingsSlice = createSlice({
     },
     changeLanguage: (state, action) => {
       state.lang = action.payload;
+    },
+    saveBaseOHLC: (state, action) => {
+      state.baseOHLC = {
+        data: action.payload,
+        expireTs: Math.floor(Date.now() / 1000) + 60 * 20 // 20 minutes
+      };
     }
   },
   extraReducers: {
@@ -74,7 +84,8 @@ export const {
   updateCreationOrder,
   cancelRegSymbol,
   changeViewType,
-  changeLanguage
+  changeLanguage,
+  saveBaseOHLC
 } = settingsSlice.actions;
 
 export default settingsSlice.reducer;

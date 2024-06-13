@@ -1,12 +1,13 @@
-import { memo } from 'react';
 import { Stock } from '@ant-design/plots';
 import moment from 'moment';
 
 import appConfig from 'appConfig';
 
-export const CurrencyChart = memo(({ data, params }) => {
-  const { datafeed_value, waiting_period_length, event_date } = params;
-  const momentFormat = (event_date + waiting_period_length - moment.utc().unix() <= 7 * 24 * 3600) ? 'lll' : 'll';
+export const CurrencyChart = ({ data, params }) => {
+  const { datafeed_value, waiting_period_length, event_date, feed_name } = params;
+  const now = moment.utc().unix();
+  const isCoingeckoData = (feed_name.split("_")?.[0] === "GBYTE") && params.event_date > now;
+  const momentFormat = ((event_date + waiting_period_length - moment.utc().unix() <= 7 * 24 * 3600) || isCoingeckoData) ? 'lll' : 'll';
 
   const transformedData = data.map(({ time, open, close, high, low }) => ({
     time: moment.unix(time).locale('en').format(momentFormat),
@@ -50,8 +51,8 @@ export const CurrencyChart = memo(({ data, params }) => {
       },
       {
         type: 'line',
-        start: [moment.unix(event_date).format(momentFormat), 'min',],
-        end: [moment.unix(event_date).format(momentFormat), 'max',],
+        start: [moment.unix(event_date).locale('en').format(momentFormat), 'min'],
+        end: [moment.unix(event_date).locale('en').format(momentFormat), 'max'],
         style: {
           stroke: appConfig.DRAW_COLOR,
           lineDash: [4, 4],
@@ -72,4 +73,4 @@ export const CurrencyChart = memo(({ data, params }) => {
   return <div style={{ margin: '20px 0' }}>
     <Stock {...config} />
   </div>
-});
+};

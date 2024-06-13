@@ -20,6 +20,8 @@ import config from "appConfig";
 
 const getAAPayload = (messages = []) => messages.find(m => m.app === 'data')?.payload || {};
 
+let inited = false;
+
 export const bootstrap = async () => {
   console.log("connect");
   // load data from backend
@@ -33,8 +35,8 @@ export const bootstrap = async () => {
     await client.justsaying("light/new_address_to_watch", state.settings.walletAddress);
   }
 
-  if (state.active.address) { // reload data for active market
-    store.dispatch(setActiveMarket(state.active.address));
+  if (state.active.address && inited) { // reload data for active market
+    store.dispatch(setActiveMarket({ address: state.active.address }));
   }
 
   const updateMarkets = setInterval(() => {
@@ -59,6 +61,7 @@ export const bootstrap = async () => {
     aa: tokenRegistry
   });
 
+  inited = true;
 
   client.subscribe((err, result) => {
     if (err) return null;
