@@ -6,6 +6,10 @@
   margin-bottom: 5px;
 }
 
+.switch a {
+  color: #dcdde1;
+}
+
 .switchSmall>.switchItem {
   padding: 3px 8px;
   font-size: 12px;
