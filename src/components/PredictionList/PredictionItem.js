@@ -257,7 +257,7 @@ export const PredictionItem = ({ reserve_asset = 'base', aa_address, reserve = 0
                 </Col>
 
                 <Col sm={{ span: 8 }} xs={{ span: 8 }} style={{ textAlign: 'center' }} className={styles.draw}>
-                  <b style={{ fontSize: 24 }}>{t('common.vs', 'VS')}</b>
+                  <b style={{ fontSize: lang === "ru" || lang === "uk" ? 16 : 24 }}>{t('common.vs', 'VS')}</b>
                   <div className={styles.time}>
                     <small>{moment.unix(event_date).format(i18n.language === "en" ? 'MMM DD, LT' : i18n.language === "zh" ? 'MMM Do LT' : 'D MMM LT')}</small>
                   </div>
