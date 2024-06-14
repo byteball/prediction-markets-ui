@@ -17,6 +17,7 @@ import {
   selectMiscMarketsCount,
   selectPopularCurrencies
 } from "store/slices/marketsSlice";
+import { selectLanguage } from "store/slices/settingsSlice";
 import { loadSportsCalendarCache } from "store/thunks/loadSportsCalendarCache";
 import { selectMarketsCache } from "store/slices/cacheSlice";
 import { loadMarketsInCache } from "store/thunks/loadMarketsInCache";
@@ -39,6 +40,8 @@ export const PredictionList = ({ type = 'all', particle = 'all', setParticle }) 
   const calendarRef = useRef(null);
 
   const [inited, setInited] = useState(false);
+
+  const lang = useSelector(selectLanguage);
 
   const currencyMarkets = useSelector(selectCurrencyMarkets);
   const currencyMarketsCount = useSelector(selectCurrencyMarketsCount);
@@ -100,10 +103,12 @@ export const PredictionList = ({ type = 'all', particle = 'all', setParticle }) 
     }
   }, [type, actualCurrency]);
 
+  const langPath = (!lang || lang === 'en') ? '' : `/${lang}`;
+
   const getActionList = useCallback(() => ([
-    { value: 'all', text: `${getEmojiByType(type)} ${t('common.all_sport', 'All {{sport}}', { sport: getSportNameByType(type) })}` },
-    ...championships[type]?.map(({ name, code, emblem }) => ({ value: code, text: transformChampionshipName(name, code), iconLink: emblem }))
-  ]), [championships, type]);
+    { value: 'all', text: `${getEmojiByType(type)} ${t('common.all_sport', 'All {{sport}}', { sport: getSportNameByType(type) },)}`, url: `${langPath}/${type}/all` },
+    ...championships[type]?.map(({ name, code, emblem }) => ({ value: code, text: transformChampionshipName(name, code), iconLink: emblem, url: `${langPath}/${type}/${code}` }))
+  ]), [championships, type, lang]);
 
   const getCurrencyCalendarActionList = useCallback(() => ([
     ...popularCurrencies?.map((currency) => ({ value: currency, text: currency }))
@@ -175,7 +180,7 @@ export const PredictionList = ({ type = 'all', particle = 'all', setParticle }) 
 
   return <>
     {(type in championships) && championships[type].length > 0 && <div>
-      <SwitchActions small={true} value={championship} data={getActionList()} onChange={handleChangeChampionship} />
+      <SwitchActions linked small={true} value={championship} data={getActionList()} onChange={handleChangeChampionship} />
     </div>}
 
     {!loading && (!(type in championships) || countOfSportMarkets !== undefined) ? <>

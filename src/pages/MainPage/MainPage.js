@@ -37,10 +37,10 @@ export const MainPage = () => {
 	const sportTypes = Object.keys(championships);
 	const langPath = (!lang || lang === 'en') ? '' : `/${lang}`;
 
-	const switchActionsData = [{ value: 'all', text: t('common.all', "All") }];
+	const switchActionsData = [{ value: 'all', text: t('common.all', "All"), url: langPath ? langPath : '/' }];
 
-	sportTypes.forEach((type) => switchActionsData.push(({ value: type, text: getTabNameByType(type) })))
-	switchActionsData.push({ value: 'currency', text: `📈 ${t('common.currency', "Currency")}` }, { value: 'misc', text: t('common.misc', "Misc") })
+	sportTypes.forEach((type) => switchActionsData.push(({ value: type, text: getTabNameByType(type), url: `${langPath}/${type}`})));
+	switchActionsData.push({ value: 'currency', text: `📈 ${t('common.currency', "Currency")}`, url: `${langPath}/currency` }, { value: 'misc', text: t('common.misc', "Misc"), url: `${langPath}/misc` })
 
 	useEffect(() => {
 		// init params from url
@@ -138,7 +138,7 @@ export const MainPage = () => {
 		</Row>
 
 		{(markets.length > 0) ? <div className={styles.listWrap}>
-			<SwitchActions value={marketType} data={switchActionsData} onChange={handleMarketType} />
+			<SwitchActions linked value={marketType} data={switchActionsData} onChange={handleMarketType} />
 
 			<div style={{ marginTop: 10 }}>
 				<PredictionList type={marketType} particle={particle} setParticle={handleParticle} />
