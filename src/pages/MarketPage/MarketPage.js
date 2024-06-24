@@ -378,7 +378,7 @@ export const MarketPage = () => {
         <Row>
           <Col md={{ span: 8 }} xs={{ span: 8 }} style={{ textAlign: 'center' }}>
             <div className={styles.emblemWrap}>
-              <Img src={yes_crest_url} className={styles.emblem} />
+              <Img src={yes_crest_url} className={styles.emblem} unloader={<img className={styles.emblem} src="/plug.svg" />} />
             </div>
             <div style={{ paddingTop: 10, lineHeight: 1 }}>
               <span style={{ color: appConfig.YES_COLOR }}>{teams.yes.name}</span>
@@ -395,7 +395,7 @@ export const MarketPage = () => {
 
           <Col md={{ span: 8 }} xs={{ span: 8 }} style={{ textAlign: 'center' }}>
             <div className={styles.emblemWrap}>
-              <Img src={no_crest_url} className={styles.emblem} />
+              <Img src={no_crest_url} className={styles.emblem} unloader={<img className={styles.emblem} src="/plug.svg" />}/>
             </div>
             <div style={{ paddingTop: 10, lineHeight: 1 }}>
               <span style={{ color: appConfig.NO_COLOR }}>{teams.no.name}</span>

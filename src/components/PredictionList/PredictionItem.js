@@ -240,7 +240,7 @@ export const PredictionItem = ({ reserve_asset = 'base', aa_address, reserve = 0
             </div> : <div style={{ marginTop: 5 }}>
               <Row gutter={8} align={(exists && allow_draw && (drawOddsView || result) && width >= 576) ? "bottom" : 'middle'}>
                 <Col sm={{ span: 8 }} xs={{ span: 8 }} style={{ textAlign: 'center' }}>
-                  <Img unloader={<div />} src={yes_crest_url}
+                  <Img unloader={<img  className={styles.crests} src="/plug.svg" />} src={yes_crest_url}
                     className={styles.crests}
                     container={(children) => <div style={{ position: 'relative', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
                       {children}
@@ -271,7 +271,7 @@ export const PredictionItem = ({ reserve_asset = 'base', aa_address, reserve = 0
                   <Img
                     src={no_crest_url}
                     className={styles.crests}
-                    unloader={<div />}
+                    unloader={<img  className={styles.crests} src="/plug.svg" />}
                     container={(children) => <div style={{ position: 'relative', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
                       {children}
                       {result === 'no' && <div style={{ position: 'absolute', right: 'calc(50% - 40px)', bottom: -10 }}>
