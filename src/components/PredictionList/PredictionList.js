@@ -107,7 +107,7 @@ export const PredictionList = ({ type = 'all', particle = 'all', setParticle }) 
 
   const getActionList = useCallback(() => ([
     { value: 'all', text: `${getEmojiByType(type)} ${t('common.all_sport', 'All {{sport}}', { sport: getSportNameByType(type) },)}`, url: `${langPath}/${type}/all` },
-    ...championships[type]?.map(({ name, code, emblem }) => ({ value: code, text: transformChampionshipName(name, code), iconLink: emblem, url: `${langPath}/${type}/${code}` }))
+    ...championships[type]?.map(({ name, code, emblem }) => ({ value: code, text: transformChampionshipName(name, code), iconLink: code === "CSL" ? "/csl.png" : emblem, url: `${langPath}/${type}/${code}` }))
   ]), [championships, type, lang]);
 
   const getCurrencyCalendarActionList = useCallback(() => ([
