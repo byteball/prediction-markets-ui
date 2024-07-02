@@ -11,7 +11,7 @@ export const transformChampionshipName = (name, code) => {
         return i18n.t('championships.soccer.FL1', 'Ligue 1');
     } else if (name === "FIFA World Cup" && code === "WC") {
         return i18n.t('championships.soccer.WC', 'FIFA World Cup');
-    } else if (name === "Chinese Super League" && code === "CSL") {
+    } else if (code === "CSL") {
         return i18n.t('championships.soccer.CSL', 'Chinese Super League');
     } else if (name === "Campeonato Brasileiro Série A" && code === "BSA") {
         return i18n.t('championships.soccer.BSA', 'Campeonato Brasileiro Série A');

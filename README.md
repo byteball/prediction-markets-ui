@@ -23,3 +23,9 @@ yarn start
 ```sh
 yarn build
 ```
+
+## Donations
+
+We accept donations through [Kivach](https://kivach.org) and forward a portion of the donations to other open-source projects that made Prophet possible.
+
+[![Kivach](https://kivach.org/api/banner?repo=byteball/prediction-markets-ui)](https://kivach.org/repo/byteball/prediction-markets-ui)
