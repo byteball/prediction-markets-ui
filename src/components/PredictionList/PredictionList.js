@@ -24,10 +24,11 @@ import { loadMarketsInCache } from "store/thunks/loadMarketsInCache";
 import { loadCurrencyCalendarCache } from "store/thunks/loadCurrencyCalendarCache";
 
 import { getEmojiByType, transformChampionshipName, getSportNameByType, getCategoryName } from "utils";
-import { historyInstance } from "historyInstance";
 import backend from "services/backend";
 
 import styles from "./PredictionList.module.css";
+
+import { router } from "router";
 
 
 export const PredictionList = ({ type = 'all', particle = 'all', setParticle }) => {
@@ -174,7 +175,7 @@ export const PredictionList = ({ type = 'all', particle = 'all', setParticle }) 
 
   useEffect(() => {
     if (inited && location.hash === "#calendar") {
-      historyInstance.replace(location.pathname)
+      router.navigate(location.pathname, { replace: true })
     }
   }, [inited]);
 

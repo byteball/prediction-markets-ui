@@ -11,12 +11,12 @@ import {
 } from 'redux-persist';
 import storage from "redux-persist/lib/storage";
 
+import userWalletSlice from './slices/userWalletSlice';
 import settingsSlice from './slices/settingsSlice';
 import marketsSlice from './slices/marketsSlice';
 import activeSlice from './slices/activeSlice';
 import cacheSlice from './slices/cacheSlice';
 import bridgesSlice from './slices/bridgesSlice';
-import userWalletSlice from './slices/userWalletSlice';
 
 import config from "appConfig";
 

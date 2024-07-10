@@ -1,4 +1,4 @@
-import { useLocation } from "react-router-dom";
+import { Outlet, ScrollRestoration, useLocation } from "react-router-dom";
 import { memo, useEffect } from "react";
 import { Helmet } from "react-helmet-async";
 
@@ -27,11 +27,17 @@ export const Layout = memo(({ children }) => {
 
     <div className="container" style={{ minHeight: '100vh' }}>
       <Header />
-      <div style={{ marginTop: 25 }}>{children}</div>
+      <div style={{ marginTop: 25 }}><Outlet/></div>
     </div>
 
     <div className="container">
       <Footer />
     </div>
+
+    <ScrollRestoration getKey={(location, matches) => {
+        // default behavior
+        return location.pathname;
+    }}
+    />
   </div>
 })

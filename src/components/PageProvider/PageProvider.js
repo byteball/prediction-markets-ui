@@ -36,13 +36,11 @@ export const PageProvider = memo(() => {
                 moment.locale(getMomentLocaleByLanguageKey(language));
 
                 if (language !== languageInUrl) {
-                    // historyInstance.replace(`${language !== "en" ? '/' + language : ""}${cleanedUrl === "/" && language !== "en" ? "" : cleanedUrl}`);
                     navigate(`${language !== "en" ? '/' + language : ""}${cleanedUrl === "/" && language !== "en" ? "" : cleanedUrl}`, { replace: true });
                 }
 
             } else { // if language is not in the list we use default language
                 i18.changeLanguage(DEFAULT_LANGUAGE_KEY);
-                // historyInstance.replace(cleanedUrl);
                 navigate(cleanedUrl, { replace: true });
                 moment.locale(getMomentLocaleByLanguageKey(DEFAULT_LANGUAGE_KEY));
             }
