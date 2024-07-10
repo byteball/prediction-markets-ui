@@ -249,10 +249,6 @@ export const MarketPage = () => {
     return () => clearInterval(intervalId);
   });
 
-  useEffect(() => {
-    window.scrollTo(0, 0);
-  }, []);
-
   if (params.event_date - quiet_period > now) {
     tradeStatus = t("common.status.trading", 'trading').toUpperCase();
     tradeStatusColor = appConfig.YES_COLOR;
@@ -373,12 +369,12 @@ export const MarketPage = () => {
       <link rel="canonical" href={`${window.location.protocol + '//' + window.location.host}/${currentLang !== 'en' ? currentLang + '/' : ''}market/${seoText}-${address}`} />
     </Helmet>
     <div style={{ marginTop: 50 }}>
-      <h1 className={styles.event}>{event}</h1>
+      <h1 className={styles.event}>{event}{teams?.yes?.name ? " prediction" : null}</h1>
       {(teams.yes === null || teams.no === null) ? null : <div style={{ margin: '30px 0', width: '100%' }}>
         <Row>
           <Col md={{ span: 8 }} xs={{ span: 8 }} style={{ textAlign: 'center' }}>
             <div className={styles.emblemWrap}>
-              <Img src={yes_crest_url} className={styles.emblem} unloader={<img className={styles.emblem} src="/plug.svg" />} />
+              <Img src={yes_crest_url} alt={teams.yes.name} className={styles.emblem} unloader={<img className={styles.emblem} alt={teams.yes.name} src="/plug.svg" />} />
             </div>
             <div style={{ paddingTop: 10, lineHeight: 1 }}>
               <span style={{ color: appConfig.YES_COLOR }}>{teams.yes.name}</span>
@@ -395,7 +391,7 @@ export const MarketPage = () => {
 
           <Col md={{ span: 8 }} xs={{ span: 8 }} style={{ textAlign: 'center' }}>
             <div className={styles.emblemWrap}>
-              <Img src={no_crest_url} className={styles.emblem} unloader={<img className={styles.emblem} src="/plug.svg" />}/>
+              <Img src={no_crest_url} alt={teams.no.name} className={styles.emblem} unloader={<img className={styles.emblem} alt={teams.yes.name} src="/plug.svg" />} />
             </div>
             <div style={{ paddingTop: 10, lineHeight: 1 }}>
               <span style={{ color: appConfig.NO_COLOR }}>{teams.no.name}</span>
