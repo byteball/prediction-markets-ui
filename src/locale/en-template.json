@@ -99,9 +99,9 @@
       },
       "apy": {
         "title": "Make money from liquidity provision",
-        "every_trade": "Every trade is charged a fee which is added to the market’s pool (see the fee accumulation chart above).",
+        "every_trade": "Every trade is charged a fee which is added to this prediction market’s pool (see the fee accumulation chart above).",
         "earn": "Earn a share of these fees by buying all tokens in the same proportions they are already issued. One of the tokens will win, and you’ll get a share of the trading fees collected after you invested.",
-        "by_buying": "By buying all tokens without changing their proportions you are not betting on any outcome but taking a market-neutral position instead and adding liquidity to the market. This is safe if the current proportions reflect the true probabilities.",
+        "by_buying": "By buying all tokens without changing their proportions you are not betting on any outcome but taking a market-neutral position instead and adding liquidity to this prediction market. This is safe if the current proportions reflect the true probabilities.",
         "block": "Liquidity provision APY since the pool was started: {{percent}}%",
         "block_desc": "The APY estimation is for the first LP assuming the trading activity stays the same as it has been so far. Later LPs earn from fewer trades, and the trading activity can change in the future, so the actual APY can be significantly different."
       },
