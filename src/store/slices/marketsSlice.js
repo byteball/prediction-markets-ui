@@ -18,11 +18,12 @@ export const marketsSlice = createSlice({
   reducers: {
     addMarketInList: (state, action) => { state.data.push(action.payload) },
   },
-  extraReducers: {
-    [loadMarkets.pending]: (state) => {
+  extraReducers: (builder) => {
+    builder.addCase(loadMarkets.pending, (state) => {
       state.status = 'loading';
-    },
-    [loadMarkets.fulfilled]: (state, action) => {
+    });
+
+    builder.addCase(loadMarkets.fulfilled, (state, action) => {
       const { markets, currencyMarkets, championships, marketsCount, currencyMarketsCount, miscMarkets, miscMarketsCount, popularCurrencyPairsByOracle } = action.payload;
 
       state.allMarkets = markets;
@@ -34,10 +35,11 @@ export const marketsSlice = createSlice({
       state.miscMarkets = miscMarkets;
       state.miscMarketsCount = miscMarketsCount;
       state.status = 'loaded';
-    },
-    [loadMarkets.rejected]: (state) => {
+    });
+
+    builder.addCase(loadMarkets.rejected, (state) => {
       state.status = 'error';
-    },
+    });
   }
 });
 

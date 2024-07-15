@@ -324,14 +324,14 @@ export const PredictionItem = memo(({ reserve_asset = 'base', aa_address, reserv
               </Col>
             </Row> : null}
           </Col>
-          {width >= 768 && aa_address && <div className={styles.apyWrap}>
+          {width >= 768 && aa_address ? <div className={styles.apyWrap}>
             {apyView}
-          </div>}
-          {(exists || preview) ? (infoHeight && dataForChart.length > 0 && <Col md={{ span: 8 }} xs={{ span: 24 }} sm={{ span: 24 }} style={{ display: 'flex', alignItems: 'center' }}>
+          </div> : null}
+          {(exists || preview) ? (infoHeight && dataForChart.length > 0 ? <Col md={{ span: 8 }} xs={{ span: 24 }} sm={{ span: 24 }} style={{ display: 'flex', alignItems: 'center' }}>
             {width >= 768 ? <div style={{ height: infoHeight - 20, marginTop: 10, width: '100%', boxSizing: 'border-box' }}>
               <TinyLine {...config} data={dataForChart} />
             </div> : null}
-          </Col>) : <Col md={{ span: 8 }} xs={{ span: 24 }} sm={{ span: 24 }}>
+          </Col> : null) : <Col md={{ span: 8 }} xs={{ span: 24 }} sm={{ span: 24 }}>
             <div className={styles.createNowWrap}>
               <CreateNowModal
                 feed_name={feed_name}

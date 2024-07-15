@@ -9,8 +9,8 @@ export const cacheSlice = createSlice({
     calendar: {}
   },
   reducers: {},
-  extraReducers: {
-    [loadSportsCalendarCache.fulfilled]: (state, action) => {
+  extraReducers: (builder) => {
+    builder.addCase(loadSportsCalendarCache.fulfilled, (state, action) => {
       const { sport, championship, data, count } = action.payload;
 
       if (!(sport in state.calendar)) state.calendar[sport] = {};
@@ -22,8 +22,9 @@ export const cacheSlice = createSlice({
 
       state.calendar[sport][championship].data.push(...data);
       state.calendar[sport][championship].count = count;
-    },
-    [loadMarketsInCache.fulfilled]: (state, action) => {
+    });
+
+    builder.addCase(loadMarketsInCache.fulfilled, (state, action) => {
       const { type, championship, data, count } = action.payload;
 
 
@@ -49,9 +50,9 @@ export const cacheSlice = createSlice({
         state[type].data.push(...data);
         state[type].count = count;
       }
-    },
+    });
 
-    [loadCurrencyCalendarCache.fulfilled]: (state, action) => {
+    builder.addCase(loadCurrencyCalendarCache.fulfilled, (state, action) => {
       const { data, count, currency } = action.payload;
 
       if (!("currency" in state.calendar)) state.calendar.currency = {};
@@ -64,7 +65,7 @@ export const cacheSlice = createSlice({
 
       state.calendar.currency[currency].data.push(...data);
       state.calendar.currency[currency].count = count;
-    }
+    });
   }
 });
 
