@@ -1,9 +1,9 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, memo } from 'react';
 import { Link } from 'react-router-dom';
 
 import styles from "./SwitchActions.module.css";
 
-export const SwitchActions = ({ data = [], value, onChange, small = false, linked = false }) => {
+export const SwitchActions = memo(({ data = [], value, onChange, small = false, linked = false }) => {
   const [currentValue, setCurrentValue] = useState(value || data[0]?.value);
 
   useEffect(() => {
@@ -31,4 +31,4 @@ export const SwitchActions = ({ data = [], value, onChange, small = false, linke
   return <div className={`${styles.switch} ${small ? styles.switchSmall : ''}`}>
     {data.map(({ text, value, iconLink, url }) => <Wrapper to={linked ? url : undefined} key={value} onClick={(e) => handleSwitch(e, value)} className={`${styles.switchItem} ${currentValue === value ? styles.switchActive : ""}`}>{iconLink && <img src={iconLink} style={{ background: "#fff", height: '1em' }} alt={text} />}{text}</Wrapper>)}
   </div>
-}
+});
