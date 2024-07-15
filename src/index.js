@@ -1,5 +1,5 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
+import { createRoot } from 'react-dom/client';
 import { HelmetProvider } from 'react-helmet-async';
 import { RouterProvider } from 'react-router-dom';
 import { Provider as StoreProvider } from 'react-redux';
@@ -35,7 +35,11 @@ if (appConfig.GA_ID) {
 	});
 }
 
-ReactDOM.render(
+const container = document.getElementById('root');
+
+const root = createRoot(container);
+
+root.render(
 	<React.StrictMode>
 		<StoreProvider store={store}>
 			<HelmetProvider>
@@ -44,6 +48,5 @@ ReactDOM.render(
 				</PersistGate>
 			</HelmetProvider>
 		</StoreProvider>
-	</React.StrictMode>,
-	document.getElementById('root')
+	</React.StrictMode>
 );
