@@ -7,10 +7,10 @@ export const bridgesSlice = createSlice({
     tokensByNetwork: {}
   },
   reducers: {},
-  extraReducers: {
-    [loadEVMTokens.fulfilled]: (state, action) => {
+  extraReducers: (builder) => {
+    builder.addCase(loadEVMTokens.fulfilled, (state, action) => {
       state.tokensByNetwork = action.payload;
-    }
+    });
   }
 });
 

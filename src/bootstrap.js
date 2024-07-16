@@ -6,17 +6,17 @@ import client from "services/obyte";
 
 import { updateStateForActualMarket, updateSymbolForActualMarket } from "store/slices/activeSlice";
 import { updateCreationOrder } from "store/slices/settingsSlice";
-import { loadMarkets } from "store/thunks/loadMarkets";
 import { setActiveMarket } from "store/thunks/setActiveMarket";
 import { checkCreationOrder } from "store/thunks/checkCreationOrder";
 import { checkDataFeed } from "store/thunks/checkDataFeed";
-import { historyInstance } from "historyInstance";
 import { loadEVMTokens } from "store/thunks/loadEVMTokens";
 import { loadUserBalance } from "store/thunks/loadUserBalance";
 import { addRecentEvent } from "store/thunks/addRecentEvent";
 
 import i18n from "locale";
 import config from "appConfig";
+
+import { router } from "router";
 
 const getAAPayload = (messages = []) => messages.find(m => m.app === 'data')?.payload || {};
 
@@ -38,10 +38,6 @@ export const bootstrap = async () => {
   if (state.active.address && inited) { // reload data for active market
     store.dispatch(setActiveMarket({ address: state.active.address }));
   }
-
-  const updateMarkets = setInterval(() => {
-    store.dispatch(loadMarkets());
-  }, 1800 * 1000);
 
   const heartbeat = setInterval(() => {
     client.api.heartbeat();
@@ -156,7 +152,10 @@ export const bootstrap = async () => {
           creation_unit_id: unit
         }));
 
-        historyInstance.push('/create')
+        const lang = state.settings.lang;
+        const langPath = (!lang || lang === 'en') ? '' : `/${lang}`;
+        
+        router.navigate(`${langPath}/create`);
       }
 
     } else if (subject === "light/aa_response") {
@@ -219,7 +218,6 @@ export const bootstrap = async () => {
   }
 
   client.client.ws.addEventListener("close", () => {
-    clearInterval(updateMarkets);
     clearInterval(heartbeat);
     clearInterval(checkOracleData);
   });

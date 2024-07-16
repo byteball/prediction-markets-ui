@@ -6,6 +6,13 @@
   margin-bottom: 5px;
 }
 
+.switch.suspense .switchItem {
+  width: 9em;
+  height: 34px;
+  border: none;
+  animation: pulse 500ms infinite alternate ease-in-out;
+}
+
 .switch a {
   color: #dcdde1;
 }
@@ -45,4 +52,14 @@
 
 .switchActive:hover {
   background-color: #303030;
+}
+
+@keyframes pulse {
+	0% {
+    background-color: #1e1e1e;
+	}
+
+	100% {
+    background-color: #232222;
+	}
 }

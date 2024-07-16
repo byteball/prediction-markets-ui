@@ -1,4 +1,4 @@
-import { Fragment, useEffect, useRef, useState } from "react";
+import { Fragment, memo, useEffect, useRef, useState } from "react";
 import { TinyLine } from '@ant-design/plots';
 import useResizeObserver from '@react-hook/resize-observer';
 import { Badge, Card, Col, Row, Typography } from "antd";
@@ -22,7 +22,7 @@ import styles from "./PredictionItem.module.css";
 
 const max_display_decimals = 5;
 
-export const PredictionItem = ({ reserve_asset = 'base', aa_address, reserve = 0, reserve_decimals = 0, yes_price = 0, no_price = 0, draw_price = 0, allow_draw, event_date, candles, reserve_symbol, yes_symbol, result, waiting_period_length, feed_name, expect_datafeed_value, datafeed_value, oracle, comparison, yes_team_id, no_team_id, yes_team, no_team, supply_yes = 0, supply_no = 0, supply_draw = 0, preview, apy = 0, quiet_period = 0, yes_crest_url = null, no_crest_url = null, league, coef }) => {
+export const PredictionItem = memo(({ reserve_asset = 'base', aa_address, reserve = 0, reserve_decimals = 0, yes_price = 0, no_price = 0, draw_price = 0, allow_draw, event_date, candles, reserve_symbol, yes_symbol, result, waiting_period_length, feed_name, expect_datafeed_value, datafeed_value, oracle, comparison, yes_team_id, no_team_id, yes_team, no_team, supply_yes = 0, supply_no = 0, supply_draw = 0, preview, apy = 0, quiet_period = 0, yes_crest_url = null, no_crest_url = null, league, coef }) => {
   const infoWrapRef = useRef();
   const [width] = useWindowSize();
   const { t } = useTranslation();
@@ -240,7 +240,7 @@ export const PredictionItem = ({ reserve_asset = 'base', aa_address, reserve = 0
             </div> : <div style={{ marginTop: 5 }}>
               <Row gutter={8} align={(exists && allow_draw && (drawOddsView || result) && width >= 576) ? "bottom" : 'middle'}>
                 <Col sm={{ span: 8 }} xs={{ span: 8 }} style={{ textAlign: 'center' }}>
-                  <Img unloader={<img  className={styles.crests} src="/plug.svg" />} src={yes_crest_url}
+                  <Img unloader={<img className={styles.crests} alt={yes_team} src="/plug.svg" />} src={yes_crest_url}
                     className={styles.crests}
                     container={(children) => <div style={{ position: 'relative', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
                       {children}
@@ -271,7 +271,7 @@ export const PredictionItem = ({ reserve_asset = 'base', aa_address, reserve = 0
                   <Img
                     src={no_crest_url}
                     className={styles.crests}
-                    unloader={<img  className={styles.crests} src="/plug.svg" />}
+                    unloader={<img className={styles.crests} alt={no_team} src="/plug.svg" />}
                     container={(children) => <div style={{ position: 'relative', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
                       {children}
                       {result === 'no' && <div style={{ position: 'absolute', right: 'calc(50% - 40px)', bottom: -10 }}>
@@ -324,14 +324,14 @@ export const PredictionItem = ({ reserve_asset = 'base', aa_address, reserve = 0
               </Col>
             </Row> : null}
           </Col>
-          {width >= 768 && aa_address && <div className={styles.apyWrap}>
+          {width >= 768 && aa_address ? <div className={styles.apyWrap}>
             {apyView}
-          </div>}
-          {(exists || preview) ? (infoHeight && dataForChart.length > 0 && <Col md={{ span: 8 }} xs={{ span: 24 }} sm={{ span: 24 }} style={{ display: 'flex', alignItems: 'center' }}>
+          </div> : null}
+          {(exists || preview) ? (infoHeight && dataForChart.length > 0 ? <Col md={{ span: 8 }} xs={{ span: 24 }} sm={{ span: 24 }} style={{ display: 'flex', alignItems: 'center' }}>
             {width >= 768 ? <div style={{ height: infoHeight - 20, marginTop: 10, width: '100%', boxSizing: 'border-box' }}>
               <TinyLine {...config} data={dataForChart} />
             </div> : null}
-          </Col>) : <Col md={{ span: 8 }} xs={{ span: 24 }} sm={{ span: 24 }}>
+          </Col> : null) : <Col md={{ span: 8 }} xs={{ span: 24 }} sm={{ span: 24 }}>
             <div className={styles.createNowWrap}>
               <CreateNowModal
                 feed_name={feed_name}
@@ -354,6 +354,6 @@ export const PredictionItem = ({ reserve_asset = 'base', aa_address, reserve = 0
       </Card>
     </SecondWrapper>
   </Wrapper>
-}
+});
 
 const WinnerIcon = () => <img src="/winner-icon-stroke.svg" style={{ width: 32 }} alt="" />

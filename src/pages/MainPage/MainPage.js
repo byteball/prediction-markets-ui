@@ -1,126 +1,57 @@
-import { useEffect, useState } from "react";
-import { Col, Empty, Row, Spin } from "antd";
+import { useCallback } from "react";
+import { Col, Row, Spin } from "antd";
 import { useSelector } from "react-redux";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
-import { Trans, useTranslation } from "react-i18next";
+import { Trans } from "react-i18next";
 import { Helmet } from "react-helmet-async";
 
 import { PredictionList } from "components/PredictionList/PredictionList";
 import { SwitchActions } from "components/SwitchActions/SwitchActions";
-
-import { selectAllMarkets, selectAllMarketsStatus, selectChampionships } from "store/slices/marketsSlice";
-import { selectLanguage } from "store/slices/settingsSlice";
-
-import { getTabNameByType } from "utils/getTabNameByType";
-
-import styles from "./MainPage.module.css";
-import { capitalizeFirstLetter } from "utils";
-import i18n from "locale";
-import { useWindowSize } from "hooks";
 import { PageProvider } from "components/PageProvider/PageProvider";
 
+import { selectLanguage } from "store/slices/settingsSlice";
+
+import { useWindowSize, useChampionships } from "hooks";
+
+import styles from "./MainPage.module.css";
+
+import i18n from "locale";
+
 export const MainPage = () => {
-	const markets = useSelector(selectAllMarkets);
-	const allMarketsStatus = useSelector(selectAllMarketsStatus);
-	const championships = useSelector(selectChampionships);
+	const { category = 'all', particle = 'all' } = useParams();
+
 	const lang = useSelector(selectLanguage);
-	const { category, particle: particleFromUrl } = useParams();
 	const navigate = useNavigate();
-	const location = useLocation();
-	const { t } = useTranslation();
+	const { championships, categories, isLoading } = useChampionships(lang);
 	const [width] = useWindowSize();
+	const location = useLocation();
 
-	const [marketType, setMarketType] = useState('all');
-	const [particle, setParticle] = useState('all');
-	const [inited, setInited] = useState(false);
+	const handleMarketCategory = useCallback((newCategory) => {
+		if (category !== newCategory) {
+			const langPath = (!lang || lang === 'en') ? '' : `/${lang}`;
 
-	const sportTypes = Object.keys(championships);
-	const langPath = (!lang || lang === 'en') ? '' : `/${lang}`;
-
-	const switchActionsData = [{ value: 'all', text: t('common.all', "All"), url: langPath ? langPath : '/' }];
-
-	sportTypes.forEach((type) => switchActionsData.push(({ value: type, text: getTabNameByType(type), url: `${langPath}/${type}`})));
-	switchActionsData.push({ value: 'currency', text: `📈 ${t('common.currency', "Currency")}`, url: `${langPath}/currency` }, { value: 'misc', text: t('common.misc', "Misc"), url: `${langPath}/misc` })
-
-	useEffect(() => {
-		// init params from url
-		if (!inited) {
-			if (category) {
-				setMarketType(category);
-			} else {
-				setMarketType('all');
-			}
-
-			if (particleFromUrl) {
-				setParticle(particleFromUrl);
-			} else if (category === 'currency') {
-				setParticle('GBYTE')
-			}
-
-			setInited(true);
-		}
-
-	}, [inited, particleFromUrl, category]);
-
-
-	useEffect(() => {
-		// update when changing url
-		if (inited) {
-			if (category !== marketType) {
-				setMarketType(category);
-			}
-
-			if (particle !== particleFromUrl) {
-				setParticle(particleFromUrl || 'all')
-			}
-		}
-
-	}, [location.pathname]);
-
-	if (!markets || allMarketsStatus !== 'loaded' || !inited) return (
-		<div className={styles.spinWrap}>
-			<Spin size="large" />
-		</div>
-	)
-
-	const handleMarketType = (type) => {
-		if (inited && marketType !== type) {
-			setMarketType(type);
-			if (type === 'currency') {
-				setParticle('GBYTE');
-			} else {
-				setParticle('all');
-			}
-
-			if (type === 'all' || !type) {
+			if (newCategory === 'all' || !newCategory) {
 				navigate(`${langPath}/`);
 
-			} else if (['all', 'misc', 'currency'].includes(type)) {
-				navigate(`${langPath}/${type}`);
+			} else if (['all', 'misc', 'currency'].includes(newCategory)) {
+				navigate(`${langPath}/${newCategory}${location.search}`);
 
 			} else {
-				navigate(`${langPath}/${type}/all`)
+				navigate(`${langPath}/${newCategory}/all`);
 			}
 		}
 
-	}
-
-	const handleParticle = (particle) => {
-		if (inited) {
-			setParticle(particle);
-			navigate(`${langPath}/${marketType}/${particle}`)
-		}
-	}
+	}, [lang, category, navigate]);
 
 	let actualChampionshipName;
 
-	if (marketType === 'soccer' && particle !== 'all' && championships) {
-		actualChampionshipName = championships[marketType].find(({ code }) => code === particle)?.name;
+	if (category === 'soccer' && particle !== 'all' && championships) {
+		actualChampionshipName = championships?.soccer?.find(({ code }) => code === particle)?.name;
 	}
 
 	return <div>
 		<PageProvider />
-		<Helmet title={`Prophet prediction markets — ${actualChampionshipName || (marketType === 'misc' ? 'miscellaneous' : marketType)} markets`} />
+		<Helmet title={`Prophet prediction markets — ${actualChampionshipName || (category === 'misc' ? 'miscellaneous' : category)} markets`} />
 
 		<Row className={styles.headerWrap}>
 			<Col xs={{ span: 24 }} md={{ span: 24 }}>
@@ -137,14 +68,12 @@ export const MainPage = () => {
 			</Col>
 		</Row>
 
-		{(markets.length > 0) ? <div className={styles.listWrap}>
-			<SwitchActions linked value={marketType} data={switchActionsData} onChange={handleMarketType} />
-
-			<div style={{ marginTop: 10 }}>
-				<PredictionList type={marketType} particle={particle} setParticle={handleParticle} />
-			</div>
-		</div> : <div>
-			<Empty image={Empty.PRESENTED_IMAGE_SIMPLE} description={capitalizeFirstLetter(t('common.no_markets', "no markets"))} />
-		</div>}
+		<div className={styles.listWrap}>
+			<SwitchActions linked isLoading={isLoading} value={category} data={categories} onChange={handleMarketCategory} />
+			{!isLoading ? <PredictionList /> :
+				<div className={styles.spinWrap}>
+					<Spin size="large" />
+				</div>}
+		</div>
 	</div>
-}
+};

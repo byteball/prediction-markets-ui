@@ -42,8 +42,8 @@ export const activeSlice = createSlice({
       state.datafeedValue = action.payload;
     }
   },
-  extraReducers: {
-    [setActiveMarket.fulfilled]: (state, action) => {
+  extraReducers: (builder) => {
+    builder.addCase(setActiveMarket.fulfilled, (state, action) => {
       const { params, stateVars, recentEvents, recentEventsCount, dailyCandles, datafeedValue, yesTeam, noTeam, currencyCandles, currencyCurrentValue, league, created_at, committed_at, base_aa, first_trade_ts, yes_odds, no_odds, draw_odds, yes_crest_url, no_crest_url } = action.payload;
 
       state.params = { ...params, ...league, created_at, committed_at, first_trade_ts, base_aa, yes_odds, no_odds, draw_odds, yes_crest_url, no_crest_url };
@@ -57,24 +57,27 @@ export const activeSlice = createSlice({
       state.teams = { yes: yesTeam || null, no: noTeam || null };
 
       state.status = 'loaded';
-    },
-    [setActiveMarket.rejected]: (state, action) => {
+    });
+
+    builder.addCase(setActiveMarket.rejected, (state, action) => {
       state.status = 'error';
-    },
-    [addRecentEvent.fulfilled]: (state, action) => {
+    });
+
+    builder.addCase(addRecentEvent.fulfilled, (state, action) => {
       if (action.payload) {
         state.recentEvents.push(action.payload);
         state.recentEventsCount = state.recentEventsCount + 1;
       }
-    },
-    [loadMoreRecentEvents.fulfilled]: (state, action) => {
+    });
+
+    builder.addCase(loadMoreRecentEvents.fulfilled, (state, action) => {
       if (action.payload) {
         const recentEvents = action.payload.recentEvents || [];
 
         state.recentEvents = [...state.recentEvents, ...recentEvents]
         state.recentEventsCount = action.payload.recentEventsCount;
       }
-    }
+    })
   }
 });
 

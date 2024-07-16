@@ -60,21 +60,23 @@ export const settingsSlice = createSlice({
       };
     }
   },
-  extraReducers: {
-    [loadReserveAssets.fulfilled]: (state, action) => {
+  extraReducers: (builder) => {
+    builder.addCase(loadReserveAssets.fulfilled, (state, action) => {
       if (action.payload) {
         state.reserveAssets = action.payload;
       }
-    },
-    [updateReserveRate.fulfilled]: (state, action) => {
+    });
+
+    builder.addCase(updateReserveRate.fulfilled, (state, action) => {
       if (action.payload) {
         state.reserveRates = action.payload;
         state.reserveRateUpdateTime = Math.floor(Date.now() / 1000);
       }
-    },
-    [changeWalletAddress.fulfilled]: (state, action) => {
+    });
+
+    builder.addCase(changeWalletAddress.fulfilled, (state, action) => {
       state.walletAddress = action.payload;
-    }
+    });
   }
 });
 

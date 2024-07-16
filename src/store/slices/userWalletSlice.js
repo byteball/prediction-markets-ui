@@ -6,12 +6,12 @@ export const userWalletSlice = createSlice({
     name: 'userWallet',
     initialState: {},
     reducers: {},
-    extraReducers: {
-        [loadUserBalance.fulfilled]: (state, action) => {
+    extraReducers: (builder) => {
+        builder.addCase(loadUserBalance.fulfilled, (state, action) => {
             const { address, balance } = action.payload;
 
             state[address] = balance;
-        }
+        });
     }
 });
 

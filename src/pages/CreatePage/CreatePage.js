@@ -1,7 +1,6 @@
 import { Button, Result, Typography } from "antd";
 import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
-import { useEffect } from "react";
 import { Helmet } from "react-helmet-async";
 import { useTranslation } from "react-i18next";
 
@@ -15,10 +14,6 @@ export const CreatePage = () => {
   const creationOrder = useSelector(selectCreationOrder);
   const dispatch = useDispatch();
   const { t } = useTranslation();
-
-  useEffect(() => {
-    window.scrollTo(0, 0);
-  }, [])
 
   // const symbolsAlreadyReg = creationOrder ? (creationOrder.yes_symbol && creationOrder.no_symbol && (!creationOrder.data.allow_draw || creationOrder.draw_symbol)) || creationOrder.cancelRegSymbol : false;
 
