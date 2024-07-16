@@ -36,9 +36,9 @@ export const PredictionList = memo(() => {
   ]), [category, lang]);
 
 
-  const handleChangeChampionship = useCallback((currentParticle) => {
+  const handleChangeChampionship = useCallback((currentParticle = 'all') => {
     if (currentParticle !== particle) {
-      navigate(`${(!lang || lang === 'en') ? '' : `/${lang}`}/${category}/${particle}${category === "currency" ? location.search : ""}`, { preventScrollReset: true })
+      navigate(`${(!lang || lang === 'en') ? '' : `/${lang}`}/${category}/${currentParticle}${category === "currency" ? location.search : ""}`, { preventScrollReset: true })
     }
   }, [particle, lang, category, navigate, location.search]);
 

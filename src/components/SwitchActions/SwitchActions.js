@@ -6,17 +6,18 @@ import styles from "./SwitchActions.module.css";
 export const SwitchActions = memo(({ data = [], value, onChange, small = false, linked = false, isLoading = false }) => {
   if (isLoading || data.length === 0) {
     return <div className={`${styles.switch} ${isLoading ? styles.suspense : ''} ${small ? styles.switchSmall : ''}`}>
-      {[1, 2, 3, 4, 5, 6, 7, 8, 9].map((value, index) => <div key={index} className={styles.switchItem} />)}
+      {[1, 2, 3, 4, 5, 6, 7, 8, 9].map((_, index) => <div key={index} className={styles.switchItem} />)}
     </div>
   }
 
   const handleSwitch = (e, v) => {
-    if (linked) {
-      e.preventDefault();
-    }
 
     if (onChange) {
       onChange(v);
+    }
+
+    if (linked) {
+      e.preventDefault();
     }
   }
 
