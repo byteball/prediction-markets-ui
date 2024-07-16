@@ -1,4 +1,4 @@
-import { combineReducers, configureStore, getDefaultMiddleware } from '@reduxjs/toolkit';
+import { combineReducers, configureStore } from '@reduxjs/toolkit';
 import {
   persistStore,
   persistReducer,
@@ -13,18 +13,14 @@ import storage from "redux-persist/lib/storage";
 
 import userWalletSlice from './slices/userWalletSlice';
 import settingsSlice from './slices/settingsSlice';
-import marketsSlice from './slices/marketsSlice';
 import activeSlice from './slices/activeSlice';
-import cacheSlice from './slices/cacheSlice';
 import bridgesSlice from './slices/bridgesSlice';
 
 import config from "appConfig";
 
 const rootReducer = combineReducers({
   settings: settingsSlice,
-  markets: marketsSlice,
   active: activeSlice,
-  cache: cacheSlice,
   bridges: bridgesSlice,
   userWallet: userWalletSlice
 });
@@ -41,11 +37,12 @@ const persistedReducer = persistReducer(persistConfig, rootReducer);
 const getStore = () => {
   const store = configureStore({
     reducer: persistedReducer,
-    middleware: getDefaultMiddleware({
-      serializableCheck: {
-        ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER]
-      }
-    })
+    middleware: (getDefaultMiddleware) =>
+      getDefaultMiddleware({
+        serializableCheck: {
+          ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER]
+        }
+      })
   });
 
   const persistor = persistStore(store);

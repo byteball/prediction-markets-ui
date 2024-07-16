@@ -1,5 +1,4 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
-import { isEmpty } from "lodash";
 import axios from "axios";
 import moment from "moment";
 
@@ -28,7 +27,6 @@ export const setActiveMarket = createAsyncThunk(
   async ({ address }, { dispatch, getState }) => {
     dispatch(setActiveMarketAddress(address))
     const state = getState();
-    const marketInList = state.markets.allMarkets?.find(({ aa_address }) => aa_address === address);
 
     const [aa, stateVars] = await Promise.all([
       http.getDefinition(address),
@@ -44,38 +42,21 @@ export const setActiveMarket = createAsyncThunk(
     const tokenRegistry = obyte.api.getOfficialTokenRegistryAddress();
 
     const tokensInfo = {};
-    let tokensInfoGetters = [];
 
-    if (marketInList) {
-      tokensInfo.yes_symbol = marketInList.yes_symbol;
-      tokensInfo.no_symbol = marketInList.no_symbol;
-      tokensInfo.reserve_symbol = marketInList.reserve_symbol;
-
-      tokensInfo.yes_decimals = marketInList.yes_decimals;
-      tokensInfo.no_decimals = marketInList.no_decimals;
-      tokensInfo.reserve_decimals = marketInList.reserve_decimals;
-
-    } else {
-      tokensInfoGetters = [
-        http.getSymbolByAsset(tokenRegistry, stateVars.yes_asset).then(symbol => tokensInfo.yes_symbol = symbol),
-        http.getSymbolByAsset(tokenRegistry, stateVars.no_asset).then(symbol => tokensInfo.no_symbol = symbol),
-        http.getSymbolByAsset(tokenRegistry, reserve_asset).then(symbol => tokensInfo.reserve_symbol = symbol),
-        http.getDecimalsBySymbolOrAsset(tokenRegistry, stateVars.yes_asset).then(decimals => tokensInfo.yes_decimals = decimals).catch(() => tokensInfo.yes_decimals = null),
-        http.getDecimalsBySymbolOrAsset(tokenRegistry, stateVars.no_asset).then(decimals => tokensInfo.no_decimals = decimals).catch(() => tokensInfo.no_decimals = null),
-        http.getDecimalsBySymbolOrAsset(tokenRegistry, reserve_asset).then(decimals => tokensInfo.reserve_decimals = decimals).catch(() => tokensInfo.reserve_decimals = null),
-      ]
-    }
+    let tokensInfoGetters = [
+      http.getSymbolByAsset(tokenRegistry, stateVars.yes_asset).then(symbol => tokensInfo.yes_symbol = symbol),
+      http.getSymbolByAsset(tokenRegistry, stateVars.no_asset).then(symbol => tokensInfo.no_symbol = symbol),
+      http.getSymbolByAsset(tokenRegistry, reserve_asset).then(symbol => tokensInfo.reserve_symbol = symbol),
+      http.getDecimalsBySymbolOrAsset(tokenRegistry, stateVars.yes_asset).then(decimals => tokensInfo.yes_decimals = decimals).catch(() => tokensInfo.yes_decimals = null),
+      http.getDecimalsBySymbolOrAsset(tokenRegistry, stateVars.no_asset).then(decimals => tokensInfo.no_decimals = decimals).catch(() => tokensInfo.no_decimals = null),
+      http.getDecimalsBySymbolOrAsset(tokenRegistry, reserve_asset).then(decimals => tokensInfo.reserve_decimals = decimals).catch(() => tokensInfo.reserve_decimals = null),
+    ]
 
     if (aa[1].params.allow_draw && stateVars.draw_asset) {
-      if (marketInList) {
-        tokensInfo.draw_symbol = marketInList.draw_symbol;
-        tokensInfo.draw_decimals = marketInList.draw_decimals;
-      } else {
-        tokensInfoGetters.push(
-          http.getSymbolByAsset(tokenRegistry, stateVars.draw_asset).then(symbol => tokensInfo.draw_symbol = symbol),
-          http.getDecimalsBySymbolOrAsset(tokenRegistry, stateVars.draw_asset).then(decimals => tokensInfo.draw_decimals = decimals).catch(() => tokensInfo.draw_decimals = 0)
-        );
-      }
+      tokensInfoGetters.push(
+        http.getSymbolByAsset(tokenRegistry, stateVars.draw_asset).then(symbol => tokensInfo.draw_symbol = symbol),
+        http.getDecimalsBySymbolOrAsset(tokenRegistry, stateVars.draw_asset).then(decimals => tokensInfo.draw_decimals = decimals).catch(() => tokensInfo.draw_decimals = 0)
+      );
     }
 
     await Promise.all(tokensInfoGetters);
@@ -108,33 +89,18 @@ export const setActiveMarket = createAsyncThunk(
     let league_emblem = null;
     let league = null;
 
-    let created_at;
-    let committed_at;
-    let first_trade_ts;
-
     let yes_odds = null;
     let no_odds = null;
     let draw_odds = null;
     let yes_crest_url = null;
     let no_crest_url = null;
 
-    if (marketInList) {
-      created_at = marketInList.created_at;
-      committed_at = marketInList.committed_at;
-      first_trade_ts = marketInList.first_trade_at;
+    const dates = await backend.getDates(address);
 
-      yes_odds = marketInList.yes_odds || null;
-      no_odds = marketInList.no_odds || null;
-      draw_odds = marketInList.draw_odds || null;
-      yes_crest_url = marketInList.yes_crest_url || null;
-      no_crest_url = marketInList.no_crest_url || null;
-    } else {
-      const dates = await backend.getDates(address);
+    const created_at = dates.created_at;
+    const committed_at = dates.committed_at;
+    const first_trade_ts = await backend.getFirstTradeTs(address);
 
-      created_at = dates.created_at;
-      committed_at = dates.committed_at;
-      first_trade_ts = await backend.getFirstTradeTs(address);
-    }
 
     if (isSportMarket) {
 
@@ -149,11 +115,7 @@ export const setActiveMarket = createAsyncThunk(
       }
 
       const [championship, yes_abbreviation, no_abbreviation] = params.feed_name.split("_");
-      let championships = state.markets.championships;
-
-      if (isEmpty(championships)) {
-        championships = await backend.getChampionships();
-      }
+      const championships = await backend.getChampionships();
 
       const sport = Object.entries(championships).find(([_, cs]) => cs.find(({ code }) => code === championship));
 
@@ -180,7 +142,7 @@ export const setActiveMarket = createAsyncThunk(
       const [from, to] = params.feed_name.split("_");
       const toTsQueryParam = committed_at ? `&toTs=${committed_at}` : '';
       const now = moment.utc().unix();
-      
+
       try {
         if (from === 'GBYTE' && params.event_date > now) {
           if ((state.settings?.baseOHLC?.expireTs || 0) > Math.floor(Date.now() / 1000)) {

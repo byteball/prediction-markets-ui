@@ -8,15 +8,13 @@ import { Header } from "components/Header/Header";
 
 import { getAlternateMetaList } from "utils";
 import { useDispatch } from "react-redux";
-import { loadMarkets } from "store/thunks/loadMarkets";
 import { loadReserveAssets } from "store/thunks/loadReserveAssets";
 
-export const Layout = memo(({ children }) => {
+export const Layout = memo(() => {
   const location = useLocation();
   const dispatch = useDispatch();
 
   useEffect(() => {
-    dispatch(loadMarkets());
     dispatch(loadReserveAssets());
   }, [dispatch]);
 

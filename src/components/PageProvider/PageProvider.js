@@ -1,4 +1,4 @@
-import { useNavigate } from "react-router-dom"
+import { useLocation, useNavigate } from "react-router-dom"
 import { Fragment, memo, useEffect } from "react";
 import moment from "moment";
 import { useDispatch, useSelector } from "react-redux";
@@ -18,13 +18,15 @@ export const PageProvider = memo(() => {
     const lang = useSelector(selectLanguage);
     const dispatch = useDispatch()
     const navigate = useNavigate();
+    const location = useLocation();
+
     const { address: activeMarketAddress, params = {}, teams = {} } = useSelector((state) => state.active || {});
 
     useEffect(() => {
-        const pathname = window.location.pathname;
+        const pathname = location.pathname;
         const langList = langs.map((lang) => lang.name);
         const languageInUrl = langList.includes(pathname.split("/")[1]) ? pathname.split("/")[1] : null;
-        const cleanedUrl = cleanUrl(window.location.pathname, languageInUrl);
+        const cleanedUrl = cleanUrl(location.pathname, languageInUrl);
 
         if (!lang) {
             const languageFromBrowserSettings = navigator.language.split("-")[0];
@@ -36,12 +38,12 @@ export const PageProvider = memo(() => {
                 moment.locale(getMomentLocaleByLanguageKey(language));
 
                 if (language !== languageInUrl) {
-                    navigate(`${language !== "en" ? '/' + language : ""}${cleanedUrl === "/" && language !== "en" ? "" : cleanedUrl}`, { replace: true });
+                    navigate(`${language !== "en" ? '/' + language : ""}${cleanedUrl === "/" && language !== "en" ? "" : cleanedUrl}${location.search}`, { replace: true });
                 }
 
             } else { // if language is not in the list we use default language
                 i18.changeLanguage(DEFAULT_LANGUAGE_KEY);
-                navigate(cleanedUrl, { replace: true });
+                navigate(cleanedUrl + location.search, { replace: true });
                 moment.locale(getMomentLocaleByLanguageKey(DEFAULT_LANGUAGE_KEY));
             }
 
@@ -49,10 +51,10 @@ export const PageProvider = memo(() => {
             i18.changeLanguage(lang);
 
             if (lang !== languageInUrl && lang !== "en") {
-                navigate(`${lang !== "en" ? '/' + lang : ""}${cleanedUrl === "/" ? "" : cleanedUrl}`, { replace: true });
+                navigate(`${lang !== "en" ? '/' + lang : ""}${cleanedUrl === "/" ? "" : cleanedUrl}${location.search}`, { replace: true });
 
             } else if (lang === "en" || languageInUrl === "en") {
-                navigate(cleanedUrl || "/", { replace: true });
+                navigate((cleanedUrl || "/") + location.search, { replace: true });
             }
 
             moment.locale(getMomentLocaleByLanguageKey(lang));
@@ -77,7 +79,7 @@ export const PageProvider = memo(() => {
                     const newSeoTextWithAddress = `${seoText}-${activeMarketAddress}`;
 
                     if (seoTextWithAddressFromUrl !== newSeoTextWithAddress) {
-                        navigate(`${lang !== "en" ? '/' + lang : ""}/market/${newSeoTextWithAddress}`, { replace: true });
+                        navigate(`${lang !== "en" ? '/' + lang : ""}/market/${newSeoTextWithAddress}${location.search}`, { replace: true });
                     }
                 }
 

@@ -1,11 +1,14 @@
 import React from 'react';
-import { createRoot } from 'react-dom/client';
+import { render } from 'react-dom';
 import { HelmetProvider } from 'react-helmet-async';
 import { RouterProvider } from 'react-router-dom';
 import { Provider as StoreProvider } from 'react-redux';
+import ReactGA from "react-ga";
+import { SWRConfig } from 'swr'
+import axios from "axios";
+
 import { PersistGate } from "redux-persist/integration/react";
 import 'antd/dist/antd.dark.less';
-import ReactGA from "react-ga";
 
 import getStore from "./store";
 import appConfig from 'appConfig';
@@ -35,18 +38,19 @@ if (appConfig.GA_ID) {
 	});
 }
 
-const container = document.getElementById('root');
-
-const root = createRoot(container);
-
-root.render(
+render(
 	<React.StrictMode>
 		<StoreProvider store={store}>
 			<HelmetProvider>
 				<PersistGate loading={null} persistor={persistor}>
-					<RouterProvider router={router} />
+					<SWRConfig value={{
+						fetcher: (url) => axios.get(url).then(res => res.data)
+					}}>
+						<RouterProvider router={router} />
+					</SWRConfig>
 				</PersistGate>
 			</HelmetProvider>
 		</StoreProvider>
-	</React.StrictMode>
+	</React.StrictMode>,
+	document.getElementById('root')
 );

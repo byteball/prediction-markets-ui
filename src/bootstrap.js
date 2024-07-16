@@ -6,7 +6,6 @@ import client from "services/obyte";
 
 import { updateStateForActualMarket, updateSymbolForActualMarket } from "store/slices/activeSlice";
 import { updateCreationOrder } from "store/slices/settingsSlice";
-import { loadMarkets } from "store/thunks/loadMarkets";
 import { setActiveMarket } from "store/thunks/setActiveMarket";
 import { checkCreationOrder } from "store/thunks/checkCreationOrder";
 import { checkDataFeed } from "store/thunks/checkDataFeed";
@@ -39,10 +38,6 @@ export const bootstrap = async () => {
   if (state.active.address && inited) { // reload data for active market
     store.dispatch(setActiveMarket({ address: state.active.address }));
   }
-
-  const updateMarkets = setInterval(() => {
-    store.dispatch(loadMarkets());
-  }, 1800 * 1000);
 
   const heartbeat = setInterval(() => {
     client.api.heartbeat();
@@ -223,7 +218,6 @@ export const bootstrap = async () => {
   }
 
   client.client.ws.addEventListener("close", () => {
-    clearInterval(updateMarkets);
     clearInterval(heartbeat);
     clearInterval(checkOracleData);
   });
