@@ -293,6 +293,18 @@ export const MarketPage = () => {
     noOddsView = supply_no !== 0 ? +Number((reserve / supply_no) / noPrice).toFixed(5) : null;
   }
 
+  const yesToWinPrice = supply_yes ? +Number(reserve / supply_yes).toFixed(4) : 0;
+  const noToWinPrice = supply_no ? +Number(reserve / supply_no).toFixed(4) : 0;
+  const drawToWinPrice = supply_draw ? +Number(reserve / supply_draw).toFixed(4) : 0;
+
+  const yesToWinPriceInUSD = reserve_rate ? `$${+Number(yesToWinPrice * reserve_rate).toFixed(4)}` : '';
+  const noToWinPriceInUSD = reserve_rate ? `$${+Number(noToWinPrice * reserve_rate).toFixed(4)}` : '';
+  const drawToWinPriceInUSD = reserve_rate ? `$${+Number(drawToWinPrice * reserve_rate).toFixed(4)}` : '';
+
+  const showYesToWin = !result && priceOrOdds === 'price' && reserve && supply_yes;
+  const showNoToWin = !result && priceOrOdds === 'price' && reserve && supply_no;
+  const showDrawToWin = !result && priceOrOdds === 'price' && reserve && supply_draw;
+
   const haveTeamNames = isSportMarket && teams?.yes?.name && teams?.no?.name;
 
   const apy = getEstimatedAPY({ coef, params });
@@ -434,7 +446,9 @@ export const MarketPage = () => {
               subValue={yesSubValueView}
               color={appConfig.YES_COLOR}
               onAction={tradeIsActive ? (action) => setVisibleTradeModal({ type: 'yes', action }) : undefined}
-              value={priceOrOdds === 'price' ? <span>{result ? winnerPriceView : yesPrice} <small>{reserve_symbol}</small></span> : (yesOddsView ? <span>x{result ? winnerOddsView : yesOddsView}</span> : '-')} />
+              toWinValue={showYesToWin ? <span>{yesToWinPrice} <small>{reserve_symbol}</small></span> : null}
+              toWinSubValue={showYesToWin && reserve_rate ? yesToWinPriceInUSD : null}
+              value={priceOrOdds === 'price' ? <span>{result ? winnerPriceView : (showYesToWin ? +Number(yesPrice).toFixed(4) : yesPrice)} <small className={showYesToWin ? styles.symbolWide : ''}>{reserve_symbol}</small></span> : (yesOddsView ? <span>x{result ? winnerOddsView : yesOddsView}</span> : '-')} />
           </Col>
 
           {allow_draw ? <Col lg={{ span: 8 }} md={{ span: 12 }} xs={{ span: 24 }} style={{ marginBottom: 30 }}>
@@ -446,7 +460,9 @@ export const MarketPage = () => {
               subValue={drawSubValueView}
               color={appConfig.DRAW_COLOR}
               onAction={tradeIsActive ? (action) => setVisibleTradeModal({ type: 'draw', action }) : undefined}
-              value={priceOrOdds === 'price' ? <span>{result ? winnerPriceView : drawPrice} <small>{reserve_symbol}</small></span> : (drawOddsView ? <span>x{result ? winnerOddsView : drawOddsView}</span> : '-')} />
+              toWinValue={showDrawToWin ? <span>{drawToWinPrice} <small>{reserve_symbol}</small></span> : null}
+              toWinSubValue={showDrawToWin && reserve_rate ? drawToWinPriceInUSD : null}
+              value={priceOrOdds === 'price' ? <span>{result ? winnerPriceView : (showDrawToWin ? +Number(drawPrice).toFixed(4) : drawPrice)} <small className={showDrawToWin ? styles.symbolWide : ''}>{reserve_symbol}</small></span> : (drawOddsView ? <span>x{result ? winnerOddsView : drawOddsView}</span> : '-')} />
           </Col> : null}
 
           <Col lg={{ span: 8 }} md={{ span: 12 }} xs={{ span: 24 }} style={{ marginBottom: 30 }}>
@@ -458,7 +474,9 @@ export const MarketPage = () => {
               subValue={noSubValueView}
               color={appConfig.NO_COLOR}
               onAction={tradeIsActive ? (action) => setVisibleTradeModal({ type: 'no', action }) : undefined}
-              value={priceOrOdds === 'price' ? <span>{result ? winnerPriceView : noPrice} <small>{reserve_symbol}</small></span> : (noOddsView ? <span>x{result ? winnerOddsView : noOddsView}</span> : '-')} />
+              toWinValue={showNoToWin ? <span>{noToWinPrice} <small>{reserve_symbol}</small></span> : null}
+              toWinSubValue={showNoToWin && reserve_rate ? noToWinPriceInUSD : null}
+              value={priceOrOdds === 'price' ? <span>{result ? winnerPriceView : (showNoToWin ? +Number(noPrice).toFixed(4) : noPrice)} <small className={showNoToWin ? styles.symbolWide : ''}>{reserve_symbol}</small></span> : (noOddsView ? <span>x{result ? winnerOddsView : noOddsView}</span> : '-')} />
           </Col>
 
           {(isCurrencyMarket && currencyCurrentValue) ? <Col lg={{ span: 8 }} md={{ span: 12 }} xs={{ span: 24 }} style={{ marginBottom: 30 }}>
