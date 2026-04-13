@@ -17,17 +17,17 @@ export const StatsCard = ({ title, tooltip = '', value = <span />, toWinValue = 
         <div className={styles.title}>{title}</div>
         {tooltip && <InfoTooltip title={tooltip} />}
       </div>
-      <div className={styles.title}>{t('pages.market.cards.to_win', 'To win')}</div>
+      <div className={styles.title} style={{ opacity: 0.6 }}>{t('pages.market.cards.to_win', 'To win')}</div>
     </div> : <div className={styles.title}>{title}</div>}
     {showValue && (toWinValue ? <div className={styles.valueRow}>
       <div className={styles.value} style={{ color }}>{value}</div>
-      <div className={styles.arrow}>→</div>
-      <div className={styles.value} style={{ color, textAlign: 'right' }}>{toWinValue}</div>
+      <div className={styles.arrow} style={{ opacity: 0.6 }}>→</div>
+      <div className={styles.value} style={{ color, textAlign: 'right', opacity: 0.6 }}>{toWinValue}</div>
     </div> : <div className={styles.value} style={{ color }}>{value}</div>)}
     {isWinner === false && <div className={styles.value} style={{ color }}> </div>}
     {toWinSubValue ? <div className={styles.subValueRow}>
       <div style={{ color }}>{subValue}</div>
-      <div style={{ color }}>{toWinSubValue}</div>
+      <div style={{ color, opacity: 0.6 }}>{toWinSubValue}</div>
     </div> : <div className={styles.subValueWrap} style={{ color: !winnerExists ? color : '#fff' }}>
       {!winnerExists ? <div>{subValue}</div> : (isWinner ? t('common.winner', 'WINNER') : t('common.loser', 'LOSER'))}
       {(onAction && !winnerExists && reserve !== 0) ? <Space size="large">
