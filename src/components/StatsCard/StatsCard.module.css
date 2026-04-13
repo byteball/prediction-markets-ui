@@ -18,10 +18,46 @@
   min-height: 1.5em;
 }
 
+.titleRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.titleWithTooltip {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.valueRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.valueRow .value {
+  font-size: 18px;
+}
+
+.arrow {
+  color: #bfbfbf;
+  font-size: 16px;
+  flex-shrink: 0;
+}
+
 .tooltipWrap {
   position: absolute;
   top: 17px;
   right: 15px;
+}
+
+.subValueRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  min-height: 1.5em;
 }
 
 .subValueWrap{
