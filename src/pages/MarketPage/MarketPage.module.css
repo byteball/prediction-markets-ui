@@ -149,6 +149,16 @@
   }
 }
 
+.symbolWide {
+  display: none;
+}
+
+@media (min-width: 1170px) {
+  .symbolWide {
+    display: inline;
+  }
+}
+
 /* safari only */
 @media not all and (min-resolution:.001dpcm) {
   .emblem {

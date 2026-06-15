@@ -73,7 +73,8 @@
         "expiration_time": {
           "title": "到期时间",
           "desc": "您可以投注或退出的时段。"
-        }
+        },
+        "to_win": "赢得"
       },
       "sport_price_tooltip": "{{team_name}} 代币的价格。如果 {{team_name}} 获胜，所有代币的购买者支付的所有资金将在 {{team_name}} 代币持有者之间分配。",
       "sport_price_tooltip_draw": "平局代币的价格。 在平局的情况下，所有代币购买者支付的所有资金将在平局代币持有人之间分配。",

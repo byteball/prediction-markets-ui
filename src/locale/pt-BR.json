@@ -73,7 +73,8 @@
         "expiration_time": {
           "title": "tempo de expiração",
           "desc": "O período em que você pode fazer suas apostas ou sair delas se mudar de ideia"
-        }
+        },
+        "to_win": "Ganho"
       },
       "sport_price_tooltip": "O preço do token {{team_name}}. Se {{team_name}} vencer, todos os fundos pagos pelos compradores de todos os tokens serão divididos entre os detentores dos tokens {{team_name}}.",
       "sport_price_tooltip_draw": "O preço do token de sorteio. Em caso de empate, todos os fundos pagos pelos compradores de todos os tokens serão divididos entre os detentores dos tokens do sorteio.",
