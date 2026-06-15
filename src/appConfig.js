@@ -51,5 +51,6 @@ export default {
     process.env.REACT_APP_SPORT_ORACLE,
     process.env.REACT_APP_PRECIOUS_METAL_ORACLE
   ],
-  GA_ID: process.env.REACT_APP_GA_ID
+  GA_ID: process.env.REACT_APP_GA_ID,
+  ALLOW_DRAW_IN_FIFA_WORLD_CUP_BEFORE: '2026-06-28T19:00:00Z',
 }
