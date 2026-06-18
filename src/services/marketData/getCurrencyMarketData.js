@@ -3,6 +3,7 @@ import { withValidation } from "./decorators/withValidation";
 import { withSafety } from "./decorators/withSafety";
 import { withLogging } from "./decorators/withLogging";
 import { withTimeout } from "./decorators/withTimeout";
+import { bucketByDay } from "./shared/bucketByDay";
 
 const TIMEOUT_MS = 8000;
 
@@ -54,8 +55,12 @@ export const getCurrencyMarketData = async ({ from, to, isHourlyChart, committed
   const req = { from, to, isHourlyChart, committed_at };
   const [candleResult, priceResult] = await Promise.all([resolveCandles(req), resolvePrice(req)]);
 
-  const { candles, candlesSource } = candleResult;
+  const { candlesSource } = candleResult;
   const { currentValue, priceSource } = priceResult;
+
+  // The daily view labels the x-axis by date, so collapse intraday candles
+  // (e.g. CoinGecko's 4h) into one candle per day. Exchange daily candles are unchanged.
+  const candles = isHourlyChart ? candleResult.candles : bucketByDay(candleResult.candles);
 
   console.log(
     `[marketData] resolved ${from}_${to} in ${Date.now() - startTime}ms — ` +

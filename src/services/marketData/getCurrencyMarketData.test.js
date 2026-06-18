@@ -87,6 +87,28 @@ describe("getCurrencyMarketData", () => {
     expect(result.candlesSource).toBe("b");
   });
 
+  it("collapses intraday candles into one per day for the daily view", async () => {
+    const DAY = 24 * 60 * 60;
+    const day = 1700000000 - (1700000000 % DAY);
+    providerA.getCandles.mockResolvedValue([
+      { time: day, open: 10, high: 12, low: 9, close: 11 },
+      { time: day + 4 * 3600, open: 11, high: 15, low: 8, close: 13 }
+    ]);
+
+    const result = await getCurrencyMarketData({ from: "BTC", to: "USD", isHourlyChart: false });
+
+    expect(result.candles).toEqual([{ time: day, open: 10, high: 15, low: 8, close: 13 }]);
+    expect(result.candlesSource).toBe("a");
+  });
+
+  it("keeps intraday candles as-is for the hourly view", async () => {
+    providerA.getCandles.mockResolvedValue(validCandles());
+
+    const result = await getCurrencyMarketData({ from: "BTC", to: "USD", isHourlyChart: true });
+
+    expect(result.candles).toHaveLength(2);
+  });
+
   it("returns empty candles and zero price when no provider succeeds", async () => {
     const result = await getCurrencyMarketData(req);
 
