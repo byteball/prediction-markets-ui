@@ -40,7 +40,7 @@
   "scripts": {
     "start": "NODE_OPTIONS=--openssl-legacy-provider craco start",
     "build": "NODE_OPTIONS=--openssl-legacy-provider craco build",
-    "test": "craco test"
+    "test": "NODE_OPTIONS=--openssl-legacy-provider craco test"
   },
   "eslintConfig": {
     "extends": [

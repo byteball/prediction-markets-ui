@@ -1,8 +1,8 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
-import axios from "axios";
 import { isEmpty } from "lodash";
 
-import http from "services/http";
+import { getCurrencyPrice } from "services/marketData";
+import { getBaseUsdRate } from "services/oswap";
 
 export const updateReserveRate = createAsyncThunk(
   'updateReserveRate',
@@ -10,14 +10,33 @@ export const updateReserveRate = createAsyncThunk(
     const state = getState();
 
     if (isEmpty(state.settings.reserveRates) || reserveAssetsHaveBeenChanged || (state.settings.reserveRateUpdateTime + 1800 <= (Date.now() / 1000))) {
+      const startTime = Date.now();
       const rates = {};
 
-      await axios.get(`https://min-api.cryptocompare.com/data/pricemulti?fsyms=${Object.values(assets || state.settings.reserveAssets).map(({ symbol }) => symbol).filter((s) => s !== "GBYTE").join(',')}&tsyms=USD`).then(({ data }) => Object.entries(data).forEach(([symbol, { USD }]) => {
-        const asset = Object.entries(assets).find(([_, item]) => item.symbol === symbol)[0];
-        rates[asset] = USD;
-      })).catch((error) => console.error(error));
+      const reserveAssets = assets || state.settings.reserveAssets;
 
-      rates.base = await http.getDataFeed([process.env.REACT_APP_CURRENCY_ORACLE], "GBYTE_USD", 0);
+      // every non-base reserve asset, priced in USD through the market-data fallback chain
+      const pricedAssets = Object.entries(reserveAssets).filter(([asset]) => asset !== "base");
+
+      console.log('[updateReserveRate] requesting base (oswap GBYTE_USD) + USD rates for:', pricedAssets.map(([, { symbol }]) => symbol));
+
+      // reserve-asset USD rates (via providers chain) and the base (GBYTE) rate from oswap run in parallel
+      const reserveRequests = pricedAssets.map(([asset, { symbol }]) =>
+        getCurrencyPrice({ from: symbol, to: "USD" }).then((price) => {
+          console.log(`[updateReserveRate] received ${symbol} in ${Date.now() - startTime}ms:`, price);
+          if (price) rates[asset] = price;
+        }).catch((error) => console.error(`[updateReserveRate] ${symbol} request failed:`, error)));
+
+      // base (GBYTE) price comes exclusively from oswap's exchange-rates feed
+      const baseRequest = getBaseUsdRate()
+        .then((base) => {
+          console.log(`[updateReserveRate] received base (oswap GBYTE_USD) in ${Date.now() - startTime}ms:`, base);
+          if (base) rates.base = base;
+        }).catch((error) => console.error('[updateReserveRate] base (oswap) request failed:', error));
+
+      await Promise.all([...reserveRequests, baseRequest]);
+
+      console.log(`[updateReserveRate] resolved rates in ${Date.now() - startTime}ms:`, rates);
 
       return rates;
     }
