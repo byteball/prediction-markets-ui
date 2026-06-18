@@ -1,10 +1,10 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
-import axios from "axios";
 import moment from "moment";
 
 import backend from "services/backend";
 import obyte from "services/obyte";
 import http from "services/http";
+import { getCurrencyMarketData, getCurrencyPrice } from "services/marketData";
 
 import { setActiveMarketAddress } from "store/slices/activeSlice";
 import { saveBaseOHLC } from "store/slices/settingsSlice";
@@ -140,41 +140,27 @@ export const setActiveMarket = createAsyncThunk(
       }
     } else if (isCurrencyMarket) {
       const [from, to] = params.feed_name.split("_");
-      const toTsQueryParam = committed_at ? `&toTs=${committed_at}` : '';
       const now = moment.utc().unix();
 
       try {
         if (from === 'GBYTE' && params.event_date > now) {
+          // GBYTE live market: keep the 20-min baseOHLC cache, resolve via the provider chain.
           if ((state.settings?.baseOHLC?.expireTs || 0) > Math.floor(Date.now() / 1000)) {
             currencyCandles = state.settings?.baseOHLC?.data || [];
+            currencyCurrentValue = await getCurrencyPrice({ from, to });
           } else {
-            const ohlc = await axios.get(`https://api.coingecko.com/api/v3/coins/byteball/ohlc?vs_currency=usd&days=30`, {
-              headers: {
-                "Access-Control-Allow-Origin": "*",
-                "Access-Control-Allow-Methods": "GET, OPTIONS"
-              }
-            }).then(({ data }) => data.map(([ts, o, h, l, c]) => ({ time: ts / 1000, open: o, high: h, low: l, close: c })));
+            const { candles, currentValue } = await getCurrencyMarketData({ from, to, isHourlyChart, committed_at });
 
-            dispatch(saveBaseOHLC(ohlc));
+            if (candles.length) dispatch(saveBaseOHLC(candles)); // don't cache an empty result for 20 min
 
-            currencyCandles = ohlc;
+            currencyCandles = candles;
+            currencyCurrentValue = currentValue;
           }
-
-          currencyCurrentValue = await axios.get(`https://api.coingecko.com/api/v3/coins/byteball`, {
-            headers: {
-              "Access-Control-Allow-Origin": "*",
-              "Access-Control-Allow-Methods": "GET, OPTIONS"
-            }
-          }).then(({ data }) => data?.market_data?.current_price?.usd);
-
         } else {
-          const cryptocompare = await Promise.all([
-            axios.get(`https://min-api.cryptocompare.com/data/v2/${isHourlyChart ? 'histohour' : 'histoday'}?fsym=${from}&tsym=${to}${toTsQueryParam}&limit=${isHourlyChart ? 168 : 30}`).then(({ data }) => data?.Data?.Data),
-            axios.get(`https://min-api.cryptocompare.com/data/price?fsym=${from}&tsyms=${to}`).then(({ data }) => data?.[to])
-          ]);
+          const { candles, currentValue } = await getCurrencyMarketData({ from, to, isHourlyChart, committed_at });
 
-          currencyCandles = cryptocompare[0];
-          currencyCurrentValue = cryptocompare[1];
+          currencyCandles = candles;
+          currencyCurrentValue = currentValue;
         }
       } catch {
         console.log(`no candles for ${from}->${to}`)

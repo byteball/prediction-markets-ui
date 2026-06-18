@@ -15,6 +15,7 @@ import userWalletSlice from './slices/userWalletSlice';
 import settingsSlice from './slices/settingsSlice';
 import activeSlice from './slices/activeSlice';
 import bridgesSlice from './slices/bridgesSlice';
+import searchCacheSlice from './slices/searchCacheSlice';
 
 import config from "appConfig";
 
@@ -22,14 +23,15 @@ const rootReducer = combineReducers({
   settings: settingsSlice,
   active: activeSlice,
   bridges: bridgesSlice,
-  userWallet: userWalletSlice
+  userWallet: userWalletSlice,
+  searchCache: searchCacheSlice
 });
 
 const persistConfig = {
   key: `prediction${config.ENVIRONMENT === "testnet" ? "-tn" : ""}314`,
   version: 3,
   storage,
-  whitelist: ['settings'],
+  whitelist: ['settings', 'searchCache'],
 }
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);
