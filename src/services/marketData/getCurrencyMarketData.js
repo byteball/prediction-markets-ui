@@ -4,6 +4,7 @@ import { withSafety } from "./decorators/withSafety";
 import { withLogging } from "./decorators/withLogging";
 import { withTimeout } from "./decorators/withTimeout";
 import { bucketByDay } from "./shared/bucketByDay";
+import { toPreciousMetalProxy } from "./shared/symbolMap";
 
 const TIMEOUT_MS = 8000;
 
@@ -46,13 +47,17 @@ const resolvePrice = async (req) => {
  * @param {string} req.to - quote symbol (e.g. "USD").
  * @param {boolean} req.isHourlyChart - hourly candles when true, daily otherwise.
  * @param {number} [req.committed_at] - unix seconds to anchor a resolved market.
+ * @param {boolean} [req.proxyPreciousMetal] - map XAU/XAG to a tokenized proxy (PAXG/KAG) before fetching.
  * @returns {Promise<{candles: Array, currentValue: number, candlesSource: string|null, priceSource: string|null}>}
  */
-export const getCurrencyMarketData = async ({ from, to, isHourlyChart, committed_at } = {}) => {
+export const getCurrencyMarketData = async ({ from, to, isHourlyChart, committed_at, proxyPreciousMetal } = {}) => {
   const startTime = Date.now();
-  console.log(`[marketData] resolving ${from}_${to} (isHourly=${!!isHourlyChart}, committed_at=${committed_at || "live"})`);
+  // Precious-metal feeds (XAU/XAG) aren't crypto; fetch a tokenized 1:1 proxy (PAXG/KAG) instead.
+  const reqFrom = proxyPreciousMetal ? toPreciousMetalProxy(from) : from;
+  const reqTo = proxyPreciousMetal ? toPreciousMetalProxy(to) : to;
+  console.log(`[marketData] resolving ${reqFrom}_${reqTo} (isHourly=${!!isHourlyChart}, committed_at=${committed_at || "live"})`);
 
-  const req = { from, to, isHourlyChart, committed_at };
+  const req = { from: reqFrom, to: reqTo, isHourlyChart, committed_at };
   const [candleResult, priceResult] = await Promise.all([resolveCandles(req), resolvePrice(req)]);
 
   const { candlesSource } = candleResult;
@@ -63,7 +68,7 @@ export const getCurrencyMarketData = async ({ from, to, isHourlyChart, committed
   const candles = isHourlyChart ? candleResult.candles : bucketByDay(candleResult.candles);
 
   console.log(
-    `[marketData] resolved ${from}_${to} in ${Date.now() - startTime}ms — ` +
+    `[marketData] resolved ${reqFrom}_${reqTo} in ${Date.now() - startTime}ms — ` +
     `candles: ${candlesSource ? `${candlesSource} (${candles.length})` : "NONE"}, ` +
     `price: ${priceSource ? `${priceSource} (${currentValue})` : "NONE"}`
   );

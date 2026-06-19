@@ -115,6 +115,22 @@ describe("getCurrencyMarketData", () => {
     expect(result).toEqual({ candles: [], currentValue: 0, candlesSource: null, priceSource: null });
   });
 
+  it("maps precious-metal symbols to a tokenized proxy when proxyPreciousMetal is set", async () => {
+    providerA.getCandles.mockResolvedValue(validCandles());
+
+    await getCurrencyMarketData({ from: "XAU", to: "BTC", isHourlyChart: true, proxyPreciousMetal: true });
+
+    expect(providerA.getCandles).toHaveBeenCalledWith(expect.objectContaining({ from: "PAXG", to: "BTC" }));
+  });
+
+  it("leaves symbols untouched without the proxyPreciousMetal flag", async () => {
+    providerA.getCandles.mockResolvedValue(validCandles());
+
+    await getCurrencyMarketData({ from: "XAU", to: "BTC", isHourlyChart: true });
+
+    expect(providerA.getCandles).toHaveBeenCalledWith(expect.objectContaining({ from: "XAU", to: "BTC" }));
+  });
+
   it("getCurrencyPrice resolves only the price through the chain", async () => {
     providerA.getPrice.mockResolvedValue(null);
     providerB.getPrice.mockResolvedValue(777);
