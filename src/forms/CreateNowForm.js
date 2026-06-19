@@ -11,7 +11,7 @@ import ReactGA from "react-ga";
 import { useTranslation } from "react-i18next";
 
 import { getParamList } from "./CreateForm";
-import { generateLink, generateTextEvent } from "utils";
+import { generateLink, generateTextEvent, isDrawAllowed } from "utils";
 
 import styles from "components/PredictionList/PredictionItem.module.css";
 import client from "services/obyte";
@@ -99,7 +99,7 @@ export const CreateNowForm = ({ feed_name, event_date, expect_datafeed_value, ye
     issue_fee: issueFee.value / 100,
     redeem_fee: redeemFee.value / 100,
     arb_profit_tax: arbProfitFee.value / 100,
-    allow_draw: type === 'sport' && league !== "FIFA World Cup" ? 1 : undefined,
+    allow_draw: type === 'sport' && isDrawAllowed(league, event_date) ? 1 : undefined,
     datafeed_draw_value: type === 'sport' ? 'draw' : undefined,
     reserve_asset: reserveAsset.value,
     quiet_period: (type === 'sport' ? 0 : quietPeriod.value) * 3600

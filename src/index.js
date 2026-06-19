@@ -10,7 +10,7 @@ import axios from "axios";
 import { PersistGate } from "redux-persist/integration/react";
 import 'antd/dist/antd.dark.less';
 
-import getStore from "./store";
+import { store, persistor } from "store/store";
 import appConfig from 'appConfig';
 
 import { router } from 'router';
@@ -24,7 +24,7 @@ import 'moment/locale/uk';
 import './locale/index';
 import './index.css';
 
-export const { store, persistor } = getStore();
+export { store, persistor };
 
 if (appConfig.GA_ID) {
 	ReactGA.initialize(appConfig.GA_ID);

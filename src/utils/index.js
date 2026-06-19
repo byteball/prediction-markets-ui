@@ -12,6 +12,7 @@ import { getOracleName } from "./getOracleName";
 import { getCategoryName } from "./getCategoryName";
 import { getAlternatePaths, getAlternateMetaList } from "./getAlternatePaths";
 import { botCheck } from "./botCheck";
+import { isDrawAllowed } from "./isDrawAllowed";
 
 export {
   encodeData,
@@ -29,5 +30,6 @@ export {
   getCategoryName,
   getAlternatePaths,
   getAlternateMetaList,
-  botCheck
+  botCheck,
+  isDrawAllowed
 }
