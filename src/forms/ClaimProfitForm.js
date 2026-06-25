@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Form, Input, Typography } from "antd";
+import { Form, Input, Tooltip, Typography } from "antd";
 import { QRButton } from "components/QRButton/QRButton";
 import { useTranslation } from "react-i18next";
 
@@ -54,7 +54,7 @@ export const ClaimProfitForm = ({ address, asset, supply = 0, reserve = 0, decim
     <Form.Item
       validateStatus={amount.value === '' ? '' : (amountIsValid ? 'success' : 'error')}
       extra={amount.value === '' ? null : (amountIsValid ? <div>{t("forms.common.you_get", "You get")} {+Number(payout / 10 ** reserve_decimals).toFixed(reserve_decimals)} {reserve_symbol}</div> : <div style={{ color: 'red' }}>{(!amount.valid ? (Number(amount.value) !== 0 ? t("forms.common.not_valid_amount", "Not valid amount") : '') : `${t("forms.common.max_value", "Max value")}: ${+Number(supply / 10 ** decimals).toFixed(decimals)}`)}</div>)}>
-      <Input autoFocus={true} value={amount.value} onChange={handleAmount} placeholder={t("forms.common.amount", "Amount")} suffix={<span style={{ maxWidth: '100%', overflow: 'hidden' }}>{truncate(symbol, { length: 18 })}</span>} />
+      <Input autoFocus={true} value={amount.value} onChange={handleAmount} placeholder={t("forms.common.amount", "Amount")} suffix={<Tooltip title={symbol}><span style={{ maxWidth: '100%', overflow: 'hidden', cursor: 'default' }}>{truncate(symbol, { length: 18 })}</span></Tooltip>} />
     </Form.Item>
 
     <Form.Item>

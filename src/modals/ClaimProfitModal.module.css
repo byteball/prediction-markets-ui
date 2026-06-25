@@ -1,0 +1,91 @@
+.banner {
+  text-align: center;
+  margin: 8px 0 12px;
+}
+
+.flagWrap {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 72px;
+  margin-bottom: 6px;
+}
+
+.flag {
+  max-height: 72px;
+  max-width: 96px;
+  object-fit: contain;
+  user-select: none;
+}
+
+.nameRow {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+}
+
+.wreath {
+  height: 44px;
+  flex-shrink: 0;
+  user-select: none;
+}
+
+.wreathRight {
+  transform: scaleX(-1);
+}
+
+.winnerName {
+  font-size: 22px;
+  font-weight: 700;
+  line-height: 1.2;
+  color: #fff;
+  max-width: 320px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.winnerNameLarge {
+  font-size: 30px;
+}
+
+.winnerLabel {
+  margin-top: 4px;
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: #ffc54d;
+}
+
+.desc {
+  text-align: center;
+  color: #ffc54d !important;
+  font-size: 13px;
+  font-weight: 300;
+}
+
+@media (max-width: 480px) {
+  .flagWrap {
+    min-height: 56px;
+  }
+
+  .flag {
+    max-height: 56px;
+    max-width: 72px;
+  }
+
+  .wreath {
+    height: 34px;
+  }
+
+  .winnerName {
+    font-size: 18px;
+    max-width: 60vw;
+  }
+
+  .winnerNameLarge {
+    font-size: 24px;
+  }
+}

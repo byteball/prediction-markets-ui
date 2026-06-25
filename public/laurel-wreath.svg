@@ -1,0 +1,24 @@
+<svg viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <path id="laurelLeaf" d="M0 0 C4 -2 4.5 -8 0 -13 C-4.5 -8 -4 -2 0 0 Z" />
+  </defs>
+  <g fill="#FFC54D">
+    <!-- curved branch (stem) -->
+    <path d="M44 61 C22 53 7 36 20 7" stroke="#FFC54D" stroke-width="2.4" fill="none" stroke-linecap="round" />
+    <!-- outer leaves, pointing up and outward (left) -->
+    <use href="#laurelLeaf" transform="translate(41 57) rotate(-42)" />
+    <use href="#laurelLeaf" transform="translate(31 49) rotate(-58)" />
+    <use href="#laurelLeaf" transform="translate(21 39) rotate(-74)" />
+    <use href="#laurelLeaf" transform="translate(14 28) rotate(-92)" />
+    <use href="#laurelLeaf" transform="translate(15 17) rotate(-112)" />
+    <use href="#laurelLeaf" transform="translate(21 8) rotate(-128)" />
+    <!-- inner leaves, smaller, pointing more upward -->
+    <use href="#laurelLeaf" transform="translate(45 51) rotate(-12) scale(0.78)" />
+    <use href="#laurelLeaf" transform="translate(35 43) rotate(-28) scale(0.78)" />
+    <use href="#laurelLeaf" transform="translate(26 34) rotate(-44) scale(0.78)" />
+    <use href="#laurelLeaf" transform="translate(21 24) rotate(-62) scale(0.78)" />
+    <use href="#laurelLeaf" transform="translate(23 14) rotate(-80) scale(0.78)" />
+    <!-- berry at the base -->
+    <circle cx="46" cy="60" r="2.3" />
+  </g>
+</svg>
