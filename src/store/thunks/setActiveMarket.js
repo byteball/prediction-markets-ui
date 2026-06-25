@@ -79,6 +79,7 @@ export const setActiveMarket = createAsyncThunk(
 
     const isSportMarket = !!appConfig.CATEGORIES.sport.oracles.find(({ address }) => address === params.oracle);
     const isCurrencyMarket = !!appConfig.CATEGORIES.currency.oracles.find(({ address }) => address === params.oracle);
+    const isPreciousMetalMarket = !!appConfig.PRECIOUS_METAL_ORACLE && params.oracle === appConfig.PRECIOUS_METAL_ORACLE;
 
     const isHourlyChart = params.event_date + params.waiting_period_length - moment.utc().unix() <= 7 * 24 * 3600;
 
@@ -143,7 +144,13 @@ export const setActiveMarket = createAsyncThunk(
       const now = moment.utc().unix();
 
       try {
-        if (from === 'GBYTE' && params.event_date > now) {
+        if (isPreciousMetalMarket) {
+          // Current rate comes from the oracle's own feed value (the metal itself), not an external token.
+          currencyCurrentValue = datafeedValue !== 'none' ? Number(datafeedValue) : 0;
+          // Chart history via a tokenized-metal proxy (PAXG/KAG) through the existing provider chain.
+          const { candles } = await getCurrencyMarketData({ from, to, isHourlyChart, committed_at, proxyPreciousMetal: true });
+          currencyCandles = candles;
+        } else if (from === 'GBYTE' && params.event_date > now) {
           // GBYTE live market: keep the 20-min baseOHLC cache, resolve via the provider chain.
           if ((state.settings?.baseOHLC?.expireTs || 0) > Math.floor(Date.now() / 1000)) {
             currencyCandles = state.settings?.baseOHLC?.data || [];
