@@ -75,7 +75,7 @@ export const WalletModal = ({ children = "WALLET", type = "default", styles = {}
     <Button onClick={changeVisible} size="large" type={type} style={btnStyles}>{currentWalletAddress ? `${currentWalletAddress.slice(0, 7)}...` : (children === "WALLET" ? t("modals.wallet.title", "Wallet") : children)}</Button>
 
     <Modal
-      visible={visible}
+      open={visible}
       onCancel={changeVisible}
       footer={null}
     >

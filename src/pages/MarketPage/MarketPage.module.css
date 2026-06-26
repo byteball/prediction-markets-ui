@@ -117,6 +117,14 @@
   min-height: 120px;
 }
 
+.venueWrap {
+  margin-bottom: 14px;
+}
+
+.venueCol {
+  text-align: center;
+}
+
 /* Small devices (landscape phones, 576px and up) */
 @media (min-width: 576px) {
   .vs {

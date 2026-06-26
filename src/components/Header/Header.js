@@ -46,7 +46,7 @@ export const Header = () => {
 					</Col>
 				</> : <>
 					<Button onClick={changeVisible} size="large">{t("header.menu", "Menu")}</Button>
-					<Drawer width={width >= 320 ? 320 : width} visible={showMenu} onClose={changeVisible} bodyStyle={{ width: '100%', textAlign: 'center', display: 'flex', flexDirection: 'column', maxHeight: 'calc(100vh - 50px)' }}>
+					<Drawer width={width >= 320 ? 320 : width} open={showMenu} onClose={changeVisible} bodyStyle={{ width: '100%', textAlign: 'center', display: 'flex', flexDirection: 'column', maxHeight: 'calc(100vh - 50px)' }}>
 						<div className={styles.mainMenuWrap}>
 							<MainMenu direction="vertical" onClose={changeVisible} />
 						</div>

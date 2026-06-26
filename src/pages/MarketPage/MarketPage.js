@@ -21,7 +21,8 @@ import {
   selectActiveMarketParams,
   selectActiveMarketStateVars,
   selectActiveMarketStatus,
-  selectActiveTeams
+  selectActiveTeams,
+  selectActiveVenue
 } from "store/slices/activeSlice";
 import { setActiveMarket } from "store/thunks/setActiveMarket";
 import { selectLanguage, selectPriceOrOdds, selectReserveAssets, selectReservesRate } from "store/slices/settingsSlice";
@@ -122,6 +123,8 @@ export const MarketPage = () => {
   const status = useSelector(selectActiveMarketStatus);
   const reserveAssets = useSelector(selectReserveAssets);
   const stateVars = useSelector(selectActiveMarketStateVars);
+
+  const venue = useSelector(selectActiveVenue);
 
   const candles = useSelector(selectActiveDailyCandles);
   const datafeedValue = useSelector(selectActiveDatafeedValue);
@@ -411,6 +414,12 @@ export const MarketPage = () => {
           </Col>
         </Row>
       </div>}
+
+      {venue ? <Row className={styles.venueWrap}>
+        <Col span={24} className={styles.venueCol}>
+          <span>{venue}</span>
+        </Col>
+      </Row> : null}
 
       <Row justify="space-between" align="middle">
         <Space size='large' wrap={true} style={{ marginBottom: 20, marginTop: 10 }}>

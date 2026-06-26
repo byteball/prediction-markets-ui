@@ -37,7 +37,7 @@ export const AddLiquidityModal = ({ disabled, yes_team, no_team }) => {
       width={width > 640 ? 640 : width}
       placement="right"
       size="large"
-      visible={visible}
+      open={visible}
       onClose={close}
     >
 

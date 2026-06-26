@@ -49,7 +49,7 @@ export const ClaimProfitModal = ({ disabled, yes_team, no_team }) => {
       width={width > 640 ? 640 : width}
       placement="right"
       size="large"
-      visible={visible}
+      open={visible}
       onClose={close}
     >
       <Title level={2}>{t("modals.claim_profit.title", "Claim profit")}</Title>

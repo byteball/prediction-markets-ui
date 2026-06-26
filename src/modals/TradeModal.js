@@ -67,7 +67,7 @@ export const TradeModal = memo(({ disabled, visible, setVisible, yes_team, no_te
       width={width > 640 ? 640 : width}
       placement="right"
       size="large"
-      visible={visible}
+      open={visible}
       onClose={close}
     >
 

@@ -89,6 +89,7 @@ export const setActiveMarket = createAsyncThunk(
     let currencyCurrentValue = 0;
     let league_emblem = null;
     let league = null;
+    let venue = null;
 
     let yes_odds = null;
     let no_odds = null;
@@ -116,8 +117,14 @@ export const setActiveMarket = createAsyncThunk(
       }
 
       const [championship, yes_abbreviation, no_abbreviation] = params.feed_name.split("_");
-      const championships = await backend.getChampionships();
 
+      const [venueData, championships] = await Promise.all([
+        backend.getVenue(params.feed_name).then(data => data?.data).catch(() => null),
+        backend.getChampionships()
+      ]);
+
+      venue = venueData;
+      
       const sport = Object.entries(championships).find(([_, cs]) => cs.find(({ code }) => code === championship));
 
       if (sport) {
@@ -176,6 +183,7 @@ export const setActiveMarket = createAsyncThunk(
 
     return {
       params,
+      venue,
       stateVars,
       base_aa,
       dailyCandles,

@@ -99,6 +99,11 @@ class Backend {
     const crest = await this.axios.get(`/crest/${sport}/${competition}/${team_id}`);
     return crest?.data;
   }
+
+  getVenue = async (feed_name) => {
+    const venueRes = await this.axios.get(`/venue/${feed_name}`);
+    return venueRes?.data;
+  }
 }
 
 export default new Backend();
