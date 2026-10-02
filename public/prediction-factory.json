@@ -15,6 +15,7 @@
     "quiet_period": "How early before the event to stop trading",
     "issue_fee": "Issuance fee",
     "redeem_fee": "Redemption fee",
-    "arb_profit_tax": "Arbitrageur profit tax"
+    "arb_profit_tax": "Arbitrageur profit tax",
+    "is_tokenless": "Create a tokenless market whose positions are kept as balances inside the AA instead of assets, set to true"
   }
 }
