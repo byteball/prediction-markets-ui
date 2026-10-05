@@ -266,6 +266,10 @@
         "name": "Allow draw",
         "desc": "Whether to allow a 3rd outcome along with Yes and No. It’s common in some sports."
       },
+      "issue_tokens": {
+        "name": "Issue tokens",
+        "desc": "Issue Yes/No/Draw tokens for the outcomes. Without tokens the positions are kept as balances inside the market and cannot be transferred or traded elsewhere."
+      },
       "oracle": {
         "name": "Oracle",
         "desc": "Address of the oracle that will post the result",

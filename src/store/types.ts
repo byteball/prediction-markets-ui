@@ -129,6 +129,7 @@ export interface CreationOrderData {
   redeem_fee: number;
   arb_profit_tax: number;
   allow_draw?: boolean | number;
+  is_tokenless?: boolean;
   quiet_period: number;
   reserve_decimals?: number;
   yes_team?: string;
@@ -234,8 +235,9 @@ export interface HubMessage {
 }
 
 export interface FactoryPredictionVar {
-  yes_asset: string;
-  no_asset: string;
+  yes_asset?: string;
+  no_asset?: string;
   draw_asset?: string;
+  is_tokenless?: boolean;
   [name: string]: StateVarValue | undefined;
 }

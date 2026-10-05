@@ -176,7 +176,7 @@ export const bootstrap = async () => {
           if (prediction_address) {
             const data = newFactoryStateVars[varName]?.value as FactoryPredictionVar | undefined;
 
-            if (data && ('yes_asset' in data) && ('no_asset' in data)) {
+            if (data && (orderData.is_tokenless ? data.is_tokenless : ('yes_asset' in data) && ('no_asset' in data))) {
               store.dispatch(updateCreationOrder({
                 status: 'created',
                 yes_asset: data.yes_asset,

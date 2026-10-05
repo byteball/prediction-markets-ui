@@ -12,7 +12,7 @@ export const checkCreationOrder = createAsyncThunk<void, void, AppThunkApiConfig
 
     const order = state.settings?.creationOrder;
 
-    if (order && order.creation_unit_id && (order.status !== 'created' || !((order.yes_symbol && order.no_symbol && (!order.data.allow_draw || order.draw_symbol)) || order.cancelRegSymbol))) {
+    if (order && order.creation_unit_id && (order.status !== 'created' || !((order.yes_symbol && order.no_symbol && (!order.data.allow_draw || order.draw_symbol)) || order.cancelRegSymbol || order.data.is_tokenless))) {
       let yes_asset = order.yes_asset;
       let no_asset = order.no_asset;
       let draw_asset = order.draw_asset;

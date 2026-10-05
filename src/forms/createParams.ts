@@ -21,6 +21,10 @@ export const getParamList = () =>
       name: i18n.t("forms.create.allow_draw.name", "Allow draw"),
       description: i18n.t("forms.create.allow_draw.desc", "Whether to allow a 3rd outcome along with Yes and No. It’s common in some sports."),
     },
+    issue_tokens: {
+      name: i18n.t("forms.create.issue_tokens.name", "Issue tokens"),
+      description: i18n.t("forms.create.issue_tokens.desc", "Issue Yes/No/Draw tokens for the outcomes. Without tokens the positions are kept as balances inside the market and cannot be transferred or traded elsewhere."),
+    },
     oracle: {
       name: i18n.t("forms.create.oracle.name", "Oracle"),
       description: i18n.t("forms.create.oracle.desc", "Address of the oracle that will post the result"),

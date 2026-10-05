@@ -34,6 +34,7 @@ export const CreateForm = () => {
   const paramList = getParamList();
   // states
   const [allowDraw, setAllowDraw] = useState<Field<boolean | "">>({ value: "", valid: true });
+  const [issueTokens, setIssueTokens] = useState(false);
   const [oracle, setOracle] = useState<Field<string>>({ value: "", valid: false });
   const [feedName, setFeedName] = useState<Field<string>>({ value: "", valid: false });
   const [reserveAsset, setReserveAsset] = useState<Field<string>>({ value: paramList.reserve_asset.initValue, valid: true });
@@ -119,6 +120,10 @@ export const CreateForm = () => {
   if (allowDraw.value) {
     data.allow_draw = 1;
     data.datafeed_draw_value = datafeedDrawValue.value;
+  }
+
+  if (!issueTokens) {
+    data.is_tokenless = true;
   }
 
   const save = () => {
@@ -207,9 +212,15 @@ export const CreateForm = () => {
       {category.value !== "sport" && (
         <>
           <FormItem>
-            <div className="flex items-center gap-2.5">
-              <FormLabel info={paramList.allow_draw.description}>{paramList.allow_draw.name}</FormLabel>
-              <Switch defaultChecked={!!allowDraw.value} onCheckedChange={(checked) => handleChangeValue(checked, "allow_draw")} />
+            <div className="flex flex-wrap items-center gap-x-6 gap-y-2.5">
+              <div className="flex items-center gap-2.5">
+                <FormLabel info={paramList.allow_draw.description}>{paramList.allow_draw.name}</FormLabel>
+                <Switch defaultChecked={!!allowDraw.value} onCheckedChange={(checked) => handleChangeValue(checked, "allow_draw")} />
+              </div>
+              <div className="flex items-center gap-2.5">
+                <FormLabel info={paramList.issue_tokens.description}>{paramList.issue_tokens.name}</FormLabel>
+                <Switch checked={issueTokens} onCheckedChange={setIssueTokens} aria-label={paramList.issue_tokens.name} />
+              </div>
             </div>
           </FormItem>
 
