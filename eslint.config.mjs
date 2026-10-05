@@ -22,7 +22,15 @@ export default defineConfig([
     rules: {
       // Carried over from the CRA eslintConfig.
       'react-hooks/exhaustive-deps': 'off',
+      // The forms keep their original useEffect + setState data flow through the UI migration
+      // (behaviour must stay byte-identical, see docs/migration). Revisit when the data flow is refactored.
+      'react-hooks/set-state-in-effect': 'warn',
     },
+  },
+  {
+    // shadcn components export variant helpers (cva) next to the component by convention.
+    files: ['src/components/ui/**/*.tsx'],
+    rules: { 'react-refresh/only-export-components': 'off' },
   },
   {
     // Legacy JS files: keep the CRA-era relaxed rule set until they are migrated to TS.

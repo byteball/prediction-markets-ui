@@ -3,12 +3,13 @@ import { createRoot } from 'react-dom/client';
 import { HelmetProvider } from 'react-helmet-async';
 import { RouterProvider } from 'react-router-dom';
 import { Provider as StoreProvider } from 'react-redux';
-import ReactGA from 'react-ga';
+import ReactGA from "react-ga4";
 import { SWRConfig } from 'swr';
 import axios from 'axios';
 
 import { PersistGate } from 'redux-persist/integration/react';
-import 'antd/dist/antd.dark.less';
+import { TooltipProvider } from '@/components/ui/tooltip';
+import { Toaster } from '@/components/ui/sonner';
 
 import { store, persistor } from 'store/store';
 import appConfig from 'appConfig';
@@ -29,11 +30,11 @@ import './index.css';
 if (appConfig.GA_ID) {
 	ReactGA.initialize(appConfig.GA_ID);
 
-	ReactGA.pageview(router.state.location.pathname);
+	ReactGA.send({ hitType: "pageview", page: router.state.location.pathname });
 
 	router.subscribe(({ historyAction, location }) => {
 		if (historyAction === 'PUSH' || historyAction === 'POP') {
-			ReactGA.pageview(location.pathname);
+			ReactGA.send({ hitType: "pageview", page: location.pathname });
 		}
 	});
 }
@@ -54,7 +55,10 @@ createRoot(container).render(
 							fetcher: (url: string) => axios.get(url).then((res) => res.data),
 						}}
 					>
-						<RouterProvider router={router} />
+						<TooltipProvider delayDuration={100}>
+							<RouterProvider router={router} />
+							<Toaster position="top-center" richColors />
+						</TooltipProvider>
 					</SWRConfig>
 				</PersistGate>
 			</HelmetProvider>

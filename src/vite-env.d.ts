@@ -17,5 +17,4 @@ interface ImportMeta {
 
 // Untyped third-party packages.
 declare module 'obyte';
-declare module 'obyte-qr-button';
 declare module 'counterstake-sdk';

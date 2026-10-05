@@ -6,6 +6,11 @@
   position: relative;
 }
 
+/* was the antd Card body (24px, 12px on phones) */
+.cardBody {
+  padding: 24px;
+}
+
 .notifyWrap {
   font-size: 12px;
   font-weight: 300;
@@ -78,7 +83,7 @@
     object-fit: contain;
   }
 
-  .itemWrap :global(.ant-card-body) {
+  .cardBody {
     padding: 12px;
   }
 }

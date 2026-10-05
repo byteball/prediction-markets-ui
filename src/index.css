@@ -1,3 +1,195 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+@import "shadcn/tailwind.css";
+
+/* ---------- shadcn design tokens (CLI 4.21.1, preset radix-nova), values mapped to the former antd dark theme ---------- */
+
+@custom-variant dark (&:is(.dark *));
+
+@theme inline {
+  --font-heading: var(--font-sans);
+  --font-sans: 'Open Sans', sans-serif;
+  --color-sidebar-ring: var(--sidebar-ring);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar: var(--sidebar);
+  --color-chart-5: var(--chart-5);
+  --color-chart-4: var(--chart-4);
+  --color-chart-3: var(--chart-3);
+  --color-chart-2: var(--chart-2);
+  --color-chart-1: var(--chart-1);
+  --color-ring: var(--ring);
+  --color-input: var(--input);
+  --color-border: var(--border);
+  --color-destructive: var(--destructive);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-accent: var(--accent);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-muted: var(--muted);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-secondary: var(--secondary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-primary: var(--primary);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-popover: var(--popover);
+  --color-card-foreground: var(--card-foreground);
+  --color-card: var(--card);
+  --color-foreground: var(--foreground);
+  --color-background: var(--background);
+  --color-yes: var(--yes);
+  --color-no: var(--no);
+  --color-draw: var(--draw);
+  --radius-sm: calc(var(--radius) * 0.6);
+  --radius-md: calc(var(--radius) * 0.8);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) * 1.4);
+  --radius-2xl: calc(var(--radius) * 1.8);
+  --radius-3xl: calc(var(--radius) * 2.2);
+  --radius-4xl: calc(var(--radius) * 2.6);
+}
+
+/*
+ * The app is dark-only: <html class="dark"> is set in index.html. The :root block carries the same
+ * values so components look right even if the class is missing (e.g. in tests).
+ * Sources: the old craco modifyVars (@primary-color #2D72F6, @text-color #dcdde1, @border-radius-base 8px),
+ * antd.dark (body #141414, component bg #1f1f1f, border #424242), appConfig YES/NO/DRAW colours.
+ */
+:root,
+.dark {
+  --background: #141413;
+  --foreground: #dcdde1;
+  --card: #1f1f1f;
+  --card-foreground: #dcdde1;
+  --popover: #1f1f1f;
+  --popover-foreground: #dcdde1;
+  --primary: #2d72f6;
+  --primary-foreground: #ffffff;
+  --secondary: #303030;
+  --secondary-foreground: #dcdde1;
+  --muted: #262626;
+  --muted-foreground: #8c8c8c;
+  --accent: #303030;
+  --accent-foreground: #dcdde1;
+  --destructive: #ff5e57;
+  --border: #424342;
+  --input: #434343;
+  --ring: #2d72f6;
+  --yes: #05c46b;
+  --no: #ff5e57;
+  --draw: #ffc048;
+  --chart-1: #2d72f6;
+  --chart-2: #05c46b;
+  --chart-3: #ff5e57;
+  --chart-4: #ffc048;
+  --chart-5: #8c8c8c;
+  --radius: 0.5rem;
+  --sidebar: #1f1f1f;
+  --sidebar-foreground: #dcdde1;
+  --sidebar-primary: #2d72f6;
+  --sidebar-primary-foreground: #ffffff;
+  --sidebar-accent: #303030;
+  --sidebar-accent-foreground: #dcdde1;
+  --sidebar-border: #424342;
+  --sidebar-ring: #2d72f6;
+  color-scheme: dark;
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+
+  html {
+    @apply font-sans;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+    font-size: 16px;
+    line-height: 1.5715;
+  }
+
+  /*
+   * Global element styles the app relied on from antd.dark (preflight resets them to nothing):
+   * links in the primary colour, paragraph spacing, heading weight/colour, bullet lists, inline images.
+   */
+  a {
+    color: var(--primary);
+    text-decoration: none;
+    transition: color 0.3s;
+  }
+
+  a:hover {
+    color: color-mix(in srgb, var(--primary) 80%, white);
+  }
+
+  p {
+    margin-bottom: 1em;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    margin-bottom: 0.5em;
+    color: var(--foreground);
+    font-weight: 500;
+  }
+
+  h1 {
+    font-size: 38px;
+    line-height: 1.23;
+  }
+
+  h2 {
+    font-size: 30px;
+    line-height: 1.35;
+  }
+
+  h3 {
+    font-size: 24px;
+    line-height: 1.35;
+  }
+
+  h4 {
+    font-size: 20px;
+    line-height: 1.4;
+  }
+
+  h5 {
+    font-size: 16px;
+    line-height: 1.5;
+  }
+
+  img {
+    display: inline-block;
+  }
+
+  button:not(:disabled),
+  [role="button"]:not(:disabled) {
+    cursor: pointer;
+  }
+
+  /* Bullet lists in the FAQ answers (Trans content) */
+  .faq ul {
+    list-style: disc;
+    padding-left: 2em;
+    margin-bottom: 1em;
+  }
+
+  ::placeholder {
+    color: var(--muted-foreground);
+  }
+}
+
+/* ---------- app styles ---------- */
+
 body {
   font-family: 'Open Sans', sans-serif;
 }
@@ -11,26 +203,6 @@ body {
   box-sizing: border-box;
 }
 
-.firstBigLetter .ant-select-item-option .ant-select-item-option-content:first-letter {
-  text-transform: uppercase;
-}
-
-.firstBigLetter {
-  display: block;
-}
-
-.firstBigLetter::first-letter {
-  text-transform: uppercase !important;
-}
-
-.firstBigLetter .ant-select-selection-item:first-letter {
-  text-transform: uppercase;
-}
-
-.ant-ribbon {
-  top: 4px !important;
-}
-
 body {
   background-color: #141413 !important;
 }
@@ -42,8 +214,4 @@ body {
 .metaWrap {
   color: #ccc !important;
   font-size: 14px;
-}
-
-.ant-ribbon {
-  top: -5px !important;
 }

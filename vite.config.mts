@@ -1,17 +1,13 @@
 import { fileURLToPath, URL } from 'node:url';
 import { defineConfig } from 'vitest/config';
 import react from '@vitejs/plugin-react';
+import tailwindcss from '@tailwindcss/vite';
 import { nodePolyfills } from 'vite-plugin-node-polyfills';
 
 const src = (p = '') => fileURLToPath(new URL(`./src/${p}`, import.meta.url));
 
-// Theme variables previously passed through craco-less (craco.config.js).
-const antdThemeVars = {
-  '@primary-color': '#2D72F6',
-  '@border-radius-base': '8px',
-  '@text-color': '#dcdde1',
-  '@font-size-base': '16px',
-};
+// antd's dark theme (with the old craco-less modifyVars) is precompiled by scripts/build-antd-css.mjs
+// into src/styles/antd.dark.layer.css and imported from src/index.css inside `@layer antd`.
 
 // Bare imports relative to src/ (the old jsconfig "baseUrl": "src/").
 // Mirrors tsconfig.app.json "baseUrl". Add an entry here when a new top-level src/ module is created.
@@ -33,6 +29,7 @@ const srcModules = [
 export default defineConfig({
   plugins: [
     react(),
+    tailwindcss(),
     // obyte / counterstake-sdk (ethers 5, secp256k1, create-hash, ws) expect Node globals in the browser.
     nodePolyfills({
       include: ['buffer', 'process', 'events', 'util', 'stream', 'crypto'],
@@ -50,18 +47,12 @@ export default defineConfig({
   },
   // Keep the CRA variable names so .env.testnet / .env.livenet stay unchanged.
   envPrefix: 'REACT_APP_',
-  css: {
-    preprocessorOptions: {
-      less: {
-        javascriptEnabled: true,
-        modifyVars: antdThemeVars,
-      },
-    },
-  },
   build: {
     // prophet-backend reads ../prediction-markets-ui/build/index.html for OG/SSR placeholders.
     outDir: 'build',
     emptyOutDir: true,
+    // Matches package.json "browserslist": the Tailwind v4 floor.
+    target: ['chrome111', 'edge111', 'firefox128', 'safari16.4'],
   },
   test: {
     globals: true,
