@@ -12,7 +12,7 @@ import { cn } from "cn";
 import { selectLanguage, selectPriceOrOdds, selectReservesRate } from "store/slices/settingsSlice";
 
 import { CreateNowModal } from "modals";
-import { generateTextEvent } from "utils";
+import { getTokenlessSymbols, generateTextEvent } from "utils";
 import { useWindowSize } from "hooks";
 
 import i18n from "locale";
@@ -37,6 +37,7 @@ export type PredictionItemProps = {
   candles?: Candle[] | number[];
   reserve_symbol?: string;
   yes_symbol?: string;
+  is_tokenless?: boolean | number;
   result?: "yes" | "no" | "draw" | null;
   waiting_period_length?: number;
   feed_name?: string;
@@ -109,7 +110,8 @@ export const PredictionItem = memo(
     event_date,
     candles,
     reserve_symbol,
-    yes_symbol,
+    yes_symbol: yes_symbol_prop,
+    is_tokenless,
     result,
     waiting_period_length = 0,
     feed_name,
@@ -132,6 +134,7 @@ export const PredictionItem = memo(
     league,
     coef = 0,
   }: PredictionItemProps) => {
+    const yes_symbol = yes_symbol_prop || (is_tokenless && feed_name ? getTokenlessSymbols({ feed_name, event_date, oracle }).yes_symbol : undefined);
     const infoWrapRef = useRef<HTMLDivElement>(null);
     const [width] = useWindowSize();
     const { t } = useTranslation();

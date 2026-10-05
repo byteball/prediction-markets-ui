@@ -19,6 +19,7 @@ export interface MarketParams {
   redeem_fee: number;
   arb_profit_tax: number;
   allow_draw?: boolean | number;
+  is_tokenless?: boolean;
   quiet_period?: number;
   yes_symbol: string;
   no_symbol: string;

@@ -13,9 +13,11 @@ import { getCategoryName } from "./getCategoryName";
 import { getAlternatePaths, getAlternateMetaList } from "./getAlternatePaths";
 import { botCheck } from "./botCheck";
 import { isDrawAllowed } from "./isDrawAllowed";
+import { getTokenlessSymbols } from "./getTokenlessSymbols";
 
 export {
   encodeData,
+  getTokenlessSymbols,
   generateLink,
   getExchangeResult,
   getMarketPriceByType,

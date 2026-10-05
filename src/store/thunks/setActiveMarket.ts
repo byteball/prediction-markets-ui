@@ -12,6 +12,7 @@ import type { AppThunkApiConfig } from "store/hooks";
 import type { Candle, CurrencyCandle, MarketParams, MarketStateVars, RecentEvent, Team } from "store/types";
 
 import appConfig from "appConfig";
+import { getTokenlessSymbols } from "utils/getTokenlessSymbols";
 
 const initialParams = {
   allow_draw: false,
@@ -75,25 +76,38 @@ export const setActiveMarket = createAsyncThunk<SetActiveMarketResult, { address
 
   const tokensInfo: TokensInfo = {};
 
+  const isTokenless = !!aa[1].params.is_tokenless;
+
   const tokensInfoGetters: Promise<unknown>[] = [
-    http.getSymbolByAsset(tokenRegistry, stateVars.yes_asset).then((symbol) => (tokensInfo.yes_symbol = symbol)),
-    http.getSymbolByAsset(tokenRegistry, stateVars.no_asset).then((symbol) => (tokensInfo.no_symbol = symbol)),
     http.getSymbolByAsset(tokenRegistry, reserve_asset).then((symbol) => (tokensInfo.reserve_symbol = symbol)),
-    http
-      .getDecimalsBySymbolOrAsset(tokenRegistry, stateVars.yes_asset)
-      .then((decimals) => (tokensInfo.yes_decimals = decimals))
-      .catch(() => (tokensInfo.yes_decimals = null)),
-    http
-      .getDecimalsBySymbolOrAsset(tokenRegistry, stateVars.no_asset)
-      .then((decimals) => (tokensInfo.no_decimals = decimals))
-      .catch(() => (tokensInfo.no_decimals = null)),
     http
       .getDecimalsBySymbolOrAsset(tokenRegistry, reserve_asset)
       .then((decimals) => (tokensInfo.reserve_decimals = decimals))
       .catch(() => (tokensInfo.reserve_decimals = null)),
   ];
 
-  if (aa[1].params.allow_draw && stateVars.draw_asset) {
+  if (isTokenless) {
+    const { yes_symbol, no_symbol, draw_symbol } = getTokenlessSymbols({ feed_name: aa[1].params.feed_name, event_date: aa[1].params.event_date, oracle: aa[1].params.oracle });
+
+    tokensInfo.yes_symbol = yes_symbol;
+    tokensInfo.no_symbol = no_symbol;
+    if (aa[1].params.allow_draw) tokensInfo.draw_symbol = draw_symbol;
+  } else {
+    tokensInfoGetters.push(
+      http.getSymbolByAsset(tokenRegistry, stateVars.yes_asset).then((symbol) => (tokensInfo.yes_symbol = symbol)),
+      http.getSymbolByAsset(tokenRegistry, stateVars.no_asset).then((symbol) => (tokensInfo.no_symbol = symbol)),
+      http
+        .getDecimalsBySymbolOrAsset(tokenRegistry, stateVars.yes_asset)
+        .then((decimals) => (tokensInfo.yes_decimals = decimals))
+        .catch(() => (tokensInfo.yes_decimals = null)),
+      http
+        .getDecimalsBySymbolOrAsset(tokenRegistry, stateVars.no_asset)
+        .then((decimals) => (tokensInfo.no_decimals = decimals))
+        .catch(() => (tokensInfo.no_decimals = null))
+    );
+  }
+
+  if (!isTokenless && aa[1].params.allow_draw && stateVars.draw_asset) {
     tokensInfoGetters.push(
       http.getSymbolByAsset(tokenRegistry, stateVars.draw_asset).then((symbol) => (tokensInfo.draw_symbol = symbol)),
       http
