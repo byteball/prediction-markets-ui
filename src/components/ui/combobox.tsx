@@ -35,6 +35,12 @@ function Combobox({ value, onValueChange, options, placeholder, searchPlaceholde
   const [activeIndex, setActiveIndex] = React.useState(0)
   const listId = React.useId()
   const inputRef = React.useRef<HTMLInputElement>(null)
+  const triggerRef = React.useRef<HTMLElement>(null)
+  const [container, setContainer] = React.useState<HTMLElement | null>(null)
+
+  React.useEffect(() => {
+    setContainer(triggerRef.current?.closest<HTMLElement>("[data-slot=sheet-content], [data-slot=dialog-content]") ?? null)
+  }, [])
 
   const selected = options.find((o) => o.value === value)
   const filtered = React.useMemo(() => {
@@ -118,7 +124,7 @@ function Combobox({ value, onValueChange, options, placeholder, searchPlaceholde
     return (
       <Popover open={open && filtered.length > 0} onOpenChange={setOpen}>
         <PopoverTrigger asChild>
-          <div className={cn("relative", className)}>
+          <div ref={triggerRef as React.RefObject<HTMLDivElement>} className={cn("relative", className)}>
             <input
               ref={inputRef}
               id={id}
@@ -137,12 +143,12 @@ function Combobox({ value, onValueChange, options, placeholder, searchPlaceholde
                 setQuery(e.target.value)
                 setOpen(true)
               }}
-              onFocus={() => setOpen(true)}
+              onClick={() => setOpen(true)}
               onKeyDown={onKeyDown}
             />
           </div>
         </PopoverTrigger>
-        <PopoverContent align="start" className="w-(--radix-popover-trigger-width) p-0" onOpenAutoFocus={(e) => e.preventDefault()}>
+        <PopoverContent container={container} align="start" className="w-(--radix-popover-trigger-width) p-0" onOpenAutoFocus={(e) => e.preventDefault()}>
           {renderList}
         </PopoverContent>
       </Popover>
@@ -159,6 +165,7 @@ function Combobox({ value, onValueChange, options, placeholder, searchPlaceholde
     >
       <PopoverTrigger asChild>
         <button
+          ref={triggerRef as React.RefObject<HTMLButtonElement>}
           type="button"
           id={id}
           role="combobox"
@@ -176,7 +183,7 @@ function Combobox({ value, onValueChange, options, placeholder, searchPlaceholde
           <ChevronDown className="size-4 shrink-0 opacity-50" />
         </button>
       </PopoverTrigger>
-      <PopoverContent align="start" className="w-(--radix-popover-trigger-width) p-0" onOpenAutoFocus={(e) => e.preventDefault()}>
+      <PopoverContent container={container} align="start" className="w-(--radix-popover-trigger-width) p-0" onOpenAutoFocus={(e) => e.preventDefault()}>
         <div className="border-b border-border p-1">
           <input
             ref={inputRef}
