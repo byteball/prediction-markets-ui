@@ -22,6 +22,7 @@ import { FormItem, type FormItemStatus } from "@/components/ui/form-item";
 import { Input } from "@/components/ui/input";
 import { InputGroup } from "@/components/ui/input-group";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Switch } from "@/components/ui/switch";
 
 import styles from "components/PredictionList/PredictionItem.module.css";
 
@@ -56,6 +57,7 @@ export const CreateNowForm = ({ feed_name, event_date, expect_datafeed_value, ye
   const [arbProfitFee, setArbProfitFee] = useState<Field<string | number>>({ value: paramList.arb_profit_fee.initValue, valid: true });
   const [reserveAsset, setReserveAsset] = useState<Field<string>>({ value: paramList.reserve_asset.initValue, valid: true });
   const [comparison, setComparison] = useState<Field<string>>({ value: expect_comparison || ">", valid: true });
+  const [issueTokens, setIssueTokens] = useState(false);
 
   const [eventDate, setEventDate] = useState<Field<number>>({ value: event_date, valid: true });
   const [feedName, setFeedName] = useState<Field<string | undefined>>({ value: feed_name, valid: true });
@@ -127,6 +129,7 @@ export const CreateNowForm = ({ feed_name, event_date, expect_datafeed_value, ye
     datafeed_draw_value: type === "sport" ? "draw" : undefined,
     reserve_asset: reserveAsset.value,
     quiet_period: (type === "sport" ? 0 : Number(quietPeriod.value)) * 3600,
+    is_tokenless: issueTokens ? undefined : true,
   };
 
   const create = () => {
@@ -334,6 +337,13 @@ export const CreateNowForm = ({ feed_name, event_date, expect_datafeed_value, ye
               </SelectContent>
             </Select>
           )}
+        </FormItem>
+
+        <FormItem>
+          <div className="flex items-center gap-2.5">
+            <FormLabel info={paramList.issue_tokens.description}>{paramList.issue_tokens.name}</FormLabel>
+            <Switch checked={issueTokens} onCheckedChange={setIssueTokens} aria-label={paramList.issue_tokens.name} />
+          </div>
         </FormItem>
 
         {percentInput(issueFee, "issue_fee", paramList.issue_fee.placeholder)}
