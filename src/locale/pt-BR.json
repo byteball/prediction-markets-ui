@@ -264,6 +264,10 @@
         "name": "Permitir empate",
         "desc": "Se permitirmos um 3º resultado juntamente com Sim e Não. É comum em alguns esportes."
       },
+      "issue_tokens": {
+        "name": "Emitir tokens",
+        "desc": "Emitir tokens Sim/Não/Empate para os resultados. Sem tokens, as posições ficam como saldos dentro do mercado e não podem ser transferidas nem negociadas em outro lugar."
+      },
       "oracle": {
         "name": "Oráculo",
         "desc": "Endereço do oráculo que postará o resultado",
