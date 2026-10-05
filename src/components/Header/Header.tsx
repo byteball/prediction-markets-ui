@@ -36,7 +36,7 @@ export const Header = () => {
 						</Link>
 					</div>
 					{width >= 990 ? (
-						<div className="flex items-baseline gap-6">
+						<div className="flex items-center gap-6">
 							<MainMenu />
 							<WalletModal />
 

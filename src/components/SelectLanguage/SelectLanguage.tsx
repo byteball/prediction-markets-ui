@@ -33,7 +33,7 @@ export const SelectLanguage = ({ action }: SelectLanguageProps) => {
       </SelectTrigger>
       <SelectContent align="end" className="min-w-0">
         {langs.map((item) => (
-          <SelectItem key={item.name} value={item.name} className="px-5">
+          <SelectItem key={item.name} value={item.name} className="px-5 [&>span:first-child]:hidden">
             <a href={`/${item.name}`} style={{ pointerEvents: "none" }} tabIndex={-1}>
               <Flag name={item.name} flag={item.flag} />
             </a>
