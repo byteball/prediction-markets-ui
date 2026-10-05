@@ -56,7 +56,7 @@ export const PredictionItem = memo(({ reserve_asset = 'base', aa_address, reserv
   const exists = !!aa_address || preview;
   const currentReserveRate = reservesRates[reserve_asset] || 0;
 
-  useEffect(async () => {
+  useEffect(() => {
     const data = preview ? candles : (candles ? (candles.length === 1 ? [...candles, ...candles] : candles) : []).map(({ price }) => price);
 
     const minValue = min(data);

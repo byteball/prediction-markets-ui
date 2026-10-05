@@ -10,7 +10,7 @@ import { createIdResolver } from "../shared/createIdResolver";
 const instance = axios.create({ baseURL: "https://api.coingecko.com/api/v3" });
 
 // REACT_APP_ENVIRONMENT distinguishes testnet from livenet.
-const isTestnet = process.env.REACT_APP_ENVIRONMENT === "testnet";
+const isTestnet = import.meta.env.REACT_APP_ENVIRONMENT === "testnet";
 
 const resolveId = createIdResolver({
   provider: "coingecko",

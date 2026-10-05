@@ -2,18 +2,18 @@ const feedNamesCurrencyOracle = ["BTC_USD", "1ECO_BTC", "1ECO_USD", "1INCH_USD",
 const feedNamesPreciousMetalOracle = ["XAG_BTC", "XAG_EUR", "XAG_GBP", "XAG_JPY", "XAG_USD", "XAG_XAU", "XAU_BTC", 'XAU_EUR', "XAU_GBP", "XAU_JPY", "XAU_USD", "XAU_XAG", "GBYTE_XAG", "GBYTE_XAU", "XAG_GBYTE", "XAU_GBYTE"];
 
 export default {
-  ENVIRONMENT: process.env.REACT_APP_ENVIRONMENT,
-  FACTORY_AAS: process.env.REACT_APP_FACTORY_AAS?.split(",") || [],
-  BACKEND_URL: process.env.REACT_APP_BACKEND_URL,
-  BASE_AAS: process.env.REACT_APP_BASE_AAS?.split(","),
+  ENVIRONMENT: import.meta.env.REACT_APP_ENVIRONMENT,
+  FACTORY_AAS: import.meta.env.REACT_APP_FACTORY_AAS?.split(",") || [],
+  BACKEND_URL: import.meta.env.REACT_APP_BACKEND_URL,
+  BASE_AAS: import.meta.env.REACT_APP_BASE_AAS?.split(","),
   YES_COLOR: "#05c46b",
   NO_COLOR: "#ff5e57",
   DRAW_COLOR: "#ffc048",
-  CATEGORIES: process.env.REACT_APP_ENVIRONMENT === 'testnet' ? {
+  CATEGORIES: import.meta.env.REACT_APP_ENVIRONMENT === 'testnet' ? {
     'currency': {
       oracles: [
         {
-          address: process.env.REACT_APP_CURRENCY_ORACLE,
+          address: import.meta.env.REACT_APP_CURRENCY_ORACLE,
           feedNames: feedNamesCurrencyOracle,
         },
       ]
@@ -21,7 +21,7 @@ export default {
     'sport': {
       oracles: [
         {
-          address: process.env.REACT_APP_SPORT_ORACLE
+          address: import.meta.env.REACT_APP_SPORT_ORACLE
         }
       ]
     }
@@ -29,11 +29,11 @@ export default {
     'currency': {
       oracles: [
         {
-          address: process.env.REACT_APP_CURRENCY_ORACLE,
+          address: import.meta.env.REACT_APP_CURRENCY_ORACLE,
           feedNames: feedNamesCurrencyOracle
         },
         {
-          address: process.env.REACT_APP_PRECIOUS_METAL_ORACLE,
+          address: import.meta.env.REACT_APP_PRECIOUS_METAL_ORACLE,
           feedNames: feedNamesPreciousMetalOracle
         }
       ]
@@ -41,17 +41,17 @@ export default {
     'sport': {
       oracles: [
         {
-          address: process.env.REACT_APP_SPORT_ORACLE,
+          address: import.meta.env.REACT_APP_SPORT_ORACLE,
         }
       ]
     }
   },
   KNOWN_ORACLES: [
-    process.env.REACT_APP_CURRENCY_ORACLE,
-    process.env.REACT_APP_SPORT_ORACLE,
-    process.env.REACT_APP_PRECIOUS_METAL_ORACLE
+    import.meta.env.REACT_APP_CURRENCY_ORACLE,
+    import.meta.env.REACT_APP_SPORT_ORACLE,
+    import.meta.env.REACT_APP_PRECIOUS_METAL_ORACLE
   ],
-  GA_ID: process.env.REACT_APP_GA_ID,
+  GA_ID: import.meta.env.REACT_APP_GA_ID,
   ALLOW_DRAW_IN_FIFA_WORLD_CUP_BEFORE: '2026-06-28T19:00:00Z',
-  PRECIOUS_METAL_ORACLE: process.env.REACT_APP_PRECIOUS_METAL_ORACLE,
+  PRECIOUS_METAL_ORACLE: import.meta.env.REACT_APP_PRECIOUS_METAL_ORACLE,
 }

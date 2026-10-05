@@ -113,37 +113,41 @@ export const BuyForm = ({ type, yes_team, no_team, amount, setAmount }) => {
     }
   }
 
-  useEffect(async () => {
-    if (fromToken && fromToken.network !== "Obyte" && amount.value && amount.valid && Number(amount.value) > 0) {
-      try {
-        const res = await estimateOutput({
-          amount: Number(amount.value),
-          src_network: fromToken.network,
-          src_asset: fromToken.asset,
-          dst_network: 'Obyte',
-          dst_asset: reserve_asset,
-          recipient_address: walletAddress,
-          assistant_reward_percent: 1.0,
-          testnet: appConfig.ENVIRONMENT === 'testnet',
-          obyteClient: client,
-        });
+  useEffect(() => {
+    const run = async () => {
+      if (fromToken && fromToken.network !== "Obyte" && amount.value && amount.valid && Number(amount.value) > 0) {
+        try {
+          const res = await estimateOutput({
+            amount: Number(amount.value),
+            src_network: fromToken.network,
+            src_asset: fromToken.asset,
+            dst_network: 'Obyte',
+            dst_asset: reserve_asset,
+            recipient_address: walletAddress,
+            assistant_reward_percent: 1.0,
+            testnet: appConfig.ENVIRONMENT === 'testnet',
+            obyteClient: client,
+          });
 
-        if (res && typeof res === 'number' && res > 0) {
-          setEstimate(res);
-        } else {
+          if (res && typeof res === 'number' && res > 0) {
+            setEstimate(res);
+          } else {
+            setEstimate(0);
+          }
+
+          setEstimateError(undefined);
+        } catch (e) {
           setEstimate(0);
+          setEstimateError(e.message);
+          console.log('estimateOutput error')
         }
 
-        setEstimateError(undefined);
-      } catch (e) {
+      } else if (estimate) {
         setEstimate(0);
-        setEstimateError(e.message);
-        console.log('estimateOutput error')
       }
+    };
 
-    } else if (estimate) {
-      setEstimate(0);
-    }
+    run();
   }, [fromToken, amount]);
 
   const buyForReserve = () => {

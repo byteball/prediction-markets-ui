@@ -5,7 +5,6 @@
   "dependencies": {
     "@ant-design/icons": "^4.2.1",
     "@ant-design/plots": "^1.0.9",
-    "@craco/craco": "^6.0.0",
     "@fortawesome/fontawesome-svg-core": "^6.1.1",
     "@fortawesome/free-brands-svg-icons": "^6.1.1",
     "@fortawesome/react-fontawesome": "^0.1.18",
@@ -14,47 +13,52 @@
     "antd": "^4.19.5",
     "axios": "^0.27.2",
     "counterstake-sdk": "^0.1.9",
-    "craco-less": "^1.17.1",
-    "history": "^5.2.0",
     "i18next": "^21.9.2",
     "lodash": "^4.17.21",
     "moment": "^2.30.1",
     "obyte": "^0.1.23",
     "obyte-qr-button": "^0.0.16",
-    "react": "^17.0.2",
-    "react-dom": "^17.0.2",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
     "react-ga": "^3.3.1",
     "react-helmet-async": "^1.3.0",
     "react-i18next": "^11.18.6",
     "react-image": "^4.0.3",
     "react-redux": "^8.1.3",
     "react-router-dom": "^6.3.0",
-    "react-scripts": "^4.0.3",
     "redux": "^4.2.1",
     "redux-persist": "^6.0.0",
     "swr": "1.3.0"
   },
-  "resolutions": {
-    "react-error-overlay": "6.0.9"
+  "devDependencies": {
+    "@eslint/js": "^10.0.1",
+    "@types/lodash": "^4.17.25",
+    "@types/node": "^26.6.4",
+    "@types/react": "^18.3.31",
+    "@types/react-dom": "^18.3.7",
+    "@vitejs/plugin-react": "^6.1.2",
+    "eslint": "^10.12.0",
+    "eslint-plugin-react-hooks": "^7.1.1",
+    "eslint-plugin-react-refresh": "^0.5.7",
+    "globals": "^17.13.0",
+    "jsdom": "^29.1.1",
+    "less": "^4.9.1",
+    "typescript": "~5.9.3",
+    "typescript-eslint": "^8.71.0",
+    "vite": "^8.3.2",
+    "vite-plugin-node-polyfills": "^0.28.0",
+    "vitest": "^4.1.11"
   },
   "scripts": {
-    "start": "NODE_OPTIONS=--openssl-legacy-provider craco start",
-    "build": "NODE_OPTIONS=--openssl-legacy-provider craco build",
-    "test": "NODE_OPTIONS=--openssl-legacy-provider craco test"
-  },
-  "eslintConfig": {
-    "extends": [
-      "react-app",
-      "react-app/jest"
-    ],
-    "rules": {
-      "react/jsx-no-target-blank": "off",
-      "jsx-a11y/anchor-is-valid": "off",
-      "react-hooks/exhaustive-deps": "off",
-      "import/no-anonymous-default-export": "off",
-      "no-useless-escape": "off",
-      "no-useless-constructor": "off"
-    }
+    "start": "vite",
+    "dev": "vite",
+    "build": "tsc -b && vite build",
+    "preview": "vite preview",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "typecheck": "tsc -b",
+    "lint": "eslint .",
+    "i18n:extract": "npx -y i18next-parser@9 --config src/locale/i18next-parser.config.cjs"
   },
   "browserslist": {
     "production": [

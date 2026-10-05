@@ -1,4 +1,4 @@
-import { store } from "index";
+import { store } from "store/store";
 import { isEmpty } from "lodash";
 import { notification } from "antd";
 
