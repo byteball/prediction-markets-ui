@@ -8,7 +8,6 @@ import appConfig from "appConfig";
 
 type Team = { name: string } | null;
 
-/** Market state vars the pie reads (`getMarketPriceByType` reads the same fields plus `coef`). */
 export interface MarketSizeStateVars {
     coef?: number;
     supply_yes?: number;
@@ -27,7 +26,6 @@ export interface MarketSizePieProps {
 
 type PieDatum = { type: 'YES' | 'NO' | 'DRAW'; token: 'yes' | 'no' | 'draw'; value: number };
 
-/** Shape G2Plot hands to the label `content` / `color` callbacks for this chart. */
 type PieLabelItem = PieDatum & { percent: number };
 
 export const MarketSizePie = ({ teams, reserve_decimals, stateVars = {}, reserve_symbol, allow_draw = false, oracle }: MarketSizePieProps) => {
@@ -43,8 +41,6 @@ export const MarketSizePie = ({ teams, reserve_decimals, stateVars = {}, reserve
     const noPrice = +getMarketPriceByType(stateVars, 'no').toFixed(reserve_decimals);
     const drawPrice = +getMarketPriceByType(stateVars, 'draw').toFixed(reserve_decimals);
 
-    // Cast: the label/color/tooltip callbacks and the `renderer`/`theme` string literals do not match the G2Plot typings.
-    // `data` is omitted from the type because it is passed separately to `<Pie>` below.
     const pieConfig = {
         angleField: 'value',
         colorField: 'type',

@@ -18,9 +18,7 @@ interface CoingeckoSearchCoin {
 interface CoingeckoSearchResponse {
   coins?: CoingeckoSearchCoin[];
 }
-/** OHLC row: [ ts(ms), open, high, low, close ]. */
 type CoingeckoOhlcRow = [ts: number, open: number, high: number, low: number, close: number];
-/** `/simple/price`: { [coinId]: { [vsCurrency]: price } }. */
 type CoingeckoSimplePrice = Record<string, Record<string, number> | undefined>;
 
 // REACT_APP_ENVIRONMENT distinguishes testnet from livenet.

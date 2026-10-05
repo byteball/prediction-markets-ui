@@ -22,7 +22,6 @@ type Meta = {
   new_supply_draw: number;
   old_reserve: number;
   new_reserve: number;
-  // Present on the buy estimate (get_result_for_buying_by_type), absent on the redeem estimate.
   amount?: number;
   reserve_amount?: number;
   total_fee: number;
@@ -31,7 +30,6 @@ type Meta = {
   percentage_arb_profit_tax: number;
   issue_fee: number;
   redeem_fee: number;
-  // Present on the redeem estimate (getExchangeResult), absent on the buy estimate.
   percentage_redeem_fee?: number;
   network_fee: number;
 };

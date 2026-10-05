@@ -62,7 +62,6 @@ export type PredictionItemProps = {
   type?: string;
 };
 
-/** Replacement for antd `Badge.Ribbon` (placement="start"). */
 const Ribbon = ({ color, children, text }: { color: string; children: ReactNode; text: ReactNode }) => (
   <div className="relative">
     {children}
@@ -152,7 +151,6 @@ export const PredictionItem = memo(
     const exists = !!aa_address || preview;
     const currentReserveRate = reservesRates[reserve_asset] || 0;
 
-    // Chart data derived from candles (was useEffect + setState before the TS migration).
     const { dataForChart, minValue } = useMemo(() => {
       const prices: number[] = preview
         ? ((candles as number[] | undefined) ?? [])
@@ -223,7 +221,6 @@ export const PredictionItem = memo(
       no_team_name: no_team,
     });
 
-    // status ribbon
     let status = "";
     let color = "red";
 

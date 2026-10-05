@@ -15,6 +15,6 @@ interface ImportMeta {
   readonly env: ImportMetaEnv;
 }
 
-// Untyped third-party packages.
 declare module 'obyte';
 declare module 'counterstake-sdk';
+declare module 'moment/dist/locale/*';

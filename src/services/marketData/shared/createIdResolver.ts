@@ -1,15 +1,11 @@
 import { store } from "store/store";
 import { cacheSearchResult, selectSearchCache } from "store/slices/searchCacheSlice";
 
-/** The slice of persisted search-cache state this resolver reads: `{ [provider]: { [symbol]: id } }`. */
 type SearchCacheResults = Record<string, Record<string, string | undefined> | undefined>;
 
 export interface IdResolverOptions {
-  /** Provider name, used as the cache namespace. */
   provider: string;
-  /** Pinned symbol -> id pairs (e.g. testnet-only tokens /search can't find). */
   overrides?: Record<string, string>;
-  /** Performs the /search lookup. */
   fetcher: (symbol: string) => Promise<string | null>;
 }
 
@@ -33,7 +29,6 @@ export const createIdResolver = ({ provider, overrides = {}, fetcher }: IdResolv
     if (!sym) return Promise.resolve(null);
     if (overrides[sym]) return Promise.resolve(overrides[sym]);
 
-    // The store is still JavaScript (untyped selector); name the piece we read once, here.
     const persisted = (selectSearchCache(store.getState()) as SearchCacheResults | undefined)?.[provider]?.[sym];
     if (persisted) return Promise.resolve(persisted);
 

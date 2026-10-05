@@ -23,10 +23,6 @@ type ActiveState = {
   teams?: { yes?: { name: string } | null; no?: { name: string } | null };
 };
 
-/**
- * Keeps the URL language prefix, the persisted language setting and the moment locale in sync, and
- * rewrites /market/<address> URLs to their SEO form once the market is loaded. Renders nothing.
- */
 export const PageProvider = memo(() => {
   const lang = useSelector(selectLanguage);
   const dispatch = useDispatch();
@@ -47,7 +43,6 @@ export const PageProvider = memo(() => {
       const language = botCheck() ? languageInUrl : languageInUrl || languageFromBrowserSettings;
 
       if (language && langList.find((lang) => lang === language)) {
-        // if language is in the list
         dispatch(changeLanguage(language));
         moment.locale(getMomentLocaleByLanguageKey(language));
 
@@ -55,13 +50,11 @@ export const PageProvider = memo(() => {
           navigate(`${language !== "en" ? "/" + language : ""}${cleanedUrl === "/" && language !== "en" ? "" : cleanedUrl}${location.search}`, { replace: true });
         }
       } else {
-        // if language is not in the list we use default language
         i18.changeLanguage(DEFAULT_LANGUAGE_KEY);
         navigate(cleanedUrl + location.search, { replace: true });
         moment.locale(getMomentLocaleByLanguageKey(DEFAULT_LANGUAGE_KEY));
       }
     } else {
-      // if language is already set
       i18.changeLanguage(lang);
 
       if (lang !== languageInUrl && lang !== "en") {

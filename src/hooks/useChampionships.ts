@@ -6,14 +6,12 @@ import type { SwitchAction } from "components/SwitchActions/SwitchActions";
 import appConfig from "appConfig";
 import { getTabNameByType } from "utils/getTabNameByType";
 
-/** One championship entry of the backend `championships` response (keyed by sport type). */
 export interface Championship {
     name: string;
     code: string;
     emblem?: string;
 }
 
-/** Backend `championships` response: sport type -> championships. */
 export type Championships = Record<string, Championship[]>;
 
 export const useChampionships = (lang?: string | null) => {

@@ -4,7 +4,6 @@ import type { RootState } from 'store';
 import type { Bridge } from 'store/types';
 
 export interface BridgesState {
-  /** Counterstake bridges into Obyte, grouped by their home (EVM) network. */
   tokensByNetwork: Record<string, Bridge[]>;
 }
 

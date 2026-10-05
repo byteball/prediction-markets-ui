@@ -8,7 +8,6 @@ const krakenAssetOverrides: Record<string, string> = {
   DOGE: "XDG"
 };
 
-/** Translate a ticker symbol to Kraken's asset code. */
 export const toKrakenAsset = (symbol: string): string => krakenAssetOverrides[symbol] || symbol;
 
 // Precious metals aren't crypto, but 1:1-pegged tokenized proxies trade on the same

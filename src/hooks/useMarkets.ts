@@ -4,10 +4,8 @@ import type { PredictionItemProps } from 'components/PredictionList/PredictionIt
 
 import appConfig from 'appConfig';
 
-/** One market row of the backend `markets/<page>` response; rendered as-is by `PredictionItem`. */
 export type Market = PredictionItemProps & { aa_address: string };
 
-/** One page of the backend `markets/<page>` response. */
 export interface MarketsPage {
     data: Market[];
     max_count: number;

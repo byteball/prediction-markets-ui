@@ -11,8 +11,6 @@ const validCandles: Candle[] = [
   { time: now - 3600, open: 11, high: 13, low: 10, close: 12 }
 ];
 
-// The decorators are generic over request/result types, and these tests feed them
-// deliberately untrusted output (undefined, invalid candles, 0), so keep both sides open.
 type TestProvider = ProviderLike<unknown, unknown, unknown, unknown>;
 
 const makeProvider = (overrides: Partial<TestProvider> = {}): TestProvider => ({

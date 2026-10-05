@@ -22,8 +22,6 @@ export interface ActiveState {
   teams: { yes: Team | null; no: Team | null };
 }
 
-// `params` / `stateVars` are empty objects until `setActiveMarket` resolves; the market UI only
-// reads them once `status` is 'loaded', so they are typed as the loaded shapes.
 const initialState: ActiveState = {
   address: null,
   status: 'not selected', // selected, loaded

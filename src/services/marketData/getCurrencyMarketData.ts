@@ -47,8 +47,6 @@ const resolvePrice = async (req: PriceQuery): Promise<{ currentValue: number; pr
  * @param req.committed_at - unix seconds to anchor a resolved market.
  * @param req.proxyPreciousMetal - map XAU/XAG to a tokenized proxy (PAXG/KAG) before fetching.
  */
-// The `= {}` default is kept from the JS version (a missing request resolves to the empty
-// result instead of throwing); callers are typed to always pass `from`/`to`.
 export const getCurrencyMarketData = async ({ from, to, isHourlyChart, committed_at, proxyPreciousMetal }: MarketDataQuery = {} as MarketDataQuery): Promise<MarketDataResult> => {
   const startTime = Date.now();
   // Precious-metal feeds (XAU/XAG) aren't crypto; fetch a tokenized 1:1 proxy (PAXG/KAG) instead.

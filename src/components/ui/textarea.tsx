@@ -1,7 +1,6 @@
 import * as React from "react"
 import { cn } from "cn"
 
-// forwardRef: React 18 (see button.tsx).
 const Textarea = React.forwardRef<HTMLTextAreaElement, React.ComponentProps<"textarea">>(function Textarea(
   { className, ...props },
   ref

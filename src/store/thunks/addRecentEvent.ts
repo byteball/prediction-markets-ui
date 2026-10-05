@@ -9,7 +9,6 @@ export const addRecentEvent = createAsyncThunk<RecentEvent | undefined, AARespon
     async ({ aa_address, bounced, response, timestamp, response_unit, trigger_address, trigger_unit, objResponseUnit }, { getState }) => {
         const state = getState();
         const responseVars = response.responseVars || {};
-        // the trigger unit's full joint; read defensively (the hub may return no joint)
         const { joint } = await client.api.getJoint(trigger_unit) as { joint?: { unit?: ObyteUnit } };
         const msg = joint?.unit?.messages.find(m => m.app === 'data');
         const payload = msg ? msg.payload : {};
@@ -20,7 +19,6 @@ export const addRecentEvent = createAsyncThunk<RecentEvent | undefined, AARespon
             const params = state.active?.params || {};
             const { reserve_asset } = params;
 
-            // The AA response vars carry the trade amounts/prices of the event.
             let eventObject = {
                 aa_address,
                 trigger_unit,
@@ -34,7 +32,6 @@ export const addRecentEvent = createAsyncThunk<RecentEvent | undefined, AARespon
 
             if (responseVars && ('next_coef' in responseVars) && ('arb_profit_tax' in responseVars || isAddLiquidity)) {
                 const existsAmountInPayload = 'yes_amount' in payload || 'no_amount' in payload || 'draw_amount' in payload;
-
 
                 if (existsAmountInPayload || isAddLiquidity || ('type' in payload)) {
                     if (joint.unit && joint.unit.messages) {
@@ -101,7 +98,7 @@ export const addRecentEvent = createAsyncThunk<RecentEvent | undefined, AARespon
 
             }
 
-            eventObject.type = type as RecentEventType; // only returned below when set
+            eventObject.type = type as RecentEventType;
             eventObject.reserve_amount = reserve_amount;
 
             if (type) {

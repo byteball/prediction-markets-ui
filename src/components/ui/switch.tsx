@@ -6,7 +6,6 @@ type SwitchProps = React.ComponentProps<typeof SwitchPrimitive.Root> & {
   size?: "sm" | "default"
 }
 
-// forwardRef: React 18 (see button.tsx). Used as a `TooltipTrigger asChild` target in ViewPriceSwitcher.
 const Switch = React.forwardRef<React.ElementRef<typeof SwitchPrimitive.Root>, SwitchProps>(function Switch(
   { className, size = "default", ...props },
   ref

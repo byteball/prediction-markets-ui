@@ -4,12 +4,9 @@ import { cn } from "cn"
 
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
 
-// Replacement for antd `<Select showSearch>` and `<AutoComplete>`: a trigger that opens a filterable
-// list. With `allowCustomValue` the search box is the value itself (free text, like AutoComplete).
 export type ComboboxOption = {
   value: string
   label: React.ReactNode
-  /** Plain text used for filtering (defaults to `value`). */
   text?: string
   group?: string
 }
@@ -21,14 +18,12 @@ type ComboboxProps = {
   placeholder?: React.ReactNode
   searchPlaceholder?: string
   emptyText?: React.ReactNode
-  /** Free-text mode: the typed text becomes the value even when it matches no option. */
   allowCustomValue?: boolean
   disabled?: boolean
   id?: string
   className?: string
   "aria-invalid"?: boolean
   "aria-describedby"?: string
-  /** Class applied to each option label element (e.g. first-letter capitalisation). */
   optionClassName?: string
 }
 
@@ -120,7 +115,6 @@ function Combobox({ value, onValueChange, options, placeholder, searchPlaceholde
   )
 
   if (allowCustomValue) {
-    // AutoComplete mode: the input holds the value; the list offers suggestions.
     return (
       <Popover open={open && filtered.length > 0} onOpenChange={setOpen}>
         <PopoverTrigger asChild>

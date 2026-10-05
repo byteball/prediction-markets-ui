@@ -14,26 +14,17 @@ const AppStoreUrl = "https://apps.apple.com/us/app/byteball/id1147137332#?platfo
 const PlayMarketUrl = "https://play.google.com/store/apps/details?id=org.byteball.wallet";
 
 export type QRButtonProps = {
-  /** Obyte payment URI (`obyte:…` / `obyte-tn:…`). */
   href: string;
   children?: ReactNode;
-  /** Called both when the QR dialog is opened and when the desktop button is clicked (as obyte-qr-button did). */
   onClick?: (ev: MouseEvent<HTMLElement>) => void;
   disabled?: boolean;
-  /** antd-era prop kept for call sites: "large" → shadcn size "lg". */
   size?: "small" | "middle" | "large";
-  /** antd-era prop kept for call sites: "primary" → filled button, anything else → outline. */
   type?: "primary" | "default" | "link";
   className?: string;
 };
 
 const sizeMap: Record<NonNullable<QRButtonProps["size"]>, ButtonProps["size"]> = { small: "sm", middle: "default", large: "lg" };
 
-/**
- * Replacement for the `obyte-qr-button` package (which was a precompiled bundle depending on antd 4).
- * Left button opens a dialog with a QR code for the mobile wallet, right button is a regular link that
- * opens the desktop wallet. The ref points at the desktop button so forms can trigger it with Enter.
- */
 export const QRButton = forwardRef<HTMLAnchorElement, QRButtonProps>(function QRButton({ href, children, onClick, disabled = false, size = "middle", type = "default", className }, ref) {
   const [qrOpen, setQrOpen] = useState(false);
   const [downloadType, setDownloadType] = useState<false | "ios" | "android">(false);
@@ -92,7 +83,6 @@ export const QRButton = forwardRef<HTMLAnchorElement, QRButtonProps>(function QR
             <QRCodeSVG size={240} value={href} />
           </a>
           <div className="mt-2 text-xs text-muted-foreground">
-            {/* The translations keep the obyte-qr-button placeholders "[ios]" / "[android]". */}
             {t("qr_button.install", "Install Obyte wallet for [ios] or [android] if you don't have one yet")
               .split(/(\[ios\]|\[android\])/)
               .map((part, index) =>

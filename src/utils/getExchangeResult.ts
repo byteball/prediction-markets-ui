@@ -1,4 +1,3 @@
-/** Subset of the market AA state vars used by the AMM estimates. */
 export type ExchangeStateVars = {
   coef?: number;
   reserve?: number;
@@ -7,7 +6,6 @@ export type ExchangeStateVars = {
   supply_draw?: number;
 };
 
-/** Subset of the market AA params used by the AMM estimates. */
 export type ExchangeParams = {
   issue_fee: number;
   redeem_fee: number;
@@ -25,7 +23,6 @@ export type BuyParams = {
 
 export type TokenType = 'yes' | 'no' | 'draw';
 
-/** Fields shared by the issue/redeem estimate (getExchangeResult) and the buy estimate (get_result_for_buying_by_type). */
 export type ExchangeEstimateBase = {
   reserve_needed: number;
   new_reserve: number;
@@ -55,14 +52,11 @@ export type ExchangeEstimateBase = {
   new_supply_draw: number;
 };
 
-/** Result of getExchangeResult (issue or redeem by token amounts). */
 export type ExchangeResult = ExchangeEstimateBase & {
   percentage_redeem_fee: number;
 };
 
-/** Result of get_result_for_buying_by_type (buy by reserve amount). */
 export type BuyResult = ExchangeEstimateBase & {
-  /** Token amount received for `reserve_amount`. */
   amount: number;
   reserve_amount: number;
 };
@@ -204,7 +198,6 @@ export const get_result_for_buying_by_type = (state: ExchangeStateVars, params: 
   const new_supply_squared = new_supply ** 2;
   const new_den = Math.sqrt((type === 'yes' ? new_supply_squared : supply_yes_squared) + (type === 'no' ? new_supply_squared : supply_no_squared) + (type === 'draw' ? new_supply_squared : supply_draw_squared));
 
-  // Both branches below assign these before use (kept as declarations for eslint no-useless-assignment).
   let token_amount: number;
   let fee_with_arb_profit_tax: number;
   let arb_profit_tax_amount = 0;

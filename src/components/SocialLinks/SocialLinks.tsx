@@ -12,12 +12,11 @@ type SocialLink = {
 };
 
 type SocialLinksProps = {
-  /** "full" shows every link; anything else ("small") only the first five. */
   size?: "full" | "small";
   centered?: boolean;
 };
 
-export const SocialLinks = ({ size = 'full', centered = false }: SocialLinksProps) => { // type full or short
+export const SocialLinks = ({ size = 'full', centered = false }: SocialLinksProps) => {
 
   const links: SocialLink[] = [
     {

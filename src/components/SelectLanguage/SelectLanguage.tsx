@@ -26,15 +26,14 @@ export const SelectLanguage = ({ action }: SelectLanguageProps) => {
         dispatch(changeLanguage(value));
       }}
     >
-      <SelectTrigger aria-label="Language" className="h-10 w-auto gap-2 border-0 bg-transparent px-2 shadow-none dark:bg-transparent">
+      <SelectTrigger aria-label="Language" className="h-10 w-auto gap-1 border-0 bg-transparent px-1 shadow-none dark:bg-transparent dark:hover:bg-transparent">
         <SelectValue>
           <Flag name={current.name} flag={current.flag} />
         </SelectValue>
       </SelectTrigger>
-      <SelectContent align="end">
+      <SelectContent align="end" className="min-w-0">
         {langs.map((item) => (
           <SelectItem key={item.name} value={item.name} className="px-5">
-            {/* The href keeps crawlable links to every language, as the antd version did (pointer events are off). */}
             <a href={`/${item.name}`} style={{ pointerEvents: "none" }} tabIndex={-1}>
               <Flag name={item.name} flag={item.flag} />
             </a>

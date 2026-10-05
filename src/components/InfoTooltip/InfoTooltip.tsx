@@ -19,7 +19,7 @@ export const InfoTooltip = ({ title, style = {} }: InfoTooltipProps) => {
     >
       <Tooltip>
         <TooltipTrigger asChild>
-          <span className="inline-flex cursor-help opacity-40" style={style}>
+          <span className="inline-flex opacity-40" style={style}>
             <Info className="size-[1em]" aria-hidden="true" />
           </span>
         </TooltipTrigger>

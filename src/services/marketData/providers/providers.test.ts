@@ -11,8 +11,6 @@ import { coinpaprikaProvider } from "./coinpaprika";
 import type { Mock } from "vitest";
 
 // One shared axios.get mock is returned by every axios.create() call (closure),
-// so each provider's internal instance dispatches through it. (vi.mock is
-// hoisted above the imports by babel-vi.)
 vi.mock("axios", () => {
   const get = vi.fn();
   return { __esModule: true, default: { create: vi.fn(() => ({ get })) } };
@@ -24,7 +22,6 @@ vi.mock("store/store", () => ({
 }));
 
 const mockGet = axios.create().get as Mock;
-// The factory above replaces the store with plain mocks; view it as such for the setup calls.
 const mockedStore = store as unknown as { getState: Mock; dispatch: Mock };
 
 beforeEach(() => {

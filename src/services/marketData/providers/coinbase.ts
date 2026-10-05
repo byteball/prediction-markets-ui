@@ -7,7 +7,6 @@ import type { Provider } from "../types";
 // Candles support start/end (ISO, max 300 buckets) → can anchor resolved markets.
 const instance = axios.create({ baseURL: "https://api.exchange.coinbase.com" });
 
-/** Candle row: [ time(seconds), low, high, open, close, volume ], newest first. */
 type CoinbaseCandleRow = [time: number, low: number, high: number, open: number, close: number, volume: number];
 interface CoinbaseTicker {
   price?: string;

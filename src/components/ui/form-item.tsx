@@ -1,11 +1,8 @@
 import { useId, type ReactNode } from "react"
 import { cn } from "cn"
 
-import { Label } from "@/components/ui/label"
+import { Field, FieldDescription, FieldError, FieldLabel } from "@/components/ui/field"
 
-// Replacement for antd `Form.Item` as the forms use it: a label, a control, a help/error line and an
-// extra line, driven by the controlled `validateStatus` the forms already compute. It wires
-// label ↔ control (`htmlFor`/`id`), `aria-invalid` and `aria-describedby` through a render prop.
 export type FormItemStatus = "success" | "warning" | "error" | "validating" | "" | undefined
 
 type ControlProps = {
@@ -20,7 +17,6 @@ type FormItemProps = {
   extra?: ReactNode
   status?: FormItemStatus
   className?: string
-  /** Control id; generated when omitted. */
   id?: string
   children: ReactNode | ((control: ControlProps) => ReactNode)
 }
@@ -36,24 +32,30 @@ function FormItem({ label, help, extra, status, className, id: idProp, children 
   const control: ControlProps = { id, "aria-invalid": isError || undefined, "aria-describedby": describedBy }
 
   return (
-    <div data-slot="form-item" data-status={status || undefined} className={cn("mb-4 flex flex-col gap-1.5", className)}>
+    <Field data-slot="form-item" data-status={status || undefined} className={cn("mb-4 gap-1.5", className)}>
       {label ? (
-        <Label htmlFor={id} className="text-base text-muted-foreground">
+        <FieldLabel htmlFor={id} className="text-base text-muted-foreground">
           {label}
-        </Label>
+        </FieldLabel>
       ) : null}
       {typeof children === "function" ? children(control) : children}
       {help ? (
-        <div id={helpId} className={cn("text-xs", isError ? "text-destructive" : status === "warning" ? "text-draw" : "text-muted-foreground")} role={isError ? "alert" : undefined}>
-          {help}
-        </div>
+        isError ? (
+          <FieldError id={helpId} className="text-xs">
+            {help}
+          </FieldError>
+        ) : (
+          <FieldDescription id={helpId} className={cn("text-xs", status === "warning" && "text-draw")}>
+            {help}
+          </FieldDescription>
+        )
       ) : null}
       {extra ? (
-        <div id={extraId} className="text-xs text-muted-foreground">
+        <FieldDescription id={extraId} className="text-xs">
           {extra}
-        </div>
+        </FieldDescription>
       ) : null}
-    </div>
+    </Field>
   )
 }
 

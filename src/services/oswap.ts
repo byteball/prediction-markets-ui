@@ -2,7 +2,6 @@ import axios from "axios";
 
 const instance = axios.create({ baseURL: "https://v2-data.oswap.io/api/v1" });
 
-/** Flat map of `PAIR_QUOTE -> rate`, e.g. `{ GBYTE_USD: 5.07, BTC_USD: 62661 }`. */
 type ExchangeRates = Record<string, number | undefined>;
 
 /**

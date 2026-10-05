@@ -6,7 +6,6 @@
   position: relative;
 }
 
-/* was the antd Card body (24px, 12px on phones) */
 .cardBody {
   padding: 24px;
 }
@@ -87,8 +86,6 @@
     padding: 12px;
   }
 }
-
-
 
 /* Medium devices (tablets, 768px and up) */
 @media (min-width: 768px) {

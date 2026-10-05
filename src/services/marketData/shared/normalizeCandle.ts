@@ -1,6 +1,5 @@
 import type { Candle } from "../types";
 
-/** A vendor row already mapped to candle field names; values may still be numeric strings. */
 export type CandleInput = Record<keyof Candle, number | string>;
 
 /**

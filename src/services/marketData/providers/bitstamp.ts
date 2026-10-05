@@ -8,7 +8,6 @@ import type { Provider } from "../types";
 // of history → the most reliable anchor for resolved markets.
 const instance = axios.create({ baseURL: "https://www.bitstamp.net/api/v2" });
 
-/** OHLC row, ascending, numeric strings. */
 interface BitstampOhlcRow {
   timestamp: string;
   open: string;

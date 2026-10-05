@@ -8,9 +8,7 @@ import type { Provider } from "../types";
 // order is OCHL (open, CLOSE, high, low) — not the usual OHLC.
 const instance = axios.create({ baseURL: "https://api-pub.bitfinex.com/v2" });
 
-/** Candle row: [ MTS(ms), open, close, high, low, volume ]. */
 type BitfinexCandleRow = [mts: number, open: number, close: number, high: number, low: number, volume: number];
-/** Ticker array: [ BID, BID_SIZE, ASK, ASK_SIZE, DAILY_CHANGE, DAILY_CHANGE_REL, LAST_PRICE, ... ]. */
 type BitfinexTicker = number[];
 
 const symbol = (from: string, to: string) => `t${from.toUpperCase()}${to.toUpperCase()}`;
@@ -21,7 +19,7 @@ export const bitfinexProvider: Provider = {
 
   getCandles: async ({ from, to, isHourlyChart, committed_at }) => {
     const timeframe = isHourlyChart ? "1h" : "1D";
-    const params: { limit: number; sort: number; end?: number } = { limit: limitFor(isHourlyChart), sort: 1 }; // sort=1 -> ascending
+    const params: { limit: number; sort: number; end?: number } = { limit: limitFor(isHourlyChart), sort: 1 };
     if (committed_at) params.end = committed_at * 1000;
 
     const { data } = await instance.get<BitfinexCandleRow[]>(`/candles/trade:${timeframe}:${symbol(from, to)}/hist`, { params });

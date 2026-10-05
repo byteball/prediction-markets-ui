@@ -1,4 +1,3 @@
-// Store icons ported from obyte-qr-button/src (MIT).
 export const AppStoreIcon = () => (
   <svg style={{ marginRight: 3, marginLeft: 5 }} width="1em" height="1em" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
     <path

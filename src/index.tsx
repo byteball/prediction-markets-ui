@@ -16,8 +16,6 @@ import appConfig from 'appConfig';
 
 import { router } from 'router';
 
-// Vite resolves `moment` to the ESM build (moment/dist/moment.js); the UMD files under moment/locale/*
-// would register on a second CJS copy, so the locales must come from moment/dist/locale/*.
 import 'moment/dist/locale/es';
 import 'moment/dist/locale/pt-br';
 import 'moment/dist/locale/zh-cn';

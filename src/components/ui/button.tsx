@@ -10,7 +10,7 @@ const buttonVariants = cva(
       variant: {
         default: "bg-primary text-primary-foreground hover:bg-primary/80",
         outline:
-          "border-border bg-background hover:bg-muted hover:text-foreground aria-expanded:bg-muted aria-expanded:text-foreground dark:border-input dark:bg-input/30 dark:hover:bg-input/50",
+          "border-input bg-transparent hover:border-primary hover:text-primary aria-expanded:border-primary aria-expanded:text-primary",
         secondary:
           "bg-secondary text-secondary-foreground hover:bg-[color-mix(in_oklch,var(--secondary),var(--foreground)_5%)] aria-expanded:bg-secondary aria-expanded:text-secondary-foreground",
         ghost:
@@ -45,9 +45,6 @@ type ButtonProps = React.ComponentProps<"button"> &
     asChild?: boolean
   }
 
-// forwardRef is required on React 18: the shadcn 4.x template passes `ref` as a plain prop (React 19
-// semantics). Without it, Radix `Trigger asChild` and the forms' `btnRef.current.click()` get no element.
-// Keep it through stage 5b (React 19); it keeps working there too.
 const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(function Button(
   { className, variant = "default", size = "default", asChild = false, ...props },
   ref

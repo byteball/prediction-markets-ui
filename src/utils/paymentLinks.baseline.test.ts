@@ -1,10 +1,3 @@
-/**
- * Migration baseline: exact payment URIs and payloads that the forms hand to QRButton.
- *
- * Each case mirrors a real generateLink() call site (BuyForm, RedeemForm, ClaimProfitForm,
- * AddLiquidityForm, CreateForm, CreateNowForm, RegSymbol, MarketPage commit) with fixed inputs.
- * These strings must stay byte-identical through the CRA → Vite / antd → shadcn migration.
- */
 import moment from "moment";
 
 import { generateLink } from "./generateLink";
@@ -34,7 +27,6 @@ describe("payment link baseline", () => {
   });
 
   it("BuyForm: reserve asset, amount in pennies, type payload, single address, from_address", () => {
-    // BuyForm.js: amount: Math.ceil(amount.value * 10 ** reserve_decimals), data: { type }
     const link = generateLink({
       aa: AA, asset: "base", is_single: true,
       amount: Math.ceil(1 * 10 ** 9), data: { type: "yes" }, from_address: WALLET,
@@ -51,7 +43,6 @@ describe("payment link baseline", () => {
   });
 
   it("RedeemForm: token asset is URL-encoded, no data", () => {
-    // RedeemForm.js: asset: currentToken.asset, amount: Math.ceil(amount.value * 10 ** decimals)
     const link = generateLink({ aa: AA, asset: YES_ASSET, is_single: true, amount: Math.ceil(2.5 * 10 ** 9), from_address: WALLET });
     expect(link).toBe(
       `obyte-tn:${AA}?amount=2500000000&asset=yZ8oMSHEtXnPDrw3MqMA6vjFHdTdRgoMW9wnHuLYgrQ%3D&from_address=${WALLET}&single_address=1`
@@ -75,7 +66,7 @@ describe("payment link baseline", () => {
   });
 
   it("CreateForm: 20000 bytes to the last factory, event_date as UTC string, reserve_decimals stripped", () => {
-    const eventDateUnix = 1803732540; // 2027-02-27 12:49:00 UTC
+    const eventDateUnix = 1803732540;
     const data = {
       oracle: "F4KHJUCLJKY4JV7M5F754LAJX4EB7M4N",
       feed_name: "GBYTE_USD",
@@ -123,8 +114,6 @@ describe("payment link baseline", () => {
 });
 
 describe("event date baseline (DatePicker → unix → UTC payload)", () => {
-  // CreateForm: value = picker.unix(); CreateNowForm: value = picker.utc().unix() — both are the same instant.
-  // Payload: moment.unix(v).utc().seconds(0).format('YYYY-MM-DDTHH:mm:ss')
   const toPayload = (unix: number) => moment.unix(unix).utc().seconds(0).format("YYYY-MM-DDTHH:mm:ss");
 
   it("local picker value and utc() give the same unix", () => {
@@ -137,12 +126,11 @@ describe("event date baseline (DatePicker → unix → UTC payload)", () => {
   });
 
   it("payload is UTC regardless of utcOffset of the source moment", () => {
-    const m = moment.unix(1803732540).utcOffset(180); // same instant viewed at UTC+3
+    const m = moment.unix(1803732540).utcOffset(180);
     expect(toPayload(m.unix())).toBe("2027-02-27T12:49:00");
   });
 
   it("DST boundary dates round-trip through unix unchanged", () => {
-    // 2027-03-28 is the EU DST switch; the instant must survive unix → payload
     const unix = moment.utc("2027-03-28T01:30:00").unix();
     expect(toPayload(unix)).toBe("2027-03-28T01:30:00");
   });

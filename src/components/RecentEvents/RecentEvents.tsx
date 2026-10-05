@@ -114,7 +114,7 @@ export const RecentEvents = () => {
       ) : (
         <ul className="m-0 list-none p-0">
           {data.map((item) => (
-            <li key={`ev-${item.trigger_unit}-${item.timestamp}`} className="border-b border-border py-4 last:border-b-0">
+            <li key={`ev-${item.trigger_unit}-${item.timestamp}`}>
               <RecentEventItem {...item} />
             </li>
           ))}

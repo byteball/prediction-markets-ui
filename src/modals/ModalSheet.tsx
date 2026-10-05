@@ -10,10 +10,6 @@ type ModalSheetProps = {
   children: ReactNode;
 };
 
-/**
- * The right-side panel every modal of the app used to render with antd `Drawer` (width 640, full
- * width on phones). Content is scrollable; the title is a real heading for screen readers.
- */
 export const ModalSheet = ({ open, onOpenChange, title, description, children }: ModalSheetProps) => (
   <Sheet open={open} onOpenChange={onOpenChange}>
     <SheetContent side="right" className="w-full gap-0 overflow-y-auto p-6 data-[side=right]:sm:max-w-[640px]">

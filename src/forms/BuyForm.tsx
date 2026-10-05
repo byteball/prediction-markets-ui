@@ -81,7 +81,7 @@ export const BuyForm = ({ type, yes_team, no_team, amount, setAmount }: BuyFormP
     ];
 
     if (allow_draw) {
-      tokens.push({ symbol: draw_symbol!, asset: draw_asset!, decimals: draw_decimals, type: "draw" }); // present whenever allow_draw
+      tokens.push({ symbol: draw_symbol!, asset: draw_asset!, decimals: draw_decimals, type: "draw" });
     }
 
     setTokens(tokens);
@@ -276,13 +276,13 @@ export const BuyForm = ({ type, yes_team, no_team, amount, setAmount }: BuyFormP
             <div className="md:col-span-2">
               <FormItem>
                 {(control) => (
-                  <Select value={currentToken?.asset} onValueChange={(toAsset) => setCurrentToken(tokens.find(({ asset }) => asset === toAsset))}>
+                  <Select value={currentToken?.type} onValueChange={(toType) => setCurrentToken(tokens.find(({ type }) => type === toType))}>
                     <SelectTrigger {...control} className="w-full">
                       <SelectValue placeholder={t("forms.common.select_token", "Select token")} />
                     </SelectTrigger>
                     <SelectContent>
                       {tokens?.map((token) => (
-                        <SelectItem key={`to_${token.asset}`} value={token.asset}>
+                        <SelectItem key={`to_${token.type}`} value={token.type}>
                           {tokenLabel(token)}
                         </SelectItem>
                       ))}

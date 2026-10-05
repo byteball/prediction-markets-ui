@@ -13,19 +13,15 @@ import { selectLanguage } from 'store/slices/settingsSlice';
 
 import appConfig from 'appConfig';
 
-/** One upcoming event of the backend `calendar/...` response; rendered as-is by `PredictionItem`. */
 export type CalendarItem = PredictionItemProps;
 
-/** One page of the backend `calendar/...` response. */
 export interface CalendarPage {
     data: CalendarItem[];
     count: number;
 }
 
-/** Backend `popular_oracle_pairs` response: oracle address -> feed names (e.g. "GBYTE_USD"). */
 export type PopularOraclePairs = Record<string, string[]>;
 
-/** Entry of `popularCurrencies`, shaped for `SwitchActions` `data`. */
 export type PopularCurrency = Pick<SwitchAction, 'text' | 'value'>;
 
 const INIT_CALENDAR_CURRENCY = "GBYTE";
@@ -42,8 +38,6 @@ export const useCalendar = () => {
 
     const { data = [], size, setSize, isLoading } = useSWRInfinite<CalendarPage>(index => category && championships && (category === "currency" ? !!calendarCurrency : true) ? getCalendarKey(category, particle, index + 1, calendarCurrency, championships) : null, { initialSize: 1, persistSize: true, refreshInterval: 60 * 1000 * 30 });
 
-    // `pairsLoading` is not a field of the SWR response (it is `isLoading`), so it is always `undefined`;
-    // kept as-is to leave the runtime behaviour untouched by the TS migration.
     const { data: currencyPairsByOracle = {}, pairsLoading } = useSWR<PopularOraclePairs>(category === "currency" ? `${appConfig.BACKEND_URL}popular_oracle_pairs` : null, { refreshInterval: 60 * 1000 * 60 * 24 }) as SWRResponse<PopularOraclePairs> & { pairsLoading?: boolean };
 
     const currencyPairs: string[] = [];

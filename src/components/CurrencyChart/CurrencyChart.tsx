@@ -3,7 +3,6 @@ import moment from 'moment';
 
 import appConfig from 'appConfig';
 
-/** One OHLC candle of the backend currency candles (as stored in `active.currencyCandles`). */
 export interface CurrencyCandle {
   time: number;
   open: number | string;
@@ -12,7 +11,6 @@ export interface CurrencyCandle {
   low: number | string;
 }
 
-/** Market params the chart reads. */
 export interface CurrencyChartParams {
   datafeed_value: number | string;
   waiting_period_length: number;
@@ -39,7 +37,6 @@ export const CurrencyChart = ({ data, params }: CurrencyChartProps) => {
     low: +Number(low).toPrecision(6),
   }));
 
-  // Cast: the tooltip `title` renderer and the string `renderer`/`theme` literals do not match the G2Plot typings.
   const config = {
     data: transformedData,
     xField: 'time',

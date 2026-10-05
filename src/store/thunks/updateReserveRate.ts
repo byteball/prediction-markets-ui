@@ -7,7 +7,6 @@ import type { AppThunkApiConfig } from "store/hooks";
 import type { ReserveAssets, ReserveRates } from "store/types";
 
 export interface UpdateReserveRateArgs {
-  /** The reserve assets to price; falls back to the ones in the store. */
   assets?: ReserveAssets;
   reserveAssetsHaveBeenChanged: boolean;
 }

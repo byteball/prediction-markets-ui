@@ -2,11 +2,6 @@ import obyte from "obyte";
 
 import { bootstrap } from "bootstrap";
 
-/**
- * Minimal typing of the `obyte` light client (the package ships no types; see `declare module 'obyte'`
- * in vite-env.d.ts). Only the members used across src are declared; the hub API methods are generated
- * at runtime from the package's api.json, so their results are typed loosely.
- */
 export type ObyteHubApi = {
   heartbeat(): void;
   getOfficialTokenRegistryAddress(): string;

@@ -19,7 +19,6 @@ import config from "appConfig";
 
 import { router } from "router";
 
-/** A message as `client.subscribe` delivers it: `[type, { subject, body }]`. */
 type HubEvent = [string, HubMessage];
 
 const getAAPayload = (messages: ObyteMessage[] = []): ObyteMessagePayload => messages.find(m => m.app === 'data')?.payload || {};
@@ -93,7 +92,6 @@ export const bootstrap = async () => {
       const { messages } = body!.unit!;
       const payload = getAAPayload(messages);
 
-
       if (payload.symbol && payload.asset && order.status === 'created') {
         const asset = payload.asset;
         if (asset === order.yes_asset || asset === order.no_asset || asset === order.draw_asset) {
@@ -106,11 +104,9 @@ export const bootstrap = async () => {
 
       }
     } else if (subject === "light/aa_response") {
-      // the token registry responds with { [asset]: symbol }
       const responseVars = body!.response?.responseVars as Record<string, string> | undefined;
 
       if (responseVars) {
-        // `x in obj` coerces the key to a string, so an unset asset looks up "undefined", as in the JavaScript version
         if ((String(order.yes_asset) in responseVars) || (String(order.no_asset) in responseVars) || (order.draw_asset && (order.draw_asset in responseVars))) {
           const type: OutcomeType = String(order.yes_asset) in responseVars ? 'yes' : (String(order.no_asset) in responseVars ? 'no' : 'draw');
           const asset = order[`${type}_asset`];
@@ -178,7 +174,6 @@ export const bootstrap = async () => {
           const prediction_address = varName.split("_")[1];
 
           if (prediction_address) {
-            // the factory stores prediction_<address> = { yes_asset, no_asset, draw_asset? }
             const data = newFactoryStateVars[varName]?.value as FactoryPredictionVar | undefined;
 
             if (data && ('yes_asset' in data) && ('no_asset' in data)) {
@@ -212,11 +207,9 @@ export const bootstrap = async () => {
       }
 
       if (!isEmpty(diff)) {
-        // the updated vars of a market AA are its MarketStateVars
         store.dispatch(updateStateForActualMarket({ diff: diff as Partial<MarketStateVars>, address: aa_address }));
       }
 
-      // inside the aa_response branch the body is a full light/aa_response body
       store.dispatch(addRecentEvent(body as AAResponseBody));
 
     } else if (subject === "light/aa_request" && state.settings.walletAddress && author === state.settings.walletAddress) {

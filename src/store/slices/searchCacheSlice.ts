@@ -2,7 +2,6 @@ import { createSlice, type PayloadAction } from "@reduxjs/toolkit";
 import type { RootState } from "store";
 
 export interface SearchCacheState {
-  /** { [provider]: { [symbol]: key } } */
   results: Record<string, Record<string, string>>;
 }
 

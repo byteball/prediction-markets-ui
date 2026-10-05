@@ -12,8 +12,8 @@ type Result = { recentEvents: RecentEvent[]; recentEventsCount: number } | undef
 export const loadMoreRecentEvents = createAsyncThunk<Result, Args, AppThunkApiConfig>("loadMoreRecentEvents", async ({ address, page }, { getState }) => {
   const state = getState();
   if (address === state.active.address) {
-    const { data: recentEvents, count: recentEventsCount } = await backend.getRecentEvents(address as string, page); // equal to the loaded market address here
-    const uniqRecentEvents = uniqBy(recentEvents, "trigger_unit") as RecentEvent[]; // backend `trades` rows
+    const { data: recentEvents, count: recentEventsCount } = await backend.getRecentEvents(address as string, page);
+    const uniqRecentEvents = uniqBy(recentEvents, "trigger_unit") as RecentEvent[];
 
     return {
       recentEvents: uniqRecentEvents,

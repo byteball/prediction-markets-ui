@@ -2,7 +2,6 @@ import type { ReactNode } from "react"
 import { CircleCheck, CircleX, Info, Loader2, TriangleAlert } from "lucide-react"
 import { cn } from "cn"
 
-// Replacement for antd `<Result>`: a centred status block with an icon, title, subtitle and actions.
 type ResultProps = {
   status?: "success" | "error" | "info" | "warning" | "loading"
   icon?: ReactNode

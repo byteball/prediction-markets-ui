@@ -62,7 +62,7 @@ export const RedeemForm = memo(({ type, yes_team, no_team, amount, setAmount }: 
     ];
 
     if (allow_draw) {
-      tokens.push({ symbol: draw_symbol!, asset: draw_asset!, decimals: draw_decimals, type: "draw" }); // present whenever allow_draw
+      tokens.push({ symbol: draw_symbol!, asset: draw_asset!, decimals: draw_decimals, type: "draw" });
     }
 
     setTokens(tokens);
@@ -115,8 +115,8 @@ export const RedeemForm = memo(({ type, yes_team, no_team, amount, setAmount }: 
     });
   };
 
-  const handleChangeCurrentToken = (toAsset: string) => {
-    setCurrentToken(tokens.find(({ asset }) => asset === toAsset));
+  const handleChangeCurrentToken = (toType: string) => {
+    setCurrentToken(tokens.find(({ type }) => type === toType));
     setAmount({ value: "", valid: false });
   };
 
@@ -173,13 +173,13 @@ export const RedeemForm = memo(({ type, yes_team, no_team, amount, setAmount }: 
           <div className="md:col-span-3">
             <FormItem>
               {(control) => (
-                <Select value={currentToken?.asset} onValueChange={handleChangeCurrentToken}>
+                <Select value={currentToken?.type} onValueChange={handleChangeCurrentToken}>
                   <SelectTrigger {...control} className="w-full">
                     <SelectValue placeholder={t("forms.common.select_token", "Select token")} />
                   </SelectTrigger>
                   <SelectContent>
                     {tokens?.map((token) => (
-                      <SelectItem key={`to_${token.asset}`} value={token.asset}>
+                      <SelectItem key={`to_${token.type}`} value={token.type}>
                         {tokenLabel(token)}
                       </SelectItem>
                     ))}

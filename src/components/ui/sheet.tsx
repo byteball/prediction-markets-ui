@@ -27,7 +27,6 @@ function SheetPortal({
   return <SheetPrimitive.Portal data-slot="sheet-portal" {...props} />
 }
 
-// forwardRef: React 18 (see button.tsx). Radix Presence passes a ref to the overlay.
 const SheetOverlay = React.forwardRef<React.ElementRef<typeof SheetPrimitive.Overlay>, React.ComponentProps<typeof SheetPrimitive.Overlay>>(function SheetOverlay(
   { className, ...props },
   ref

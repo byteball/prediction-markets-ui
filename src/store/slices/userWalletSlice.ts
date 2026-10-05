@@ -4,7 +4,6 @@ import { selectWalletAddress } from './settingsSlice';
 import type { RootState } from 'store';
 import type { WalletBalance } from 'store/types';
 
-/** Balances per wallet address. */
 export type UserWalletState = Record<string, WalletBalance | undefined>;
 
 const initialState: UserWalletState = {};
@@ -30,9 +29,7 @@ export default userWalletSlice.reducer;
 
 const selectWalletsBalance = (state: RootState) => state.userWallet;
 
-
 export const selectWalletBalance = createSelector(
     selectWalletAddress,
     selectWalletsBalance,
-    // A null address looks up the "null" key (undefined), as in the JavaScript version.
     (address, balances) => balances[address as string]);

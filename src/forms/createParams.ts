@@ -4,7 +4,6 @@ import moment from "moment";
 
 import i18n from "locale";
 
-// Parameter definitions of the market creation form (shared with ViewParamsModal).
 type Validator = (value: string | number | boolean | undefined) => boolean | string | number | undefined;
 
 export type Param = {
@@ -120,6 +119,5 @@ export const getParamList = () =>
       },
     },
   }) satisfies Record<string, Param>;
-
 
 export type ParamKey = keyof ReturnType<typeof getParamList>;

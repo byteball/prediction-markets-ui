@@ -1,15 +1,11 @@
 import * as React from "react"
 import { cn } from "cn"
 
-// Replacement for antd `<Input prefix suffix addonBefore addonAfter>`.
-// The wrapper carries the field chrome (border, focus ring); prefix/suffix share the row with the
-// native input so long values never slide under the suffix. Addons are attached blocks on either side.
 type InputGroupProps = React.ComponentProps<"input"> & {
   prefix?: React.ReactNode
   suffix?: React.ReactNode
   addonBefore?: React.ReactNode
   addonAfter?: React.ReactNode
-  /** Classes for the bordered field wrapper (height, font size); `className` goes to the <input>. */
   fieldClassName?: string
 }
 
@@ -24,7 +20,6 @@ const InputGroup = React.forwardRef<HTMLInputElement, InputGroupProps>(function 
       data-slot="input-group-field"
       className={cn(
         "flex h-10 min-w-0 items-center gap-2 rounded-lg border border-input bg-transparent px-2.5 text-base transition-colors dark:bg-input/30",
-        // `flex-1` only inside the addon row: in a column flex parent (FormItem) it would collapse the height.
         hasAddon ? "flex-1" : "w-full",
         "focus-within:border-ring focus-within:ring-3 focus-within:ring-ring/50 has-[input[aria-invalid=true]]:border-destructive has-[input[aria-invalid=true]]:ring-3 has-[input[aria-invalid=true]]:ring-destructive/20 has-[input:disabled]:opacity-50",
         hasAddon && "rounded-none",

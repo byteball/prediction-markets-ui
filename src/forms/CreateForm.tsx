@@ -97,7 +97,6 @@ export const CreateForm = () => {
     }
   };
 
-  // antd `disabledDate` rejected days before today; the native picker gets the same floor as `min`.
   const minDate = moment().hours(0).minutes(0).seconds(0).milliseconds(0);
 
   const isValidForm = oracle.valid && feedName.valid && datafeedValue.valid && eventDate.valid && waitingPeriodLength.valid && issueFee.valid && redeemFee.valid && quietPeriod.valid && (allowDraw.value ? datafeedDrawValue.valid : 1) && arbProfitFee.valid;

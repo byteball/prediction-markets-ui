@@ -2,8 +2,6 @@
 @import "tw-animate-css";
 @import "shadcn/tailwind.css";
 
-/* ---------- shadcn design tokens (CLI 4.21.1, preset radix-nova), values mapped to the former antd dark theme ---------- */
-
 @custom-variant dark (&:is(.dark *));
 
 @theme inline {
@@ -52,12 +50,6 @@
   --radius-4xl: calc(var(--radius) * 2.6);
 }
 
-/*
- * The app is dark-only: <html class="dark"> is set in index.html. The :root block carries the same
- * values so components look right even if the class is missing (e.g. in tests).
- * Sources: the old craco modifyVars (@primary-color #2D72F6, @text-color #dcdde1, @border-radius-base 8px),
- * antd.dark (body #141414, component bg #1f1f1f, border #424242), appConfig YES/NO/DRAW colours.
- */
 :root,
 .dark {
   --background: #141413;
@@ -113,10 +105,6 @@
     line-height: 1.5715;
   }
 
-  /*
-   * Global element styles the app relied on from antd.dark (preflight resets them to nothing):
-   * links in the primary colour, paragraph spacing, heading weight/colour, bullet lists, inline images.
-   */
   a {
     color: var(--primary);
     text-decoration: none;
@@ -176,7 +164,6 @@
     cursor: pointer;
   }
 
-  /* Bullet lists in the FAQ answers (Trans content) */
   .faq ul {
     list-style: disc;
     padding-left: 2em;
@@ -187,8 +174,6 @@
     color: var(--muted-foreground);
   }
 }
-
-/* ---------- app styles ---------- */
 
 body {
   font-family: 'Open Sans', sans-serif;

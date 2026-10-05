@@ -40,8 +40,6 @@ type CreationOrder = {
   data: { oracle: string; feed_name: string; event_date: string; reserve_decimals: number; datafeed_value: string | number; comparison: string; yes_team?: string; no_team?: string } & Record<string, unknown>;
 } & Record<string, unknown>;
 
-// Not mounted by any route at the moment (CreatePage imports it commented out); kept in sync with the
-// antd → shadcn migration so the module still type-checks and builds.
 export const RegisterSymbols = () => {
   const order = useSelector((state: RootState) => (state as unknown as { settings: { creationOrder: CreationOrder } }).settings.creationOrder);
 

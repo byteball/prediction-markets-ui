@@ -2,7 +2,6 @@ import type { ReactNode } from "react"
 import { Check } from "lucide-react"
 import { cn } from "cn"
 
-// Replacement for antd `<Steps>`: numbered steps with finished / active / waiting states.
 type StepsProps = {
   current: number
   direction?: "horizontal" | "vertical"

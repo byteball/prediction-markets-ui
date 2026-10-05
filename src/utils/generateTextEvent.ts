@@ -5,7 +5,6 @@ import i18n from "locale";
 
 export type GenerateTextEventParams = {
     oracle?: string;
-    /** Unix timestamp (seconds). */
     event_date: number;
     feed_name?: string;
     datafeed_value?: string | number;
@@ -15,7 +14,7 @@ export type GenerateTextEventParams = {
     no_team_name?: string;
 };
 
-export const generateTextEvent = ({ oracle, event_date, feed_name, datafeed_value, comparison, isUTC = false, yes_team_name, no_team_name }: GenerateTextEventParams): string => { // params    
+export const generateTextEvent = ({ oracle, event_date, feed_name, datafeed_value, comparison, isUTC = false, yes_team_name, no_team_name }: GenerateTextEventParams): string => {
     const format = ["ru", "uk"].includes(i18n.language) ? "D MMMM gggg [в] LT" : "LLL";
     const expiry_date = isUTC ? moment.unix(event_date).utc().format(format) : moment.unix(event_date).format(format);
     const comparisonText = getComparisonText(comparison);

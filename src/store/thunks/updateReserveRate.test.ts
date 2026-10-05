@@ -4,7 +4,6 @@ import { updateReserveRate, type UpdateReserveRateArgs } from "./updateReserveRa
 import type { RootState } from "store";
 import type { SettingsState } from "store/slices/settingsSlice";
 
-// vi.mock is hoisted above the imports by babel-vi.
 vi.mock("services/marketData", () => ({ getCurrencyPrice: vi.fn() }));
 vi.mock("services/oswap", () => ({ getBaseUsdRate: vi.fn() }));
 

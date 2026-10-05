@@ -11,8 +11,6 @@ import { ModalSheet } from "./ModalSheet";
 
 type CreateNowModalProps = CreateNowFormProps;
 
-// The antd Drawer here used destroyOnClose + forceRender: the form resets when the panel closes.
-// Radix Sheet unmounts its content on close, which gives the same behaviour.
 export const CreateNowModal = (props: CreateNowModalProps) => {
   const [visible, setVisible] = useState(false);
   const { t } = useTranslation();

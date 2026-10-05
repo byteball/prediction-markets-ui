@@ -1,7 +1,6 @@
 import * as React from "react"
 import { cn } from "cn"
 
-// forwardRef: React 18 (see button.tsx). Forms focus inputs through refs (WalletModal autoFocus/inputRef).
 const Input = React.forwardRef<HTMLInputElement, React.ComponentProps<"input">>(function Input(
   { className, type, ...props },
   ref

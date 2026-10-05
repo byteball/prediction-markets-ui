@@ -3,14 +3,12 @@ import { store } from "store/store";
 import { cacheSearchResult } from "store/slices/searchCacheSlice";
 import { createIdResolver, type IdResolverOptions } from "./createIdResolver";
 
-// vi.mock is hoisted above the imports; the factory must not touch outer variables.
 vi.mock("store/store", () => ({
   store: { getState: vi.fn(), dispatch: vi.fn() }
 }));
 
 type Fetcher = IdResolverOptions["fetcher"];
 
-// The factory above replaces the store with plain mocks; view it as such for the setup calls.
 const mockedStore = store as unknown as { getState: Mock; dispatch: Mock };
 
 beforeEach(() => {

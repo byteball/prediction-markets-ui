@@ -37,7 +37,6 @@ type TokensInfo = {
 
 type Championship = { code: string; name: string; emblem?: string };
 
-/** What `setActiveMarket` resolves with; merged into `active.params` / `active.stateVars` by activeSlice. */
 export interface SetActiveMarketResult {
   params: MarketParams;
   stateVars: MarketStateVars;
@@ -219,7 +218,7 @@ export const setActiveMarket = createAsyncThunk<SetActiveMarketResult, { address
     stateVars: stateVars as MarketStateVars,
     base_aa,
     dailyCandles,
-    recentEvents: recentEvents as RecentEvent[], // backend `trades` rows
+    recentEvents: recentEvents as RecentEvent[],
     recentEventsCount,
     datafeedValue: datafeedValue !== "none" ? datafeedValue : null,
     yesTeam,

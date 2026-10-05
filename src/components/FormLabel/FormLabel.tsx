@@ -24,7 +24,7 @@ export const FormLabel = ({ info, children, value }: FormLabelProps) => {
       {transformInfo ? (
         <Tooltip>
           <TooltipTrigger asChild>
-            <span className="inline-flex cursor-help align-middle opacity-40">
+            <span className="inline-flex align-middle opacity-40">
               <Info className="size-[1em]" aria-hidden="true" />
             </span>
           </TooltipTrigger>

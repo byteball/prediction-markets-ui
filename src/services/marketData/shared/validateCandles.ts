@@ -10,13 +10,10 @@ const MIN_TIME = 1e9;                  // ~2001 in unix seconds; rejects garbage
 const MAX_TIME_SKEW = 24 * 60 * 60;    // allow up to 1 day into the future
 
 export interface ValidatedCandles {
-  /** Cleaned, ascending, de-duplicated candles (possibly empty). */
   candles: Candle[];
-  /** Rejection reason, or `null` when every row was kept. */
   reason: string | null;
 }
 
-/** A row as a provider produced it: should look like a candle, but nothing is trusted. */
 type CandleRow = Partial<Record<keyof Candle, unknown>>;
 
 /**

@@ -1,10 +1,7 @@
 import { useEffect, useState } from "react"
 
-// Replacement for antd `Statistic.Countdown` with the format `DD [days] HH:mm:ss`.
 type CountdownProps = {
-  /** Target time as a unix timestamp in seconds. */
   value: number
-  /** Word shown between the day count and the clock, e.g. the translated "days". */
   daysLabel: string
   className?: string
 }

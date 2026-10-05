@@ -111,7 +111,6 @@ export const FaqPage = () => {
               </div>
             </div>
 
-
             <p>and similar formulas for the prices of NO and DRAW tokens.</p>
             <p>Thanks to the bonding curve, we have continuous pricing and it is always possible to buy or sell any tokens, i.e. liquidity is always available.</p>
             <p>The bonding curve is implemented by an <a href="https://obyte.org/platform/autonomous-agents" target="_blank" rel="noopener">Autonomous Agent</a>, and the AA acts like a decentralized automated bookmaker that automatically adjusts its prices in response to the changing demand. LPs act like shareholders of the decentralized bookmaker, and share its profits.</p>

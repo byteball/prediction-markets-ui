@@ -3,13 +3,11 @@ import type { Mock } from "vitest";
 
 import { getBaseUsdRate } from "./oswap";
 
-// vi.mock is hoisted above the imports; the factory must not touch outer variables.
 vi.mock("axios", () => {
   const get = vi.fn();
   return { __esModule: true, default: { create: vi.fn(() => ({ get })) } };
 });
 
-// The factory above returns a plain mock for every axios.create(); view it as such.
 const mockGet = axios.create().get as Mock;
 
 beforeEach(() => mockGet.mockReset());

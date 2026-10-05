@@ -1,26 +1,20 @@
 import appConfig from "appConfig";
 import axios, { type AxiosInstance } from "axios";
 
-/** One row of a paginated backend listing (`/markets/:page`, `/calendar/...`). */
 export type PaginatedResponse<T, CountKey extends string = "count"> = { data: T[] } & Record<CountKey, number>;
 
-/** A market as listed by `/markets/:page`; the exact columns come from the backend's `markets` table. */
 export type MarketListItem = Record<string, unknown>;
 export type MarketsPage = PaginatedResponse<MarketListItem, "max_count">;
 
 export type Championship = { code: string; name: string; emblem?: string } & Record<string, unknown>;
-/** `{ [sport]: Championship[] }`, e.g. `{ soccer: [{ code: "PL", name: "Premier League" }] }`. */
 export type Championships = Record<string, Championship[]>;
 
-/** `{ [oracleAddress]: feed_name[] }`. */
 export type PopularOraclePairs = Record<string, string[]>;
 
 export type Team = { id: number | string; name: string } & Record<string, unknown>;
 
-/** `{ [category]: { oracles: { address: string; feedNames?: string[] }[] } }` as the create form consumes it. */
 export type Categories = Record<string, { oracles: { address: string; feedNames?: string[] }[] }>;
 
-/** `{ [asset]: { symbol, decimals } }` (asset `base` is GBYTE). */
 export type ReserveAssets = Record<string, { symbol: string; decimals: number }>;
 
 export type Candle = Record<string, unknown>;

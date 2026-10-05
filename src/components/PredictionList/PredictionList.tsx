@@ -22,7 +22,6 @@ const Spinner = () => (
   </div>
 );
 
-/** Replacement for antd `<Divider dashed>` with centered text. */
 const DashedDivider = ({ children }: { children: ReactNode }) => (
   <div className={`${styles.calendarHeader} my-6 flex items-center gap-4 text-center font-medium`}>
     <span className="h-0 flex-1 border-t border-dashed border-border" aria-hidden="true" />

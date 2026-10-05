@@ -12,7 +12,6 @@ describe("toCandle", () => {
   });
 
   it("only keeps the canonical OHLC keys", () => {
-    // A vendor row with an extra column; kept in a variable so the excess key is not an inline-literal type error.
     const row = { time: 1, open: 1, high: 1, low: 1, close: 1, volume: 5 };
     expect(Object.keys(toCandle(row)))
       .toEqual(["time", "open", "high", "low", "close"]);

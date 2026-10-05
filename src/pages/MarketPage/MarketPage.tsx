@@ -48,7 +48,6 @@ import styles from "./MarketPage.module.css";
 
 const SECONDS_IN_YEAR = 31536000;
 
-
 type ChartType = "prices" | "supplies" | "fee" | "apy";
 
 type ChartPoint = {
@@ -232,7 +231,6 @@ export const MarketPage = () => {
 
   const commitResultLink = generateLink({ aa: address, amount: 1e4, data: { commit: 1 } });
 
-  // Chart data derived from candles (was useEffect + setState before the TS migration).
   const dataForChart = useMemo<ChartPoint[]>(() => {
     let candlesData = candles;
 
@@ -314,7 +312,6 @@ export const MarketPage = () => {
     );
 
     return data;
-    // Same dependency list as the original effect.
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [candles, chartType, address, reservesRate, teams, i18n.language]);
 
@@ -396,7 +393,6 @@ export const MarketPage = () => {
 
     if (priceOrOdds === "price") {
       yesTooltip = t("pages.market.sport_price_tooltip", "The price of the {{team_name}} token. If {{team_name}} wins, all funds paid by buyers of all tokens will be divided among {{team_name}} token holders.", { team_name: yes_team_name });
-      // Was assigned to yesTooltip twice in the JS version (noTooltip stayed empty); fixed during the TS migration.
       noTooltip = t("pages.market.sport_price_tooltip", "The price of the {{team_name}} token. If {{team_name}} wins, all funds paid by buyers of all tokens will be divided among {{team_name}} token holders.", { team_name: no_team_name });
       drawTooltip = t("pages.market.sport_price_tooltip_draw", "The price of the draw token. In case of a draw, all funds paid by buyers of all tokens will be divided among draw token holders.");
     } else {

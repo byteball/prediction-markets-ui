@@ -4,9 +4,6 @@ import { createBrowserRouter } from "react-router-dom";
 import { langs } from "components/SelectLanguage/langs";
 import { Layout } from "components/Layout/Layout";
 
-// React Router 7 behaviours, opted in ahead of the v7 upgrade (stage 2a of the migration).
-// Kept in a variable rather than inline: `v7_startTransition` is a `RouterProvider` flag that
-// `createBrowserRouter` ignores at runtime, and TS rejects it as an excess property in an inline literal.
 const future = {
 	v7_relativeSplatPath: true,
 	v7_startTransition: true,

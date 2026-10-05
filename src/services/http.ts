@@ -3,7 +3,6 @@ import axios, { type AxiosInstance } from "axios";
 
 type HubResponse<T> = { data?: T };
 
-/** Thin client for the Obyte hub HTTP API (data feeds, AA definitions and state vars, token registry lookups). */
 class HttpHub {
   readonly hubUrl: string;
   private readonly client: AxiosInstance;

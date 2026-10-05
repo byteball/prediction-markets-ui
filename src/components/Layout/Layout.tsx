@@ -5,7 +5,6 @@ import { Helmet } from "react-helmet-async";
 import { Footer } from "components/Footer/Footer";
 import { Header } from "components/Header/Header";
 
-
 import { getAlternateMetaList } from "utils";
 import { useAppDispatch } from "store/hooks";
 import { loadReserveAssets } from "store/thunks/loadReserveAssets";

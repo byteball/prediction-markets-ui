@@ -9,14 +9,10 @@ import type { Provider } from "../types";
 // is capped at ~720 candles and has no historical anchor → last-resort fallback.
 const instance = axios.create({ baseURL: "https://api.kraken.com" });
 
-/** OHLC row: [ time(seconds), open, high, low, close, vwap, volume, count ], strings, ascending. */
 type KrakenOhlcRow = [time: number, open: string, high: string, low: string, close: string, vwap: string, volume: string, count: number];
-/** Ticker entry; `c` = [ last trade price, lot volume ]. */
 interface KrakenTickerEntry {
   c?: [string, string];
 }
-// Kraken's `result` holds the renamed pair under a dynamic key (plus a `last` cursor
-// on OHLC, which resultKey() skips), so it's read as a plain record.
 interface KrakenResponse<T> {
   error?: string[];
   result: Record<string, T>;

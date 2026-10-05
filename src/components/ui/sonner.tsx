@@ -1,7 +1,6 @@
 import { Toaster as Sonner, type ToasterProps } from "sonner"
 import { CircleCheckIcon, InfoIcon, TriangleAlertIcon, OctagonXIcon, Loader2Icon } from "lucide-react"
 
-// The app is dark-only (no next-themes); the template's useTheme() call was replaced by a fixed theme.
 const Toaster = ({ ...props }: ToasterProps) => {
   return (
     <Sonner

@@ -39,7 +39,6 @@ export const WalletModal = ({ children = "WALLET", type = "default", styles = {}
         action: "click-wallet",
       });
 
-      // Prefill with the saved address every time the dialog opens (was a useEffect on [currentWalletAddress, visible]).
       if (currentWalletAddress) {
         setWalletAddress({ value: currentWalletAddress, valid: true });
       }

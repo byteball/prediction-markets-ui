@@ -67,7 +67,6 @@ export const CreateNowForm = ({ feed_name, event_date, expect_datafeed_value, ye
   const [quietPeriod, setQuietPeriod] = useState<Field<string | number>>({ value: +Number(quiet_period / 3600).toFixed(6), valid: true });
   const [waitingPeriodLength, setWaitingPeriodLength] = useState<Field<string | number>>({ value: +Number(waiting_period_length / (24 * 3600)).toFixed(6), valid: true });
 
-  // antd `disabledDate` rejected days before today; the native picker gets the same floor as `min`.
   const minDate = moment().hours(0).minutes(0).seconds(0).milliseconds(0);
 
   const reserveAssets: Record<string, { symbol: string; decimals: number }> = useSelector(selectReserveAssets);
@@ -178,7 +177,6 @@ export const CreateNowForm = ({ feed_name, event_date, expect_datafeed_value, ye
       setCustomOracle({ value: oracle.address, valid: true });
     }
 
-    // The JS version called `getDataFeed(String(value, oracle?.address))`, i.e. without the oracle: kept as is.
     getDataFeed(String(value));
   };
 

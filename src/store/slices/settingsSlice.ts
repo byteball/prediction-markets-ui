@@ -12,12 +12,10 @@ export interface SettingsState {
   cancelRegSymbol: boolean;
   walletAddress: string | null;
   reserveRates: ReserveRates;
-  /** Unix seconds of the last `updateReserveRate` refresh. */
   reserveRateUpdateTime: number;
   reserveAssets: ReserveAssets;
   sportsCalendar: unknown[];
   priceOrOdds: PriceOrOdds;
-  /** 20-minute cache of the GBYTE candles used by live GBYTE markets. */
   baseOHLC: {
     data: CurrencyCandle[];
     expireTs: number;
@@ -57,7 +55,6 @@ export const settingsSlice = createSlice({
     updateCreationOrder: (state, action: PayloadAction<Partial<CreationOrder> | undefined>) => {
       const payload = action.payload || {};
 
-      // Merges into the current order; only ever dispatched while an order exists.
       state.creationOrder = {
         ...state.creationOrder,
         ...payload

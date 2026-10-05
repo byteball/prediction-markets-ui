@@ -4,7 +4,6 @@ import type { Candle, CandleQuery } from "./types";
 
 // Replace the provider registry with controllable fakes; the orchestrator still
 // wraps them with the real decorators (validation/safety/logging/timeout).
-// (vi.mock is hoisted above the imports; the factory must not touch outer variables.)
 vi.mock("./providers", () => {
   const make = (name: string) => ({ name, getCandles: vi.fn(), getPrice: vi.fn() });
   const a = make("a");

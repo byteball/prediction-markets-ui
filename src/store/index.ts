@@ -55,7 +55,6 @@ const getStore = () => {
 export default getStore;
 
 export type AppStore = ReturnType<typeof getStore>["store"];
-/** The persisted root state (the reducer map plus redux-persist's `_persist`). */
 export type RootState = ReturnType<AppStore["getState"]>;
 export type AppDispatch = AppStore["dispatch"];
 
