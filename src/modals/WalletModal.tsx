@@ -87,7 +87,7 @@ export const WalletModal = ({ children = "WALLET", type = "default", styles = {}
       <Dialog open={visible} onOpenChange={(open) => (open ? setVisible(true) : changeVisible())}>
         <DialogContent className="sm:max-w-[520px]">
           <DialogHeader>
-            <DialogTitle className="text-xl">{t("modals.wallet.title", "Wallet")}</DialogTitle>
+            <DialogTitle className="text-base font-medium">{t("modals.wallet.title", "Wallet")}</DialogTitle>
             <DialogDescription className="sr-only">{t("modals.wallet.title", "Wallet")}</DialogDescription>
           </DialogHeader>
           <form
@@ -122,7 +122,7 @@ export const WalletModal = ({ children = "WALLET", type = "default", styles = {}
                 />
               )}
             </FormItem>
-            <Button type="button" ref={buttonRef} onClick={saveWallet} disabled={!walletAddress.valid || (currentWalletAddress ? currentWalletAddress === walletAddress.value : false)}>
+            <Button type="button" size="lg" ref={buttonRef} onClick={saveWallet} disabled={!walletAddress.valid || (currentWalletAddress ? currentWalletAddress === walletAddress.value : false)}>
               {t("modals.wallet.save", "Save")}
             </Button>
           </form>

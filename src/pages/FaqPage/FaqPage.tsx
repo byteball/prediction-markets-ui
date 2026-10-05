@@ -10,7 +10,7 @@ export const FaqPage = () => {
   return (<>
     <PageProvider />
     <Helmet title={`Prophet prediction markets — ${t("pages.faq.title", "F.A.Q.")}`} />
-    <h1 className="mb-5 text-4xl font-semibold text-foreground">{t("pages.faq.title", "F.A.Q.")}</h1>
+    <h1 className="mb-[0.5em] text-[44px] leading-[1.23] font-semibold">{t("pages.faq.title", "F.A.Q.")}</h1>
 
     <div className="faq">
       <div className={styles.collapse}>

@@ -20,9 +20,9 @@ export const ViewPriceSwitcher = () => {
           checked={isOdds}
           onCheckedChange={() => dispatch(changeViewType())}
           aria-label={description}
-          className="group/switch relative inline-flex h-[22px] min-w-[44px] cursor-pointer items-center rounded-full bg-white/25 align-middle text-xs leading-none text-white transition-colors outline-none select-none focus-visible:ring-3 focus-visible:ring-ring/50 data-[state=checked]:bg-primary"
+          className="group/switch relative inline-flex h-[22px] min-w-[44px] cursor-pointer items-center rounded-full bg-white/25 align-middle text-xs leading-none text-white transition-colors outline-none select-none focus-visible:ring-3 focus-visible:ring-ring/50 aria-checked:bg-primary"
         >
-          <span className="pointer-events-none block pr-[7px] pl-[25px] transition-[padding] group-data-[state=checked]/switch:pr-[25px] group-data-[state=checked]/switch:pl-[7px]">
+          <span className="pointer-events-none block pr-[7px] pl-[25px] transition-[padding] group-aria-checked/switch:pr-[25px] group-aria-checked/switch:pl-[7px]">
             {isOdds ? t("view_price_switcher.odds", "odds") : t("view_price_switcher.prices", "prices")}
           </span>
           <SwitchPrimitive.Thumb className="pointer-events-none absolute top-[2px] left-[2px] size-[18px] rounded-full bg-white shadow-sm transition-[left,right] data-[state=checked]:left-auto data-[state=checked]:right-[2px]" />

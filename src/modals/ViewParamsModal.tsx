@@ -65,8 +65,8 @@ export const ViewParamsModal = ({
       <Button size="sm" variant="link" onClick={open}>
         {t("modals.view_params.title", "View params")}
       </Button>
-      <ModalSheet open={visible} onOpenChange={setVisible} title={t("modals.view_params.title", "View params")}>
-        <div className="flex flex-col gap-3 text-base">
+      <ModalSheet open={visible} onOpenChange={setVisible} title={t("modals.view_params.title", "View params")} headerClassName="pb-0">
+        <div className="text-base">
           <p>
             <a href={`${explorerBase}/address/${aa_address}`} target="_blank" rel="noopener">
               {t("modals.view_params.explorer", "View AA on explorer")}

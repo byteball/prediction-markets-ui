@@ -678,8 +678,8 @@ export const MarketPage = () => {
         {dataForChart.length > 0 && (
           <div>
             <div className={styles.typeChartSelectorWrap}>
-              <Tabs value={chartType} onValueChange={(v) => setChartType(v as ChartType)}>
-                <TabsList className={styles.typeChartSelector}>
+              <Tabs value={chartType} onValueChange={(v) => setChartType(v as ChartType)} className={styles.typeChartSelector}>
+                <TabsList>
                   <TabsTrigger value="prices">{t("pages.market.chart.prices", "Prices")}</TabsTrigger>
                   <TabsTrigger value="supplies">{t("pages.market.chart.supplies", "Supplies")}</TabsTrigger>
                   <TabsTrigger value="fee">{t("pages.market.chart.fee", "Fee accumulation")}</TabsTrigger>

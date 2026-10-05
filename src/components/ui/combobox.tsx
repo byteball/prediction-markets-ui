@@ -98,7 +98,7 @@ function Combobox({ value, onValueChange, options, placeholder, searchPlaceholde
                   role="option"
                   aria-selected={isSelected}
                   data-active={index === activeIndex || undefined}
-                  className={cn("flex cursor-pointer items-center gap-2 rounded-md px-2 py-1.5 text-sm outline-none data-active:bg-muted", isSelected && "font-medium", optionClassName)}
+                  className={cn("flex cursor-pointer items-center gap-2 rounded-md px-2 py-1.5 text-base outline-none data-active:bg-muted", isSelected && "font-medium", optionClassName)}
                   onMouseEnter={() => setActiveIndex(index)}
                   onMouseDown={(e) => e.preventDefault()}
                   onClick={() => commit(o.value)}
@@ -129,7 +129,7 @@ function Combobox({ value, onValueChange, options, placeholder, searchPlaceholde
               {...aria}
               data-slot="input"
               disabled={disabled}
-              className="h-10 w-full min-w-0 rounded-lg border border-input bg-transparent px-2.5 py-1 text-base outline-none placeholder:text-muted-foreground focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 disabled:cursor-not-allowed disabled:opacity-50 aria-invalid:border-destructive dark:bg-input/30"
+              className="h-10 w-full min-w-0 rounded-lg border border-input bg-transparent px-2.5 py-1 text-lg outline-none placeholder:text-muted-foreground focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 disabled:cursor-not-allowed disabled:opacity-50 aria-invalid:border-destructive dark:bg-input/30"
               placeholder={typeof placeholder === "string" ? placeholder : undefined}
               value={value ?? ""}
               onChange={(e) => {
@@ -168,7 +168,7 @@ function Combobox({ value, onValueChange, options, placeholder, searchPlaceholde
           data-slot="select-trigger"
           disabled={disabled}
           className={cn(
-            "flex h-10 w-full min-w-0 items-center justify-between gap-2 rounded-lg border border-input bg-transparent px-2.5 py-1 text-left text-base outline-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 disabled:cursor-not-allowed disabled:opacity-50 aria-invalid:border-destructive dark:bg-input/30",
+            "flex h-10 w-full min-w-0 items-center justify-between gap-2 rounded-lg border border-input bg-transparent px-2.5 py-1 text-left text-lg outline-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 disabled:cursor-not-allowed disabled:opacity-50 aria-invalid:border-destructive dark:bg-input/30",
             className
           )}
         >

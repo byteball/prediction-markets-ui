@@ -18,7 +18,7 @@ export const CreatePage = () => {
 
   return (
     <>
-      <h1 className="mb-5 text-4xl font-semibold text-foreground">{t("pages.create.title", "Create new prediction market")}</h1>
+      <h1 className="mb-[0.5em] text-[44px] leading-[1.23] font-semibold">{t("pages.create.title", "Create new prediction market")}</h1>
       <Helmet title={`Prophet prediction markets — ${t("pages.create.short_title", "Create new market")}`} />
 
       <PageProvider />

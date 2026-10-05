@@ -32,9 +32,9 @@ function FormItem({ label, help, extra, status, className, id: idProp, children 
   const control: ControlProps = { id, "aria-invalid": isError || undefined, "aria-describedby": describedBy }
 
   return (
-    <Field data-slot="form-item" data-status={status || undefined} className={cn("mb-4 gap-1.5", className)}>
+    <Field data-slot="form-item" data-status={status || undefined} className={cn("mb-6 gap-1.5", className)}>
       {label ? (
-        <FieldLabel htmlFor={id} className="text-base text-muted-foreground">
+        <FieldLabel htmlFor={id} className="text-base font-normal text-white/45">
           {label}
         </FieldLabel>
       ) : null}

@@ -19,7 +19,7 @@ const InputGroup = React.forwardRef<HTMLInputElement, InputGroupProps>(function 
     <div
       data-slot="input-group-field"
       className={cn(
-        "flex h-10 min-w-0 items-center gap-2 rounded-lg border border-input bg-transparent px-2.5 text-base transition-colors dark:bg-input/30",
+        "flex h-10 min-w-0 items-center gap-2 rounded-lg border border-input bg-transparent px-2.5 text-lg transition-colors dark:bg-input/30",
         hasAddon ? "flex-1" : "w-full",
         "focus-within:border-ring focus-within:ring-3 focus-within:ring-ring/50 has-[input[aria-invalid=true]]:border-destructive has-[input[aria-invalid=true]]:ring-3 has-[input[aria-invalid=true]]:ring-destructive/20 has-[input:disabled]:opacity-50",
         hasAddon && "rounded-none",
