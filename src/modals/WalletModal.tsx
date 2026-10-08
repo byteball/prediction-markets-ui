@@ -1,5 +1,4 @@
-import { useRef, useState, type ChangeEvent, type CSSProperties, type KeyboardEvent, type ReactNode } from "react";
-import { useSelector } from "react-redux";
+import { useState, type ChangeEvent, type CSSProperties, type FormEvent, type ReactNode } from "react";
 import obyte from "obyte";
 import { Helmet } from "react-helmet-async";
 import ReactGA from "react-ga4";
@@ -7,7 +6,7 @@ import { Trans, useTranslation } from "react-i18next";
 
 import { selectWalletAddress } from "store/slices/settingsSlice";
 import { changeWalletAddress } from "store/thunks/changeWalletAddress";
-import { useAppDispatch } from "store/hooks";
+import { useAppDispatch, useAppSelector } from "store/hooks";
 
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
@@ -24,10 +23,7 @@ export const WalletModal = ({ children = "WALLET", type = "default", styles = {}
   const [visible, setVisible] = useState(false);
   const [walletAddress, setWalletAddress] = useState({ value: "", valid: false });
 
-  const currentWalletAddress: string | null = useSelector(selectWalletAddress);
-
-  const buttonRef = useRef<HTMLButtonElement>(null);
-  const inputRef = useRef<HTMLInputElement>(null);
+  const currentWalletAddress: string | null = useAppSelector(selectWalletAddress);
 
   const { t } = useTranslation();
   const dispatch = useAppDispatch();
@@ -61,17 +57,15 @@ export const WalletModal = ({ children = "WALLET", type = "default", styles = {}
     });
   };
 
-  const handleEnter = (ev: KeyboardEvent<HTMLInputElement>) => {
-    if (ev.key === "Enter" && buttonRef.current) {
-      buttonRef.current.click();
-    }
-  };
+  const saveDisabled = !walletAddress.valid || (currentWalletAddress ? currentWalletAddress === walletAddress.value : false);
 
-  const saveWallet = () => {
-    if (walletAddress.value && walletAddress.valid) {
-      dispatch(changeWalletAddress(walletAddress.value));
-      changeVisible();
-    }
+  const saveWallet = (ev: FormEvent<HTMLFormElement>) => {
+    ev.preventDefault();
+
+    if (saveDisabled || !walletAddress.value) return;
+
+    dispatch(changeWalletAddress(walletAddress.value));
+    changeVisible();
   };
 
   const btnStyles = type === "link" ? { padding: 0, ...styles } : { ...styles };
@@ -90,12 +84,7 @@ export const WalletModal = ({ children = "WALLET", type = "default", styles = {}
             <DialogTitle className="text-base font-medium">{t("modals.wallet.title", "Wallet")}</DialogTitle>
             <DialogDescription className="sr-only">{t("modals.wallet.title", "Wallet")}</DialogDescription>
           </DialogHeader>
-          <form
-            onSubmit={(e) => {
-              e.preventDefault();
-              saveWallet();
-            }}
-          >
+          <form onSubmit={saveWallet}>
             <FormItem
               status={status}
               extra={
@@ -109,20 +98,9 @@ export const WalletModal = ({ children = "WALLET", type = "default", styles = {}
                 </small>
               }
             >
-              {(control) => (
-                <Input
-                  {...control}
-                  autoFocus={true}
-                 
-                  value={walletAddress.value}
-                  placeholder={t("modals.wallet.placeholder", "Wallet address (Example: WMFLGI2GLAB2...)")}
-                  onChange={handleWalletAddress}
-                  onKeyDown={handleEnter}
-                  ref={inputRef}
-                />
-              )}
+              {(control) => <Input {...control} autoFocus={true} value={walletAddress.value} placeholder={t("modals.wallet.placeholder", "Wallet address (Example: WMFLGI2GLAB2...)")} onChange={handleWalletAddress} />}
             </FormItem>
-            <Button type="button" size="lg" ref={buttonRef} onClick={saveWallet} disabled={!walletAddress.valid || (currentWalletAddress ? currentWalletAddress === walletAddress.value : false)}>
+            <Button type="submit" size="lg" disabled={saveDisabled}>
               {t("modals.wallet.save", "Save")}
             </Button>
           </form>

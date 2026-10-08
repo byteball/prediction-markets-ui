@@ -1,11 +1,11 @@
 import { useEffect, useMemo, useState, type ReactNode } from "react";
-import { Line, type LineConfig } from "@ant-design/plots";
+import type { LineConfig } from "@ant-design/plots";
+import { Line } from "components/charts";
 import { useLocation } from "react-router-dom";
-import { useSelector } from "react-redux";
 import moment from "moment";
 import { Img } from "react-image";
 import { Helmet } from "react-helmet-async";
-import { kebabCase } from "lodash";
+import { kebabCase } from "lodash-es";
 import { Trans, useTranslation } from "react-i18next";
 import { Loader2, TriangleAlert } from "lucide-react";
 import { cn } from "cn";
@@ -32,7 +32,8 @@ import {
 } from "store/slices/activeSlice";
 import { setActiveMarket } from "store/thunks/setActiveMarket";
 import { selectLanguage, selectPriceOrOdds, selectReserveAssets, selectReservesRate } from "store/slices/settingsSlice";
-import { useAppDispatch } from "store/hooks";
+import { useAppDispatch, useAppSelector } from "store/hooks";
+import type { Team } from "store/types";
 import { getMarketPriceByType, generateLink, generateTextEvent, getEstimatedAPY, transformChampionshipName } from "utils";
 
 import { Alert, AlertDescription } from "@/components/ui/alert";
@@ -59,7 +60,7 @@ type ChartPoint = {
   symbol?: string;
 };
 
-type Teams = { yes?: { name: string } | null; no?: { name: string } | null };
+type Teams = { yes: Team | null; no: Team | null };
 
 const getConfig = (chartType: ChartType, teams: Teams) =>
   ({
@@ -147,23 +148,23 @@ export const MarketPage = () => {
   const [chartType, setChartType] = useState<ChartType>("prices");
   const [visibleTradeModal, setVisibleTradeModal] = useState<TradeModalVisible>(false);
 
-  const status = useSelector(selectActiveMarketStatus);
-  const reserveAssets = useSelector(selectReserveAssets);
-  const stateVars = useSelector(selectActiveMarketStateVars);
+  const status = useAppSelector(selectActiveMarketStatus);
+  const reserveAssets = useAppSelector(selectReserveAssets);
+  const stateVars = useAppSelector(selectActiveMarketStateVars);
 
-  const candles = useSelector(selectActiveDailyCandles);
-  const datafeedValue = useSelector(selectActiveDatafeedValue);
+  const candles = useAppSelector(selectActiveDailyCandles);
+  const datafeedValue = useAppSelector(selectActiveDatafeedValue);
 
-  const activeAddress = useSelector(selectActiveAddress);
-  const teams: Teams = useSelector(selectActiveTeams);
-  const currencyCandles = useSelector(selectActiveCurrencyCandles);
-  const currencyCurrentValue = useSelector(selectActiveCurrencyCurrentValue);
+  const activeAddress = useAppSelector(selectActiveAddress);
+  const teams: Teams = useAppSelector(selectActiveTeams);
+  const currencyCandles = useAppSelector(selectActiveCurrencyCandles);
+  const currencyCurrentValue = useAppSelector(selectActiveCurrencyCurrentValue);
 
-  const params = useSelector(selectActiveMarketParams);
+  const params = useAppSelector(selectActiveMarketParams);
 
-  const priceOrOdds = useSelector(selectPriceOrOdds);
+  const priceOrOdds = useAppSelector(selectPriceOrOdds);
 
-  const currentLang = useSelector(selectLanguage);
+  const currentLang = useAppSelector(selectLanguage);
 
   const chartConfig = getConfig(chartType, teams);
 
@@ -197,7 +198,7 @@ export const MarketPage = () => {
 
   const actualReserveSymbol = reserveAssets[reserve_asset]?.symbol;
 
-  const reservesRate = useSelector(selectReservesRate);
+  const reservesRate = useAppSelector(selectReservesRate);
 
   const reserve_rate = reservesRate[reserve_asset] || 0;
 
@@ -312,7 +313,6 @@ export const MarketPage = () => {
     );
 
     return data;
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [candles, chartType, address, reservesRate, teams, i18n.language]);
 
   useEffect(() => {
@@ -350,7 +350,6 @@ export const MarketPage = () => {
     if (address && activeAddress !== address) {
       dispatch(setActiveMarket({ address }));
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [address]);
 
   if (status !== "loaded" || !address || !actualReserveSymbol) return <Spinner />;

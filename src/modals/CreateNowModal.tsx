@@ -1,5 +1,4 @@
 import { useState } from "react";
-import { Outlet } from "react-router-dom";
 import { Helmet } from "react-helmet-async";
 import { useTranslation } from "react-i18next";
 
@@ -23,7 +22,6 @@ export const CreateNowModal = (props: CreateNowModalProps) => {
       </Button>
       <ModalSheet open={visible} onOpenChange={setVisible} title={t("modals.create_now.title", "Create market")}>
         <CreateNowForm key={`${props.feed_name} ${props.event_date} ${props.expect_datafeed_value}`} {...props} />
-        <Outlet />
       </ModalSheet>
     </>
   );

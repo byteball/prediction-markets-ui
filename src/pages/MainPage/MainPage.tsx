@@ -1,5 +1,4 @@
 import { useCallback } from "react";
-import { useSelector } from "react-redux";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { Trans } from "react-i18next";
 import { Helmet } from "react-helmet-async";
@@ -10,6 +9,7 @@ import { SwitchActions } from "components/SwitchActions/SwitchActions";
 import { PageProvider } from "components/PageProvider/PageProvider";
 
 import { selectLanguage } from "store/slices/settingsSlice";
+import { useAppSelector } from "store/hooks";
 
 import { useWindowSize, useChampionships } from "hooks";
 
@@ -20,7 +20,7 @@ import i18n from "locale";
 export const MainPage = () => {
 	const { category = "all", particle = "all" } = useParams();
 
-	const lang = useSelector(selectLanguage);
+	const lang = useAppSelector(selectLanguage);
 	const navigate = useNavigate();
 	const { championships, categories, isLoading } = useChampionships(lang);
 	const [width] = useWindowSize();
@@ -40,7 +40,6 @@ export const MainPage = () => {
 				}
 			}
 		},
-		// eslint-disable-next-line react-hooks/exhaustive-deps
 		[lang, category, navigate]
 	);
 

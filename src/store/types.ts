@@ -32,7 +32,7 @@ export interface MarketParams {
   base_aa: string;
   created_at: number;
   committed_at?: number;
-  first_trade_ts?: number;
+  first_trade_ts?: number | null;
   league?: string | null;
   league_emblem?: string | null;
   yes_odds: number | null;
@@ -42,16 +42,20 @@ export interface MarketParams {
   no_crest_url: string | null;
 }
 
+export type OutcomeAmounts = { yes: number; no: number; draw: number };
+
 export type MarketStateVars = {
-  yes_asset: string;
-  no_asset: string;
+  yes_asset?: string;
+  no_asset?: string;
   draw_asset?: string;
+  supplies?: OutcomeAmounts;
   supply_yes?: number;
   supply_no?: number;
   supply_draw?: number;
   reserve?: number;
   coef?: number;
   result?: OutcomeType | null;
+  [balanceVar: `balance_${string}`]: OutcomeAmounts | undefined;
 };
 
 export interface Team {
@@ -106,16 +110,13 @@ export interface RecentEvent {
   [responseVar: string]: unknown;
 }
 
-export interface ReserveAsset {
-  symbol: string;
-  decimals: number;
-}
+export type ReserveAssets = Record<string, { symbol: string; decimals: number }>;
 
-export type ReserveAssets = Record<string, ReserveAsset>;
+export type MarketDates = { created_at: number; committed_at?: number };
 
 export type ReserveRates = Record<string, number>;
 
-export type CreationOrderStatus = "order" | "pending" | "created";
+type CreationOrderStatus = "order" | "pending" | "created";
 
 export interface CreationOrderData {
   oracle: string;
@@ -144,21 +145,13 @@ export interface CreationOrder {
   prediction_address?: string;
   yes_asset?: string;
   no_asset?: string;
-  draw_asset?: string | false | 0;
+  draw_asset?: string;
   yes_symbol?: string;
   no_symbol?: string;
   draw_symbol?: string;
-  cancelRegSymbol?: boolean;
 }
 
-export interface AssetBalance {
-  stable: number;
-  pending: number;
-  total?: number;
-  is_private?: number;
-}
-
-export type WalletBalance = Record<string, AssetBalance | undefined>;
+export type WalletBalance = Record<string, { stable: number; pending: number; total?: number; is_private?: number } | undefined>;
 
 export interface Bridge {
   bridge_id: number;
@@ -172,14 +165,9 @@ export interface Bridge {
   foreign_symbol: string;
 }
 
-export interface ObytePaymentOutput {
-  address: string;
-  amount: number;
-}
-
 export type ObyteMessagePayload = {
   asset?: string;
-  outputs?: ObytePaymentOutput[];
+  outputs?: { address: string; amount: number }[];
 } & Record<string, unknown>;
 
 export interface ObyteMessage {
@@ -203,12 +191,12 @@ export interface AAResponseVars {
   [name: string]: string | number | boolean | undefined;
 }
 
-export interface AAResponse {
+interface AAResponse {
   responseVars?: AAResponseVars;
   error?: string;
 }
 
-export type UpdatedStateVars = Record<string, Record<string, { value: StateVarValue; old_value?: StateVarValue; delta?: number }>>;
+type UpdatedStateVars = Record<string, Record<string, { value: StateVarValue; old_value?: StateVarValue; delta?: number }>>;
 
 export interface AAResponseBody {
   aa_address: string;
@@ -223,12 +211,7 @@ export interface AAResponseBody {
   objResponseUnit?: ObyteUnit | null;
 }
 
-export interface AARequestBody {
-  aa_address: string;
-  unit: ObyteUnit;
-}
-
-export type AAEventBody = { aa_address: string; unit?: ObyteUnit } & Partial<Omit<AAResponseBody, "aa_address">>;
+type AAEventBody = { aa_address: string; unit?: ObyteUnit } & Partial<Omit<AAResponseBody, "aa_address">>;
 
 export interface HubMessage {
   subject?: string;

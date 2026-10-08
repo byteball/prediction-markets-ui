@@ -1,4 +1,4 @@
-import { truncate } from "lodash";
+import { truncate } from "lodash-es";
 import { capitalizeFirstLetter } from "./capitalizeFirstLetter";
 import { encodeData } from "./encodeData";
 import { generateLink } from "./generateLink";
@@ -13,11 +13,14 @@ import { getCategoryName } from "./getCategoryName";
 import { getAlternatePaths, getAlternateMetaList } from "./getAlternatePaths";
 import { botCheck } from "./botCheck";
 import { isDrawAllowed } from "./isDrawAllowed";
-import { getTokenlessSymbols } from "./getTokenlessSymbols";
+import { getTokenlessSymbols, resolveTokenlessSymbols } from "./getTokenlessSymbols";
+import { normalizeStateVars } from "./normalizeStateVars";
 
 export {
   encodeData,
   getTokenlessSymbols,
+  resolveTokenlessSymbols,
+  normalizeStateVars,
   generateLink,
   getExchangeResult,
   getMarketPriceByType,

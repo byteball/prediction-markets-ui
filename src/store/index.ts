@@ -57,5 +57,3 @@ export default getStore;
 export type AppStore = ReturnType<typeof getStore>["store"];
 export type RootState = ReturnType<AppStore["getState"]>;
 export type AppDispatch = AppStore["dispatch"];
-
-export const getPersist = (state: RootState) => state._persist;

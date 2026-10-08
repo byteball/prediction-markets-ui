@@ -1,9 +1,9 @@
 import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import { useSelector } from "react-redux";
 import { cn } from "cn";
 
 import { selectLanguage } from "store/slices/settingsSlice";
+import { useAppSelector } from "store/hooks";
 
 import styles from "./MainMenu.module.css";
 
@@ -14,7 +14,7 @@ type MainMenuProps = {
 
 export const MainMenu = ({ direction = "horizontal", onClose = () => {} }: MainMenuProps) => {
   const { t } = useTranslation();
-  const lang = useSelector(selectLanguage);
+  const lang = useAppSelector(selectLanguage);
 
   const basename = lang && lang !== "en" ? "/" + lang : "";
 

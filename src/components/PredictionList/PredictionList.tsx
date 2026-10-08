@@ -1,5 +1,4 @@
 import { memo, useCallback, useMemo, type ReactNode } from "react";
-import { useSelector } from "react-redux";
 import { useLocation, useNavigate, useParams, useSearchParams } from "react-router-dom";
 import { t } from "i18next";
 import { Loader2 } from "lucide-react";
@@ -7,6 +6,7 @@ import { Loader2 } from "lucide-react";
 import { PredictionItem, type PredictionItemProps } from "./PredictionItem";
 import { SwitchActions } from "components/SwitchActions/SwitchActions";
 import { selectLanguage } from "store/slices/settingsSlice";
+import { useAppSelector } from "store/hooks";
 import { getEmojiByType, transformChampionshipName, getSportNameByType, getCategoryName } from "utils";
 
 import { useMarket, useChampionships, useCalendar } from "hooks";
@@ -44,7 +44,7 @@ export const PredictionList = memo(() => {
   const { markets = [], loadMore, isLoading, isLoadMore, isLoadingMore } = useMarket(category, particle);
   const [searchParams, setSearchParams] = useSearchParams();
 
-  const lang = useSelector(selectLanguage);
+  const lang = useAppSelector(selectLanguage);
   const location = useLocation();
 
   const navigate = useNavigate();
@@ -65,7 +65,6 @@ export const PredictionList = memo(() => {
         url: `${langPath}/${category}/${code}`,
       })),
     ],
-    // eslint-disable-next-line react-hooks/exhaustive-deps
     [category, lang]
   );
 

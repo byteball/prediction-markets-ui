@@ -1,9 +1,9 @@
-import { createSlice, type PayloadAction } from '@reduxjs/toolkit';
+import { createSelector, createSlice, type PayloadAction } from '@reduxjs/toolkit';
 import { addRecentEvent } from 'store/thunks/addRecentEvent';
 import { loadMoreRecentEvents } from 'store/thunks/loadMoreRecentEvents';
 import { setActiveMarket } from 'store/thunks/setActiveMarket';
 import type { RootState } from 'store';
-import type { Candle, CurrencyCandle, MarketParams, MarketStateVars, OutcomeType, RecentEvent, Team } from 'store/types';
+import type { Candle, CurrencyCandle, MarketParams, MarketStateVars, OutcomeAmounts, OutcomeType, RecentEvent, Team } from 'store/types';
 
 export type ActiveMarketStatus = 'not selected' | 'loading' | 'loaded' | 'error';
 
@@ -106,7 +106,7 @@ export const {
   setActiveMarketAddress,
   updateStateForActualMarket,
   updateSymbolForActualMarket,
-  updateDataFeedValue
+  updateDataFeedValue,
 } = activeSlice.actions;
 
 export default activeSlice.reducer;
@@ -127,3 +127,13 @@ export const selectActiveDatafeedValue = (state: RootState) => state.active.data
 export const selectActiveTeams = (state: RootState) => state.active.teams;
 export const selectActiveCurrencyCandles = (state: RootState) => state.active.currencyCandles;
 export const selectActiveCurrencyCurrentValue = (state: RootState) => state.active.currencyCurrentValue;
+const ZERO_BALANCES: OutcomeAmounts = { yes: 0, no: 0, draw: 0 };
+
+export const selectUserOutcomeBalances = createSelector(
+  [(state: RootState) => state.active.stateVars, (state: RootState) => state.active.params.is_tokenless, (state: RootState) => state.settings.walletAddress],
+  (stateVars, is_tokenless, walletAddress): OutcomeAmounts | null => {
+    if (!walletAddress || !is_tokenless) return null;
+
+    return stateVars[`balance_${walletAddress}`] ?? ZERO_BALANCES;
+  }
+);

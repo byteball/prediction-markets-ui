@@ -54,7 +54,7 @@ createRoot(container).render(
 						}}
 					>
 						<TooltipProvider delayDuration={100}>
-							<RouterProvider router={router} />
+							<RouterProvider router={router} future={{ v7_startTransition: true }} />
 							<Toaster position="top-center" richColors />
 						</TooltipProvider>
 					</SWRConfig>

@@ -1,10 +1,10 @@
-import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import { Helmet } from "react-helmet-async";
 import { useTranslation } from "react-i18next";
 
 import { CreateForm } from "forms";
 import { removeCreationOrder, selectCreationOrder } from "store/slices/settingsSlice";
+import { useAppDispatch, useAppSelector } from "store/hooks";
 import { WaitingPredictionMarket } from "./WaitingPredictionMarket";
 import { PageProvider } from "components/PageProvider/PageProvider";
 
@@ -12,8 +12,8 @@ import { Button } from "@/components/ui/button";
 import { Result } from "@/components/ui/result";
 
 export const CreatePage = () => {
-  const creationOrder = useSelector(selectCreationOrder);
-  const dispatch = useDispatch();
+  const creationOrder = useAppSelector(selectCreationOrder);
+  const dispatch = useAppDispatch();
   const { t } = useTranslation();
 
   return (

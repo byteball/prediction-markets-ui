@@ -1,3 +1,4 @@
+import { readdirSync } from 'node:fs';
 import { fileURLToPath, URL } from 'node:url';
 import { defineConfig } from 'vitest/config';
 import react from '@vitejs/plugin-react';
@@ -6,25 +7,10 @@ import { nodePolyfills } from 'vite-plugin-node-polyfills';
 
 const src = (p = '') => fileURLToPath(new URL(`./src/${p}`, import.meta.url));
 
-// antd's dark theme (with the old craco-less modifyVars) is precompiled by scripts/build-antd-css.mjs
-// into src/styles/antd.dark.layer.css and imported from src/index.css inside `@layer antd`.
-
-// Bare imports relative to src/ (the old jsconfig "baseUrl": "src/").
-// Mirrors tsconfig.app.json "baseUrl". Add an entry here when a new top-level src/ module is created.
-const srcModules = [
-  'appConfig',
-  'bootstrap',
-  'components',
-  'forms',
-  'hooks',
-  'locale',
-  'modals',
-  'pages',
-  'router',
-  'services',
-  'store',
-  'utils',
-];
+// Bare imports relative to src/ (tsconfig.app.json "baseUrl"): every top-level directory and file of src/.
+const srcModules = readdirSync(src(), { withFileTypes: true })
+  .filter((entry) => entry.isDirectory() || /(?<!\.d)\.tsx?$/.test(entry.name))
+  .map((entry) => entry.name.replace(/\.tsx?$/, ''));
 
 export default defineConfig({
   plugins: [

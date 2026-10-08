@@ -1,18 +1,17 @@
-import { useEffect, useState, type ChangeEvent } from "react";
-import { Pie, type PieConfig } from "@ant-design/plots";
+import { useEffect, useMemo, useState, type ChangeEvent } from "react";
+import type { PieConfig } from "@ant-design/plots";
+import { Pie } from "components/charts";
 import { toast } from "sonner";
-import { estimateOutput, transferEVM2Obyte } from "counterstake-sdk";
-import { isNumber } from "lodash";
-import { useSelector } from "react-redux";
+import { isNumber } from "lodash-es";
 import ReactGA from "react-ga4";
 import { Trans, useTranslation } from "react-i18next";
-import { Loader2 } from "lucide-react";
 
 import appConfig from "appConfig";
 import client from "services/obyte";
 
 import { QRButton } from "components/QRButton/QRButton";
 import { WalletModal } from "modals";
+import { useAppSelector } from "store/hooks";
 import { selectActiveAddress, selectActiveMarketParams, selectActiveMarketStateVars } from "store/slices/activeSlice";
 import { selectTokensByNetwork } from "store/slices/bridgesSlice";
 import { selectWalletAddress } from "store/slices/settingsSlice";
@@ -36,35 +35,47 @@ type Probabilities = { yes: Probability; no: Probability; draw: Probability };
 export type AddLiquidityFormProps = {
   yes_team?: string;
   no_team?: string;
-  visible?: boolean;
 };
 
-export const AddLiquidityForm = ({ yes_team, no_team, visible }: AddLiquidityFormProps) => {
-  const params = useSelector(selectActiveMarketParams);
-  const stateVars = useSelector(selectActiveMarketStateVars);
+const emptyProbabilities: Probabilities = { yes: { value: "", valid: true }, no: { value: "", valid: true }, draw: { value: "", valid: true } };
 
-  const walletAddress = useSelector(selectWalletAddress);
-  const address = useSelector(selectActiveAddress);
-  const tokensByNetwork: Record<string, BridgeToken[]> = useSelector(selectTokensByNetwork);
+const getSuggestedProbabilities = (yes_odds: number | null, no_odds: number | null, draw_odds: number | null, isFirstIssue: boolean): Probabilities => {
+  if (!(yes_odds && no_odds && draw_odds && isFirstIssue)) return emptyProbabilities;
+
+  const sum = 1 / yes_odds + 1 / no_odds + 1 / draw_odds;
+
+  return {
+    yes: { value: floorDecimals((1 / yes_odds / sum) * 100, 2), valid: true },
+    no: { value: floorDecimals((1 / no_odds / sum) * 100, 2), valid: true },
+    draw: { value: "", valid: true },
+  };
+};
+
+export const AddLiquidityForm = ({ yes_team, no_team }: AddLiquidityFormProps) => {
+  const params = useAppSelector(selectActiveMarketParams);
+  const stateVars = useAppSelector(selectActiveMarketStateVars);
+
+  const walletAddress = useAppSelector(selectWalletAddress);
+  const address = useAppSelector(selectActiveAddress);
+  const tokensByNetwork: Record<string, BridgeToken[]> = useAppSelector(selectTokensByNetwork);
 
   const { t } = useTranslation();
-
-  const [meta, setMeta] = useState<ReturnType<typeof getExchangeResult> | null>(null);
-  const [reserveAmount, setReserveAmount] = useState<{ value: string | number | undefined; valid: boolean }>({ value: 0.1, valid: true });
-  const [probabilities, setProbabilities] = useState<Probabilities>({ yes: { value: "", valid: true }, no: { value: "", valid: true }, draw: { value: "", valid: true } });
-  const [dataForPie, setDataForPie] = useState<{ type: string; token: string; value: number }[]>([]);
-
-  const [fromToken, setFromToken] = useState<FromToken>();
-  const [estimate, setEstimate] = useState<number>();
-  const [estimateError, setEstimateError] = useState<string>();
 
   const { allow_draw, reserve_asset, reserve_decimals, reserve_symbol, base_aa, yes_odds: bookmaker_yes_odds, no_odds: bookmaker_no_odds, draw_odds: bookmaker_draw_odds } = params;
   const { supply_yes = 0, supply_no = 0, supply_draw = 0, reserve = 0 } = stateVars;
 
+  const isFirstIssue = supply_yes + supply_no + supply_draw === 0;
+
+  const [reserveAmount, setReserveAmount] = useState<{ value: string | number | undefined; valid: boolean }>({ value: 0.1, valid: true });
+  // The form remounts on every open, so the initial state replaces the old "set on mount" effects.
+  const [probabilities, setProbabilities] = useState<Probabilities>(() => getSuggestedProbabilities(bookmaker_yes_odds, bookmaker_no_odds, bookmaker_draw_odds, isFirstIssue));
+  const [fromToken, setFromToken] = useState<FromToken>(() => ({ asset: reserve_asset, decimals: reserve_decimals, symbol: reserve_symbol, network: "Obyte", foreign_asset: "no" }));
+  const [estimate, setEstimate] = useState<number>();
+  const [estimateError, setEstimateError] = useState<string>();
+
   const network_fee = reserve_asset === "base" ? 1e4 : 0;
   const minAmount = reserve_asset === "base" ? network_fee / 1e9 : 1 / 10 ** reserve_decimals;
   const haveTeamNames = yes_team && no_team;
-  const isFirstIssue = supply_yes + supply_no + supply_draw === 0;
   const needsIssueFeeForLiquidity = (appConfig.BASE_AAS ?? []).findIndex((address) => address === base_aa) === 0;
 
   let amountInPennies = 0;
@@ -162,11 +173,6 @@ export const AddLiquidityForm = ({ yes_team, no_team, visible }: AddLiquidityFor
     }
   };
 
-  useEffect(() => {
-    setFromToken({ asset: reserve_asset, decimals: reserve_decimals, symbol: reserve_symbol, network: "Obyte", foreign_asset: "no" });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [address, reserve_asset]);
-
   const handleChangeFromToken = (strValue: string) => {
     const [network, asset, decimals, foreign_asset, ...symbol] = strValue.split("__");
 
@@ -181,6 +187,7 @@ export const AddLiquidityForm = ({ yes_team, no_team, visible }: AddLiquidityFor
     const run = async () => {
       if (fromToken && fromToken.network !== "Obyte" && reserveAmount.value && reserveAmount.valid && Number(reserveAmount.value) > 0) {
         try {
+          const { estimateOutput } = await import("counterstake-sdk");
           const res = await estimateOutput({
             amount: Number(reserveAmount.value),
             src_network: fromToken.network,
@@ -211,39 +218,24 @@ export const AddLiquidityForm = ({ yes_team, no_team, visible }: AddLiquidityFor
     };
 
     run();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [fromToken, reserveAmount]);
 
-  useEffect(() => {
-    if (reserveAmount.valid && reserveAmount.value && (fromToken?.network === "Obyte" || estimate)) {
-      const result = getExchangeResult(stateVars, params, yesAmount, noAmount, drawAmount);
+  const meta = reserveAmount.valid && reserveAmount.value && (fromToken.network === "Obyte" || estimate) ? getExchangeResult(stateVars, params, yesAmount, noAmount, drawAmount) : null;
 
-      if (result) {
-        setMeta(result);
-      }
-    } else {
-      setMeta(null);
+  const dataForPie = useMemo(() => {
+    if (!meta) return [];
+
+    const data = [
+      { type: "YES", token: "yes", value: +Number((amountInPenniesWithoutFee * Number(probabilities.yes.value)) / 100 / 10 ** reserve_decimals).toFixed(reserve_decimals) },
+      { type: "NO", token: "no", value: +Number((amountInPenniesWithoutFee * Number(probabilities.no.value)) / 100 / 10 ** reserve_decimals).toFixed(reserve_decimals) },
+    ];
+
+    if (allow_draw) {
+      data.push({ type: "DRAW", token: "draw", value: +Number((amountInPenniesWithoutFee * drawPercent) / 100 / 10 ** reserve_decimals).toFixed(reserve_decimals) });
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [reserveAmount, address, stateVars, fromToken, estimate, yesAmount, noAmount, drawAmount]);
 
-  useEffect(() => {
-    if (meta) {
-      const data = [
-        { type: "YES", token: "yes", value: +Number((amountInPenniesWithoutFee * Number(probabilities.yes.value)) / 100 / 10 ** reserve_decimals).toFixed(reserve_decimals) },
-        { type: "NO", token: "no", value: +Number((amountInPenniesWithoutFee * Number(probabilities.no.value)) / 100 / 10 ** reserve_decimals).toFixed(reserve_decimals) },
-      ];
-
-      if (allow_draw) {
-        data.push({ type: "DRAW", token: "draw", value: +Number((amountInPenniesWithoutFee * drawPercent) / 100 / 10 ** reserve_decimals).toFixed(reserve_decimals) });
-      }
-
-      setDataForPie(data);
-    } else {
-      setDataForPie([]);
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [stateVars, supply_yes, supply_no, supply_draw, amountInPenniesWithoutFee, reserveAmount, meta, probabilities]);
+    return data;
+  }, [meta, amountInPenniesWithoutFee, probabilities, drawPercent, allow_draw, reserve_decimals]);
 
   const data: { add_liquidity: number; yes_amount_ratio?: number; no_amount_ratio?: number } = { add_liquidity: 1 };
 
@@ -328,33 +320,12 @@ export const AddLiquidityForm = ({ yes_team, no_team, visible }: AddLiquidityFor
     },
   } as unknown as PieConfig;
 
-  useEffect(() => {
-    if (bookmaker_yes_odds && bookmaker_no_odds && bookmaker_draw_odds && isFirstIssue) {
-      const sum = 1 / bookmaker_yes_odds + 1 / bookmaker_no_odds + 1 / bookmaker_draw_odds;
-
-      const yes_odds_percentage = (1 / bookmaker_yes_odds / sum) * 100;
-      const no_odds_percentage = (1 / bookmaker_no_odds / sum) * 100;
-
-      setProbabilities({
-        yes: { value: floorDecimals(yes_odds_percentage, 2), valid: true },
-        no: { value: floorDecimals(no_odds_percentage, 2), valid: true },
-        draw: { value: "", valid: true },
-      });
-    }
-  }, [bookmaker_yes_odds, bookmaker_no_odds, bookmaker_draw_odds, isFirstIssue, visible]);
-
-  if (!fromToken)
-    return (
-      <div style={{ display: "flex", justifyContent: "center", padding: 20 }}>
-        <Loader2 className="size-8 animate-spin text-primary" aria-label="loading" />
-      </div>
-    );
-
   const counterstake_assistant_fee = fromToken.network !== "Obyte" ? Number(reserveAmount.value) * 0.01 : 0;
   const metamaskInstalled = !!(window as unknown as { ethereum?: unknown }).ethereum;
 
   const buyViaEVM = async () => {
     try {
+      const { transferEVM2Obyte } = await import("counterstake-sdk");
       await transferEVM2Obyte({
         amount: Number(reserveAmount.value),
         src_network: fromToken.network,
@@ -408,7 +379,7 @@ export const AddLiquidityForm = ({ yes_team, no_team, visible }: AddLiquidityFor
     <form className="text-base" onSubmit={(e) => e.preventDefault()}>
       <div className="grid grid-cols-1 gap-x-2 md:grid-cols-3">
         <div className="md:col-span-1">
-          <FormItem>{(control) => <Input {...control} value={reserveAmount.value ?? ""} placeholder="Amount" onChange={handleChangeReserveAmount} />}</FormItem>
+          <FormItem>{(control) => <Input {...control} value={reserveAmount.value ?? ""} placeholder={t("forms.common.amount", "Amount")} onChange={handleChangeReserveAmount} />}</FormItem>
         </div>
 
         <div className="md:col-span-2">

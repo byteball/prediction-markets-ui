@@ -1,41 +1,15 @@
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
-import { useSelector } from "react-redux";
 
 import { FormLabel } from "components/FormLabel/FormLabel";
 import { selectPriceOrOdds } from "store/slices/settingsSlice";
+import { useAppSelector } from "store/hooks";
+import type { BuyResult, ExchangeResult } from "utils/getExchangeResult";
 
 import styles from "./TransactionEstimation.module.css";
 
-type Meta = {
-  new_yes_price: number;
-  new_no_price: number;
-  new_draw_price: number;
-  old_yes_price: number;
-  old_no_price: number;
-  old_draw_price: number;
-  old_supply_yes: number;
-  old_supply_no: number;
-  old_supply_draw: number;
-  new_supply_yes: number;
-  new_supply_no: number;
-  new_supply_draw: number;
-  old_reserve: number;
-  new_reserve: number;
-  amount?: number;
-  reserve_amount?: number;
-  total_fee: number;
-  percentage_total_fee: number;
-  arb_profit_tax: number;
-  percentage_arb_profit_tax: number;
-  issue_fee: number;
-  redeem_fee: number;
-  percentage_redeem_fee?: number;
-  network_fee: number;
-};
-
 type TransactionEstimationProps = {
-  meta?: Meta | null;
+  meta?: ExchangeResult | BuyResult | null;
   params: { reserve_symbol: string; reserve_decimals: number; issue_fee: number };
   tokenType?: "yes" | "no" | "draw";
   showEstimatedWinnings?: boolean;
@@ -46,7 +20,7 @@ type TransactionEstimationProps = {
 export const TransactionEstimation = ({ meta, params, tokenType, showEstimatedWinnings = false, yes_team, no_team }: TransactionEstimationProps) => {
   const { reserve_symbol, reserve_decimals, issue_fee } = params;
   const [visibleFee, setVisibleFee] = useState(false);
-  const priceOrOdds = useSelector(selectPriceOrOdds);
+  const priceOrOdds = useAppSelector(selectPriceOrOdds);
   const { t } = useTranslation();
 
   if (!meta || !tokenType) return null;
@@ -64,9 +38,9 @@ export const TransactionEstimation = ({ meta, params, tokenType, showEstimatedWi
 
   const percentageOddsDifference = (100 * (new_odds - odds)) / odds;
 
-  const estimatedWinnings = (meta.new_reserve / new_supply) * (meta.amount ?? 0);
+  const estimatedWinnings = (meta.new_reserve / new_supply) * ("amount" in meta ? meta.amount : 0);
   const estimatedWinningsView = +Number(estimatedWinnings / 10 ** reserve_decimals).toFixed(reserve_decimals);
-  const reserveAmount = meta.reserve_amount ?? 0;
+  const reserveAmount = "reserve_amount" in meta ? meta.reserve_amount : 0;
   const percentageEstimatedProfit = Number(((estimatedWinnings - reserveAmount) / reserveAmount) * 100).toFixed(4);
 
   const tokenName = tokenType === "yes" ? yes_team || "YES" : tokenType === "no" ? no_team || "NO" : "DRAW";
@@ -145,7 +119,7 @@ export const TransactionEstimation = ({ meta, params, tokenType, showEstimatedWi
             )}
             {meta.redeem_fee !== 0 && (
               <div>
-                <span className="metaLabel">{t("transaction_estimation.sell_fee", "Sell fee")}</span>: {+Number(meta.redeem_fee / 10 ** reserve_decimals).toFixed(reserve_decimals)} {reserve_symbol} ({meta.percentage_redeem_fee}%)
+                <span className="metaLabel">{t("transaction_estimation.sell_fee", "Sell fee")}</span>: {+Number(meta.redeem_fee / 10 ** reserve_decimals).toFixed(reserve_decimals)} {reserve_symbol} ({"percentage_redeem_fee" in meta ? meta.percentage_redeem_fee : undefined}%)
               </div>
             )}
             {meta.network_fee !== 0 && (

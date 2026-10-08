@@ -1,5 +1,5 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
-import { isEmpty } from "lodash";
+import { isEmpty } from "lodash-es";
 
 import { getCurrencyPrice } from "services/marketData";
 import { getBaseUsdRate } from "services/oswap";

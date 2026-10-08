@@ -1,13 +1,13 @@
 import { useEffect, useMemo, useState, type ChangeEvent } from "react";
-import { useDispatch, useSelector } from "react-redux";
 import { Img } from "react-image";
 import moment, { type Moment } from "moment";
-import { debounce, isNaN } from "lodash";
+import { debounce, isNaN } from "lodash-es";
 import ReactGA from "react-ga4";
 import { useTranslation } from "react-i18next";
 
 import { FormLabel } from "components/FormLabel/FormLabel";
 import { QRButton } from "components/QRButton/QRButton";
+import { useAppDispatch, useAppSelector } from "store/hooks";
 import { saveCreationOrder, selectReserveAssets } from "store/slices/settingsSlice";
 import { generateLink, generateTextEvent, isDrawAllowed } from "utils";
 import client from "services/obyte";
@@ -33,8 +33,6 @@ type Field<T = string | number> = { value: T; valid: boolean };
 const statusOf = (field: Field<string | number | undefined>): FormItemStatus => (field.value !== "" && field.value !== undefined ? (field.valid ? "success" : "error") : undefined);
 
 export type CreateNowFormProps = {
-  comparison?: string;
-  event?: string;
   feed_name?: string;
   event_date: number;
   expect_datafeed_value?: string | number;
@@ -71,9 +69,9 @@ export const CreateNowForm = ({ feed_name, event_date, expect_datafeed_value, ye
 
   const minDate = moment().hours(0).minutes(0).seconds(0).milliseconds(0);
 
-  const reserveAssets: Record<string, { symbol: string; decimals: number }> = useSelector(selectReserveAssets);
+  const reserveAssets: Record<string, { symbol: string; decimals: number }> = useAppSelector(selectReserveAssets);
 
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
   const { t } = useTranslation();
 
   const handleChangeValue = (evOrValue: ChangeEvent<HTMLInputElement> | Moment | string, type: ParamKey) => {
@@ -170,7 +168,7 @@ export const CreateNowForm = ({ feed_name, event_date, expect_datafeed_value, ye
     }
   }
 
-  const handleChangeFeedName = async (value: string | undefined) => {
+  const handleChangeFeedName = (value: string | undefined) => {
     handleChangeValue(String(value).toUpperCase(), "feed_name");
     setCurrentFeedValue({ value: undefined, valid: false, loading: true });
 
@@ -217,7 +215,6 @@ export const CreateNowForm = ({ feed_name, event_date, expect_datafeed_value, ye
 
   useEffect(() => {
     handleChangeFeedName(feed_name);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [feed_name]);
 
   const percentInput = (field: Field<string | number>, key: ParamKey, placeholder?: string) => (
@@ -276,7 +273,7 @@ export const CreateNowForm = ({ feed_name, event_date, expect_datafeed_value, ye
                 <FormItem
                   extra={
                     currentFeedValue.loading ? (
-                      "Loading rate..."
+                      t("forms.create_now.loading_rate", "Loading rate...")
                     ) : (
                       <span style={{ color: currentFeedValue.value ? "green" : "red" }}>
                         {currentFeedValue.value ? t("forms.create_now.current_rate", "Current rate: {{value}} {{symbol}}", { value: currentFeedValue.value, symbol: dataFeedCurrency }) : t("forms.create_now.no_pair", "Pair not found")}
@@ -289,7 +286,6 @@ export const CreateNowForm = ({ feed_name, event_date, expect_datafeed_value, ye
                     <Combobox
                       {...control}
                       allowCustomValue
-                     
                       placeholder={paramList.feed_name.placeholder}
                       value={feedName.value ?? ""}
                       onValueChange={handleChangeFeedName}

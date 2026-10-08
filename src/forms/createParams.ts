@@ -1,5 +1,5 @@
 import obyte from "obyte";
-import { isNumber } from "lodash";
+import { isNumber } from "lodash-es";
 import moment from "moment";
 
 import i18n from "locale";

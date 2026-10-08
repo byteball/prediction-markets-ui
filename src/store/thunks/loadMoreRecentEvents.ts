@@ -1,5 +1,5 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
-import { uniqBy } from "lodash";
+import { uniqBy } from "lodash-es";
 
 import backend from "services/backend";
 import type { AppThunkApiConfig } from "store/hooks";
@@ -13,7 +13,7 @@ export const loadMoreRecentEvents = createAsyncThunk<Result, Args, AppThunkApiCo
   const state = getState();
   if (address === state.active.address) {
     const { data: recentEvents, count: recentEventsCount } = await backend.getRecentEvents(address as string, page);
-    const uniqRecentEvents = uniqBy(recentEvents, "trigger_unit") as RecentEvent[];
+    const uniqRecentEvents = uniqBy(recentEvents, "trigger_unit");
 
     return {
       recentEvents: uniqRecentEvents,

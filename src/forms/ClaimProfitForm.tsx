@@ -1,9 +1,9 @@
 import { useState, useEffect, type ChangeEvent } from "react";
 import { useTranslation } from "react-i18next";
-import { useSelector } from "react-redux";
 
 import { QRButton } from "components/QRButton/QRButton";
 import { generateLink, truncate } from "utils";
+import { useAppSelector } from "store/hooks";
 import { selectWalletBalance } from "store/slices/userWalletSlice";
 
 import { FormItem } from "@/components/ui/form-item";
@@ -14,20 +14,31 @@ const f = (x: unknown) => (~(x + "").indexOf(".") ? (x + "").split(".")[1].lengt
 
 export type ClaimProfitFormProps = {
   address: string | null;
-  asset: string | number;
+  asset?: string;
   supply?: number;
   reserve?: number;
   decimals?: number;
   walletAddress?: string | null;
-  symbol: string | number;
+  symbol?: string;
   reserve_decimals: number;
   reserve_symbol: string;
+  isTokenless?: boolean;
+  outcomeBalance?: number;
 };
 
-export const ClaimProfitForm = ({ address, asset, supply = 0, reserve = 0, decimals = 0, walletAddress, symbol, reserve_decimals, reserve_symbol }: ClaimProfitFormProps) => {
-  const [amount, setAmount] = useState<{ value: string | number; valid: boolean }>({ value: "", valid: false });
-  const walletBalance = useSelector(selectWalletBalance);
+export const ClaimProfitForm = ({ address, asset, supply = 0, reserve = 0, decimals = 0, walletAddress, symbol, reserve_decimals, reserve_symbol, isTokenless = false, outcomeBalance = 0 }: ClaimProfitFormProps) => {
+  const walletBalance = useAppSelector(selectWalletBalance);
   const { t } = useTranslation();
+
+  // tokenless markets keep the position in the AA state, tokened markets in the wallet
+  const userBalanceOfWinnerTokens: number = isTokenless ? outcomeBalance : asset ? walletBalance?.[asset]?.total || 0 : 0;
+  const userBalanceOfWinnerTokensView = +Number(userBalanceOfWinnerTokens / 10 ** decimals).toFixed(decimals);
+
+  const [amount, setAmount] = useState<{ value: string | number; valid: boolean }>({ value: "", valid: false });
+
+  useEffect(() => {
+    setAmount(userBalanceOfWinnerTokens ? { value: userBalanceOfWinnerTokensView, valid: true } : { value: "", valid: false });
+  }, [userBalanceOfWinnerTokens, userBalanceOfWinnerTokensView]);
 
   const price_winner_by_reserve = reserve / supply;
   const payout = Math.floor(Number(amount.value) * 10 ** decimals * price_winner_by_reserve);
@@ -44,22 +55,13 @@ export const ClaimProfitForm = ({ address, asset, supply = 0, reserve = 0, decim
     }
   };
 
-  const link = generateLink({ aa: address, asset, is_single: true, amount: Math.ceil(+amount.value * 10 ** decimals), data: { claim_profit: 1 }, from_address: walletAddress || undefined });
+  // the tokenless AA claims the whole position and must not receive the reserve asset, the trigger carries only the network fee
+  const link = isTokenless
+    ? generateLink({ aa: address, amount: 1e4, data: { claim_profit: 1 }, is_single: true, from_address: walletAddress || undefined })
+    : generateLink({ aa: address, asset, is_single: true, amount: Math.ceil(+amount.value * 10 ** decimals), data: { claim_profit: 1 }, from_address: walletAddress || undefined });
 
   const amountLessOrEqualSupply = Number(amount.value) * 10 ** decimals <= supply;
   const amountIsValid = amount.valid && Number(amount.value) && amountLessOrEqualSupply;
-
-  const userBalanceOfWinnerTokens: number = walletBalance?.[asset]?.total || 0;
-  const userBalanceOfWinnerTokensView = +Number(userBalanceOfWinnerTokens / 10 ** decimals).toFixed(decimals);
-
-  useEffect(() => {
-    if (userBalanceOfWinnerTokens) {
-      setAmount({ value: userBalanceOfWinnerTokensView, valid: true });
-    } else {
-      setAmount({ value: "", valid: false });
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [userBalanceOfWinnerTokensView]);
 
   const insertToInput = () => {
     setAmount({ value: userBalanceOfWinnerTokensView, valid: true });
@@ -86,15 +88,15 @@ export const ClaimProfitForm = ({ address, asset, supply = 0, reserve = 0, decim
         {(control) => (
           <InputGroup
             {...control}
-           
             autoFocus={true}
+            readOnly={isTokenless}
             value={amount.value}
             onChange={handleAmount}
             placeholder={t("forms.common.amount", "Amount")}
             suffix={
               <Tooltip>
                 <TooltipTrigger asChild>
-                  <span style={{ maxWidth: "100%", overflow: "hidden", cursor: "default" }}>{truncate(String(symbol), { length: 18 })}</span>
+                  <span style={{ maxWidth: "100%", overflow: "hidden", cursor: "default" }}>{truncate(symbol ?? "", { length: 18 })}</span>
                 </TooltipTrigger>
                 <TooltipContent>{symbol}</TooltipContent>
               </Tooltip>
@@ -104,7 +106,7 @@ export const ClaimProfitForm = ({ address, asset, supply = 0, reserve = 0, decim
       </FormItem>
 
       <FormItem>
-        <QRButton type="primary" size="large" disabled={!amountIsValid} href={link}>
+        <QRButton type="primary" size="large" disabled={!amountIsValid || (!isTokenless && !asset)} href={link}>
           {t("forms.claim_profit.claim_profit", "Claim profit")}
         </QRButton>
       </FormItem>

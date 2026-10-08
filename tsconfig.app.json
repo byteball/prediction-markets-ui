@@ -13,8 +13,7 @@
       "@/*": ["./*"]
     },
 
-    "allowJs": true,
-    "checkJs": false,
+    "allowJs": false,
     "noEmit": true,
     "isolatedModules": true,
     "moduleDetection": "force",
@@ -22,6 +21,7 @@
     "resolveJsonModule": true,
     "esModuleInterop": true,
     "skipLibCheck": true,
+    "noUncheckedSideEffectImports": true,
 
     "strict": true,
     "noUnusedLocals": true,
@@ -30,5 +30,5 @@
     "types": ["vite/client", "vitest/globals"]
   },
   "include": ["src"],
-  "exclude": ["src/**/*.test.js", "src/**/*.test.jsx"]
+  "exclude": ["src/locale/*.cjs"]
 }

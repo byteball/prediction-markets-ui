@@ -1,8 +1,6 @@
 import { useEffect, useRef, useState, type ChangeEvent, type Dispatch, type SetStateAction } from "react";
 import { toast } from "sonner";
-import { isNaN } from "lodash";
-import { useSelector } from "react-redux";
-import { estimateOutput, transferEVM2Obyte } from "counterstake-sdk";
+import { isNaN } from "lodash-es";
 import ReactGA from "react-ga4";
 import { useTranslation, Trans } from "react-i18next";
 import { Loader2 } from "lucide-react";
@@ -10,6 +8,7 @@ import { Loader2 } from "lucide-react";
 import { QRButton } from "components/QRButton/QRButton";
 import { TransactionEstimation } from "components/TransactionEstimation/TransactionEstimation";
 import { WalletModal } from "modals";
+import { useAppSelector } from "store/hooks";
 import { selectActiveAddress, selectActiveMarketParams, selectActiveMarketStateVars } from "store/slices/activeSlice";
 import { selectWalletAddress } from "store/slices/settingsSlice";
 import { get_result_for_buying_by_type } from "utils/getExchangeResult";
@@ -27,10 +26,11 @@ import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
 import type { AmountState } from "./RedeemForm";
+import { tokenLabel } from "./tokenLabel";
 
 const f = (x: unknown) => (~(x + "").indexOf(".") ? (x + "").split(".")[1].length : 0);
 
-type Token = { symbol: string; asset: string; type: "yes" | "no" | "draw"; decimals: number };
+type Token = { symbol: string; asset?: string; type: "yes" | "no" | "draw"; decimals: number };
 type FromToken = { asset: string; decimals: number; symbol: string; foreign_asset: string; network: string };
 type BridgeToken = { home_asset: string; home_asset_decimals: number; foreign_asset: string; home_symbol: string; home_network: string; bridge_id: string | number };
 
@@ -43,11 +43,11 @@ export type BuyFormProps = {
 };
 
 export const BuyForm = ({ type, yes_team, no_team, amount, setAmount }: BuyFormProps) => {
-  const stateVars = useSelector(selectActiveMarketStateVars);
-  const address = useSelector(selectActiveAddress);
-  const params = useSelector(selectActiveMarketParams);
-  const walletAddress = useSelector(selectWalletAddress);
-  const tokensByNetwork: Record<string, BridgeToken[]> = useSelector(selectTokensByNetwork);
+  const stateVars = useAppSelector(selectActiveMarketStateVars);
+  const address = useAppSelector(selectActiveAddress);
+  const params = useAppSelector(selectActiveMarketParams);
+  const walletAddress = useAppSelector(selectWalletAddress);
+  const tokensByNetwork: Record<string, BridgeToken[]> = useAppSelector(selectTokensByNetwork);
 
   const btnRef = useRef<HTMLAnchorElement>(null);
   const { t } = useTranslation();
@@ -71,7 +71,6 @@ export const BuyForm = ({ type, yes_team, no_team, amount, setAmount }: BuyFormP
 
   useEffect(() => {
     setFromToken({ asset: reserve_asset, decimals: reserve_decimals, symbol: reserve_symbol, foreign_asset: "no", network: "Obyte" });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [address, reserve_asset]);
 
   useEffect(() => {
@@ -81,14 +80,13 @@ export const BuyForm = ({ type, yes_team, no_team, amount, setAmount }: BuyFormP
     ];
 
     if (allow_draw) {
-      tokens.push({ symbol: draw_symbol!, asset: draw_asset!, decimals: draw_decimals, type: "draw" });
+      tokens.push({ symbol: draw_symbol!, asset: draw_asset, decimals: draw_decimals, type: "draw" });
     }
 
     setTokens(tokens);
     const tokenIndex = type ? tokens.findIndex((item) => item.type === type) : 0;
 
     setCurrentToken(tokens[tokenIndex]);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [address, type]);
 
   const handleChangeAmount = (ev: ChangeEvent<HTMLInputElement>) => {
@@ -115,7 +113,6 @@ export const BuyForm = ({ type, yes_team, no_team, amount, setAmount }: BuyFormP
       setMeta(null);
       setGetAmount({ value: "", valid: true });
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentToken, amount, estimate, stateVars]);
 
   const data = { type: currentToken?.type };
@@ -136,6 +133,7 @@ export const BuyForm = ({ type, yes_team, no_team, amount, setAmount }: BuyFormP
     const run = async () => {
       if (fromToken && fromToken.network !== "Obyte" && amount.value && amount.valid && Number(amount.value) > 0) {
         try {
+          const { estimateOutput } = await import("counterstake-sdk");
           const res = await estimateOutput({
             amount: Number(amount.value),
             src_network: fromToken.network,
@@ -166,7 +164,6 @@ export const BuyForm = ({ type, yes_team, no_team, amount, setAmount }: BuyFormP
     };
 
     run();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [fromToken, amount]);
 
   const buyForReserve = () => {
@@ -180,6 +177,7 @@ export const BuyForm = ({ type, yes_team, no_team, amount, setAmount }: BuyFormP
   const buyViaEVM = async () => {
     if (!fromToken) return;
     try {
+      const { transferEVM2Obyte } = await import("counterstake-sdk");
       await transferEVM2Obyte({
         amount: Number(amount.value),
         src_network: fromToken.network,
@@ -228,17 +226,6 @@ export const BuyForm = ({ type, yes_team, no_team, amount, setAmount }: BuyFormP
     ),
   ];
 
-  const tokenLabel = (token: Token) =>
-    yes_team && no_team ? (
-      <>
-        {token.type === "draw" ? "Draw" : token.type === "yes" ? yes_team : no_team} ({token.symbol})
-      </>
-    ) : (
-      <>
-        {token.symbol} {token.type && (token.type as string) !== "reserve" ? "(" + token.type.toUpperCase() + "-token)" : ""}
-      </>
-    );
-
   const getAmountValue = Number(getAmount.value);
 
   return (
@@ -249,7 +236,6 @@ export const BuyForm = ({ type, yes_team, no_team, amount, setAmount }: BuyFormP
             {(control) => (
               <Input
                 {...control}
-               
                 placeholder={t("forms.buy.stake_amount", "Stake amount")}
                 value={amount.value ?? ""}
                 onChange={handleChangeAmount}
@@ -283,7 +269,7 @@ export const BuyForm = ({ type, yes_team, no_team, amount, setAmount }: BuyFormP
                     <SelectContent>
                       {tokens?.map((token) => (
                         <SelectItem key={`to_${token.type}`} value={token.type}>
-                          {tokenLabel(token)}
+                          {tokenLabel(token, yes_team, no_team)}
                         </SelectItem>
                       ))}
                     </SelectContent>
@@ -294,7 +280,7 @@ export const BuyForm = ({ type, yes_team, no_team, amount, setAmount }: BuyFormP
           </>
         ) : getAmount.value ? (
           <div className="md:col-span-3" style={{ marginBottom: 10, fontWeight: "bold", paddingLeft: 5 }}>
-            <span style={{ marginRight: 5 }}>You get:</span> <span>{(getAmountValue > 0 ? getAmountValue : 0) / 10 ** currentToken.decimals}</span> {tokenLabel(currentToken)}
+            <span style={{ marginRight: 5 }}>{t("forms.common.you_get", "You get")}:</span> <span>{(getAmountValue > 0 ? getAmountValue : 0) / 10 ** currentToken.decimals}</span> {tokenLabel(currentToken, yes_team, no_team)}
           </div>
         ) : (
           ""

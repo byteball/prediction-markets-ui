@@ -1,11 +1,11 @@
 import { useState } from "react";
-import { useSelector } from "react-redux";
 import { Helmet } from "react-helmet-async";
 import { useTranslation } from "react-i18next";
 import { Img } from "react-image";
 
 import { ClaimProfitForm } from "forms";
-import { selectActiveAddress, selectActiveMarketParams, selectActiveMarketStateVars, selectActiveMarketStatus } from "store/slices/activeSlice";
+import { useAppSelector } from "store/hooks";
+import { selectActiveAddress, selectActiveMarketParams, selectActiveMarketStateVars, selectActiveMarketStatus, selectUserOutcomeBalances } from "store/slices/activeSlice";
 import { selectWalletAddress } from "store/slices/settingsSlice";
 
 import { Button } from "@/components/ui/button";
@@ -21,19 +21,21 @@ type ClaimProfitModalProps = {
 
 export const ClaimProfitModal = ({ disabled, yes_team, no_team }: ClaimProfitModalProps) => {
   const [visible, setVisible] = useState(false);
-  const status = useSelector(selectActiveMarketStatus);
-  const address = useSelector(selectActiveAddress);
-  const stateVars = useSelector(selectActiveMarketStateVars);
-  const walletAddress = useSelector(selectWalletAddress);
+  const status = useAppSelector(selectActiveMarketStatus);
+  const address = useAppSelector(selectActiveAddress);
+  const stateVars = useAppSelector(selectActiveMarketStateVars);
+  const walletAddress = useAppSelector(selectWalletAddress);
+  const outcomeBalances = useAppSelector(selectUserOutcomeBalances);
 
-  const { yes_decimals, no_decimals, draw_decimals, yes_symbol, no_symbol, draw_symbol, reserve_decimals, reserve_symbol, yes_crest_url, no_crest_url } = useSelector(selectActiveMarketParams);
+  const { yes_decimals, no_decimals, draw_decimals, yes_symbol, no_symbol, draw_symbol, reserve_decimals, reserve_symbol, yes_crest_url, no_crest_url, is_tokenless } = useAppSelector(selectActiveMarketParams);
 
   const { result: winner, supply_yes, supply_no, supply_draw, reserve, yes_asset, no_asset, draw_asset } = stateVars;
 
-  const supply = winner === "yes" ? supply_yes : (winner === "no" ? supply_no : supply_draw) || 0;
-  const decimals = winner === "yes" ? yes_decimals : (winner === "no" ? no_decimals : draw_decimals) || 0;
-  const asset = winner === "yes" ? yes_asset : (winner === "no" ? no_asset : draw_asset) || 0;
-  const symbol = winner === "yes" ? yes_symbol : (winner === "no" ? no_symbol : draw_symbol) || 0;
+  const supply = (winner === "yes" ? supply_yes : winner === "no" ? supply_no : supply_draw) || 0;
+  const decimals = (winner === "yes" ? yes_decimals : winner === "no" ? no_decimals : draw_decimals) || 0;
+  const asset: string | undefined = winner === "yes" ? yes_asset : winner === "no" ? no_asset : draw_asset;
+  const symbol: string | undefined = winner === "yes" ? yes_symbol : winner === "no" ? no_symbol : draw_symbol;
+  const outcomeBalance = winner && outcomeBalances ? outcomeBalances[winner] : undefined;
   const winnerView = winner === "yes" ? yes_team || "Yes" : winner === "no" ? no_team || "No" : "Draw";
   const winnerCrest = winner === "yes" ? yes_crest_url : winner === "no" ? no_crest_url : null;
 
@@ -63,7 +65,19 @@ export const ClaimProfitModal = ({ disabled, yes_team, no_team }: ClaimProfitMod
 
           <p className={`${styles.desc} mb-4`}>{t("modals.claim_profit.winner_desc", '"{{winner}}" was the right choice and you can collect your winnings', { winner: winnerView })}</p>
 
-          <ClaimProfitForm address={address} supply={supply} reserve={reserve} decimals={decimals} walletAddress={walletAddress} reserve_decimals={reserve_decimals} reserve_symbol={reserve_symbol} asset={asset} symbol={symbol} />
+          <ClaimProfitForm
+            address={address}
+            supply={supply}
+            reserve={reserve}
+            decimals={decimals}
+            walletAddress={walletAddress}
+            reserve_decimals={reserve_decimals}
+            reserve_symbol={reserve_symbol}
+            asset={asset}
+            symbol={symbol}
+            isTokenless={!!is_tokenless}
+            outcomeBalance={outcomeBalance}
+          />
         </ModalSheet>
       )}
     </>

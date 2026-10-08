@@ -12,7 +12,8 @@ import type { AppThunkApiConfig } from "store/hooks";
 import type { Candle, CurrencyCandle, MarketParams, MarketStateVars, RecentEvent, Team } from "store/types";
 
 import appConfig from "appConfig";
-import { getTokenlessSymbols } from "utils/getTokenlessSymbols";
+import { resolveTokenlessSymbols } from "utils/getTokenlessSymbols";
+import { normalizeStateVars } from "utils/normalizeStateVars";
 
 const initialParams = {
   allow_draw: false,
@@ -36,8 +37,6 @@ type TokensInfo = {
   reserve_decimals?: number | null;
 };
 
-type Championship = { code: string; name: string; emblem?: string };
-
 export interface SetActiveMarketResult {
   params: MarketParams;
   stateVars: MarketStateVars;
@@ -45,14 +44,14 @@ export interface SetActiveMarketResult {
   dailyCandles: Candle[];
   recentEvents: RecentEvent[];
   recentEventsCount: number;
-  datafeedValue: string | null;
+  datafeedValue: string | number | null;
   yesTeam: Team | undefined;
   noTeam: Team | undefined;
   currencyCandles: CurrencyCandle[];
   currencyCurrentValue: number;
   created_at: number;
   committed_at: number | undefined;
-  first_trade_ts: number | undefined;
+  first_trade_ts: number | null | undefined;
   yes_odds: number | null;
   no_odds: number | null;
   draw_odds: number | null;
@@ -65,7 +64,8 @@ export const setActiveMarket = createAsyncThunk<SetActiveMarketResult, { address
   dispatch(setActiveMarketAddress(address));
   const state = getState();
 
-  const [aa, stateVars] = await Promise.all([http.getDefinition(address), http.getStateVars(address)]);
+  const [aa, rawStateVars] = await Promise.all([http.getDefinition(address), http.getStateVars(address)]);
+  const stateVars = normalizeStateVars(rawStateVars);
 
   const base_aa: string = aa[1].base_aa;
   const reserve_asset: string = aa[1].params.reserve_asset || "base";
@@ -87,11 +87,13 @@ export const setActiveMarket = createAsyncThunk<SetActiveMarketResult, { address
   ];
 
   if (isTokenless) {
-    const { yes_symbol, no_symbol, draw_symbol } = getTokenlessSymbols({ feed_name: aa[1].params.feed_name, event_date: aa[1].params.event_date, oracle: aa[1].params.oracle });
-
-    tokensInfo.yes_symbol = yes_symbol;
-    tokensInfo.no_symbol = no_symbol;
-    if (aa[1].params.allow_draw) tokensInfo.draw_symbol = draw_symbol;
+    tokensInfoGetters.push(
+      resolveTokenlessSymbols({ feed_name: aa[1].params.feed_name, event_date: aa[1].params.event_date, oracle: aa[1].params.oracle }).then(({ yes_symbol, no_symbol, draw_symbol }) => {
+        tokensInfo.yes_symbol = yes_symbol;
+        tokensInfo.no_symbol = no_symbol;
+        if (aa[1].params.allow_draw) tokensInfo.draw_symbol = draw_symbol;
+      })
+    );
   } else {
     tokensInfoGetters.push(
       http.getSymbolByAsset(tokenRegistry, stateVars.yes_asset).then((symbol) => (tokensInfo.yes_symbol = symbol)),
@@ -126,10 +128,7 @@ export const setActiveMarket = createAsyncThunk<SetActiveMarketResult, { address
   if (!params.draw_decimals) params.draw_decimals = params.reserve_decimals;
 
   const [dailyCandles, { data: recentEvents, count: recentEventsCount }, datafeedValue] = await Promise.all([
-    backend
-      .getDailyCandles(address)
-      .then((data) => data as Candle[])
-      .catch((): Candle[] => []),
+    backend.getDailyCandles(address).catch((): Candle[] => []),
     backend.getRecentEvents(address),
     http.getDataFeed([params.oracle], params.feed_name, "none"),
     obyte.justsaying("light/new_aa_to_watch", {
@@ -160,7 +159,7 @@ export const setActiveMarket = createAsyncThunk<SetActiveMarketResult, { address
 
   const created_at: number = dates.created_at;
   const committed_at: number | undefined = dates.committed_at;
-  const first_trade_ts: number | undefined = await backend.getFirstTradeTs(address);
+  const first_trade_ts = await backend.getFirstTradeTs(address);
 
   if (isSportMarket) {
     if (!yes_odds || !no_odds || !draw_odds) {
@@ -174,7 +173,7 @@ export const setActiveMarket = createAsyncThunk<SetActiveMarketResult, { address
     }
 
     const [championship, yes_abbreviation, no_abbreviation] = (params.feed_name as string).split("_");
-    const championships: Record<string, Championship[]> = await backend.getChampionships();
+    const championships = await backend.getChampionships();
 
     const sport = Object.entries(championships).find(([, cs]) => cs.find(({ code }) => code === championship));
 
@@ -229,10 +228,10 @@ export const setActiveMarket = createAsyncThunk<SetActiveMarketResult, { address
 
   return {
     params,
-    stateVars: stateVars as MarketStateVars,
+    stateVars,
     base_aa,
     dailyCandles,
-    recentEvents: recentEvents as RecentEvent[],
+    recentEvents,
     recentEventsCount,
     datafeedValue: datafeedValue !== "none" ? datafeedValue : null,
     yesTeam,

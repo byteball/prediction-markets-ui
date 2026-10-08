@@ -1,5 +1,6 @@
 import appConfig from "appConfig";
 import axios, { type AxiosInstance } from "axios";
+import type { Candle, MarketDates, RecentEvent, ReserveAssets, Team } from "store/types";
 
 export type PaginatedResponse<T, CountKey extends string = "count"> = { data: T[] } & Record<CountKey, number>;
 
@@ -11,20 +12,11 @@ export type Championships = Record<string, Championship[]>;
 
 export type PopularOraclePairs = Record<string, string[]>;
 
-export type Team = { id: number | string; name: string } & Record<string, unknown>;
-
 export type Categories = Record<string, { oracles: { address: string; feedNames?: string[] }[] }>;
-
-export type ReserveAssets = Record<string, { symbol: string; decimals: number }>;
-
-export type Candle = Record<string, unknown>;
 
 export type CalendarItem = Record<string, unknown>;
 export type CalendarPage = PaginatedResponse<CalendarItem>;
 
-export type MarketDates = { created_at: number; committed_at?: number } & Record<string, unknown>;
-
-export type RecentEvent = { trigger_unit: string } & Record<string, unknown>;
 export type RecentEventsPage = PaginatedResponse<RecentEvent>;
 
 export type BookmakerOdds = { yes_odds: number; no_odds: number; draw_odds: number } & Record<string, unknown>;
@@ -115,8 +107,8 @@ class Backend {
     return events?.data;
   }
 
-  getFirstTradeTs = async (address: string): Promise<number | undefined> => {
-    const ts = await this.axios.get<number | undefined>(`/first_trade_ts/${address}`);
+  getFirstTradeTs = async (address: string): Promise<number | null | undefined> => {
+    const ts = await this.axios.get<number | null | undefined>(`/first_trade_ts/${address}`);
     return ts?.data;
   }
 

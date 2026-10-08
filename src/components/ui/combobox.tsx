@@ -2,7 +2,8 @@ import * as React from "react"
 import { Check, ChevronDown } from "lucide-react"
 import { cn } from "cn"
 
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
+import i18n from "locale"
+import { Popover, PopoverAnchor, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
 
 export type ComboboxOption = {
   value: string
@@ -29,18 +30,15 @@ type ComboboxProps = {
 
 const normalize = (s: string) => s.toLowerCase()
 
-function Combobox({ value, onValueChange, options, placeholder, searchPlaceholder, emptyText = "No data", allowCustomValue = false, disabled, id, className, optionClassName, ...aria }: ComboboxProps) {
+function Combobox({ value, onValueChange, options, placeholder, searchPlaceholder, emptyText, allowCustomValue = false, disabled, id, className, optionClassName, ...aria }: ComboboxProps) {
+  // In free-text mode nothing is highlighted until the user arrows onto an item, so Enter keeps the typed value.
+  const initialIndex = allowCustomValue ? -1 : 0
   const [open, setOpen] = React.useState(false)
   const [query, setQuery] = React.useState("")
-  const [activeIndex, setActiveIndex] = React.useState(0)
+  const [activeIndex, setActiveIndex] = React.useState(initialIndex)
   const listId = React.useId()
   const inputRef = React.useRef<HTMLInputElement>(null)
-  const triggerRef = React.useRef<HTMLElement>(null)
-  const [container, setContainer] = React.useState<HTMLElement | null>(null)
-
-  React.useEffect(() => {
-    setContainer(triggerRef.current?.closest<HTMLElement>("[data-slot=sheet-content], [data-slot=dialog-content]") ?? null)
-  }, [])
+  const anchorRef = React.useRef<HTMLDivElement>(null)
 
   const selected = options.find((o) => o.value === value)
   const filtered = React.useMemo(() => {
@@ -59,38 +57,42 @@ function Combobox({ value, onValueChange, options, placeholder, searchPlaceholde
     return [...map.entries()]
   }, [filtered])
 
+  const setOpenState = (next: boolean) => {
+    setOpen(next)
+    setActiveIndex(initialIndex)
+    if (!next && !allowCustomValue) setQuery("")
+  }
+
   const commit = (next: string) => {
     onValueChange(next)
     setOpen(false)
     setQuery("")
+    setActiveIndex(initialIndex)
   }
 
   const onKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === "ArrowDown") {
       e.preventDefault()
-      if (!open) setOpen(true)
-      setActiveIndex((i) => Math.min(i + 1, filtered.length - 1))
+      if (!open) setOpenState(true)
+      else setActiveIndex((i) => Math.min(i + 1, filtered.length - 1))
     } else if (e.key === "ArrowUp") {
       e.preventDefault()
-      setActiveIndex((i) => Math.max(i - 1, 0))
+      setActiveIndex((i) => Math.max(i - 1, initialIndex))
     } else if (e.key === "Enter") {
-      if (open && filtered[activeIndex]) {
+      const active = open && activeIndex >= 0 ? filtered[activeIndex] : undefined
+      if (active) {
         e.preventDefault()
-        commit(filtered[activeIndex].value)
+        commit(active.value)
       } else if (allowCustomValue) {
-        setOpen(false)
+        setOpenState(false)
       }
     }
   }
 
-  React.useEffect(() => {
-    setActiveIndex(0)
-  }, [query, open])
-
   const renderList = (
     <div role="listbox" id={listId} className="max-h-64 overflow-y-auto p-1">
       {filtered.length === 0 ? (
-        <div className="px-2 py-4 text-center text-sm text-muted-foreground">{emptyText}</div>
+        <div className="px-2 py-4 text-center text-sm text-muted-foreground">{emptyText ?? i18n.t("common.no_data", "No data")}</div>
       ) : (
         groups.map(([group, items]) => (
           <div key={group ?? "__default"} role="group">
@@ -122,9 +124,9 @@ function Combobox({ value, onValueChange, options, placeholder, searchPlaceholde
 
   if (allowCustomValue) {
     return (
-      <Popover open={open && filtered.length > 0} onOpenChange={setOpen}>
-        <PopoverTrigger asChild>
-          <div ref={triggerRef as React.RefObject<HTMLDivElement>} className={cn("relative", className)}>
+      <Popover open={open && filtered.length > 0} onOpenChange={setOpenState}>
+        <PopoverAnchor asChild>
+          <div ref={anchorRef} className={cn("relative", className)}>
             <input
               ref={inputRef}
               id={id}
@@ -142,13 +144,21 @@ function Combobox({ value, onValueChange, options, placeholder, searchPlaceholde
                 onValueChange(e.target.value)
                 setQuery(e.target.value)
                 setOpen(true)
+                setActiveIndex(initialIndex)
               }}
-              onClick={() => setOpen(true)}
+              onClick={() => setOpenState(true)}
               onKeyDown={onKeyDown}
             />
           </div>
-        </PopoverTrigger>
-        <PopoverContent container={container} align="start" className="w-(--radix-popover-trigger-width) p-0" onOpenAutoFocus={(e) => e.preventDefault()}>
+        </PopoverAnchor>
+        <PopoverContent
+          align="start"
+          className="w-(--radix-popover-trigger-width) p-0"
+          onOpenAutoFocus={(e) => e.preventDefault()}
+          onInteractOutside={(e) => {
+            if (anchorRef.current?.contains(e.target as Node)) e.preventDefault()
+          }}
+        >
           {renderList}
         </PopoverContent>
       </Popover>
@@ -156,16 +166,9 @@ function Combobox({ value, onValueChange, options, placeholder, searchPlaceholde
   }
 
   return (
-    <Popover
-      open={open}
-      onOpenChange={(next) => {
-        setOpen(next)
-        if (!next) setQuery("")
-      }}
-    >
+    <Popover open={open} onOpenChange={setOpenState}>
       <PopoverTrigger asChild>
         <button
-          ref={triggerRef as React.RefObject<HTMLButtonElement>}
           type="button"
           id={id}
           role="combobox"
@@ -183,16 +186,19 @@ function Combobox({ value, onValueChange, options, placeholder, searchPlaceholde
           <ChevronDown className="size-4 shrink-0 opacity-50" />
         </button>
       </PopoverTrigger>
-      <PopoverContent container={container} align="start" className="w-(--radix-popover-trigger-width) p-0" onOpenAutoFocus={(e) => e.preventDefault()}>
+      <PopoverContent align="start" className="w-(--radix-popover-trigger-width) p-0" onOpenAutoFocus={(e) => e.preventDefault()}>
         <div className="border-b border-border p-1">
           <input
             ref={inputRef}
             autoFocus
             data-slot="input"
             className="h-8 w-full bg-transparent px-2 text-sm outline-none placeholder:text-muted-foreground"
-            placeholder={searchPlaceholder ?? "Search"}
+            placeholder={searchPlaceholder ?? i18n.t("common.search", "Search")}
             value={query}
-            onChange={(e) => setQuery(e.target.value)}
+            onChange={(e) => {
+              setQuery(e.target.value)
+              setActiveIndex(initialIndex)
+            }}
             onKeyDown={onKeyDown}
           />
         </div>

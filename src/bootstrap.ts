@@ -1,5 +1,5 @@
 import { store } from "store/store";
-import { isEmpty } from "lodash";
+import { isEmpty } from "lodash-es";
 import { toast } from "sonner";
 
 import client from "services/obyte";
@@ -12,7 +12,8 @@ import { checkDataFeed } from "store/thunks/checkDataFeed";
 import { loadEVMTokens } from "store/thunks/loadEVMTokens";
 import { loadUserBalance } from "store/thunks/loadUserBalance";
 import { addRecentEvent } from "store/thunks/addRecentEvent";
-import type { AAResponseBody, FactoryPredictionVar, HubMessage, MarketStateVars, ObyteMessage, ObyteMessagePayload, OutcomeType, StateVarValue } from "store/types";
+import type { AAResponseBody, FactoryPredictionVar, HubMessage, ObyteMessage, ObyteMessagePayload, OutcomeType, StateVarValue } from "store/types";
+import { normalizeStateVars } from "utils/normalizeStateVars";
 
 import i18n from "locale";
 import config from "appConfig";
@@ -107,8 +108,10 @@ export const bootstrap = async () => {
       const responseVars = body!.response?.responseVars as Record<string, string> | undefined;
 
       if (responseVars) {
-        if ((String(order.yes_asset) in responseVars) || (String(order.no_asset) in responseVars) || (order.draw_asset && (order.draw_asset in responseVars))) {
-          const type: OutcomeType = String(order.yes_asset) in responseVars ? 'yes' : (String(order.no_asset) in responseVars ? 'no' : 'draw');
+        const has = (asset?: string): asset is string => !!asset && asset in responseVars;
+
+        if (has(order.yes_asset) || has(order.no_asset) || has(order.draw_asset)) {
+          const type: OutcomeType = has(order.yes_asset) ? 'yes' : (has(order.no_asset) ? 'no' : 'draw');
           const asset = order[`${type}_asset`];
 
           if (asset) {
@@ -125,11 +128,11 @@ export const bootstrap = async () => {
         if (state.active.address) {
           const { yes_asset, no_asset, draw_asset } = state.active.stateVars;
 
-          if (yes_asset && (yes_asset in responseVars)) {
+          if (has(yes_asset)) {
             store.dispatch(updateSymbolForActualMarket({ type: 'yes', symbol: responseVars[yes_asset] }));
-          } else if (no_asset && (no_asset in responseVars)) {
+          } else if (has(no_asset)) {
             store.dispatch(updateSymbolForActualMarket({ type: 'no', symbol: responseVars[no_asset] }))
-          } else if (draw_asset && (draw_asset in responseVars)) {
+          } else if (has(draw_asset)) {
             store.dispatch(updateSymbolForActualMarket({ type: 'draw', symbol: responseVars[draw_asset] }))
           }
         }
@@ -199,15 +202,17 @@ export const bootstrap = async () => {
     const author = unit?.authors?.[0]?.address;
 
     if (subject === "light/aa_response") {
-      const diff: Record<string, StateVarValue> = {};
+      const updatedVars: Record<string, StateVarValue> = {};
       if (updatedStateVars) {
         for (const var_name in updatedStateVars[aa_address]) {
-          diff[var_name] = updatedStateVars[aa_address][var_name].value;
+          updatedVars[var_name] = updatedStateVars[aa_address][var_name].value;
         }
       }
 
+      const diff = normalizeStateVars(updatedVars);
+
       if (!isEmpty(diff)) {
-        store.dispatch(updateStateForActualMarket({ diff: diff as Partial<MarketStateVars>, address: aa_address }));
+        store.dispatch(updateStateForActualMarket({ diff, address: aa_address }));
       }
 
       store.dispatch(addRecentEvent(body as AAResponseBody));

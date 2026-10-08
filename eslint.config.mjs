@@ -22,9 +22,8 @@ export default defineConfig([
     rules: {
       // Carried over from the CRA eslintConfig.
       'react-hooks/exhaustive-deps': 'off',
-      // The forms keep their original useEffect + setState data flow through the UI migration
-      // (behaviour must stay byte-identical, see docs/migration). Revisit when the data flow is refactored.
-      'react-hooks/set-state-in-effect': 'warn',
+      // The forms keep their original useEffect + setState data flow.
+      'react-hooks/set-state-in-effect': 'off',
     },
   },
   {
@@ -33,26 +32,8 @@ export default defineConfig([
     rules: { 'react-refresh/only-export-components': 'off' },
   },
   {
-    // Legacy JS files: keep the CRA-era relaxed rule set until they are migrated to TS.
-    files: ['**/*.{js,jsx,cjs,mjs}'],
-    extends: [js.configs.recommended, reactHooks.configs.flat.recommended, reactRefresh.configs.vite],
-    languageOptions: {
-      ecmaVersion: 2022,
-      sourceType: 'module',
-      parserOptions: { ecmaFeatures: { jsx: true } },
-      globals: { ...globals.browser, ...globals.node, ...globals.vitest },
-    },
-    rules: {
-      'react-hooks/exhaustive-deps': 'off',
-      'react-refresh/only-export-components': 'off',
-      'no-useless-escape': 'off',
-      'no-useless-constructor': 'off',
-      'no-unused-vars': 'warn',
-      // Rules that did not exist in the CRA-era config; surfaced as warnings, to be fixed when files move to TS.
-      'react-hooks/set-state-in-effect': 'warn',
-      'react-hooks/immutability': 'warn',
-      'no-useless-assignment': 'warn',
-      'no-extra-boolean-cast': 'warn',
-    },
+    files: ['**/*.{js,mjs,cjs}'],
+    extends: [js.configs.recommended],
+    languageOptions: { ecmaVersion: 2022, globals: globals.node },
   },
 ]);

@@ -1,15 +1,16 @@
 import { Fragment, memo, useMemo, useRef, useState, type ReactNode, type RefObject } from "react";
-import { TinyLine, type TinyLineConfig } from "@ant-design/plots";
+import type { TinyLineConfig } from "@ant-design/plots";
+import { TinyLine } from "components/charts";
 import useResizeObserver from "@react-hook/resize-observer";
 import { Link } from "react-router-dom";
 import moment from "moment";
-import { useSelector } from "react-redux";
-import { kebabCase, min } from "lodash";
+import { kebabCase, min } from "lodash-es";
 import { Img } from "react-image";
-import { Trans, useTranslation } from "react-i18next";
+import { useTranslation } from "react-i18next";
 import { cn } from "cn";
 
 import { selectLanguage, selectPriceOrOdds, selectReservesRate } from "store/slices/settingsSlice";
+import { useAppSelector } from "store/hooks";
 
 import { CreateNowModal } from "modals";
 import { getTokenlessSymbols, generateTextEvent } from "utils";
@@ -95,8 +96,6 @@ const Crest = ({ src, alt, winner }: { src: string | null; alt?: string; winner:
   />
 );
 
-const interpolate = (values: Record<string, unknown>) => values as unknown as string;
-
 export const PredictionItem = memo(
   ({
     reserve_asset = "base",
@@ -113,7 +112,7 @@ export const PredictionItem = memo(
     yes_symbol: yes_symbol_prop,
     is_tokenless,
     result,
-    waiting_period_length = 0,
+    waiting_period_length,
     feed_name,
     expect_datafeed_value,
     datafeed_value,
@@ -141,9 +140,9 @@ export const PredictionItem = memo(
 
     const [infoHeight, setInfoHeight] = useState<number>();
 
-    const reservesRates = useSelector(selectReservesRate);
-    const priceOrOdds = useSelector(selectPriceOrOdds);
-    const lang = useSelector(selectLanguage);
+    const reservesRates = useAppSelector(selectReservesRate);
+    const priceOrOdds = useAppSelector(selectPriceOrOdds);
+    const lang = useAppSelector(selectLanguage);
 
     useResizeObserver(infoWrapRef as RefObject<HTMLElement>, (entry) => {
       setInfoHeight((entry.target as HTMLElement).clientHeight);
@@ -179,11 +178,7 @@ export const PredictionItem = memo(
                 const tokenView = yes_team || yes_symbol || t("common.type_token", "{{type}} token", { type: t("common.yes", "yes").toUpperCase() });
                 const valueView = +Number(+value + minValue).toFixed(max_display_decimals);
 
-                return (
-                  <Trans i18nKey="prediction_item.chart_tooltip">
-                    {interpolate({ token: tokenView })} price - {interpolate({ value: valueView })} {interpolate({ symbol: reserve_symbol })}
-                  </Trans>
-                );
+                return t("prediction_item.chart_tooltip", "{{token}} price - {{value}} {{symbol}}", { token: tokenView, value: valueView, symbol: reserve_symbol });
               }
               return null;
             },
@@ -232,7 +227,7 @@ export const PredictionItem = memo(
         status = t("common.status.claiming", "Claiming profit");
         color = appConfig.YES_COLOR;
       } else {
-        if (now > event_date + waiting_period_length) {
+        if (waiting_period_length !== undefined && now > event_date + waiting_period_length) {
           status = t("common.status.resumed", "Resumed trading");
         } else {
           status = t("common.status.waiting", "Waiting for results");
@@ -457,13 +452,12 @@ export const PredictionItem = memo(
                   feed_name={feed_name}
                   oracle={oracle}
                   event_date={event_date}
-                  event={eventView}
                   expect_datafeed_value={expect_datafeed_value}
                   waiting_period_length={waiting_period_length}
                   no_team={no_team}
                   yes_team={yes_team}
                   quiet_period={quiet_period}
-                  comparison={comparison}
+                  expect_comparison={comparison}
                   yes_crest_url={yes_crest_url}
                   no_crest_url={no_crest_url}
                   league={league}

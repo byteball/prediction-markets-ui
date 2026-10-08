@@ -1,6 +1,5 @@
-import { useDispatch, useSelector } from "react-redux";
-
 import { changeLanguage, selectLanguage } from "store/slices/settingsSlice";
+import { useAppDispatch, useAppSelector } from "store/hooks";
 
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
@@ -13,8 +12,8 @@ type SelectLanguageProps = {
 };
 
 export const SelectLanguage = ({ action }: SelectLanguageProps) => {
-  const lang: string | undefined | null = useSelector(selectLanguage);
-  const dispatch = useDispatch();
+  const lang: string | undefined | null = useAppSelector(selectLanguage);
+  const dispatch = useAppDispatch();
   const current = langs.find((l) => l.name === (lang || "en")) ?? langs[0];
 
   return (

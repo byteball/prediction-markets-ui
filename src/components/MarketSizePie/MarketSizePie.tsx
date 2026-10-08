@@ -1,24 +1,17 @@
-import { Pie, type PieConfig } from "@ant-design/plots"
-import { useEffect, useState } from "react";
+import type { PieConfig } from "@ant-design/plots"
+import { Pie } from "components/charts"
+import { useMemo } from "react";
 import { Trans, useTranslation } from 'react-i18next';
 
+import type { MarketStateVars, Team } from "store/types";
 import { getMarketPriceByType } from "utils";
 
 import appConfig from "appConfig";
 
-type Team = { name: string } | null;
-
-export interface MarketSizeStateVars {
-    coef?: number;
-    supply_yes?: number;
-    supply_no?: number;
-    supply_draw?: number;
-}
-
 export interface MarketSizePieProps {
-    teams?: { yes?: Team; no?: Team };
+    teams?: { yes?: Team | null; no?: Team | null };
     reserve_decimals: number;
-    stateVars?: MarketSizeStateVars;
+    stateVars?: MarketStateVars;
     reserve_symbol?: string;
     allow_draw?: boolean | number;
     oracle?: string;
@@ -28,8 +21,7 @@ type PieDatum = { type: 'YES' | 'NO' | 'DRAW'; token: 'yes' | 'no' | 'draw'; val
 
 type PieLabelItem = PieDatum & { percent: number };
 
-export const MarketSizePie = ({ teams, reserve_decimals, stateVars = {}, reserve_symbol, allow_draw = false, oracle }: MarketSizePieProps) => {
-    const [dataForPie, setDataForPie] = useState<PieDatum[]>([]);
+export const MarketSizePie = ({ teams, reserve_decimals, stateVars = {} as MarketStateVars, reserve_symbol, allow_draw = false, oracle }: MarketSizePieProps) => {
     const { t } = useTranslation();
 
     const isSportMarket = !!appConfig.CATEGORIES.sport.oracles.find(({ address }) => address === oracle);
@@ -94,9 +86,9 @@ export const MarketSizePie = ({ teams, reserve_decimals, stateVars = {}, reserve
                 const name = haveTeamNames ? (items[0]?.data.type === 'YES' ? teams!.yes!.name : (items[0]?.data.type === 'NO' ? teams!.no!.name : 'DRAW')) : items[0]?.data.type + ' tokens';
                 const value = items[0]?.data.value;
 
-                return <Trans i18nKey="market_size_pie.tooltip">
-                    <div style={{ padding: 5, textAlign: 'center' }}>Capital invested in {{ name } as unknown as string}:
-                        <div style={{ marginTop: 5 }}>{{ value } as unknown as string} <small>{{ reserve_symbol } as unknown as string}</small></div>
+                return <Trans i18nKey="market_size_pie.tooltip" values={{ name, value, reserve_symbol }}>
+                    <div style={{ padding: 5, textAlign: 'center' }}>Capital invested in {"{{name}}"}:
+                        <div style={{ marginTop: 5 }}>{"{{value}}"} <small>{"{{reserve_symbol}}"}</small></div>
                     </div>
                 </Trans>
             }
@@ -106,7 +98,7 @@ export const MarketSizePie = ({ teams, reserve_decimals, stateVars = {}, reserve
         }
     } as unknown as Omit<PieConfig, "data">;
 
-    useEffect(() => {
+    const dataForPie = useMemo(() => {
         const data: PieDatum[] = [
             { type: 'YES', token: 'yes', value: +Number((supply_yes * yesPrice) / 10 ** reserve_decimals).toFixed(reserve_decimals) },
             { type: 'NO', token: 'no', value: +Number((supply_no * noPrice) / 10 ** reserve_decimals).toFixed(reserve_decimals) },
@@ -116,8 +108,8 @@ export const MarketSizePie = ({ teams, reserve_decimals, stateVars = {}, reserve
             data.push({ type: 'DRAW', token: 'draw', value: +Number((supply_draw * drawPrice) / 10 ** reserve_decimals).toFixed(reserve_decimals) });
         }
 
-        setDataForPie(data);
-    }, [stateVars, yesPrice, noPrice, drawPrice, supply_yes, supply_no, supply_draw]);
+        return data;
+    }, [yesPrice, noPrice, drawPrice, supply_yes, supply_no, supply_draw, reserve_decimals, allow_draw]);
 
     return <Pie data={dataForPie} {...pieConfig} />
 }

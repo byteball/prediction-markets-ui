@@ -1,7 +1,6 @@
 import { useState, type ChangeEvent } from "react";
-import { isEmpty } from "lodash";
+import { isEmpty } from "lodash-es";
 import moment, { type Moment } from "moment";
-import { useDispatch, useSelector } from "react-redux";
 import ReactGA from "react-ga4";
 import { Link } from "react-router-dom";
 import { Trans, useTranslation } from "react-i18next";
@@ -10,6 +9,7 @@ import { TriangleAlert } from "lucide-react";
 import { QRButton } from "components/QRButton/QRButton";
 import { FormLabel } from "components/FormLabel/FormLabel";
 import { PredictionItem } from "components/PredictionList/PredictionItem";
+import { useAppDispatch, useAppSelector } from "store/hooks";
 import { saveCreationOrder, selectReserveAssets } from "store/slices/settingsSlice";
 import { capitalizeFirstLetter, generateLink, getCategoryName, getOracleName } from "utils";
 import appConfig from "appConfig";
@@ -49,9 +49,9 @@ export const CreateForm = () => {
   const [category, setCategory] = useState<Field<string>>({ value: "sport", valid: true });
   const [quietPeriod, setQuietPeriod] = useState<Field<string | number>>({ value: paramList.quiet_period.initValue, valid: true });
 
-  const reserveAssets: Record<string, { symbol: string; decimals: number }> = useSelector(selectReserveAssets);
+  const reserveAssets: Record<string, { symbol: string; decimals: number }> = useAppSelector(selectReserveAssets);
 
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
   const { t } = useTranslation();
 
   // handles

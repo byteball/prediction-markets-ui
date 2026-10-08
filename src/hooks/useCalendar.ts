@@ -1,15 +1,15 @@
 import useSWRInfinite from 'swr/infinite';
-import useSWR, { type SWRResponse } from "swr";
+import useSWR from "swr";
 import { useEffect, useMemo } from 'react';
-import { useSelector } from 'react-redux';
 import { createSearchParams, useNavigate, useParams, useSearchParams } from 'react-router-dom';
-import { uniq } from 'lodash';
+import { uniq } from 'lodash-es';
 
 import type { PredictionItemProps } from 'components/PredictionList/PredictionItem';
 import type { SwitchAction } from 'components/SwitchActions/SwitchActions';
 
 import { useChampionships, type Championships } from './useChampionships';
 import { selectLanguage } from 'store/slices/settingsSlice';
+import { useAppSelector } from 'store/hooks';
 
 import appConfig from 'appConfig';
 
@@ -28,7 +28,7 @@ const INIT_CALENDAR_CURRENCY = "GBYTE";
 export const QUERY_CURRENCY_KEY = 'calendarCurrency';
 
 export const useCalendar = () => {
-    const lang = useSelector(selectLanguage);
+    const lang = useAppSelector(selectLanguage);
     const { category = 'all', particle = 'all' } = useParams();
     const { championships } = useChampionships(lang);
     const [searchParams] = useSearchParams();
@@ -38,7 +38,7 @@ export const useCalendar = () => {
 
     const { data = [], size, setSize, isLoading } = useSWRInfinite<CalendarPage>(index => category && championships && (category === "currency" ? !!calendarCurrency : true) ? getCalendarKey(category, particle, index + 1, calendarCurrency, championships) : null, { initialSize: 1, persistSize: true, refreshInterval: 60 * 1000 * 30 });
 
-    const { data: currencyPairsByOracle = {}, pairsLoading } = useSWR<PopularOraclePairs>(category === "currency" ? `${appConfig.BACKEND_URL}popular_oracle_pairs` : null, { refreshInterval: 60 * 1000 * 60 * 24 }) as SWRResponse<PopularOraclePairs> & { pairsLoading?: boolean };
+    const { data: currencyPairsByOracle = {}, isLoading: pairsLoading } = useSWR<PopularOraclePairs>(category === "currency" ? `${appConfig.BACKEND_URL}popular_oracle_pairs` : null, { refreshInterval: 60 * 1000 * 60 * 24 });
 
     const currencyPairs: string[] = [];
     Object.keys(currencyPairsByOracle).forEach((oracle) => {

@@ -45,15 +45,11 @@ type ButtonProps = React.ComponentProps<"button"> &
     asChild?: boolean
   }
 
-const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(function Button(
-  { className, variant = "default", size = "default", asChild = false, ...props },
-  ref
-) {
+function Button({ className, variant = "default", size = "default", asChild = false, ...props }: ButtonProps) {
   const Comp = asChild ? Slot.Root : "button"
 
   return (
     <Comp
-      ref={ref}
       data-slot="button"
       data-variant={variant}
       data-size={size}
@@ -61,7 +57,7 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(function Button(
       {...props}
     />
   )
-})
+}
 
 export { Button, buttonVariants }
 export type { ButtonProps }

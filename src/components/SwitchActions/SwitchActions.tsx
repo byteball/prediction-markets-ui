@@ -50,16 +50,16 @@ export const SwitchActions = memo(({ data = [], value, onChange, small = false, 
             {text}
           </>
         );
-        const key = `${value}${url}${text}`;
+        const key = `${v}${url}${text}`;
 
         return linked ? (
           <Link to={url ?? ""} key={key} onClick={(e) => handleSwitch(e, v)} className={className}>
             {content}
           </Link>
         ) : (
-          <span key={key} onClick={(e) => handleSwitch(e, v)} className={className}>
+          <button type="button" key={key} aria-pressed={v === value} onClick={(e) => handleSwitch(e, v)} className={className}>
             {content}
-          </span>
+          </button>
         );
       })}
     </div>

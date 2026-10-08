@@ -9,7 +9,6 @@ export type PriceOrOdds = 'price' | 'odds';
 
 export interface SettingsState {
   creationOrder: CreationOrder | null;
-  cancelRegSymbol: boolean;
   walletAddress: string | null;
   reserveRates: ReserveRates;
   reserveRateUpdateTime: number;
@@ -25,7 +24,6 @@ export interface SettingsState {
 
 const initialState: SettingsState = {
   creationOrder: null,
-  cancelRegSymbol: false,
   walletAddress: null,
   reserveRates: {},
   reserveRateUpdateTime: 0,
@@ -59,11 +57,6 @@ export const settingsSlice = createSlice({
         ...state.creationOrder,
         ...payload
       } as CreationOrder;
-    },
-    cancelRegSymbol: (state) => {
-      if (state.creationOrder) {
-        state.creationOrder.cancelRegSymbol = true;
-      }
     },
     changeViewType: (state) => {
       if (state.priceOrOdds === 'odds') {
@@ -106,7 +99,6 @@ export const {
   saveCreationOrder,
   removeCreationOrder,
   updateCreationOrder,
-  cancelRegSymbol,
   changeViewType,
   changeLanguage,
   saveBaseOHLC

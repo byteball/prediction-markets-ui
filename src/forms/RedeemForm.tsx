@@ -1,13 +1,13 @@
 import { memo, useEffect, useRef, useState, type ChangeEvent, type Dispatch, type SetStateAction } from "react";
-import { isNaN } from "lodash";
-import { useSelector } from "react-redux";
+import { isNaN } from "lodash-es";
 import ReactGA from "react-ga4";
 import { useTranslation } from "react-i18next";
 import { Loader2 } from "lucide-react";
 
 import { QRButton } from "components/QRButton/QRButton";
 import { TransactionEstimation } from "components/TransactionEstimation/TransactionEstimation";
-import { selectActiveAddress, selectActiveMarketParams, selectActiveMarketStateVars } from "store/slices/activeSlice";
+import { useAppSelector } from "store/hooks";
+import { selectActiveAddress, selectActiveMarketParams, selectActiveMarketStateVars, selectUserOutcomeBalances } from "store/slices/activeSlice";
 import { selectWalletAddress } from "store/slices/settingsSlice";
 import { selectWalletBalance } from "store/slices/userWalletSlice";
 import { generateLink, getExchangeResult, truncate } from "utils";
@@ -17,11 +17,13 @@ import { FormItem } from "@/components/ui/form-item";
 import { InputGroup } from "@/components/ui/input-group";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
+import { tokenLabel } from "./tokenLabel";
+
 const f = (x: unknown) => (~(x + "").indexOf(".") ? (x + "").split(".")[1].length : 0);
 
 export type AmountState = { value: string | number | undefined; valid: boolean };
 
-type Token = { symbol: string; asset: string; type: "yes" | "no" | "draw"; decimals: number };
+type Token = { symbol: string; asset?: string; type: "yes" | "no" | "draw"; decimals: number };
 
 export type RedeemFormProps = {
   type?: "yes" | "no" | "draw";
@@ -32,11 +34,12 @@ export type RedeemFormProps = {
 };
 
 export const RedeemForm = memo(({ type, yes_team, no_team, amount, setAmount }: RedeemFormProps) => {
-  const stateVars = useSelector(selectActiveMarketStateVars);
-  const address = useSelector(selectActiveAddress);
-  const params = useSelector(selectActiveMarketParams);
-  const walletAddress = useSelector(selectWalletAddress);
-  const walletBalance = useSelector(selectWalletBalance);
+  const stateVars = useAppSelector(selectActiveMarketStateVars);
+  const address = useAppSelector(selectActiveAddress);
+  const params = useAppSelector(selectActiveMarketParams);
+  const walletAddress = useAppSelector(selectWalletAddress);
+  const walletBalance = useAppSelector(selectWalletBalance);
+  const outcomeBalances = useAppSelector(selectUserOutcomeBalances);
 
   const [tokens, setTokens] = useState<Token[]>([]);
   const [currentToken, setCurrentToken] = useState<Token>();
@@ -47,10 +50,10 @@ export const RedeemForm = memo(({ type, yes_team, no_team, amount, setAmount }: 
   const btnRef = useRef<HTMLAnchorElement>(null);
   const { t } = useTranslation();
 
-  const { yes_symbol, no_symbol, draw_symbol, allow_draw, reserve_symbol, reserve_decimals, yes_decimals, no_decimals, draw_decimals } = params;
+  const { yes_symbol, no_symbol, draw_symbol, allow_draw, reserve_symbol, reserve_decimals, yes_decimals, no_decimals, draw_decimals, is_tokenless } = params;
   const { yes_asset, no_asset, draw_asset } = stateVars;
 
-  const walletBalanceOfCurrentToken: number = currentToken && walletAddress ? walletBalance?.[currentToken.asset]?.total || 0 : 0;
+  const walletBalanceOfCurrentToken: number = currentToken && walletAddress ? (is_tokenless ? outcomeBalances?.[currentToken.type] || 0 : currentToken.asset ? walletBalance?.[currentToken.asset]?.total || 0 : 0) : 0;
   const currentDecimals = currentToken?.decimals || 0;
 
   const walletBalanceOfCurrentTokenView = +Number(walletBalanceOfCurrentToken / 10 ** currentDecimals).toFixed(currentDecimals);
@@ -62,14 +65,13 @@ export const RedeemForm = memo(({ type, yes_team, no_team, amount, setAmount }: 
     ];
 
     if (allow_draw) {
-      tokens.push({ symbol: draw_symbol!, asset: draw_asset!, decimals: draw_decimals, type: "draw" });
+      tokens.push({ symbol: draw_symbol!, asset: draw_asset, decimals: draw_decimals, type: "draw" });
     }
 
     setTokens(tokens);
 
     const tokenIndex = type ? tokens.findIndex((item) => item.type === type) : 0;
     setCurrentToken(tokens[tokenIndex]);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [address, type]);
 
   const handleChangeAmount = (ev: ChangeEvent<HTMLInputElement>) => {
@@ -100,10 +102,13 @@ export const RedeemForm = memo(({ type, yes_team, no_team, amount, setAmount }: 
       setMeta(null);
       setPayoutAmount({ value: "", valid: true });
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentToken, amount, stateVars]);
 
-  const link = generateLink({ aa: address, asset: currentToken?.asset, is_single: true, amount: Math.ceil(Number(amount.value) * 10 ** (currentToken?.decimals ?? 0)), from_address: walletAddress || undefined });
+  const tokenAmountInSmallestUnits = Math.round(Number(amount.value) * 10 ** (currentToken?.decimals ?? 0));
+
+  const link = is_tokenless
+    ? generateLink({ aa: address, amount: 1e4, data: { [`${currentToken?.type}_amount`]: -tokenAmountInSmallestUnits }, is_single: true, from_address: walletAddress || undefined })
+    : generateLink({ aa: address, asset: currentToken?.asset, is_single: true, amount: Math.ceil(Number(amount.value) * 10 ** (currentToken?.decimals ?? 0)), from_address: walletAddress || undefined });
 
   if (!currentToken) return <Loader2 className="size-8 animate-spin text-primary" aria-label="loading" />;
 
@@ -126,24 +131,10 @@ export const RedeemForm = memo(({ type, yes_team, no_team, amount, setAmount }: 
     }
   };
 
-  const tokenLabel = (token: Token) =>
-    yes_team && no_team ? (
-      <>
-        {token.type === "draw" ? "Draw" : token.type === "yes" ? yes_team : no_team} ({token.symbol})
-      </>
-    ) : (
-      <>
-        {token.symbol} {token.type && (token.type as string) !== "reserve" ? "(" + token.type.toUpperCase() + "-token)" : ""}
-      </>
-    );
-
-  const suffixText = type
-    ? yes_team && no_team
-      ? `${currentToken.type === "draw" ? "Draw" : currentToken.type === "yes" ? yes_team : no_team} (${currentToken.symbol})`
-      : `${currentToken.symbol} ${currentToken.type && (currentToken.type as string) !== "reserve" ? "(" + currentToken.type.toUpperCase() + "-token)" : ""}`
-    : "";
+  const suffixText = type ? tokenLabel(currentToken, yes_team, no_team) : "";
 
   const payoutValue = Number(payoutAmount.value);
+  const canSend = is_tokenless ? !!address : !!currentToken.asset;
 
   return (
     <form className="text-base" onSubmit={(e) => e.preventDefault()}>
@@ -158,7 +149,6 @@ export const RedeemForm = memo(({ type, yes_team, no_team, amount, setAmount }: 
             {(control) => (
               <InputGroup
                 {...control}
-               
                 placeholder={t("forms.common.amount", "Amount")}
                 suffix={<span style={{ maxWidth: "100%", overflow: "hidden" }}>{truncate(suffixText, { length: 18 })}</span>}
                 value={amount.value ?? ""}
@@ -180,7 +170,7 @@ export const RedeemForm = memo(({ type, yes_team, no_team, amount, setAmount }: 
                   <SelectContent>
                     {tokens?.map((token) => (
                       <SelectItem key={`to_${token.type}`} value={token.type}>
-                        {tokenLabel(token)}
+                        {tokenLabel(token, yes_team, no_team)}
                       </SelectItem>
                     ))}
                   </SelectContent>
@@ -210,7 +200,7 @@ export const RedeemForm = memo(({ type, yes_team, no_team, amount, setAmount }: 
       ) : null}
 
       <FormItem>
-        <QRButton ref={btnRef} href={link} size="large" disabled={!amount.valid || !Number(amount.value) || payoutValue <= 0} type="primary" onClick={redeem}>
+        <QRButton ref={btnRef} href={link} size="large" disabled={!canSend || !amount.valid || !Number(amount.value) || payoutValue <= 0} type="primary" onClick={redeem}>
           {t("forms.common.send", "Send")} {amount.valid && Number(amount.value) ? Number(amount.value) : ""} {truncate(currentToken.symbol, { length: 14 })}
         </QRButton>
       </FormItem>

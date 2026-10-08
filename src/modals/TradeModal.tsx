@@ -1,5 +1,4 @@
 import { memo, useEffect, useState, type Dispatch, type SetStateAction } from "react";
-import { useSelector } from "react-redux";
 import { Helmet } from "react-helmet-async";
 import ReactGA from "react-ga4";
 import { useTranslation } from "react-i18next";
@@ -7,6 +6,7 @@ import { useTranslation } from "react-i18next";
 import { SwitchActions } from "components/SwitchActions/SwitchActions";
 import { BuyForm, RedeemForm } from "forms";
 import type { AmountState } from "forms/RedeemForm";
+import { useAppSelector } from "store/hooks";
 import { selectActiveMarketStatus } from "store/slices/activeSlice";
 import { capitalizeFirstLetter } from "utils";
 
@@ -28,7 +28,7 @@ type TradeModalProps = {
 export const TradeModal = memo(({ disabled, visible, setVisible, yes_team, no_team, reserve }: TradeModalProps) => {
   const [action, setAction] = useState<"buy" | "redeem">("buy");
 
-  const status = useSelector(selectActiveMarketStatus);
+  const status = useAppSelector(selectActiveMarketStatus);
   const [buyAmount, setBuyAmount] = useState<AmountState>({ value: "", valid: true });
   const [redeemAmount, setRedeemAmount] = useState<AmountState>({ value: "", valid: true });
   const { t } = useTranslation();

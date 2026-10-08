@@ -18,10 +18,11 @@ type FormItemProps = {
   status?: FormItemStatus
   className?: string
   id?: string
+  htmlFor?: string
   children: ReactNode | ((control: ControlProps) => ReactNode)
 }
 
-function FormItem({ label, help, extra, status, className, id: idProp, children }: FormItemProps) {
+function FormItem({ label, help, extra, status, className, id: idProp, htmlFor, children }: FormItemProps) {
   const generatedId = useId()
   const id = idProp ?? `field-${generatedId}`
   const helpId = `${id}-help`
@@ -30,11 +31,12 @@ function FormItem({ label, help, extra, status, className, id: idProp, children 
   const describedBy = [help ? helpId : null, extra ? extraId : null].filter(Boolean).join(" ") || undefined
 
   const control: ControlProps = { id, "aria-invalid": isError || undefined, "aria-describedby": describedBy }
+  const labelFor = htmlFor ?? (typeof children === "function" ? id : undefined)
 
   return (
     <Field data-slot="form-item" data-status={status || undefined} className={cn("mb-6 gap-1.5", className)}>
       {label ? (
-        <FieldLabel htmlFor={id} className="text-base font-normal text-white/45">
+        <FieldLabel htmlFor={labelFor} className="text-base font-normal text-white/45">
           {label}
         </FieldLabel>
       ) : null}

@@ -1,5 +1,6 @@
 import appConfig from "appConfig";
 import axios, { type AxiosInstance } from "axios";
+import type { StateVarValue } from "store/types";
 
 type HubResponse<T> = { data?: T };
 
@@ -19,8 +20,8 @@ class HttpHub {
     });
   }
 
-  async getDataFeed(oracles: string[] = [], feed_name: string, ifnone: string = "none"): Promise<string> {
-    return await this.client.post<HubResponse<string>>("/get_data_feed", { oracles, feed_name, ifnone }).then((res) => res?.data?.data || ifnone);
+  async getDataFeed(oracles: string[] = [], feed_name: string, ifnone: string = "none"): Promise<string | number> {
+    return await this.client.post<HubResponse<string | number>>("/get_data_feed", { oracles, feed_name, ifnone }).then((res) => res?.data?.data ?? ifnone);
   }
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -28,8 +29,8 @@ class HttpHub {
     return await this.client.post<HubResponse<unknown>>("/get_definition", { address }).then((res) => res?.data?.data || {});
   }
 
-  async getStateVars(address: string, var_prefix?: string): Promise<Record<string, string | number | undefined>> {
-    return await this.client.post<HubResponse<Record<string, string | number>>>("/get_aa_state_vars", { address, var_prefix }).then((res) => res?.data?.data || {});
+  async getStateVars(address: string, var_prefix?: string): Promise<Record<string, StateVarValue | undefined>> {
+    return await this.client.post<HubResponse<Record<string, StateVarValue>>>("/get_aa_state_vars", { address, var_prefix }).then((res) => res?.data?.data || {});
   }
 
   async getAssetBySymbol(tokenRegistryAddress: string, symbol: unknown): Promise<string | null> {

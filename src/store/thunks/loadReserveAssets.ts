@@ -1,5 +1,5 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
-import { isEqual } from "lodash";
+import { isEqual } from "lodash-es";
 
 import backend from "services/backend";
 import { updateReserveRate } from "./updateReserveRate";

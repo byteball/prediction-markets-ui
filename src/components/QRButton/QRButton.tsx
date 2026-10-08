@@ -52,9 +52,11 @@ export const QRButton = forwardRef<HTMLAnchorElement, QRButtonProps>(function QR
         <Tooltip>
           <TooltipTrigger asChild>
             {disabled ? (
-              <Button type="button" variant={variant} size={btnSize} disabled>
-                {children}
-              </Button>
+              <span tabIndex={0} className="inline-flex">
+                <Button type="button" variant={variant} size={btnSize} className="rounded-l-none border-l-0" disabled>
+                  {children}
+                </Button>
+              </span>
             ) : (
               <Button variant={variant} size={btnSize} asChild>
                 <a href={href} ref={ref} onClick={onClick}>

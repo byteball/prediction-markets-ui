@@ -1,11 +1,10 @@
 import { useLocation, useNavigate } from "react-router-dom";
 import { Fragment, memo, useEffect } from "react";
 import moment from "moment";
-import { useDispatch, useSelector } from "react-redux";
-import { kebabCase } from "lodash";
+import { kebabCase } from "lodash-es";
 
 import { changeLanguage, selectLanguage } from "store/slices/settingsSlice";
-import type { RootState } from "store/hooks";
+import { useAppDispatch, useAppSelector } from "store/hooks";
 
 import { botCheck, generateTextEvent } from "utils";
 
@@ -17,19 +16,13 @@ const DEFAULT_LANGUAGE_KEY = "en";
 
 type TextEventParams = Parameters<typeof generateTextEvent>[0];
 
-type ActiveState = {
-  address?: string;
-  params?: Record<string, unknown>;
-  teams?: { yes?: { name: string } | null; no?: { name: string } | null };
-};
-
 export const PageProvider = memo(() => {
-  const lang = useSelector(selectLanguage);
-  const dispatch = useDispatch();
+  const lang = useAppSelector(selectLanguage);
+  const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const location = useLocation();
 
-  const { address: activeMarketAddress, params = {}, teams = {} } = useSelector((state: RootState) => ((state as unknown as { active?: ActiveState }).active || {}) as ActiveState);
+  const { address: activeMarketAddress, params, teams } = useAppSelector((state) => state.active);
 
   useEffect(() => {
     const pathname = location.pathname;
@@ -65,7 +58,6 @@ export const PageProvider = memo(() => {
 
       moment.locale(getMomentLocaleByLanguageKey(lang));
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [lang]);
 
   useEffect(() => {
@@ -79,7 +71,7 @@ export const PageProvider = memo(() => {
         const addressInUrl = getWalletAddressFromUrl(cleanedUrl);
 
         if (addressInUrl && activeMarketAddress === addressInUrl) {
-          const eventUTC = generateTextEvent({ ...(params as object), yes_team_name: teams?.yes?.name, no_team_name: teams?.no?.name, isUTC: true } as TextEventParams);
+          const eventUTC = generateTextEvent({ ...params, yes_team_name: teams?.yes?.name, no_team_name: teams?.no?.name, isUTC: true } as TextEventParams);
           const seoText = kebabCase(eventUTC);
           const seoTextWithAddressFromUrl = decodeURIComponent(cleanedUrl.replace("/market/", ""));
           const newSeoTextWithAddress = `${seoText}-${activeMarketAddress}`;
@@ -90,7 +82,6 @@ export const PageProvider = memo(() => {
         }
       }
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [activeMarketAddress, lang]);
 
   return <Fragment />;

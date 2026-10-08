@@ -1,4 +1,5 @@
-import { CreatePage, MainPage, MarketPage, FaqPage } from "pages";
+import { MainPage } from "pages/MainPage/MainPage";
+import { CreatePage, MarketPage, FaqPage } from "pages/lazy";
 import { createBrowserRouter } from "react-router-dom";
 
 import { langs } from "components/SelectLanguage/langs";

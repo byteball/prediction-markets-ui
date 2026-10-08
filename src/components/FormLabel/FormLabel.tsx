@@ -1,6 +1,8 @@
 import type { ReactNode } from "react";
 import { Info } from "lucide-react";
 
+import { useTapTooltip } from "hooks/useTapTooltip";
+
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 
 type FormLabelProps = {
@@ -11,6 +13,7 @@ type FormLabelProps = {
 
 export const FormLabel = ({ info, children, value }: FormLabelProps) => {
   const transformInfo = typeof info === "function" ? info(value) : info;
+  const { open, onOpenChange, triggerProps } = useTapTooltip();
 
   return (
     <span
@@ -22,8 +25,8 @@ export const FormLabel = ({ info, children, value }: FormLabelProps) => {
       {children !== undefined && <span className="text-muted-foreground">{children} </span>}
 
       {transformInfo ? (
-        <Tooltip>
-          <TooltipTrigger asChild>
+        <Tooltip open={open} onOpenChange={onOpenChange}>
+          <TooltipTrigger asChild {...triggerProps}>
             <span className="inline-flex align-middle opacity-40">
               <Info className="size-[1em]" aria-hidden="true" />
             </span>
