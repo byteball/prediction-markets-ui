@@ -1,7 +1,5 @@
 import obyte from "obyte";
 
-import { bootstrap } from "bootstrap";
-
 export type ObyteHubApi = {
   heartbeat(): void;
   getOfficialTokenRegistryAddress(): string;
@@ -28,7 +26,5 @@ const client: ObyteClient = new obyte.Client(
     reconnect: true,
   }
 );
-
-client.onConnect(bootstrap);
 
 export default client;

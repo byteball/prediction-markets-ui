@@ -12,6 +12,8 @@ import { TooltipProvider } from '@/components/ui/tooltip';
 import { Toaster } from '@/components/ui/sonner';
 
 import { store, persistor } from 'store/store';
+import client from 'services/obyte';
+import { bootstrap } from 'bootstrap';
 import appConfig from 'appConfig';
 
 import { router } from 'router';
@@ -24,6 +26,9 @@ import 'moment/dist/locale/uk';
 
 import './locale/index';
 import './index.css';
+
+// Registered here, not in services/obyte: bootstrap needs the store, and the store's thunks need the client (import cycle otherwise).
+client.onConnect(bootstrap);
 
 if (appConfig.GA_ID) {
 	ReactGA.initialize(appConfig.GA_ID);
