@@ -1,4 +1,4 @@
-import type { Candle as CurrencyCandle } from "services/marketData";
+import type { Candle as CurrencyCandle } from "services/market-data";
 
 export type { CurrencyCandle };
 

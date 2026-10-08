@@ -1,4 +1,4 @@
-export { MainPage } from "./MainPage/MainPage";
-export { CreatePage } from "./CreatePage/CreatePage";
-export { MarketPage } from "./MarketPage/MarketPage";
-export { FaqPage } from "./FaqPage/FaqPage";
+export { MainPage } from "./main-page/main-page";
+export { CreatePage } from "./create-page/create-page";
+export { MarketPage } from "./market-page/market-page";
+export { FaqPage } from "./faq-page/faq-page";

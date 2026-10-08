@@ -2,7 +2,7 @@ import type { CSSProperties } from "react";
 import { Loader2 } from "lucide-react";
 import type { LineConfig, PieConfig, StockConfig, TinyLineConfig } from "@ant-design/plots";
 
-import { lazyWithFallback } from "utils/lazyWithFallback";
+import { lazyWithFallback } from "utils/lazy-with-fallback";
 
 const DEFAULT_CHART_HEIGHT = 400;
 

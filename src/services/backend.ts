@@ -1,4 +1,4 @@
-import appConfig from "appConfig";
+import appConfig from "app-config";
 import axios, { type AxiosInstance } from "axios";
 import type { Candle, MarketDates, RecentEvent, ReserveAssets, Team } from "store/types";
 

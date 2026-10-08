@@ -14,7 +14,7 @@ import { Toaster } from 'components/ui/sonner';
 import { store, persistor } from 'store/store';
 import client from 'services/obyte';
 import { bootstrap } from 'bootstrap';
-import appConfig from 'appConfig';
+import appConfig from 'app-config';
 
 import { router } from 'router';
 

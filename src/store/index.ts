@@ -11,13 +11,13 @@ import {
 } from 'redux-persist';
 import storage from "redux-persist/lib/storage";
 
-import userWalletSlice from './slices/userWalletSlice';
-import settingsSlice from './slices/settingsSlice';
-import activeSlice from './slices/activeSlice';
-import bridgesSlice from './slices/bridgesSlice';
-import searchCacheSlice from './slices/searchCacheSlice';
+import userWalletSlice from './slices/user-wallet-slice';
+import settingsSlice from './slices/settings-slice';
+import activeSlice from './slices/active-slice';
+import bridgesSlice from './slices/bridges-slice';
+import searchCacheSlice from './slices/search-cache-slice';
 
-import config from "appConfig";
+import config from "app-config";
 
 const rootReducer = combineReducers({
   settings: settingsSlice,
