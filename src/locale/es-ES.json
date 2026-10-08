@@ -16,6 +16,8 @@
     "draw": "empate",
     "yes": "si",
     "no": "no",
+    "type_tokens": "tokens {{type}}",
+    "type_token": "token {{type}}",
     "all_sport": "Todos {{sport}}",
     "no_markets": "sin mercados",
     "no_markets_type": "no hay mercados {{type}}",
@@ -31,11 +33,14 @@
     "all": "Todo",
     "currency": "Divisa",
     "sport": "deporte",
-    "soccer": "fútbol"
+    "soccer": "fútbol",
+    "no_data": "Sin datos",
+    "search": "Buscar"
   },
   "footer": {
     "time_zone": "Todas las fechas están en tu zona horaria local (UTC{{timeZoneView}}) a menos que se indique lo contrario",
-    "disclaimer": "El sitio web Prophet.ooo (“Sitio”) es sólo para fines informativos y educativos. El Sitio muestra los mercados de predicción existentes desplegados en el DAG de Obyte y es una interfaz gráfica de usuario para tanto visualizar datos de actividad en cadena como para interactuar con agentes autónomos directamente de tu propia cartera. Prophet.ooo no se hace cargo de los activos criptográficos de los usuarios y no aloja ni resuelve ningún mercado. El Sitio hace todo lo posible para garantizar la exactitud de la información mostrada, sin embargo, no existen garantías de exactitud y la información se proporciona tal cual. Ninguno de los materiales del sitio está destinado a ser, ni constituye, una solicitud, recomendar u ofrecer comprar o vender cualquier seguridad, mercancía, interés, derivado, producto financiero o instrumento. Los usuarios son responsables de cumplir con todas las leyes aplicables y deben llevar a cabo su propio análisis y consulta con asesores profesionales antes de comprometerse con cualquier mercado."
+    "disclaimer": "El sitio web Prophet.ooo (“Sitio”) es sólo para fines informativos y educativos. El Sitio muestra los mercados de predicción existentes desplegados en el DAG de Obyte y es una interfaz gráfica de usuario para tanto visualizar datos de actividad en cadena como para interactuar con agentes autónomos directamente de tu propia cartera. Prophet.ooo no se hace cargo de los activos criptográficos de los usuarios y no aloja ni resuelve ningún mercado. El Sitio hace todo lo posible para garantizar la exactitud de la información mostrada, sin embargo, no existen garantías de exactitud y la información se proporciona tal cual. Ninguno de los materiales del sitio está destinado a ser, ni constituye, una solicitud, recomendar u ofrecer comprar o vender cualquier seguridad, mercancía, interés, derivado, producto financiero o instrumento. Los usuarios son responsables de cumplir con todas las leyes aplicables y deben llevar a cabo su propio análisis y consulta con asesores profesionales antes de comprometerse con cualquier mercado.",
+    "copy": "<3>Construido en Obyte</3>"
   },
   "header": {
     "description": "Mercados de predicción",
@@ -45,10 +50,14 @@
     "create": "Crear nuevo mercado",
     "faq": "Preguntas frecuentes"
   },
+  "market_size": {
+    "label": "{{type}}\n{{value}} {{symbol}}\n{{percent}}%"
+  },
   "market_size_pie": {
     "tooltip": "<0>Capital invertido en {{name}}:<3>{{value}} <2>{{reserve_symbol}}</2></3></0>"
   },
   "prediction_item": {
+    "chart_tooltip": "{{token}} precio - {{value}} {{symbol}}",
     "lp_apy": "Proveedor de liquidez APY: {{apy}}%",
     "apy_not_shown": "APY no mostrado",
     "apy_not_available": "APY no disponible todavía"
@@ -258,6 +267,10 @@
         "name": "Permitir empate",
         "desc": "Si permitir un tercer resultado junto con Sí y No. Es común en algunos deportes."
       },
+      "issue_tokens": {
+        "name": "Emitir tokens",
+        "desc": "Emitir tokens Sí/No/Empate para los resultados. Sin tokens, las posiciones se guardan como saldos dentro del mercado y no se pueden transferir ni negociar en otro lugar."
+      },
       "oracle": {
         "name": "Oráculo",
         "desc": "Dirección del oráculo que publicará el resultado",
@@ -321,7 +334,8 @@
       "current_rate": "Tasa actual: {{value}} {{symbol}}",
       "no_pair": "Par no encontrado",
       "be_above": "para estar arriba",
-      "on": "sobre"
+      "on": "sobre",
+      "loading_rate": "Cargando tasa..."
     },
     "redeem": {
       "price_change": "El precio cambiaría demasiado, prueba una cantidad menor"
@@ -370,5 +384,24 @@
     "cryptocurrency": "Oráculo de los precios de la criptomoneda",
     "metal": "Oráculo del exchange de metales preciosos",
     "sports": "Oráculo de deportes"
+  },
+  "championships": {
+    "soccer": {
+      "ELC": "Campeonato de Inglaterra",
+      "CL": "Liga de Campeones de la UEFA",
+      "BL1": "Bundesliga",
+      "FL1": "Ligue 1",
+      "WC": "Copa Mundial de la FIFA",
+      "CSL": "Superliga China",
+      "BSA": "Campeonato Brasileño Serie A",
+      "ASL": "Liga Profesional",
+      "DED": "Eredivisie",
+      "PD": "Primera División",
+      "PPL": "Primeira Liga",
+      "BSB": "Campeonato Brasileño Serie B",
+      "SA": "Serie A",
+      "PL": "Premier League",
+      "CLI": "Copa Libertadores"
+    }
   }
 }
