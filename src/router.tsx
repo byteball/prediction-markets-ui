@@ -1,9 +1,9 @@
-import { MainPage } from "pages/MainPage/MainPage";
+import { MainPage } from "pages/main-page/main-page";
 import { CreatePage, MarketPage, FaqPage } from "pages/lazy";
 import { createBrowserRouter } from "react-router-dom";
 
-import { langs } from "components/SelectLanguage/langs";
-import { Layout } from "components/Layout/Layout";
+import { langs } from "components/select-language/langs";
+import { Layout } from "components/layout/layout";
 
 const future = {
 	v7_relativeSplatPath: true,

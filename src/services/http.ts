@@ -1,4 +1,4 @@
-import appConfig from "appConfig";
+import appConfig from "app-config";
 import axios, { type AxiosInstance } from "axios";
 import type { StateVarValue } from "store/types";
 
