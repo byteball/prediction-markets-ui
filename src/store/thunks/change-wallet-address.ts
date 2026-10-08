@@ -1,8 +1,8 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 
-import client from "services/obyte";
+import client from "@/services/obyte";
 import { loadUserBalance } from "./load-user-balance";
-import type { AppThunkApiConfig } from "store/hooks";
+import type { AppThunkApiConfig } from "@/store/hooks";
 
 export const changeWalletAddress = createAsyncThunk<string, string, AppThunkApiConfig>("changeWalletAddress", async (walletAddress, { dispatch }) => {
   dispatch(loadUserBalance(walletAddress));

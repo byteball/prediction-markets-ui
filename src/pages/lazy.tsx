@@ -1,6 +1,6 @@
 import { Loader2 } from "lucide-react";
 
-import { lazyWithFallback } from "utils/lazy-with-fallback";
+import { lazyWithFallback } from "@/utils/lazy-with-fallback";
 
 const PageFallback = () => (
   <div className="flex justify-center" style={{ padding: 40 }}>

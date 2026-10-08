@@ -8,15 +8,15 @@ import { SWRConfig } from 'swr';
 import axios from 'axios';
 
 import { PersistGate } from 'redux-persist/integration/react';
-import { TooltipProvider } from 'components/ui/tooltip';
-import { Toaster } from 'components/ui/sonner';
+import { TooltipProvider } from '@/components/ui/tooltip';
+import { Toaster } from '@/components/ui/sonner';
 
-import { store, persistor } from 'store/store';
-import client from 'services/obyte';
-import { bootstrap } from 'bootstrap';
-import appConfig from 'app-config';
+import { store, persistor } from '@/store/store';
+import client from '@/services/obyte';
+import { bootstrap } from '@/bootstrap';
+import appConfig from '@/app-config';
 
-import { router } from 'router';
+import { router } from '@/router';
 
 import 'moment/dist/locale/es';
 import 'moment/dist/locale/pt-br';
@@ -24,8 +24,8 @@ import 'moment/dist/locale/zh-cn';
 import 'moment/dist/locale/ru';
 import 'moment/dist/locale/uk';
 
-import './locale/index';
-import './index.css';
+import '@/locale';
+import './styles/index.css';
 
 // Registered here, not in services/obyte: bootstrap needs the store, and the store's thunks need the client (import cycle otherwise).
 client.onConnect(bootstrap);

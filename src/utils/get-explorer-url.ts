@@ -1,4 +1,4 @@
-import appConfig from "app-config";
+import appConfig from "@/app-config";
 
 const EXPLORER_URL = `https://${appConfig.ENVIRONMENT === "testnet" ? "testnet" : ""}explorer.obyte.org`;
 

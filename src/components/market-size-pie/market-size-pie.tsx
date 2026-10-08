@@ -1,12 +1,12 @@
 import type { PieConfig } from "@ant-design/plots"
-import { Pie } from "components/charts"
+import { Pie } from "@/components/charts"
 import { useMemo } from "react";
 import { Trans, useTranslation } from 'react-i18next';
 
-import type { MarketStateVars, Team } from "store/types";
-import { getMarketPriceByType } from "utils";
+import type { MarketStateVars, Team } from "@/store/types";
+import { getMarketPriceByType } from "@/utils";
 
-import appConfig from "app-config";
+import appConfig from "@/app-config";
 
 export interface MarketSizePieProps {
     teams?: { yes?: Team | null; no?: Team | null };

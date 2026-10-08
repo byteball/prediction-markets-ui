@@ -2,10 +2,10 @@ import { useState } from "react";
 import { Helmet } from "react-helmet-async";
 import { useTranslation } from "react-i18next";
 
-import { CreateNowForm } from "forms";
-import type { CreateNowFormProps } from "forms/create-now-form";
+import { CreateNowForm } from "@/forms";
+import type { CreateNowFormProps } from "@/forms/create-now-form";
 
-import { Button } from "components/ui/button";
+import { Button } from "@/components/ui/button";
 import { ModalSheet } from "./modal-sheet";
 
 type CreateNowModalProps = CreateNowFormProps;

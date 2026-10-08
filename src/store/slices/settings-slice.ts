@@ -1,9 +1,9 @@
 import { createSlice, type PayloadAction } from '@reduxjs/toolkit';
-import { changeWalletAddress } from 'store/thunks/change-wallet-address';
-import { loadReserveAssets } from 'store/thunks/load-reserve-assets';
-import { updateReserveRate } from 'store/thunks/update-reserve-rate';
-import type { RootState } from 'store';
-import type { CreationOrder, CreationOrderData, CurrencyCandle, ReserveAssets, ReserveRates } from 'store/types';
+import { changeWalletAddress } from '@/store/thunks/change-wallet-address';
+import { loadReserveAssets } from '@/store/thunks/load-reserve-assets';
+import { updateReserveRate } from '@/store/thunks/update-reserve-rate';
+import type { RootState } from '@/store';
+import type { CreationOrder, CreationOrderData, CurrencyCandle, ReserveAssets, ReserveRates } from '@/store/types';
 
 export type PriceOrOdds = 'price' | 'odds';
 

@@ -1,6 +1,6 @@
 import moment from "moment";
 
-import appConfig from "app-config";
+import appConfig from "@/app-config";
 
 const SECONDS_IN_YEAR = 60 * 60 * 24 * 365;
 

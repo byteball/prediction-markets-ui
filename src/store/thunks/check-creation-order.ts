@@ -1,8 +1,8 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
-import client from "services/obyte";
-import { updateCreationOrder } from "store/slices/settings-slice";
-import type { AppThunkApiConfig } from "store/hooks";
-import type { AAResponseBody, CreationOrder } from "store/types";
+import client from "@/services/obyte";
+import { updateCreationOrder } from "@/store/slices/settings-slice";
+import type { AppThunkApiConfig } from "@/store/hooks";
+import type { AAResponseBody, CreationOrder } from "@/store/types";
 
 export const checkCreationOrder = createAsyncThunk<void, void, AppThunkApiConfig>(
   'checkCreationOrder',

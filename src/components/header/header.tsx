@@ -2,16 +2,16 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 
-import { MainMenu } from "components/main-menu/main-menu";
-import { SocialLinks } from "components/social-links/social-links";
-import { ViewPriceSwitcher } from "components/view-price-switcher/view-price-switcher";
-import { SelectLanguage } from "components/select-language/select-language";
+import { MainMenu } from "@/components/main-menu/main-menu";
+import { SocialLinks } from "@/components/social-links/social-links";
+import { ViewPriceSwitcher } from "@/components/view-price-switcher/view-price-switcher";
+import { SelectLanguage } from "@/components/select-language/select-language";
 
-import { useWindowSize } from "hooks";
-import { WalletModal } from "modals";
+import { useWindowSize } from "@/hooks";
+import { WalletModal } from "@/modals";
 
-import { Button } from "components/ui/button";
-import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle } from "components/ui/sheet";
+import { Button } from "@/components/ui/button";
+import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle } from "@/components/ui/sheet";
 
 import styles from "./header.module.css";
 

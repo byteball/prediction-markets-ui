@@ -1,8 +1,8 @@
 import { createSelector, createSlice } from '@reduxjs/toolkit';
-import { loadUserBalance } from 'store/thunks/load-user-balance';
+import { loadUserBalance } from '@/store/thunks/load-user-balance';
 import { selectWalletAddress } from './settings-slice';
-import type { RootState } from 'store';
-import type { WalletBalance } from 'store/types';
+import type { RootState } from '@/store';
+import type { WalletBalance } from '@/store/types';
 
 export type UserWalletState = Record<string, WalletBalance | undefined>;
 

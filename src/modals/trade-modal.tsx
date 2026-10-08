@@ -3,15 +3,15 @@ import { Helmet } from "react-helmet-async";
 import ReactGA from "react-ga4";
 import { useTranslation } from "react-i18next";
 
-import { SwitchActions } from "components/switch-actions/switch-actions";
-import { BuyForm, RedeemForm } from "forms";
-import type { AmountState } from "forms/redeem-form";
-import { useAppSelector } from "store/hooks";
-import { selectActiveMarketStatus } from "store/slices/active-slice";
-import { capitalizeFirstLetter } from "utils";
+import { SwitchActions } from "@/components/switch-actions/switch-actions";
+import { BuyForm, RedeemForm } from "@/forms";
+import type { AmountState } from "@/forms/redeem-form";
+import { useAppSelector } from "@/store/hooks";
+import { selectActiveMarketStatus } from "@/store/slices/active-slice";
+import { capitalizeFirstLetter } from "@/utils";
 
-import { Button } from "components/ui/button";
-import { Tooltip, TooltipContent, TooltipTrigger } from "components/ui/tooltip";
+import { Button } from "@/components/ui/button";
+import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { ModalSheet } from "./modal-sheet";
 
 export type TradeModalVisible = false | true | { type: "yes" | "no" | "draw"; action?: "buy" | "redeem" };

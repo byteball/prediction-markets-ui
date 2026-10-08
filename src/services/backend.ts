@@ -1,6 +1,6 @@
-import appConfig from "app-config";
+import appConfig from "@/app-config";
 import axios, { type AxiosInstance } from "axios";
-import type { Candle, MarketDates, RecentEvent, ReserveAssets, Team } from "store/types";
+import type { Candle, MarketDates, RecentEvent, ReserveAssets, Team } from "@/store/types";
 
 export type PaginatedResponse<T, CountKey extends string = "count"> = { data: T[] } & Record<CountKey, number>;
 

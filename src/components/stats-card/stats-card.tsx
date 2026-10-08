@@ -2,8 +2,8 @@ import type { ReactNode } from "react";
 import { Download, Upload } from "lucide-react";
 import { useTranslation } from "react-i18next";
 
-import { InfoTooltip } from "components/info-tooltip/info-tooltip";
-import { Button } from "components/ui/button";
+import { InfoTooltip } from "@/components/info-tooltip/info-tooltip";
+import { Button } from "@/components/ui/button";
 
 import styles from "./stats-card.module.css";
 

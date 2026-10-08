@@ -3,12 +3,12 @@ import { Fragment, memo, useEffect } from "react";
 import moment from "moment";
 import { kebabCase } from "lodash-es";
 
-import { changeLanguage, selectLanguage } from "store/slices/settings-slice";
-import { useAppDispatch, useAppSelector } from "store/hooks";
+import { changeLanguage, selectLanguage } from "@/store/slices/settings-slice";
+import { useAppDispatch, useAppSelector } from "@/store/hooks";
 
-import { botCheck, generateTextEvent } from "utils";
+import { botCheck, generateTextEvent } from "@/utils";
 
-import { langs } from "components/select-language/langs";
+import { langs } from "@/components/select-language/langs";
 
 import i18 from "../../locale/index";
 

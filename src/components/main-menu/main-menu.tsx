@@ -2,8 +2,8 @@ import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { cn } from "cn";
 
-import { selectLanguage } from "store/slices/settings-slice";
-import { useAppSelector } from "store/hooks";
+import { selectLanguage } from "@/store/slices/settings-slice";
+import { useAppSelector } from "@/store/hooks";
 
 import styles from "./main-menu.module.css";
 

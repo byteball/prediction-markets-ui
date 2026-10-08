@@ -1,14 +1,14 @@
 import { useState, useEffect, type ChangeEvent } from "react";
 import { useTranslation } from "react-i18next";
 
-import { QRButton } from "components/qr-button/qr-button";
-import { generateLink, truncate } from "utils";
-import { useAppSelector } from "store/hooks";
-import { selectWalletBalance } from "store/slices/user-wallet-slice";
+import { QRButton } from "@/components/qr-button/qr-button";
+import { generateLink, truncate } from "@/utils";
+import { useAppSelector } from "@/store/hooks";
+import { selectWalletBalance } from "@/store/slices/user-wallet-slice";
 
-import { FormItem } from "components/ui/form-item";
-import { InputGroup } from "components/ui/input-group";
-import { Tooltip, TooltipContent, TooltipTrigger } from "components/ui/tooltip";
+import { FormItem } from "@/components/ui/form-item";
+import { InputGroup } from "@/components/ui/input-group";
+import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 
 const f = (x: unknown) => (~(x + "").indexOf(".") ? (x + "").split(".")[1].length : 0);
 

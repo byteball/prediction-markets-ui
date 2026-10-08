@@ -3,9 +3,9 @@ import moment, { type Moment } from "moment"
 import { CalendarIcon } from "lucide-react"
 import { cn } from "cn"
 
-import { Button } from "components/ui/button"
-import { Calendar } from "components/ui/calendar"
-import { Popover, PopoverContent, PopoverTrigger } from "components/ui/popover"
+import { Button } from "@/components/ui/button"
+import { Calendar } from "@/components/ui/calendar"
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
 
 type DateTimePickerProps = {
   value?: Moment | null

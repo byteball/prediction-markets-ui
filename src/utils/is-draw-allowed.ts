@@ -1,6 +1,6 @@
 import moment from "moment";
 
-import appConfig from "app-config";
+import appConfig from "@/app-config";
 
 // Draws are allowed for every sport league except the FIFA World Cup knockout (playoff) stage,
 // where a match can no longer end in a draw. World Cup matches kicking off before the configured

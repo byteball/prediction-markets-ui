@@ -1,4 +1,4 @@
-import type { MarketStateVars, OutcomeAmounts, StateVarValue } from "store/types";
+import type { MarketStateVars, OutcomeAmounts, StateVarValue } from "@/store/types";
 
 const isOutcomeAmounts = (value: unknown): value is OutcomeAmounts => !!value && typeof value === "object" && typeof (value as OutcomeAmounts).yes === "number" && typeof (value as OutcomeAmounts).no === "number";
 

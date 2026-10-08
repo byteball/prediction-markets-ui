@@ -1,19 +1,19 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import moment from "moment";
 
-import backend from "services/backend";
-import obyte from "services/obyte";
-import http from "services/http";
-import { getCurrencyMarketData, getCurrencyPrice } from "services/market-data";
+import backend from "@/services/backend";
+import obyte from "@/services/obyte";
+import http from "@/services/http";
+import { getCurrencyMarketData, getCurrencyPrice } from "@/services/market-data";
 
-import { setActiveMarketAddress } from "store/slices/active-slice";
-import { saveBaseOHLC } from "store/slices/settings-slice";
-import type { AppThunkApiConfig } from "store/hooks";
-import type { Candle, CurrencyCandle, MarketParams, MarketStateVars, RecentEvent, Team } from "store/types";
+import { setActiveMarketAddress } from "@/store/slices/active-slice";
+import { saveBaseOHLC } from "@/store/slices/settings-slice";
+import type { AppThunkApiConfig } from "@/store/hooks";
+import type { Candle, CurrencyCandle, MarketParams, MarketStateVars, RecentEvent, Team } from "@/store/types";
 
-import appConfig from "app-config";
-import { getTokenlessSymbols } from "utils/get-tokenless-symbols";
-import { normalizeStateVars } from "utils/normalize-state-vars";
+import appConfig from "@/app-config";
+import { getTokenlessSymbols } from "@/utils/get-tokenless-symbols";
+import { normalizeStateVars } from "@/utils/normalize-state-vars";
 
 const initialParams = {
   allow_draw: false,

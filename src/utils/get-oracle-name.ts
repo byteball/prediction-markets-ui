@@ -1,5 +1,5 @@
-import appConfig, { type OracleConfig } from "app-config"
-import i18n from "locale";
+import appConfig, { type OracleConfig } from "@/app-config"
+import i18n from "@/locale";
 
 type CategoryLookup = Record<string, { oracles?: OracleConfig[] } | undefined>;
 

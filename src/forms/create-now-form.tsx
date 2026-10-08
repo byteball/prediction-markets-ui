@@ -5,24 +5,24 @@ import { debounce, isNaN } from "lodash-es";
 import ReactGA from "react-ga4";
 import { useTranslation } from "react-i18next";
 
-import { FormLabel } from "components/form-label/form-label";
-import { QRButton } from "components/qr-button/qr-button";
-import { useAppDispatch, useAppSelector } from "store/hooks";
-import { saveCreationOrder, selectReserveAssets } from "store/slices/settings-slice";
-import { generateLink, generateTextEvent, isDrawAllowed } from "utils";
-import client from "services/obyte";
-import appConfig from "app-config";
+import { FormLabel } from "@/components/form-label/form-label";
+import { QRButton } from "@/components/qr-button/qr-button";
+import { useAppDispatch, useAppSelector } from "@/store/hooks";
+import { saveCreationOrder, selectReserveAssets } from "@/store/slices/settings-slice";
+import { generateLink, generateTextEvent, isDrawAllowed } from "@/utils";
+import client from "@/services/obyte";
+import appConfig from "@/app-config";
 
 import { getParamList, type Param, type ParamKey } from "./create-params";
-import type { CreationOrderData } from "store/types";
+import type { CreationOrderData } from "@/store/types";
 
-import { Combobox } from "components/ui/combobox";
-import { DateTimePicker } from "components/ui/datetime-picker";
-import { FormItem, type FormItemStatus } from "components/ui/form-item";
-import { Input } from "components/ui/input";
-import { InputGroup } from "components/ui/input-group";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "components/ui/select";
-import { Switch } from "components/ui/switch";
+import { Combobox } from "@/components/ui/combobox";
+import { DateTimePicker } from "@/components/ui/datetime-picker";
+import { FormItem, type FormItemStatus } from "@/components/ui/form-item";
+import { Input } from "@/components/ui/input";
+import { InputGroup } from "@/components/ui/input-group";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Switch } from "@/components/ui/switch";
 
 import styles from "../components/prediction-list/prediction-item.module.css";
 

@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState, type ReactNode } from "react";
 import type { LineConfig } from "@ant-design/plots";
-import { Line } from "components/charts";
+import { Line } from "@/components/charts";
 import { useLocation } from "react-router-dom";
 import moment from "moment";
 import { Img } from "react-image";
@@ -10,14 +10,14 @@ import { Trans, useTranslation } from "react-i18next";
 import { Loader2, TriangleAlert } from "lucide-react";
 import { cn } from "cn";
 
-import { StatsCard } from "components/stats-card/stats-card";
-import { QRButton } from "components/qr-button/qr-button";
-import { RecentEvents } from "components/recent-events/recent-events";
-import { CurrencyChart } from "components/currency-chart/currency-chart";
-import { MarketSizePie } from "components/market-size-pie/market-size-pie";
-import { PageProvider } from "components/page-provider/page-provider";
-import { AddLiquidityModal, ClaimProfitModal, ViewParamsModal, TradeModal } from "modals";
-import type { TradeModalVisible } from "modals/trade-modal";
+import { StatsCard } from "@/components/stats-card/stats-card";
+import { QRButton } from "@/components/qr-button/qr-button";
+import { RecentEvents } from "@/components/recent-events/recent-events";
+import { CurrencyChart } from "@/components/currency-chart/currency-chart";
+import { MarketSizePie } from "@/components/market-size-pie/market-size-pie";
+import { PageProvider } from "@/components/page-provider/page-provider";
+import { AddLiquidityModal, ClaimProfitModal, ViewParamsModal, TradeModal } from "@/modals";
+import type { TradeModalVisible } from "@/modals/trade-modal";
 
 import {
   selectActiveAddress,
@@ -29,21 +29,21 @@ import {
   selectActiveMarketStateVars,
   selectActiveMarketStatus,
   selectActiveTeams,
-} from "store/slices/active-slice";
-import { setActiveMarket } from "store/thunks/set-active-market";
-import { selectLanguage, selectPriceOrOdds, selectReserveAssets, selectReservesRate } from "store/slices/settings-slice";
-import { useAppDispatch, useAppSelector } from "store/hooks";
-import type { Team } from "store/types";
-import { getMarketPriceByType, generateLink, generateTextEvent, getEstimatedAPY, getExplorerUrl, transformChampionshipName } from "utils";
+} from "@/store/slices/active-slice";
+import { setActiveMarket } from "@/store/thunks/set-active-market";
+import { selectLanguage, selectPriceOrOdds, selectReserveAssets, selectReservesRate } from "@/store/slices/settings-slice";
+import { useAppDispatch, useAppSelector } from "@/store/hooks";
+import type { Team } from "@/store/types";
+import { getMarketPriceByType, generateLink, generateTextEvent, getEstimatedAPY, getExplorerUrl, transformChampionshipName } from "@/utils";
 
-import { Alert, AlertDescription } from "components/ui/alert";
-import { Button } from "components/ui/button";
-import { Countdown } from "components/ui/countdown";
-import { Tabs, TabsList, TabsTrigger } from "components/ui/tabs";
-import { Tooltip, TooltipContent, TooltipTrigger } from "components/ui/tooltip";
+import { Alert, AlertDescription } from "@/components/ui/alert";
+import { Button } from "@/components/ui/button";
+import { Countdown } from "@/components/ui/countdown";
+import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 
-import i18n from "locale";
-import appConfig from "app-config";
+import i18n from "@/locale";
+import appConfig from "@/app-config";
 
 import styles from "./market-page.module.css";
 

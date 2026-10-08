@@ -4,9 +4,9 @@ import { QrCode } from "lucide-react";
 import { Trans, useTranslation } from "react-i18next";
 import { cn } from "cn";
 
-import { Button, type ButtonProps } from "components/ui/button";
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "components/ui/dialog";
-import { Tooltip, TooltipContent, TooltipTrigger } from "components/ui/tooltip";
+import { Button, type ButtonProps } from "@/components/ui/button";
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 
 import { AppStoreIcon, PlayMarketIcon } from "./store-icons";
 

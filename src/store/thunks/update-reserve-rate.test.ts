@@ -1,11 +1,11 @@
-import { getCurrencyPrice } from "services/market-data";
-import { getBaseUsdRate } from "services/oswap";
+import { getCurrencyPrice } from "@/services/market-data";
+import { getBaseUsdRate } from "@/services/oswap";
 import { updateReserveRate, type UpdateReserveRateArgs } from "./update-reserve-rate";
-import type { RootState } from "store";
-import type { SettingsState } from "store/slices/settings-slice";
+import type { RootState } from "@/store";
+import type { SettingsState } from "@/store/slices/settings-slice";
 
-vi.mock("services/market-data", () => ({ getCurrencyPrice: vi.fn() }));
-vi.mock("services/oswap", () => ({ getBaseUsdRate: vi.fn() }));
+vi.mock("@/services/market-data", () => ({ getCurrencyPrice: vi.fn() }));
+vi.mock("@/services/oswap", () => ({ getBaseUsdRate: vi.fn() }));
 
 const ASSET = "lwvZjepKoGSiMIDalxi2GB8Pd+nK86Qsnsn1Ng7TAJE=";
 const assets = {

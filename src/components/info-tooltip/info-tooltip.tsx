@@ -1,9 +1,9 @@
 import type { CSSProperties, ReactNode } from "react";
 import { Info } from "lucide-react";
 
-import { useTapTooltip } from "hooks/use-tap-tooltip";
+import { useTapTooltip } from "@/hooks/use-tap-tooltip";
 
-import { Tooltip, TooltipContent, TooltipTrigger } from "components/ui/tooltip";
+import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 
 type InfoTooltipProps = {
   title: ReactNode;

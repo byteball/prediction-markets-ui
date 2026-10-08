@@ -1,6 +1,6 @@
 import type { ReactNode } from "react";
 
-import { InfoTooltip } from "components/info-tooltip/info-tooltip";
+import { InfoTooltip } from "@/components/info-tooltip/info-tooltip";
 
 type FormLabelProps = {
   info?: ReactNode | ((value: unknown) => ReactNode);

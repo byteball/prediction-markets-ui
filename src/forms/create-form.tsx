@@ -6,25 +6,25 @@ import { Link } from "react-router-dom";
 import { Trans, useTranslation } from "react-i18next";
 import { TriangleAlert } from "lucide-react";
 
-import { QRButton } from "components/qr-button/qr-button";
-import { FormLabel } from "components/form-label/form-label";
-import { PredictionItem } from "components/prediction-list/prediction-item";
-import { useAppDispatch, useAppSelector } from "store/hooks";
-import { saveCreationOrder, selectReserveAssets } from "store/slices/settings-slice";
-import { capitalizeFirstLetter, generateLink, getCategoryName, getOracleName } from "utils";
-import appConfig from "app-config";
+import { QRButton } from "@/components/qr-button/qr-button";
+import { FormLabel } from "@/components/form-label/form-label";
+import { PredictionItem } from "@/components/prediction-list/prediction-item";
+import { useAppDispatch, useAppSelector } from "@/store/hooks";
+import { saveCreationOrder, selectReserveAssets } from "@/store/slices/settings-slice";
+import { capitalizeFirstLetter, generateLink, getCategoryName, getOracleName } from "@/utils";
+import appConfig from "@/app-config";
 
 import { getParamList, type Param, type ParamKey } from "./create-params";
-import type { CreationOrderData } from "store/types";
+import type { CreationOrderData } from "@/store/types";
 
-import { Alert, AlertDescription } from "components/ui/alert";
-import { Combobox } from "components/ui/combobox";
-import { DateTimePicker } from "components/ui/datetime-picker";
-import { FormItem, type FormItemStatus } from "components/ui/form-item";
-import { Input } from "components/ui/input";
-import { InputGroup } from "components/ui/input-group";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "components/ui/select";
-import { Switch } from "components/ui/switch";
+import { Alert, AlertDescription } from "@/components/ui/alert";
+import { Combobox } from "@/components/ui/combobox";
+import { DateTimePicker } from "@/components/ui/datetime-picker";
+import { FormItem, type FormItemStatus } from "@/components/ui/form-item";
+import { Input } from "@/components/ui/input";
+import { InputGroup } from "@/components/ui/input-group";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Switch } from "@/components/ui/switch";
 
 type Field<T = string | number> = { value: T; valid: boolean };
 

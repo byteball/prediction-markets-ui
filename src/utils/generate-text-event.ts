@@ -1,7 +1,7 @@
 import moment from "moment";
 
-import appConfig from "app-config";
-import i18n from "locale";
+import appConfig from "@/app-config";
+import i18n from "@/locale";
 
 export type GenerateTextEventParams = {
     oracle?: string;

@@ -4,11 +4,11 @@ import { Helmet } from "react-helmet-async";
 import ReactGA from "react-ga4";
 import { useTranslation } from "react-i18next";
 
-import { getParamList } from "forms/create-params";
+import { getParamList } from "@/forms/create-params";
 
-import { getExplorerUrl } from "utils";
+import { getExplorerUrl } from "@/utils";
 
-import { Button } from "components/ui/button";
+import { Button } from "@/components/ui/button";
 import { ModalSheet } from "./modal-sheet";
 
 type ViewParamsModalProps = {

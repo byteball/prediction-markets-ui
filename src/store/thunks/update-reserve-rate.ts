@@ -1,10 +1,10 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import { isEmpty } from "lodash-es";
 
-import { getCurrencyPrice } from "services/market-data";
-import { getBaseUsdRate } from "services/oswap";
-import type { AppThunkApiConfig } from "store/hooks";
-import type { ReserveAssets, ReserveRates } from "store/types";
+import { getCurrencyPrice } from "@/services/market-data";
+import { getBaseUsdRate } from "@/services/oswap";
+import type { AppThunkApiConfig } from "@/store/hooks";
+import type { ReserveAssets, ReserveRates } from "@/store/types";
 
 export interface UpdateReserveRateArgs {
   assets?: ReserveAssets;

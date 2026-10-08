@@ -1,4 +1,4 @@
-import i18n from "locale";
+import i18n from "@/locale";
 import { capitalizeFirstLetter } from "./capitalize-first-letter";
 
 export const getTabNameByType = (type: string): string => {

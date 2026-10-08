@@ -2,14 +2,14 @@ import { Link } from "react-router-dom";
 import { Helmet } from "react-helmet-async";
 import { useTranslation } from "react-i18next";
 
-import { CreateForm } from "forms";
-import { removeCreationOrder, selectCreationOrder } from "store/slices/settings-slice";
-import { useAppDispatch, useAppSelector } from "store/hooks";
+import { CreateForm } from "@/forms";
+import { removeCreationOrder, selectCreationOrder } from "@/store/slices/settings-slice";
+import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { WaitingPredictionMarket } from "./waiting-prediction-market";
-import { PageProvider } from "components/page-provider/page-provider";
+import { PageProvider } from "@/components/page-provider/page-provider";
 
-import { Button } from "components/ui/button";
-import { Result } from "components/ui/result";
+import { Button } from "@/components/ui/button";
+import { Result } from "@/components/ui/result";
 
 export const CreatePage = () => {
   const creationOrder = useAppSelector(selectCreationOrder);

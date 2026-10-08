@@ -4,14 +4,14 @@ import { useEffect, useMemo } from 'react';
 import { createSearchParams, useNavigate, useParams, useSearchParams } from 'react-router-dom';
 import { uniq } from 'lodash-es';
 
-import type { PredictionItemProps } from 'components/prediction-list/prediction-item';
-import type { SwitchAction } from 'components/switch-actions/switch-actions';
+import type { PredictionItemProps } from '@/components/prediction-list/prediction-item';
+import type { SwitchAction } from '@/components/switch-actions/switch-actions';
 
 import { useChampionships, type Championships } from './use-championships';
-import { selectLanguage } from 'store/slices/settings-slice';
-import { useAppSelector } from 'store/hooks';
+import { selectLanguage } from '@/store/slices/settings-slice';
+import { useAppSelector } from '@/store/hooks';
 
-import appConfig from 'app-config';
+import appConfig from '@/app-config';
 
 export type CalendarItem = PredictionItemProps;
 

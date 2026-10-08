@@ -1,10 +1,10 @@
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
 
-import { FormLabel } from "components/form-label/form-label";
-import { selectPriceOrOdds } from "store/slices/settings-slice";
-import { useAppSelector } from "store/hooks";
-import type { BuyResult, ExchangeResult } from "utils/get-exchange-result";
+import { FormLabel } from "@/components/form-label/form-label";
+import { selectPriceOrOdds } from "@/store/slices/settings-slice";
+import { useAppSelector } from "@/store/hooks";
+import type { BuyResult, ExchangeResult } from "@/utils/get-exchange-result";
 
 import styles from "./transaction-estimation.module.css";
 

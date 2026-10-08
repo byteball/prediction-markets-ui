@@ -17,7 +17,7 @@ import activeSlice from './slices/active-slice';
 import bridgesSlice from './slices/bridges-slice';
 import searchCacheSlice from './slices/search-cache-slice';
 
-import config from "app-config";
+import config from "@/app-config";
 
 const rootReducer = combineReducers({
   settings: settingsSlice,

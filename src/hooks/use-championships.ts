@@ -1,10 +1,10 @@
 import { useTranslation } from "react-i18next";
 import useSWR from "swr";
 
-import type { SwitchAction } from "components/switch-actions/switch-actions";
+import type { SwitchAction } from "@/components/switch-actions/switch-actions";
 
-import appConfig from "app-config";
-import { getTabNameByType } from "utils/get-tab-name-by-type";
+import appConfig from "@/app-config";
+import { getTabNameByType } from "@/utils/get-tab-name-by-type";
 
 export interface Championship {
     name: string;

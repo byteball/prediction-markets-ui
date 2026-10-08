@@ -3,11 +3,11 @@ import { Helmet } from "react-helmet-async";
 import ReactGA from "react-ga4";
 import { useTranslation } from "react-i18next";
 
-import { AddLiquidityForm } from "forms";
-import { useAppSelector } from "store/hooks";
-import { selectActiveMarketStatus } from "store/slices/active-slice";
+import { AddLiquidityForm } from "@/forms";
+import { useAppSelector } from "@/store/hooks";
+import { selectActiveMarketStatus } from "@/store/slices/active-slice";
 
-import { Button } from "components/ui/button";
+import { Button } from "@/components/ui/button";
 import { ModalSheet } from "./modal-sheet";
 
 type AddLiquidityModalProps = {

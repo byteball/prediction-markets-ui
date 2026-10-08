@@ -1,7 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { loadEVMTokens } from 'store/thunks/load-evm-tokens';
-import type { RootState } from 'store';
-import type { Bridge } from 'store/types';
+import { loadEVMTokens } from '@/store/thunks/load-evm-tokens';
+import type { RootState } from '@/store';
+import type { Bridge } from '@/store/types';
 
 export interface BridgesState {
   tokensByNetwork: Record<string, Bridge[]>;

@@ -2,16 +2,16 @@ import moment from "moment";
 import { useMemo } from "react";
 import { Trans, useTranslation } from "react-i18next";
 
-import { selectActiveAddress, selectActiveMarketParams, selectActiveRecentEvents, selectActiveRecentEventsCount } from "store/slices/active-slice";
-import { loadMoreRecentEvents } from "store/thunks/load-more-recent-events";
-import { useAppDispatch, useAppSelector } from "store/hooks";
-import type { MarketParams, RecentEvent } from "store/types";
+import { selectActiveAddress, selectActiveMarketParams, selectActiveRecentEvents, selectActiveRecentEventsCount } from "@/store/slices/active-slice";
+import { loadMoreRecentEvents } from "@/store/thunks/load-more-recent-events";
+import { useAppDispatch, useAppSelector } from "@/store/hooks";
+import type { MarketParams, RecentEvent } from "@/store/types";
 
-import i18n from "locale";
-import appConfig from "app-config";
-import { getExplorerUrl } from "utils";
+import i18n from "@/locale";
+import appConfig from "@/app-config";
+import { getExplorerUrl } from "@/utils";
 
-import { Button } from "components/ui/button";
+import { Button } from "@/components/ui/button";
 
 import styles from "./recent-events.module.css";
 

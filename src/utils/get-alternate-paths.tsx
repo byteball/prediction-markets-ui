@@ -1,4 +1,4 @@
-import { langs } from "components/select-language/langs";
+import { langs } from "@/components/select-language/langs";
 
 export type AlternatePath = { lang: string; href: string };
 

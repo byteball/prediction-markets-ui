@@ -1,6 +1,6 @@
 import { Fragment, memo, useMemo, useRef, useState, type ReactNode, type RefObject } from "react";
 import type { TinyLineConfig } from "@ant-design/plots";
-import { TinyLine } from "components/charts";
+import { TinyLine } from "@/components/charts";
 import useResizeObserver from "@react-hook/resize-observer";
 import { Link } from "react-router-dom";
 import moment from "moment";
@@ -9,15 +9,15 @@ import { Img } from "react-image";
 import { useTranslation } from "react-i18next";
 import { cn } from "cn";
 
-import { selectLanguage, selectPriceOrOdds, selectReservesRate } from "store/slices/settings-slice";
-import { useAppSelector } from "store/hooks";
+import { selectLanguage, selectPriceOrOdds, selectReservesRate } from "@/store/slices/settings-slice";
+import { useAppSelector } from "@/store/hooks";
 
-import { CreateNowModal } from "modals";
-import { getTokenlessSymbols, generateTextEvent } from "utils";
-import { useWindowSize } from "hooks";
+import { CreateNowModal } from "@/modals";
+import { getTokenlessSymbols, generateTextEvent } from "@/utils";
+import { useWindowSize } from "@/hooks";
 
-import i18n from "locale";
-import appConfig from "app-config";
+import i18n from "@/locale";
+import appConfig from "@/app-config";
 
 import styles from "./prediction-item.module.css";
 

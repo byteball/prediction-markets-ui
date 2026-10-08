@@ -1,5 +1,5 @@
-import { store } from "store/store";
-import { cacheSearchResult, selectSearchCache } from "store/slices/search-cache-slice";
+import { store } from "@/store/store";
+import { cacheSearchResult, selectSearchCache } from "@/store/slices/search-cache-slice";
 
 type SearchCacheResults = Record<string, Record<string, string | undefined> | undefined>;
 

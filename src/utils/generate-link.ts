@@ -1,5 +1,5 @@
 import { encodeData } from "./encode-data";
-import config from "app-config";
+import config from "@/app-config";
 
 const suffixes: Record<string, string> = {
   livenet: "",

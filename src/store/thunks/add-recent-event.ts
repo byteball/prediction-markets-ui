@@ -1,8 +1,8 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 
-import client from "services/obyte";
-import type { AppThunkApiConfig } from "store/hooks";
-import type { AAResponseBody, AAResponseVars, ObyteUnit, OutcomeAmounts, RecentEvent, RecentEventType } from "store/types";
+import client from "@/services/obyte";
+import type { AppThunkApiConfig } from "@/store/hooks";
+import type { AAResponseBody, AAResponseVars, ObyteUnit, OutcomeAmounts, RecentEvent, RecentEventType } from "@/store/types";
 
 export const addRecentEvent = createAsyncThunk<RecentEvent | undefined, AAResponseBody, AppThunkApiConfig>(
     'addRecentEvent',

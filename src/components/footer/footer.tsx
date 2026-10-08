@@ -1,7 +1,7 @@
 import moment from 'moment';
 import { Trans, useTranslation } from 'react-i18next';
 
-import { SocialLinks } from "components/social-links/social-links";
+import { SocialLinks } from "@/components/social-links/social-links";
 
 import styles from "./footer.module.css";
 

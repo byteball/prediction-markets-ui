@@ -5,25 +5,25 @@ import ReactGA from "react-ga4";
 import { useTranslation, Trans } from "react-i18next";
 import { Loader2 } from "lucide-react";
 
-import { QRButton } from "components/qr-button/qr-button";
-import { TransactionEstimation } from "components/transaction-estimation/transaction-estimation";
-import { WalletModal } from "modals";
-import { useAppSelector } from "store/hooks";
-import { selectActiveAddress, selectActiveMarketParams, selectActiveMarketStateVars } from "store/slices/active-slice";
-import { selectWalletAddress } from "store/slices/settings-slice";
-import { get_result_for_buying_by_type } from "utils/get-exchange-result";
-import { selectTokensByNetwork } from "store/slices/bridges-slice";
-import { generateLink } from "utils";
+import { QRButton } from "@/components/qr-button/qr-button";
+import { TransactionEstimation } from "@/components/transaction-estimation/transaction-estimation";
+import { WalletModal } from "@/modals";
+import { useAppSelector } from "@/store/hooks";
+import { selectActiveAddress, selectActiveMarketParams, selectActiveMarketStateVars } from "@/store/slices/active-slice";
+import { selectWalletAddress } from "@/store/slices/settings-slice";
+import { get_result_for_buying_by_type } from "@/utils/get-exchange-result";
+import { selectTokensByNetwork } from "@/store/slices/bridges-slice";
+import { generateLink } from "@/utils";
 
-import appConfig from "app-config";
-import client from "services/obyte";
+import appConfig from "@/app-config";
+import client from "@/services/obyte";
 
-import { Alert, AlertDescription, AlertTitle } from "components/ui/alert";
-import { Button } from "components/ui/button";
-import { Combobox, type ComboboxOption } from "components/ui/combobox";
-import { FormItem } from "components/ui/form-item";
-import { Input } from "components/ui/input";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "components/ui/select";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { Button } from "@/components/ui/button";
+import { Combobox, type ComboboxOption } from "@/components/ui/combobox";
+import { FormItem } from "@/components/ui/form-item";
+import { Input } from "@/components/ui/input";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
 import type { AmountState } from "./redeem-form";
 import { tokenLabel } from "./token-label";

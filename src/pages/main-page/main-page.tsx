@@ -4,18 +4,18 @@ import { Trans } from "react-i18next";
 import { Helmet } from "react-helmet-async";
 import { Loader2 } from "lucide-react";
 
-import { PredictionList } from "components/prediction-list/prediction-list";
-import { SwitchActions } from "components/switch-actions/switch-actions";
-import { PageProvider } from "components/page-provider/page-provider";
+import { PredictionList } from "@/components/prediction-list/prediction-list";
+import { SwitchActions } from "@/components/switch-actions/switch-actions";
+import { PageProvider } from "@/components/page-provider/page-provider";
 
-import { selectLanguage } from "store/slices/settings-slice";
-import { useAppSelector } from "store/hooks";
+import { selectLanguage } from "@/store/slices/settings-slice";
+import { useAppSelector } from "@/store/hooks";
 
-import { useWindowSize, useChampionships } from "hooks";
+import { useWindowSize, useChampionships } from "@/hooks";
 
 import styles from "./main-page.module.css";
 
-import i18n from "locale";
+import i18n from "@/locale";
 
 export const MainPage = () => {
 	const { category = "all", particle = "all" } = useParams();

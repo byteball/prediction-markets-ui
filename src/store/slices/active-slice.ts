@@ -1,9 +1,9 @@
 import { createSelector, createSlice, type PayloadAction } from '@reduxjs/toolkit';
-import { addRecentEvent } from 'store/thunks/add-recent-event';
-import { loadMoreRecentEvents } from 'store/thunks/load-more-recent-events';
-import { setActiveMarket } from 'store/thunks/set-active-market';
-import type { RootState } from 'store';
-import type { Candle, CurrencyCandle, MarketParams, MarketStateVars, OutcomeAmounts, OutcomeType, RecentEvent, Team } from 'store/types';
+import { addRecentEvent } from '@/store/thunks/add-recent-event';
+import { loadMoreRecentEvents } from '@/store/thunks/load-more-recent-events';
+import { setActiveMarket } from '@/store/thunks/set-active-market';
+import type { RootState } from '@/store';
+import type { Candle, CurrencyCandle, MarketParams, MarketStateVars, OutcomeAmounts, OutcomeType, RecentEvent, Team } from '@/store/types';
 
 export type ActiveMarketStatus = 'not selected' | 'loading' | 'loaded' | 'error';
 

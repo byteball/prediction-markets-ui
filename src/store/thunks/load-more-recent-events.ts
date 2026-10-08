@@ -1,9 +1,9 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import { uniqBy } from "lodash-es";
 
-import backend from "services/backend";
-import type { AppThunkApiConfig } from "store/hooks";
-import type { RecentEvent } from "store/types";
+import backend from "@/services/backend";
+import type { AppThunkApiConfig } from "@/store/hooks";
+import type { RecentEvent } from "@/store/types";
 
 type Args = { address: string | null; page: number };
 

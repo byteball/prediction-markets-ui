@@ -4,18 +4,18 @@ import ReactGA from "react-ga4";
 import { useTranslation } from "react-i18next";
 import { Loader2 } from "lucide-react";
 
-import { QRButton } from "components/qr-button/qr-button";
-import { TransactionEstimation } from "components/transaction-estimation/transaction-estimation";
-import { useAppSelector } from "store/hooks";
-import { selectActiveAddress, selectActiveMarketParams, selectActiveMarketStateVars, selectUserOutcomeBalances } from "store/slices/active-slice";
-import { selectWalletAddress } from "store/slices/settings-slice";
-import { selectWalletBalance } from "store/slices/user-wallet-slice";
-import { generateLink, getExchangeResult, truncate } from "utils";
+import { QRButton } from "@/components/qr-button/qr-button";
+import { TransactionEstimation } from "@/components/transaction-estimation/transaction-estimation";
+import { useAppSelector } from "@/store/hooks";
+import { selectActiveAddress, selectActiveMarketParams, selectActiveMarketStateVars, selectUserOutcomeBalances } from "@/store/slices/active-slice";
+import { selectWalletAddress } from "@/store/slices/settings-slice";
+import { selectWalletBalance } from "@/store/slices/user-wallet-slice";
+import { generateLink, getExchangeResult, truncate } from "@/utils";
 
-import { Alert, AlertTitle } from "components/ui/alert";
-import { FormItem } from "components/ui/form-item";
-import { InputGroup } from "components/ui/input-group";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "components/ui/select";
+import { Alert, AlertTitle } from "@/components/ui/alert";
+import { FormItem } from "@/components/ui/form-item";
+import { InputGroup } from "@/components/ui/input-group";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
 import { tokenLabel } from "./token-label";
 

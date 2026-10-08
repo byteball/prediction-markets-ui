@@ -1,9 +1,9 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import moment from 'moment';
 
-import client from "services/obyte";
-import { updateDataFeedValue } from "store/slices/active-slice";
-import type { AppThunkApiConfig } from "store/hooks";
+import client from "@/services/obyte";
+import { updateDataFeedValue } from "@/store/slices/active-slice";
+import type { AppThunkApiConfig } from "@/store/hooks";
 
 export const checkDataFeed = createAsyncThunk<void, void, AppThunkApiConfig>(
   'checkDataFeed',

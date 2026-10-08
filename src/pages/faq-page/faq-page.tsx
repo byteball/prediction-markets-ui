@@ -2,7 +2,7 @@ import { Helmet } from "react-helmet-async";
 import { Trans, useTranslation } from "react-i18next";
 
 import styles from "./faq-page.module.css";
-import { PageProvider } from "components/page-provider/page-provider";
+import { PageProvider } from "@/components/page-provider/page-provider";
 
 export const FaqPage = () => {
   const { t } = useTranslation();

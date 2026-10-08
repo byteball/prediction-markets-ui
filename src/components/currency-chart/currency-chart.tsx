@@ -1,10 +1,10 @@
 import type { StockConfig } from '@ant-design/plots';
-import { Stock } from 'components/charts';
+import { Stock } from '@/components/charts';
 import moment from 'moment';
 
-import type { CurrencyCandle } from 'store/types';
+import type { CurrencyCandle } from '@/store/types';
 
-import appConfig from 'app-config';
+import appConfig from '@/app-config';
 
 export interface CurrencyChartParams {
   datafeed_value: number | string;

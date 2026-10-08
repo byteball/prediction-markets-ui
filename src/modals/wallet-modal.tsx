@@ -4,14 +4,14 @@ import { Helmet } from "react-helmet-async";
 import ReactGA from "react-ga4";
 import { Trans, useTranslation } from "react-i18next";
 
-import { selectWalletAddress } from "store/slices/settings-slice";
-import { changeWalletAddress } from "store/thunks/change-wallet-address";
-import { useAppDispatch, useAppSelector } from "store/hooks";
+import { selectWalletAddress } from "@/store/slices/settings-slice";
+import { changeWalletAddress } from "@/store/thunks/change-wallet-address";
+import { useAppDispatch, useAppSelector } from "@/store/hooks";
 
-import { Button } from "components/ui/button";
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "components/ui/dialog";
-import { FormItem } from "components/ui/form-item";
-import { Input } from "components/ui/input";
+import { Button } from "@/components/ui/button";
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { FormItem } from "@/components/ui/form-item";
+import { Input } from "@/components/ui/input";
 
 type WalletModalProps = {
   children?: ReactNode;

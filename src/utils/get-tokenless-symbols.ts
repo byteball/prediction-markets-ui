@@ -1,6 +1,6 @@
 import moment from "moment";
 
-import appConfig from "app-config";
+import appConfig from "@/app-config";
 
 export type OutcomeSymbols = {
   yes_symbol: string;

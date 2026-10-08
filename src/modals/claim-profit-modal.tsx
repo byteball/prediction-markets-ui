@@ -3,12 +3,12 @@ import { Helmet } from "react-helmet-async";
 import { useTranslation } from "react-i18next";
 import { Img } from "react-image";
 
-import { ClaimProfitForm } from "forms";
-import { useAppSelector } from "store/hooks";
-import { selectActiveAddress, selectActiveMarketParams, selectActiveMarketStateVars, selectActiveMarketStatus, selectUserOutcomeBalances } from "store/slices/active-slice";
-import { selectWalletAddress } from "store/slices/settings-slice";
+import { ClaimProfitForm } from "@/forms";
+import { useAppSelector } from "@/store/hooks";
+import { selectActiveAddress, selectActiveMarketParams, selectActiveMarketStateVars, selectActiveMarketStatus, selectUserOutcomeBalances } from "@/store/slices/active-slice";
+import { selectWalletAddress } from "@/store/slices/settings-slice";
 
-import { Button } from "components/ui/button";
+import { Button } from "@/components/ui/button";
 import { ModalSheet } from "./modal-sheet";
 
 import styles from "./claim-profit-modal.module.css";

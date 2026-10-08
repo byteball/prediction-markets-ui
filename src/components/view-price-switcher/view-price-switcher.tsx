@@ -1,11 +1,11 @@
 import { useTranslation } from "react-i18next";
 import { Switch as SwitchPrimitive } from "radix-ui";
 
-import { changeViewType, selectPriceOrOdds } from "store/slices/settings-slice";
-import { useAppDispatch, useAppSelector } from "store/hooks";
-import { useTapTooltip } from "hooks/use-tap-tooltip";
+import { changeViewType, selectPriceOrOdds } from "@/store/slices/settings-slice";
+import { useAppDispatch, useAppSelector } from "@/store/hooks";
+import { useTapTooltip } from "@/hooks/use-tap-tooltip";
 
-import { Tooltip, TooltipContent, TooltipTrigger } from "components/ui/tooltip";
+import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 
 export const ViewPriceSwitcher = () => {
   const dispatch = useAppDispatch();

@@ -1,24 +1,24 @@
-import { store } from "store/store";
+import { store } from "@/store/store";
 import { isEmpty } from "lodash-es";
 import { toast } from "sonner";
 
-import client from "services/obyte";
+import client from "@/services/obyte";
 
-import { updateStateForActualMarket, updateSymbolForActualMarket } from "store/slices/active-slice";
-import { updateCreationOrder } from "store/slices/settings-slice";
-import { setActiveMarket } from "store/thunks/set-active-market";
-import { checkCreationOrder } from "store/thunks/check-creation-order";
-import { checkDataFeed } from "store/thunks/check-data-feed";
-import { loadEVMTokens } from "store/thunks/load-evm-tokens";
-import { loadUserBalance } from "store/thunks/load-user-balance";
-import { addRecentEvent } from "store/thunks/add-recent-event";
-import type { AAResponseBody, FactoryPredictionVar, HubMessage, ObyteMessage, ObyteMessagePayload, OutcomeType, StateVarValue } from "store/types";
-import { normalizeStateVars } from "utils/normalize-state-vars";
+import { updateStateForActualMarket, updateSymbolForActualMarket } from "@/store/slices/active-slice";
+import { updateCreationOrder } from "@/store/slices/settings-slice";
+import { setActiveMarket } from "@/store/thunks/set-active-market";
+import { checkCreationOrder } from "@/store/thunks/check-creation-order";
+import { checkDataFeed } from "@/store/thunks/check-data-feed";
+import { loadEVMTokens } from "@/store/thunks/load-evm-tokens";
+import { loadUserBalance } from "@/store/thunks/load-user-balance";
+import { addRecentEvent } from "@/store/thunks/add-recent-event";
+import type { AAResponseBody, FactoryPredictionVar, HubMessage, ObyteMessage, ObyteMessagePayload, OutcomeType, StateVarValue } from "@/store/types";
+import { normalizeStateVars } from "@/utils/normalize-state-vars";
 
-import i18n from "locale";
-import config from "app-config";
+import i18n from "@/locale";
+import config from "@/app-config";
 
-import { router } from "router";
+import { router } from "@/router";
 
 type HubEvent = [string, HubMessage];
 

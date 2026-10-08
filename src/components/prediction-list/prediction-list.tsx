@@ -4,15 +4,15 @@ import { t } from "i18next";
 import { Loader2 } from "lucide-react";
 
 import { PredictionItem, type PredictionItemProps } from "./prediction-item";
-import { SwitchActions } from "components/switch-actions/switch-actions";
-import { selectLanguage } from "store/slices/settings-slice";
-import { useAppSelector } from "store/hooks";
-import { getEmojiByType, transformChampionshipName, getSportNameByType, getCategoryName } from "utils";
+import { SwitchActions } from "@/components/switch-actions/switch-actions";
+import { selectLanguage } from "@/store/slices/settings-slice";
+import { useAppSelector } from "@/store/hooks";
+import { getEmojiByType, transformChampionshipName, getSportNameByType, getCategoryName } from "@/utils";
 
-import { useMarket, useChampionships, useCalendar } from "hooks";
-import { QUERY_CURRENCY_KEY } from "hooks/use-calendar";
+import { useMarket, useChampionships, useCalendar } from "@/hooks";
+import { QUERY_CURRENCY_KEY } from "@/hooks/use-calendar";
 
-import { Button } from "components/ui/button";
+import { Button } from "@/components/ui/button";
 
 import styles from "./prediction-list.module.css";
 

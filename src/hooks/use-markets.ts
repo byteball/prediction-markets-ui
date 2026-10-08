@@ -1,8 +1,8 @@
 import useSWRInfinite from 'swr/infinite';
 
-import type { PredictionItemProps } from 'components/prediction-list/prediction-item';
+import type { PredictionItemProps } from '@/components/prediction-list/prediction-item';
 
-import appConfig from 'app-config';
+import appConfig from '@/app-config';
 
 export type Market = PredictionItemProps & { aa_address: string };
 

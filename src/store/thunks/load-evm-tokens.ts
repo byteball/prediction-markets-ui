@@ -1,8 +1,8 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
-import appConfig from "app-config";
+import appConfig from "@/app-config";
 import { groupBy } from "lodash-es";
 
-import type { Bridge } from "store/types";
+import type { Bridge } from "@/store/types";
 
 export const loadEVMTokens = createAsyncThunk<Record<string, Bridge[]>, void>(
   'loadEVMTokens',

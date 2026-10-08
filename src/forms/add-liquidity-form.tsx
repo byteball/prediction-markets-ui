@@ -1,28 +1,28 @@
 import { useEffect, useMemo, useState, type ChangeEvent } from "react";
 import type { PieConfig } from "@ant-design/plots";
-import { Pie } from "components/charts";
+import { Pie } from "@/components/charts";
 import { toast } from "sonner";
 import { isNumber } from "lodash-es";
 import ReactGA from "react-ga4";
 import { Trans, useTranslation } from "react-i18next";
 
-import appConfig from "app-config";
-import client from "services/obyte";
+import appConfig from "@/app-config";
+import client from "@/services/obyte";
 
-import { QRButton } from "components/qr-button/qr-button";
-import { WalletModal } from "modals";
-import { useAppSelector } from "store/hooks";
-import { selectActiveAddress, selectActiveMarketParams, selectActiveMarketStateVars } from "store/slices/active-slice";
-import { selectTokensByNetwork } from "store/slices/bridges-slice";
-import { selectWalletAddress } from "store/slices/settings-slice";
-import { capitalizeFirstLetter, generateLink, getExchangeResult, getMarketPriceByType } from "utils";
+import { QRButton } from "@/components/qr-button/qr-button";
+import { WalletModal } from "@/modals";
+import { useAppSelector } from "@/store/hooks";
+import { selectActiveAddress, selectActiveMarketParams, selectActiveMarketStateVars } from "@/store/slices/active-slice";
+import { selectTokensByNetwork } from "@/store/slices/bridges-slice";
+import { selectWalletAddress } from "@/store/slices/settings-slice";
+import { capitalizeFirstLetter, generateLink, getExchangeResult, getMarketPriceByType } from "@/utils";
 
-import { Alert, AlertDescription, AlertTitle } from "components/ui/alert";
-import { Button } from "components/ui/button";
-import { Combobox, type ComboboxOption } from "components/ui/combobox";
-import { FormItem } from "components/ui/form-item";
-import { Input } from "components/ui/input";
-import { InputGroup } from "components/ui/input-group";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { Button } from "@/components/ui/button";
+import { Combobox, type ComboboxOption } from "@/components/ui/combobox";
+import { FormItem } from "@/components/ui/form-item";
+import { Input } from "@/components/ui/input";
+import { InputGroup } from "@/components/ui/input-group";
 
 const f = (x: unknown) => (~(x + "").indexOf(".") ? (x + "").split(".")[1].length : 0);
 const floorDecimals = (number: number, decimals: number) => Math.floor(number * 10 ** decimals) / 10 ** decimals;

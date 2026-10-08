@@ -2,7 +2,7 @@ import obyte from "obyte";
 import { isNumber } from "lodash-es";
 import moment from "moment";
 
-import i18n from "locale";
+import i18n from "@/locale";
 
 type Validator = (value: string | number | boolean | undefined) => boolean | string | number | undefined;
 

@@ -2,12 +2,12 @@ import { Outlet, ScrollRestoration, useLocation } from "react-router-dom";
 import { memo, useEffect } from "react";
 import { Helmet } from "react-helmet-async";
 
-import { Footer } from "components/footer/footer";
-import { Header } from "components/header/header";
+import { Footer } from "@/components/footer/footer";
+import { Header } from "@/components/header/header";
 
-import { getAlternateMetaList } from "utils";
-import { useAppDispatch } from "store/hooks";
-import { loadReserveAssets } from "store/thunks/load-reserve-assets";
+import { getAlternateMetaList } from "@/utils";
+import { useAppDispatch } from "@/store/hooks";
+import { loadReserveAssets } from "@/store/thunks/load-reserve-assets";
 
 export const Layout = memo(() => {
   const location = useLocation();

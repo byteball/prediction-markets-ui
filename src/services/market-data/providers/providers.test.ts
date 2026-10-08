@@ -1,7 +1,7 @@
 import axios from "axios";
 
-import { store } from "store/store";
-import { cacheSearchResult } from "store/slices/search-cache-slice";
+import { store } from "@/store/store";
+import { cacheSearchResult } from "@/store/slices/search-cache-slice";
 import { coingeckoProvider } from "./coingecko";
 import { coinbaseProvider } from "./coinbase";
 import { krakenProvider } from "./kraken";
@@ -17,7 +17,7 @@ vi.mock("axios", () => {
 });
 
 // Stub the store the id resolver reads/writes (empty cache by default).
-vi.mock("store/store", () => ({
+vi.mock("@/store/store", () => ({
   store: { getState: vi.fn(), dispatch: vi.fn() }
 }));
 
