@@ -9,6 +9,7 @@ import type { MarketParams, RecentEvent } from "store/types";
 
 import i18n from "locale";
 import appConfig from "appConfig";
+import { getExplorerUrl } from "utils";
 
 import { Button } from "@/components/ui/button";
 
@@ -16,7 +17,6 @@ import styles from "./RecentEvents.module.css";
 
 const limitStep = 5;
 
-const explorerBase = `https://${appConfig.ENVIRONMENT === "testnet" ? "testnet" : ""}explorer.obyte.org`;
 
 type RecentEventItemProps = Pick<RecentEvent, "type" | "trigger_unit" | "trigger_address" | "timestamp" | "reserve_amount" | "yes_amount" | "no_amount" | "draw_amount"> &
   Pick<MarketParams, "reserve_decimals" | "reserve_symbol" | "yes_symbol" | "no_symbol" | "draw_symbol" | "yes_decimals" | "no_decimals" | "draw_decimals" | "allow_draw">;
@@ -63,7 +63,7 @@ const RecentEventItem = ({
   const values = { address: trigger_address.slice(0, 16), amount: reserveAmount, symbol: reserve_symbol };
 
   const addressLink = (
-    <a href={`${explorerBase}/address/${trigger_address}`} target="_blank" rel="noopener">
+    <a href={getExplorerUrl("address", trigger_address)} target="_blank" rel="noopener">
       {"{{address}}"}...
     </a>
   );
@@ -97,7 +97,7 @@ const RecentEventItem = ({
   return (
     <div className={styles.eventWrap}>
       <div>{Event}</div>
-      <a href={`${explorerBase}/${trigger_unit}`} target="_blank" rel="noopener" className={styles.timestamp}>
+      <a href={getExplorerUrl("unit", trigger_unit)} target="_blank" rel="noopener" className={styles.timestamp}>
         {moment.unix(timestamp).format(format)}
       </a>
     </div>

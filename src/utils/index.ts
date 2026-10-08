@@ -14,11 +14,13 @@ import { getAlternatePaths, getAlternateMetaList } from "./getAlternatePaths";
 import { botCheck } from "./botCheck";
 import { isDrawAllowed } from "./isDrawAllowed";
 import { getTokenlessSymbols } from "./getTokenlessSymbols";
+import { getExplorerUrl } from "./getExplorerUrl";
 import { normalizeStateVars } from "./normalizeStateVars";
 
 export {
   encodeData,
   getTokenlessSymbols,
+  getExplorerUrl,
   normalizeStateVars,
   generateLink,
   getExchangeResult,

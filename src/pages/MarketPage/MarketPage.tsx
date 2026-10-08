@@ -34,7 +34,7 @@ import { setActiveMarket } from "store/thunks/setActiveMarket";
 import { selectLanguage, selectPriceOrOdds, selectReserveAssets, selectReservesRate } from "store/slices/settingsSlice";
 import { useAppDispatch, useAppSelector } from "store/hooks";
 import type { Team } from "store/types";
-import { getMarketPriceByType, generateLink, generateTextEvent, getEstimatedAPY, transformChampionshipName } from "utils";
+import { getMarketPriceByType, generateLink, generateTextEvent, getEstimatedAPY, getExplorerUrl, transformChampionshipName } from "utils";
 
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
@@ -444,7 +444,6 @@ export const MarketPage = () => {
   const seoText = kebabCase(eventUTC);
   const leagueView = transformChampionshipName(league as string, params.feed_name.split("_")?.[0]);
 
-  const explorerBase = `https://${appConfig.ENVIRONMENT === "testnet" ? "testnet" : ""}explorer.obyte.org`;
 
   const teamsKnown = !(teams.yes === null || teams.no === null);
 
@@ -528,7 +527,7 @@ export const MarketPage = () => {
             <AlertDescription className="text-foreground">
               <Trans i18nKey="pages.market.unknown_oracle">
                 This market uses an oracle{" "}
-                <a style={{ color: "#fff" }} href={`${explorerBase}/#${oracle}`} target="_blank" rel="noopener">
+                <a style={{ color: "#fff" }} href={getExplorerUrl("address", oracle)} target="_blank" rel="noopener">
                   {oracle}
                 </a>{" "}
                 that is unknown to this website, trade with care.

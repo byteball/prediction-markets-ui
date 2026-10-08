@@ -6,7 +6,7 @@ import { useTranslation } from "react-i18next";
 
 import { getParamList } from "forms/createParams";
 
-import appConfig from "appConfig";
+import { getExplorerUrl } from "utils";
 
 import { Button } from "@/components/ui/button";
 import { ModalSheet } from "./ModalSheet";
@@ -28,7 +28,6 @@ type ViewParamsModalProps = {
   quiet_period?: number;
 };
 
-const explorerBase = `https://${appConfig.ENVIRONMENT === "testnet" ? "testnet" : ""}explorer.obyte.org`;
 
 export const ViewParamsModal = ({
   reserve_asset,
@@ -68,7 +67,7 @@ export const ViewParamsModal = ({
       <ModalSheet open={visible} onOpenChange={setVisible} title={t("modals.view_params.title", "View params")} headerClassName="pb-0">
         <div className="text-base">
           <p>
-            <a href={`${explorerBase}/address/${aa_address}`} target="_blank" rel="noopener">
+            <a href={getExplorerUrl("address", aa_address)} target="_blank" rel="noopener">
               {t("modals.view_params.explorer", "View AA on explorer")}
             </a>
           </p>
@@ -82,7 +81,7 @@ export const ViewParamsModal = ({
           </p>
           <p>
             <b>{paramList.oracle.name}: </b>
-            <a href={`${explorerBase}/address/${oracle}`} target="_blank" rel="noopener">
+            <a href={getExplorerUrl("address", oracle)} target="_blank" rel="noopener">
               {oracle}
             </a>
           </p>
