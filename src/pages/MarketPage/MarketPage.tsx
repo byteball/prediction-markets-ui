@@ -36,11 +36,11 @@ import { useAppDispatch, useAppSelector } from "store/hooks";
 import type { Team } from "store/types";
 import { getMarketPriceByType, generateLink, generateTextEvent, getEstimatedAPY, getExplorerUrl, transformChampionshipName } from "utils";
 
-import { Alert, AlertDescription } from "@/components/ui/alert";
-import { Button } from "@/components/ui/button";
-import { Countdown } from "@/components/ui/countdown";
-import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
+import { Alert, AlertDescription } from "components/ui/alert";
+import { Button } from "components/ui/button";
+import { Countdown } from "components/ui/countdown";
+import { Tabs, TabsList, TabsTrigger } from "components/ui/tabs";
+import { Tooltip, TooltipContent, TooltipTrigger } from "components/ui/tooltip";
 
 import i18n from "locale";
 import appConfig from "appConfig";
@@ -502,7 +502,7 @@ export const MarketPage = () => {
           <TradeModal visible={visibleTradeModal} setVisible={setVisibleTradeModal} disabled={!tradeIsActive} reserve={reserve} yes_team={teams?.yes?.name} no_team={teams?.no?.name} />
           {showCommitResultButton &&
             (datafeedValue ? (
-              <QRButton type="primary" size="large" href={commitResultLink}>
+              <QRButton size="lg" href={commitResultLink}>
                 {t("pages.market.commit_result", "Commit result")}
               </QRButton>
             ) : (

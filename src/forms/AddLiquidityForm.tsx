@@ -17,12 +17,12 @@ import { selectTokensByNetwork } from "store/slices/bridgesSlice";
 import { selectWalletAddress } from "store/slices/settingsSlice";
 import { capitalizeFirstLetter, generateLink, getExchangeResult, getMarketPriceByType } from "utils";
 
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { Button } from "@/components/ui/button";
-import { Combobox, type ComboboxOption } from "@/components/ui/combobox";
-import { FormItem } from "@/components/ui/form-item";
-import { Input } from "@/components/ui/input";
-import { InputGroup } from "@/components/ui/input-group";
+import { Alert, AlertDescription, AlertTitle } from "components/ui/alert";
+import { Button } from "components/ui/button";
+import { Combobox, type ComboboxOption } from "components/ui/combobox";
+import { FormItem } from "components/ui/form-item";
+import { Input } from "components/ui/input";
+import { InputGroup } from "components/ui/input-group";
 
 const f = (x: unknown) => (~(x + "").indexOf(".") ? (x + "").split(".")[1].length : 0);
 const floorDecimals = (number: number, decimals: number) => Math.floor(number * 10 ** decimals) / 10 ** decimals;
@@ -543,7 +543,7 @@ export const AddLiquidityForm = ({ yes_team, no_team }: AddLiquidityFormProps) =
 
       <FormItem>
         {fromToken.network === "Obyte" ? (
-          <QRButton size="large" type="primary" disabled={!valid || !probabilitiesAreValid} onClick={addLiquidity} href={link}>
+          <QRButton size="lg" disabled={!valid || !probabilitiesAreValid} onClick={addLiquidity} href={link}>
             {t("forms.common.send", "Send")}
             {reserveAmount.valid && reserveAmount.value ? ` ${reserveAmount.value} ${reserve_symbol}` : ""}
           </QRButton>

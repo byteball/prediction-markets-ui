@@ -6,9 +6,9 @@ import { generateLink, truncate } from "utils";
 import { useAppSelector } from "store/hooks";
 import { selectWalletBalance } from "store/slices/userWalletSlice";
 
-import { FormItem } from "@/components/ui/form-item";
-import { InputGroup } from "@/components/ui/input-group";
-import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
+import { FormItem } from "components/ui/form-item";
+import { InputGroup } from "components/ui/input-group";
+import { Tooltip, TooltipContent, TooltipTrigger } from "components/ui/tooltip";
 
 const f = (x: unknown) => (~(x + "").indexOf(".") ? (x + "").split(".")[1].length : 0);
 
@@ -106,7 +106,7 @@ export const ClaimProfitForm = ({ address, asset, supply = 0, reserve = 0, decim
       </FormItem>
 
       <FormItem>
-        <QRButton type="primary" size="large" disabled={!amountIsValid || (!isTokenless && !asset)} href={link}>
+        <QRButton size="lg" disabled={!amountIsValid || (!isTokenless && !asset)} href={link}>
           {t("forms.claim_profit.claim_profit", "Claim profit")}
         </QRButton>
       </FormItem>

@@ -3,7 +3,7 @@ import { Check, ChevronDown } from "lucide-react"
 import { cn } from "cn"
 
 import i18n from "locale"
-import { Popover, PopoverAnchor, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
+import { Popover, PopoverAnchor, PopoverContent, PopoverTrigger } from "components/ui/popover"
 
 export type ComboboxOption = {
   value: string

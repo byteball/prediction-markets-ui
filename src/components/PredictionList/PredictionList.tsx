@@ -12,7 +12,7 @@ import { getEmojiByType, transformChampionshipName, getSportNameByType, getCateg
 import { useMarket, useChampionships, useCalendar } from "hooks";
 import { QUERY_CURRENCY_KEY } from "hooks/useCalendar";
 
-import { Button } from "@/components/ui/button";
+import { Button } from "components/ui/button";
 
 import styles from "./PredictionList.module.css";
 

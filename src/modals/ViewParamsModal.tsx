@@ -8,7 +8,7 @@ import { getParamList } from "forms/createParams";
 
 import { getExplorerUrl } from "utils";
 
-import { Button } from "@/components/ui/button";
+import { Button } from "components/ui/button";
 import { ModalSheet } from "./ModalSheet";
 
 type ViewParamsModalProps = {

@@ -10,8 +10,8 @@ import { useAppSelector } from "store/hooks";
 import { selectActiveMarketStatus } from "store/slices/activeSlice";
 import { capitalizeFirstLetter } from "utils";
 
-import { Button } from "@/components/ui/button";
-import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
+import { Button } from "components/ui/button";
+import { Tooltip, TooltipContent, TooltipTrigger } from "components/ui/tooltip";
 import { ModalSheet } from "./ModalSheet";
 
 export type TradeModalVisible = false | true | { type: "yes" | "no" | "draw"; action?: "buy" | "redeem" };

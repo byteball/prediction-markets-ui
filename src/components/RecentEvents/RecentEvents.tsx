@@ -11,7 +11,7 @@ import i18n from "locale";
 import appConfig from "appConfig";
 import { getExplorerUrl } from "utils";
 
-import { Button } from "@/components/ui/button";
+import { Button } from "components/ui/button";
 
 import styles from "./RecentEvents.module.css";
 

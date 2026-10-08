@@ -5,7 +5,7 @@ import { changeViewType, selectPriceOrOdds } from "store/slices/settingsSlice";
 import { useAppDispatch, useAppSelector } from "store/hooks";
 import { useTapTooltip } from "hooks/useTapTooltip";
 
-import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
+import { Tooltip, TooltipContent, TooltipTrigger } from "components/ui/tooltip";
 
 export const ViewPriceSwitcher = () => {
   const dispatch = useAppDispatch();

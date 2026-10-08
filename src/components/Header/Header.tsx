@@ -10,8 +10,8 @@ import { SelectLanguage } from "components/SelectLanguage/SelectLanguage";
 import { useWindowSize } from "hooks";
 import { WalletModal } from "modals";
 
-import { Button } from "@/components/ui/button";
-import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle } from "@/components/ui/sheet";
+import { Button } from "components/ui/button";
+import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle } from "components/ui/sheet";
 
 import styles from "./Header.module.css";
 

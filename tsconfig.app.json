@@ -9,9 +9,6 @@
     "useDefineForClassFields": true,
 
     "baseUrl": "./src",
-    "paths": {
-      "@/*": ["./*"]
-    },
 
     "allowJs": false,
     "noEmit": true,

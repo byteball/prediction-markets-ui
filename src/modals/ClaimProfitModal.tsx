@@ -8,7 +8,7 @@ import { useAppSelector } from "store/hooks";
 import { selectActiveAddress, selectActiveMarketParams, selectActiveMarketStateVars, selectActiveMarketStatus, selectUserOutcomeBalances } from "store/slices/activeSlice";
 import { selectWalletAddress } from "store/slices/settingsSlice";
 
-import { Button } from "@/components/ui/button";
+import { Button } from "components/ui/button";
 import { ModalSheet } from "./ModalSheet";
 
 import styles from "./ClaimProfitModal.module.css";

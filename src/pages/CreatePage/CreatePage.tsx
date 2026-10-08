@@ -8,8 +8,8 @@ import { useAppDispatch, useAppSelector } from "store/hooks";
 import { WaitingPredictionMarket } from "./WaitingPredictionMarket";
 import { PageProvider } from "components/PageProvider/PageProvider";
 
-import { Button } from "@/components/ui/button";
-import { Result } from "@/components/ui/result";
+import { Button } from "components/ui/button";
+import { Result } from "components/ui/result";
 
 export const CreatePage = () => {
   const creationOrder = useAppSelector(selectCreationOrder);

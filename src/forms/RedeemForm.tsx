@@ -12,10 +12,10 @@ import { selectWalletAddress } from "store/slices/settingsSlice";
 import { selectWalletBalance } from "store/slices/userWalletSlice";
 import { generateLink, getExchangeResult, truncate } from "utils";
 
-import { Alert, AlertTitle } from "@/components/ui/alert";
-import { FormItem } from "@/components/ui/form-item";
-import { InputGroup } from "@/components/ui/input-group";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Alert, AlertTitle } from "components/ui/alert";
+import { FormItem } from "components/ui/form-item";
+import { InputGroup } from "components/ui/input-group";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "components/ui/select";
 
 import { tokenLabel } from "./tokenLabel";
 
@@ -200,7 +200,7 @@ export const RedeemForm = memo(({ type, yes_team, no_team, amount, setAmount }: 
       ) : null}
 
       <FormItem>
-        <QRButton ref={btnRef} href={link} size="large" disabled={!canSend || !amount.valid || !Number(amount.value) || payoutValue <= 0} type="primary" onClick={redeem}>
+        <QRButton ref={btnRef} href={link} size="lg" disabled={!canSend || !amount.valid || !Number(amount.value) || payoutValue <= 0} onClick={redeem}>
           {t("forms.common.send", "Send")} {amount.valid && Number(amount.value) ? Number(amount.value) : ""} {truncate(currentToken.symbol, { length: 14 })}
         </QRButton>
       </FormItem>

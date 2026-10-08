@@ -5,7 +5,7 @@ import { useTranslation } from "react-i18next";
 import { CreateNowForm } from "forms";
 import type { CreateNowFormProps } from "forms/CreateNowForm";
 
-import { Button } from "@/components/ui/button";
+import { Button } from "components/ui/button";
 import { ModalSheet } from "./ModalSheet";
 
 type CreateNowModalProps = CreateNowFormProps;

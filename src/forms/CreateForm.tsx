@@ -17,14 +17,14 @@ import appConfig from "appConfig";
 import { getParamList, type Param, type ParamKey } from "./createParams";
 import type { CreationOrderData } from "store/types";
 
-import { Alert, AlertDescription } from "@/components/ui/alert";
-import { Combobox } from "@/components/ui/combobox";
-import { DateTimePicker } from "@/components/ui/datetime-picker";
-import { FormItem, type FormItemStatus } from "@/components/ui/form-item";
-import { Input } from "@/components/ui/input";
-import { InputGroup } from "@/components/ui/input-group";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Switch } from "@/components/ui/switch";
+import { Alert, AlertDescription } from "components/ui/alert";
+import { Combobox } from "components/ui/combobox";
+import { DateTimePicker } from "components/ui/datetime-picker";
+import { FormItem, type FormItemStatus } from "components/ui/form-item";
+import { Input } from "components/ui/input";
+import { InputGroup } from "components/ui/input-group";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "components/ui/select";
+import { Switch } from "components/ui/switch";
 
 type Field<T = string | number> = { value: T; valid: boolean };
 
@@ -374,7 +374,7 @@ export const CreateForm = () => {
 
       {category.value !== "sport" && (
         <FormItem>
-          <QRButton disabled={!isValidForm || category.value === "sport"} size="large" onClick={save} href={link} type="primary">
+          <QRButton disabled={!isValidForm || category.value === "sport"} size="lg" onClick={save} href={link}>
             {t("forms.common.create", "Create")}
           </QRButton>
         </FormItem>

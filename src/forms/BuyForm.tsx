@@ -18,12 +18,12 @@ import { generateLink } from "utils";
 import appConfig from "appConfig";
 import client from "services/obyte";
 
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { Button } from "@/components/ui/button";
-import { Combobox, type ComboboxOption } from "@/components/ui/combobox";
-import { FormItem } from "@/components/ui/form-item";
-import { Input } from "@/components/ui/input";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Alert, AlertDescription, AlertTitle } from "components/ui/alert";
+import { Button } from "components/ui/button";
+import { Combobox, type ComboboxOption } from "components/ui/combobox";
+import { FormItem } from "components/ui/form-item";
+import { Input } from "components/ui/input";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "components/ui/select";
 
 import type { AmountState } from "./RedeemForm";
 import { tokenLabel } from "./tokenLabel";
@@ -373,7 +373,7 @@ export const BuyForm = ({ type, yes_team, no_team, amount, setAmount }: BuyFormP
 
       <FormItem>
         {fromToken.network === "Obyte" ? (
-          <QRButton size="large" ref={btnRef} href={link} disabled={!amount.valid || !Number(amount.value)} type="primary" onClick={buyForReserve}>
+          <QRButton size="lg" ref={btnRef} href={link} disabled={!amount.valid || !Number(amount.value)} onClick={buyForReserve}>
             {t("forms.common.send", "Send")}
             {amount.valid && amount.value ? ` ${amount.value}` : ""} {reserve_symbol}
           </QRButton>

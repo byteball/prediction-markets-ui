@@ -8,10 +8,10 @@ import { selectWalletAddress } from "store/slices/settingsSlice";
 import { changeWalletAddress } from "store/thunks/changeWalletAddress";
 import { useAppDispatch, useAppSelector } from "store/hooks";
 
-import { Button } from "@/components/ui/button";
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import { FormItem } from "@/components/ui/form-item";
-import { Input } from "@/components/ui/input";
+import { Button } from "components/ui/button";
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "components/ui/dialog";
+import { FormItem } from "components/ui/form-item";
+import { Input } from "components/ui/input";
 
 type WalletModalProps = {
   children?: ReactNode;

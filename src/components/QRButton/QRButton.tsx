@@ -4,9 +4,9 @@ import { QrCode } from "lucide-react";
 import { Trans, useTranslation } from "react-i18next";
 import { cn } from "cn";
 
-import { Button, type ButtonProps } from "@/components/ui/button";
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
+import { Button, type ButtonProps } from "components/ui/button";
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "components/ui/dialog";
+import { Tooltip, TooltipContent, TooltipTrigger } from "components/ui/tooltip";
 
 import { AppStoreIcon, PlayMarketIcon } from "./StoreIcons";
 
@@ -18,20 +18,17 @@ export type QRButtonProps = {
   children?: ReactNode;
   onClick?: (ev: MouseEvent<HTMLElement>) => void;
   disabled?: boolean;
-  size?: "small" | "middle" | "large";
-  type?: "primary" | "default" | "link";
+  variant?: ButtonProps["variant"];
+  size?: "sm" | "default" | "lg";
   className?: string;
 };
 
-const sizeMap: Record<NonNullable<QRButtonProps["size"]>, ButtonProps["size"]> = { small: "sm", middle: "default", large: "lg" };
-
-export const QRButton = forwardRef<HTMLAnchorElement, QRButtonProps>(function QRButton({ href, children, onClick, disabled = false, size = "middle", type = "default", className }, ref) {
+export const QRButton = forwardRef<HTMLAnchorElement, QRButtonProps>(function QRButton({ href, children, onClick, disabled = false, variant = "outline", size = "default", className }, ref) {
   const [qrOpen, setQrOpen] = useState(false);
   const [downloadType, setDownloadType] = useState<false | "ios" | "android">(false);
   const { t } = useTranslation();
 
-  const variant: ButtonProps["variant"] = type === "primary" ? "default" : type === "link" ? "link" : "outline";
-  const btnSize = sizeMap[size];
+  const iconSize: ButtonProps["size"] = size === "lg" ? "icon-lg" : size === "sm" ? "icon-sm" : "icon";
 
   const openQr = (ev: MouseEvent<HTMLButtonElement>) => {
     setQrOpen(true);
@@ -43,7 +40,7 @@ export const QRButton = forwardRef<HTMLAnchorElement, QRButtonProps>(function QR
       <div data-slot="button-group" className={cn("inline-flex items-stretch [&>*:first-child]:rounded-r-none [&>*:last-child]:rounded-l-none [&>*:last-child]:border-l-0", className)}>
         <Tooltip>
           <TooltipTrigger asChild>
-            <Button type="button" variant={variant} size={btnSize === "lg" ? "icon-lg" : btnSize === "sm" ? "icon-sm" : "icon"} disabled={disabled} onClick={openQr} aria-label={t("qr_button.tooltip_mob", "Send the transaction from your mobile phone")}>
+            <Button type="button" variant={variant} size={iconSize} disabled={disabled} onClick={openQr} aria-label={t("qr_button.tooltip_mob", "Send the transaction from your mobile phone")}>
               <QrCode />
             </Button>
           </TooltipTrigger>
@@ -53,12 +50,12 @@ export const QRButton = forwardRef<HTMLAnchorElement, QRButtonProps>(function QR
           <TooltipTrigger asChild>
             {disabled ? (
               <span tabIndex={0} className="inline-flex">
-                <Button type="button" variant={variant} size={btnSize} className="rounded-l-none border-l-0" disabled>
+                <Button type="button" variant={variant} size={size} className="rounded-l-none border-l-0" disabled>
                   {children}
                 </Button>
               </span>
             ) : (
-              <Button variant={variant} size={btnSize} asChild>
+              <Button variant={variant} size={size} asChild>
                 <a href={href} ref={ref} onClick={onClick}>
                   {children}
                 </a>

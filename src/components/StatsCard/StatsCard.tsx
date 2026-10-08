@@ -3,7 +3,7 @@ import { Download, Upload } from "lucide-react";
 import { useTranslation } from "react-i18next";
 
 import { InfoTooltip } from "components/InfoTooltip/InfoTooltip";
-import { Button } from "@/components/ui/button";
+import { Button } from "components/ui/button";
 
 import styles from "./StatsCard.module.css";
 

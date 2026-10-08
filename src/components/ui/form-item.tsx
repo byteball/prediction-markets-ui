@@ -1,8 +1,6 @@
 import { useId, type ReactNode } from "react"
 import { cn } from "cn"
 
-import { Field, FieldDescription, FieldError, FieldLabel } from "@/components/ui/field"
-
 export type FormItemStatus = "success" | "warning" | "error" | "validating" | "" | undefined
 
 type ControlProps = {
@@ -34,30 +32,30 @@ function FormItem({ label, help, extra, status, className, id: idProp, htmlFor, 
   const labelFor = htmlFor ?? (typeof children === "function" ? id : undefined)
 
   return (
-    <Field data-slot="form-item" data-status={status || undefined} className={cn("mb-6 gap-1.5", className)}>
+    <div role="group" data-slot="form-item" data-status={status || undefined} className={cn("mb-6 flex w-full flex-col gap-1.5", className)}>
       {label ? (
-        <FieldLabel htmlFor={labelFor} className="text-base font-normal text-white/45">
+        <label htmlFor={labelFor} className="flex w-fit items-center gap-2 text-base leading-snug font-normal text-white/45 select-none">
           {label}
-        </FieldLabel>
+        </label>
       ) : null}
       {typeof children === "function" ? children(control) : children}
       {help ? (
         isError ? (
-          <FieldError id={helpId} className="text-xs">
+          <div id={helpId} role="alert" className="text-xs text-destructive">
             {help}
-          </FieldError>
+          </div>
         ) : (
-          <FieldDescription id={helpId} className={cn("text-xs", status === "warning" && "text-draw")}>
+          <p id={helpId} className={cn("text-xs leading-normal text-muted-foreground [&>a]:underline [&>a]:underline-offset-4", status === "warning" && "text-draw")}>
             {help}
-          </FieldDescription>
+          </p>
         )
       ) : null}
       {extra ? (
-        <FieldDescription id={extraId} className="text-xs">
+        <p id={extraId} className="text-xs leading-normal text-muted-foreground [&>a]:underline [&>a]:underline-offset-4">
           {extra}
-        </FieldDescription>
+        </p>
       ) : null}
-    </Field>
+    </div>
   )
 }
 

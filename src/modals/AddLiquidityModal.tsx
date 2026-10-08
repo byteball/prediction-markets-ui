@@ -7,7 +7,7 @@ import { AddLiquidityForm } from "forms";
 import { useAppSelector } from "store/hooks";
 import { selectActiveMarketStatus } from "store/slices/activeSlice";
 
-import { Button } from "@/components/ui/button";
+import { Button } from "components/ui/button";
 import { ModalSheet } from "./ModalSheet";
 
 type AddLiquidityModalProps = {

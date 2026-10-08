@@ -16,13 +16,13 @@ import appConfig from "appConfig";
 import { getParamList, type Param, type ParamKey } from "./createParams";
 import type { CreationOrderData } from "store/types";
 
-import { Combobox } from "@/components/ui/combobox";
-import { DateTimePicker } from "@/components/ui/datetime-picker";
-import { FormItem, type FormItemStatus } from "@/components/ui/form-item";
-import { Input } from "@/components/ui/input";
-import { InputGroup } from "@/components/ui/input-group";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Switch } from "@/components/ui/switch";
+import { Combobox } from "components/ui/combobox";
+import { DateTimePicker } from "components/ui/datetime-picker";
+import { FormItem, type FormItemStatus } from "components/ui/form-item";
+import { Input } from "components/ui/input";
+import { InputGroup } from "components/ui/input-group";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "components/ui/select";
+import { Switch } from "components/ui/switch";
 
 import styles from "../components/PredictionList/PredictionItem.module.css";
 
@@ -353,7 +353,7 @@ export const CreateNowForm = ({ feed_name, event_date, expect_datafeed_value, ye
         )}
       </div>
 
-      <QRButton href={link} type="primary" disabled={!issueFee.valid || !redeemFee.valid || !arbProfitFee.valid || (type === "currency" && (!eventDate.valid || !datafeedValue.valid || !customOracle.valid || currentFeedValue.loading))} onClick={create} size="large">
+      <QRButton href={link} disabled={!issueFee.valid || !redeemFee.valid || !arbProfitFee.valid || (type === "currency" && (!eventDate.valid || !datafeedValue.valid || !customOracle.valid || currentFeedValue.loading))} onClick={create} size="lg">
         {t("forms.common.create", "Create")}
       </QRButton>
     </form>

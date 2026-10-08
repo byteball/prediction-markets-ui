@@ -1,6 +1,6 @@
 import { useTranslation } from "react-i18next";
 
-import { Result } from "@/components/ui/result";
+import { Result } from "components/ui/result";
 
 export const WaitingPredictionMarket = () => {
   const { t } = useTranslation();

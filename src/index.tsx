@@ -8,8 +8,8 @@ import { SWRConfig } from 'swr';
 import axios from 'axios';
 
 import { PersistGate } from 'redux-persist/integration/react';
-import { TooltipProvider } from '@/components/ui/tooltip';
-import { Toaster } from '@/components/ui/sonner';
+import { TooltipProvider } from 'components/ui/tooltip';
+import { Toaster } from 'components/ui/sonner';
 
 import { store, persistor } from 'store/store';
 import client from 'services/obyte';
