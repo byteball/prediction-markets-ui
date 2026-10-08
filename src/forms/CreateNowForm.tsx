@@ -24,7 +24,7 @@ import { InputGroup } from "@/components/ui/input-group";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Switch } from "@/components/ui/switch";
 
-import styles from "components/PredictionList/PredictionItem.module.css";
+import styles from "../components/PredictionList/PredictionItem.module.css";
 
 const f = (x: unknown) => (~(x + "").indexOf(".") ? (x + "").split(".")[1].length : 0);
 

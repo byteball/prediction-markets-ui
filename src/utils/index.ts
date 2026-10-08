@@ -13,13 +13,12 @@ import { getCategoryName } from "./getCategoryName";
 import { getAlternatePaths, getAlternateMetaList } from "./getAlternatePaths";
 import { botCheck } from "./botCheck";
 import { isDrawAllowed } from "./isDrawAllowed";
-import { getTokenlessSymbols, resolveTokenlessSymbols } from "./getTokenlessSymbols";
+import { getTokenlessSymbols } from "./getTokenlessSymbols";
 import { normalizeStateVars } from "./normalizeStateVars";
 
 export {
   encodeData,
   getTokenlessSymbols,
-  resolveTokenlessSymbols,
   normalizeStateVars,
   generateLink,
   getExchangeResult,

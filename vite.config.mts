@@ -1,20 +1,14 @@
-import { readdirSync } from 'node:fs';
-import { fileURLToPath, URL } from 'node:url';
 import { defineConfig } from 'vitest/config';
 import react from '@vitejs/plugin-react';
 import tailwindcss from '@tailwindcss/vite';
 import { nodePolyfills } from 'vite-plugin-node-polyfills';
-
-const src = (p = '') => fileURLToPath(new URL(`./src/${p}`, import.meta.url));
-
-// Bare imports relative to src/ (tsconfig.app.json "baseUrl"): every top-level directory and file of src/.
-const srcModules = readdirSync(src(), { withFileTypes: true })
-  .filter((entry) => entry.isDirectory() || /(?<!\.d)\.tsx?$/.test(entry.name))
-  .map((entry) => entry.name.replace(/\.tsx?$/, ''));
+import tsconfigPaths from 'vite-tsconfig-paths';
 
 export default defineConfig({
   plugins: [
     react(),
+    // Bare imports relative to src/ and the @/ alias come from tsconfig.app.json (baseUrl, paths).
+    tsconfigPaths(),
     tailwindcss(),
     // obyte / counterstake-sdk (ethers 5, secp256k1, create-hash, ws) expect Node globals in the browser.
     nodePolyfills({
@@ -22,15 +16,6 @@ export default defineConfig({
       globals: { Buffer: true, process: true, global: true },
     }),
   ],
-  resolve: {
-    alias: [
-      { find: '@', replacement: src() },
-      ...srcModules.map((name) => ({
-        find: new RegExp(`^${name}(?=/|$)`),
-        replacement: src(name),
-      })),
-    ],
-  },
   // Keep the CRA variable names so .env.testnet / .env.livenet stay unchanged.
   envPrefix: 'REACT_APP_',
   build: {

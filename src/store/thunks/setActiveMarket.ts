@@ -12,7 +12,7 @@ import type { AppThunkApiConfig } from "store/hooks";
 import type { Candle, CurrencyCandle, MarketParams, MarketStateVars, RecentEvent, Team } from "store/types";
 
 import appConfig from "appConfig";
-import { resolveTokenlessSymbols } from "utils/getTokenlessSymbols";
+import { getTokenlessSymbols } from "utils/getTokenlessSymbols";
 import { normalizeStateVars } from "utils/normalizeStateVars";
 
 const initialParams = {
@@ -87,13 +87,11 @@ export const setActiveMarket = createAsyncThunk<SetActiveMarketResult, { address
   ];
 
   if (isTokenless) {
-    tokensInfoGetters.push(
-      resolveTokenlessSymbols({ feed_name: aa[1].params.feed_name, event_date: aa[1].params.event_date, oracle: aa[1].params.oracle }).then(({ yes_symbol, no_symbol, draw_symbol }) => {
-        tokensInfo.yes_symbol = yes_symbol;
-        tokensInfo.no_symbol = no_symbol;
-        if (aa[1].params.allow_draw) tokensInfo.draw_symbol = draw_symbol;
-      })
-    );
+    const { yes_symbol, no_symbol, draw_symbol } = getTokenlessSymbols({ feed_name: aa[1].params.feed_name, event_date: aa[1].params.event_date, oracle: aa[1].params.oracle });
+
+    tokensInfo.yes_symbol = yes_symbol;
+    tokensInfo.no_symbol = no_symbol;
+    if (aa[1].params.allow_draw) tokensInfo.draw_symbol = draw_symbol;
   } else {
     tokensInfoGetters.push(
       http.getSymbolByAsset(tokenRegistry, stateVars.yes_asset).then((symbol) => (tokensInfo.yes_symbol = symbol)),

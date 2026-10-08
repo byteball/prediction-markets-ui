@@ -24,6 +24,8 @@ export default defineConfig([
       'react-hooks/exhaustive-deps': 'off',
       // The forms keep their original useEffect + setState data flow.
       'react-hooks/set-state-in-effect': 'off',
+      // lazyWithFallback returns a component, so files that export only its results are refresh-safe.
+      'react-refresh/only-export-components': ['warn', { allowConstantExport: true, extraHOCs: ['lazyWithFallback'] }],
     },
   },
   {
