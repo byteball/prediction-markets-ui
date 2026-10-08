@@ -6,6 +6,10 @@
   position: relative;
 }
 
+.cardBody {
+  padding: 24px;
+}
+
 .notifyWrap {
   font-size: 12px;
   font-weight: 300;
@@ -78,12 +82,10 @@
     object-fit: contain;
   }
 
-  .itemWrap :global(.ant-card-body) {
+  .cardBody {
     padding: 12px;
   }
 }
-
-
 
 /* Medium devices (tablets, 768px and up) */
 @media (min-width: 768px) {

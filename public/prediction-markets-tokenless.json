@@ -1,0 +1,19 @@
+{
+  "version": "1.0",
+  "description": "Prophet prediction markets (tokenless): positions are kept as balances inside the AA instead of being issued as assets",
+  "homepage_url": "https://prophet.ooo",
+  "source_url": "https://github.com/byteball/prediction-markets-aa",
+  "field_descriptions": {
+    "to": "Address to credit the bought tokens or pay the reserve to",
+    "type": "Type of tokens to buy with the whole sent reserve: yes, no or draw",
+    "yes_amount": "Amount of YES tokens: positive to buy, negative to sell from your balance",
+    "no_amount": "Amount of NO tokens: positive to buy, negative to sell from your balance",
+    "draw_amount": "Amount of DRAW tokens: positive to buy, negative to sell from your balance",
+    "min_expected_amount": "Minimum amount to receive when buying by type, otherwise revert",
+    "add_liquidity": "Add liquidity, set to 1",
+    "yes_amount_ratio": "The share allocated to YES tokens on the first liquidity",
+    "no_amount_ratio": "The share allocated to NO tokens on the first liquidity",
+    "claim_profit": "Claim the winnings for the winning tokens on your balance, set to 1",
+    "commit": "Record the outcome of the event"
+  }
+}

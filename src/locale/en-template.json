@@ -33,7 +33,9 @@
     "all": "All",
     "currency": "Currency",
     "sport": "sport",
-    "soccer": "soccer"
+    "soccer": "soccer",
+    "no_data": "No data",
+    "search": "Search"
   },
   "footer": {
     "time_zone": "All dates are in your local timezone (UTC{{timeZoneView}}) unless indicated otherwise",
@@ -193,8 +195,7 @@
   },
   "prediction_list": {
     "title_create": "create new markets",
-    "title_calendar": "calendar of upcoming matches",
-    "no_events": "No upcoming events"
+    "title_calendar": "calendar of upcoming matches"
   },
   "qr_button": {
     "title": "<0>Scan this QR code <1></1> with your mobile phone</0>",
@@ -266,6 +267,10 @@
         "name": "Allow draw",
         "desc": "Whether to allow a 3rd outcome along with Yes and No. It’s common in some sports."
       },
+      "issue_tokens": {
+        "name": "Issue tokens",
+        "desc": "Issue Yes/No/Draw tokens for the outcomes. Without tokens the positions are kept as balances inside the market and cannot be transferred or traded elsewhere."
+      },
       "oracle": {
         "name": "Oracle",
         "desc": "Address of the oracle that will post the result",
@@ -329,7 +334,8 @@
       "current_rate": "Current rate: {{value}} {{symbol}}",
       "no_pair": "Pair not found",
       "be_above": "to be above",
-      "on": "on"
+      "on": "on",
+      "loading_rate": "Loading rate..."
     },
     "redeem": {
       "price_change": "The price would change too much, try a smaller amount"
