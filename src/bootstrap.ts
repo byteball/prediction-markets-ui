@@ -4,19 +4,19 @@ import { toast } from "sonner";
 
 import client from "services/obyte";
 
-import { updateStateForActualMarket, updateSymbolForActualMarket } from "store/slices/activeSlice";
-import { updateCreationOrder } from "store/slices/settingsSlice";
-import { setActiveMarket } from "store/thunks/setActiveMarket";
-import { checkCreationOrder } from "store/thunks/checkCreationOrder";
-import { checkDataFeed } from "store/thunks/checkDataFeed";
-import { loadEVMTokens } from "store/thunks/loadEVMTokens";
-import { loadUserBalance } from "store/thunks/loadUserBalance";
-import { addRecentEvent } from "store/thunks/addRecentEvent";
+import { updateStateForActualMarket, updateSymbolForActualMarket } from "store/slices/active-slice";
+import { updateCreationOrder } from "store/slices/settings-slice";
+import { setActiveMarket } from "store/thunks/set-active-market";
+import { checkCreationOrder } from "store/thunks/check-creation-order";
+import { checkDataFeed } from "store/thunks/check-data-feed";
+import { loadEVMTokens } from "store/thunks/load-evm-tokens";
+import { loadUserBalance } from "store/thunks/load-user-balance";
+import { addRecentEvent } from "store/thunks/add-recent-event";
 import type { AAResponseBody, FactoryPredictionVar, HubMessage, ObyteMessage, ObyteMessagePayload, OutcomeType, StateVarValue } from "store/types";
-import { normalizeStateVars } from "utils/normalizeStateVars";
+import { normalizeStateVars } from "utils/normalize-state-vars";
 
 import i18n from "locale";
-import config from "appConfig";
+import config from "app-config";
 
 import { router } from "router";
 

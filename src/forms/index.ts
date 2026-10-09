@@ -1,9 +1,9 @@
-import { AddLiquidityForm } from "./AddLiquidityForm";
-import { BuyForm } from "./BuyForm";
-import { ClaimProfitForm } from "./ClaimProfitForm";
-import { CreateForm } from "./CreateForm";
-import { CreateNowForm } from "./CreateNowForm";
-import { RedeemForm } from "./RedeemForm";
+import { AddLiquidityForm } from "./add-liquidity-form";
+import { BuyForm } from "./buy-form";
+import { ClaimProfitForm } from "./claim-profit-form";
+import { CreateForm } from "./create-form";
+import { CreateNowForm } from "./create-now-form";
+import { RedeemForm } from "./redeem-form";
 
 export {
   AddLiquidityForm,

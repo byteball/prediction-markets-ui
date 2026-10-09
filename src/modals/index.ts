@@ -1,9 +1,9 @@
-import { AddLiquidityModal } from "./AddLiquidityModal";
-import { ClaimProfitModal } from "./ClaimProfitModal";
-import { CreateNowModal } from "./CreateNowModal";
-import { TradeModal } from "./TradeModal";
-import { ViewParamsModal } from "./ViewParamsModal";
-import { WalletModal } from "./WalletModal";
+import { AddLiquidityModal } from "./add-liquidity-modal";
+import { ClaimProfitModal } from "./claim-profit-modal";
+import { CreateNowModal } from "./create-now-modal";
+import { TradeModal } from "./trade-modal";
+import { ViewParamsModal } from "./view-params-modal";
+import { WalletModal } from "./wallet-modal";
 
 export {
   AddLiquidityModal,
