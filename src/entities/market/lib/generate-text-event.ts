@@ -1,7 +1,7 @@
 import moment from "moment";
 
-import appConfig from "@/app-config";
-import i18n from "@/locale";
+import { isCurrencyOracle, isSportOracle } from "@/entities/oracle/@x/market";
+import i18n from "@/shared/i18n";
 
 export type GenerateTextEventParams = {
     oracle?: string;
@@ -19,11 +19,11 @@ export const generateTextEvent = ({ oracle, event_date, feed_name, datafeed_valu
     const expiry_date = isUTC ? moment.unix(event_date).utc().format(format) : moment.unix(event_date).format(format);
     const comparisonText = getComparisonText(comparison);
 
-    if (appConfig.CATEGORIES.currency.oracles.find(({ address }) => address === oracle)) {
+    if (isCurrencyOracle(oracle)) {
         const [from, to] = feed_name!.split("_");
 
         return i18n.t('event.currency_text', "Will {{from_currency}} be {{comparisonText}} {{value}} {{to_currency}} on {{expiry_date}}{{UTC}}?", { from_currency: from, comparisonText, value: datafeed_value, to_currency: to, expiry_date, UTC: isUTC ? ' UTC' : '' });
-    } else if (appConfig.CATEGORIES.sport.oracles.find(({ address }) => address === oracle)) {
+    } else if (isSportOracle(oracle)) {
         const [, yes_team, no_team] = feed_name!.split("_");
 
         return i18n.t('event.sport_text', "{{yes_team}} vs {{no_team}} on {{expiry_date}}{{UTC}}", { yes_team: yes_team_name || yes_team, no_team: no_team_name || no_team, expiry_date, UTC: isUTC ? ' UTC' : '' });

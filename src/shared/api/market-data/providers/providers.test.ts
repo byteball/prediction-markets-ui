@@ -1,7 +1,6 @@
 import axios from "axios";
 
-import { store } from "@/store/store";
-import { cacheSearchResult } from "@/store/slices/search-cache-slice";
+import { createMemoryIdCache, setIdCache, type IdCache } from "../shared/id-cache";
 import { coingeckoProvider } from "./coingecko";
 import { coinbaseProvider } from "./coinbase";
 import { krakenProvider } from "./kraken";
@@ -16,18 +15,20 @@ vi.mock("axios", () => {
   return { __esModule: true, default: { create: vi.fn(() => ({ get })) } };
 });
 
-// Stub the store the id resolver reads/writes (empty cache by default).
-vi.mock("@/store/store", () => ({
-  store: { getState: vi.fn(), dispatch: vi.fn() }
-}));
-
 const mockGet = axios.create().get as Mock;
-const mockedStore = store as unknown as { getState: Mock; dispatch: Mock };
+
+// Stub the id cache the resolvers read/write (empty by default).
+const cache = { get: vi.fn<IdCache["get"]>(), set: vi.fn<IdCache["set"]>() };
 
 beforeEach(() => {
   mockGet.mockReset();
-  mockedStore.getState.mockReturnValue({ searchCache: { results: {} } });
-  mockedStore.dispatch.mockReset();
+  cache.get.mockReset().mockReturnValue(undefined);
+  cache.set.mockReset();
+  setIdCache(cache);
+});
+
+afterAll(() => {
+  setIdCache(createMemoryIdCache());
 });
 
 // NOTE: the id resolvers memoise per module, so each test below uses a distinct
@@ -43,11 +44,11 @@ describe("coingeckoProvider", () => {
     expect(mockGet).toHaveBeenNthCalledWith(1, "/search", { params: { query: "BTC" } });
     expect(mockGet).toHaveBeenNthCalledWith(2, "/coins/bitcoin/ohlc", { params: { vs_currency: "usd", days: 7 } });
     expect(candles).toEqual([{ time: 1700000000, open: 10, high: 12, low: 9, close: 11 }]);
-    expect(store.dispatch).toHaveBeenCalledWith(cacheSearchResult({ provider: "coingecko", symbol: "BTC", key: "bitcoin" }));
+    expect(cache.set).toHaveBeenCalledWith("coingecko", "BTC", "bitcoin");
   });
 
   it("uses the persisted id and skips /search", async () => {
-    mockedStore.getState.mockReturnValue({ searchCache: { results: { coingecko: { ZED: "zed-id" } } } });
+    cache.get.mockImplementation((provider, symbol) => (provider === "coingecko" && symbol === "ZED" ? "zed-id" : undefined));
     mockGet.mockResolvedValueOnce({ data: { "zed-id": { usd: 9 } } });
 
     expect(await coingeckoProvider.getPrice({ from: "ZED", to: "USD" })).toBe(9);
@@ -225,7 +226,7 @@ describe("coinpaprikaProvider", () => {
     expect(await coinpaprikaProvider.getPrice({ from: "BTC", to: "USD" })).toBe(65000);
     expect(mockGet).toHaveBeenNthCalledWith(1, "/search", { params: { q: "BTC", c: "currencies", limit: 25 } });
     expect(mockGet).toHaveBeenNthCalledWith(2, "/tickers/btc-bitcoin", { params: { quotes: "USD" } });
-    expect(store.dispatch).toHaveBeenCalledWith(cacheSearchResult({ provider: "coinpaprika", symbol: "BTC", key: "btc-bitcoin" }));
+    expect(cache.set).toHaveBeenCalledWith("coinpaprika", "BTC", "btc-bitcoin");
   });
 
   it("returns null for non-USD quotes (no request) or unmapped symbols", async () => {

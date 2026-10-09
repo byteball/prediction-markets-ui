@@ -4,9 +4,9 @@ import { QrCode } from "lucide-react";
 import { Trans, useTranslation } from "react-i18next";
 import { cn } from "cn";
 
-import { Button, type ButtonProps } from "@/components/ui/button";
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
+import { Button, type ButtonProps } from "@/shared/ui/button";
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/shared/ui/dialog";
+import { Tooltip, TooltipContent, TooltipTrigger } from "@/shared/ui/tooltip";
 
 import { AppStoreIcon, PlayMarketIcon } from "./store-icons";
 
@@ -37,7 +37,7 @@ export const QRButton = forwardRef<HTMLAnchorElement, QRButtonProps>(function QR
 
   return (
     <>
-      <div data-slot="button-group" className={cn("inline-flex items-stretch [&>*:first-child]:rounded-r-none [&>*:last-child]:rounded-l-none [&>*:last-child]:border-l-0", className)}>
+      <div data-slot="button-group" className={cn("inline-flex items-stretch [&>*]:relative [&>*:hover]:z-10 [&>*:focus-visible]:z-10 [&>*:first-child]:rounded-r-none [&>*:last-child]:-ml-px [&>*:last-child]:rounded-l-none", className)}>
         <Tooltip>
           <TooltipTrigger asChild>
             <Button type="button" variant={variant} size={iconSize} disabled={disabled} onClick={openQr} aria-label={t("qr_button.tooltip_mob", "Send the transaction from your mobile phone")}>
@@ -50,7 +50,7 @@ export const QRButton = forwardRef<HTMLAnchorElement, QRButtonProps>(function QR
           <TooltipTrigger asChild>
             {disabled ? (
               <span tabIndex={0} className="inline-flex">
-                <Button type="button" variant={variant} size={size} className="rounded-l-none border-l-0" disabled>
+                <Button type="button" variant={variant} size={size} className="rounded-l-none" disabled>
                   {children}
                 </Button>
               </span>

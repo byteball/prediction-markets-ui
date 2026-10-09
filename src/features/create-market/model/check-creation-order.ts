@@ -1,8 +1,10 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
-import client from "@/services/obyte";
-import { updateCreationOrder } from "@/store/slices/settings-slice";
-import type { AppThunkApiConfig } from "@/store/hooks";
-import type { AAResponseBody, CreationOrder } from "@/store/types";
+import client from "@/shared/api/obyte-client";
+import { updateCreationOrder, selectCreationOrder } from "./creation-order-slice";
+import type { AppThunkApiConfig } from "@/shared/lib/redux";
+import type { AAResponseBody } from "@/shared/types/obyte";
+
+import type { CreationOrder } from "./types";
 
 export const checkCreationOrder = createAsyncThunk<void, void, AppThunkApiConfig>(
   'checkCreationOrder',
@@ -10,7 +12,7 @@ export const checkCreationOrder = createAsyncThunk<void, void, AppThunkApiConfig
     const state = getState();
     const tokenRegistry: string = client.api.getOfficialTokenRegistryAddress();
 
-    const order = state.settings?.creationOrder;
+    const order = selectCreationOrder(state);
 
     if (order && order.creation_unit_id && (order.status !== 'created' || !((order.yes_symbol && order.no_symbol && (!order.data.allow_draw || order.draw_symbol)) || order.data.is_tokenless))) {
       let yes_asset = order.yes_asset;

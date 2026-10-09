@@ -1,6 +1,7 @@
-import appConfig from "@/app-config";
 import axios, { type AxiosInstance } from "axios";
-import type { StateVarValue } from "@/store/types";
+
+import { OBYTE_HUB_API_URL } from "@/shared/config/env";
+import type { StateVarValue } from "@/shared/types/obyte";
 
 type HubResponse<T> = { data?: T };
 
@@ -9,7 +10,7 @@ class HttpHub {
   private readonly client: AxiosInstance;
 
   constructor() {
-    this.hubUrl = `https://${appConfig.ENVIRONMENT === "testnet" ? "testnet." : ""}obyte.org/api`;
+    this.hubUrl = OBYTE_HUB_API_URL;
     this.client = axios.create({
       method: "post",
       baseURL: this.hubUrl,

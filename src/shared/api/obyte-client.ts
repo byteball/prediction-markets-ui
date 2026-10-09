@@ -1,5 +1,7 @@
 import obyte from "obyte";
 
+import { IS_TESTNET, OBYTE_HUB_WS_URL } from "@/shared/config/env";
+
 export type ObyteHubApi = {
   heartbeat(): void;
   getOfficialTokenRegistryAddress(): string;
@@ -19,12 +21,9 @@ export type ObyteClient = {
   justsaying(subject: string, body?: unknown): void;
 };
 
-const client: ObyteClient = new obyte.Client(
-  `wss://obyte.org/bb${import.meta.env.REACT_APP_ENVIRONMENT === "testnet" ? "-test" : ""}`,
-  {
-    testnet: import.meta.env.REACT_APP_ENVIRONMENT === "testnet",
-    reconnect: true,
-  }
-);
+const client: ObyteClient = new obyte.Client(OBYTE_HUB_WS_URL, {
+  testnet: IS_TESTNET,
+  reconnect: true,
+});
 
 export default client;

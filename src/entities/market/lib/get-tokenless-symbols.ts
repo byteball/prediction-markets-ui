@@ -1,6 +1,6 @@
 import moment from "moment";
 
-import appConfig from "@/app-config";
+import { isSportOracle } from "@/entities/oracle/@x/market";
 
 export type OutcomeSymbols = {
   yes_symbol: string;
@@ -14,7 +14,6 @@ type GetTokenlessSymbolsParams = {
   oracle?: string;
 };
 
-const isSportOracle = (oracle?: string) => !!oracle && appConfig.CATEGORIES.sport.oracles.some(({ address }) => address === oracle);
 
 export const getTokenlessSymbols = ({ feed_name, event_date, oracle }: GetTokenlessSymbolsParams): OutcomeSymbols => {
   if (isSportOracle(oracle)) {

@@ -1,9 +1,9 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import moment from 'moment';
 
-import client from "@/services/obyte";
-import { updateDataFeedValue } from "@/store/slices/active-slice";
-import type { AppThunkApiConfig } from "@/store/hooks";
+import client from "@/shared/api/obyte-client";
+import { updateDataFeedValue } from "./market-slice";
+import type { AppThunkApiConfig } from "@/shared/lib/redux";
 
 export const checkDataFeed = createAsyncThunk<void, void, AppThunkApiConfig>(
   'checkDataFeed',
@@ -11,10 +11,10 @@ export const checkDataFeed = createAsyncThunk<void, void, AppThunkApiConfig>(
     const state = getState();
     const now = moment.utc().unix();
 
-    if (state.active.address) {
-      const { waiting_period_length, event_date, oracle, feed_name } = state.active.params;
+    if (state.market.address) {
+      const { waiting_period_length, event_date, oracle, feed_name } = state.market.params;
 
-      if (!state.active.stateVars.result) {
+      if (!state.market.stateVars.result) {
         if (now > event_date && now < event_date + waiting_period_length) {
           const datafeedValue = await client.api.getDataFeed({ oracles: [oracle], feed_name: feed_name, ifnone: 'none' }) as string | number;
 

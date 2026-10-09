@@ -1,0 +1,28 @@
+.teamWrap {
+  padding-top: 10px;
+  line-height: 1;
+}
+
+.crests {
+  max-width: 50%;
+  height: 78px;
+}
+
+@media (max-width: 576px) {
+  .draw {
+    margin-top: 20px;
+    margin-bottom: 20px;
+  }
+
+  .crests {
+    max-width: 70%;
+    object-fit: contain;
+  }
+}
+
+@media (max-width: 400px) {
+  .crests {
+    max-width: 70%;
+    min-width: 50px;
+  }
+}

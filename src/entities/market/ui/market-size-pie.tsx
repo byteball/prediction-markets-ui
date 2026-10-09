@@ -1,12 +1,13 @@
 import type { PieConfig } from "@ant-design/plots"
-import { Pie } from "@/components/charts"
+import { Pie } from "@/shared/ui/charts"
 import { useMemo } from "react";
 import { Trans, useTranslation } from 'react-i18next';
 
-import type { MarketStateVars, Team } from "@/store/types";
-import { getMarketPriceByType } from "@/utils";
+import type { MarketStateVars, Team } from "../model/types";
+import { getMarketPriceByType } from "../lib/get-market-price-by-type";
 
-import appConfig from "@/app-config";
+import { DRAW_COLOR, NO_COLOR, YES_COLOR } from "@/shared/config/colors";
+import { isSportOracle } from "@/entities/oracle/@x/market";
 
 export interface MarketSizePieProps {
     teams?: { yes?: Team | null; no?: Team | null };
@@ -24,7 +25,7 @@ type PieLabelItem = PieDatum & { percent: number };
 export const MarketSizePie = ({ teams, reserve_decimals, stateVars = {} as MarketStateVars, reserve_symbol, allow_draw = false, oracle }: MarketSizePieProps) => {
     const { t } = useTranslation();
 
-    const isSportMarket = !!appConfig.CATEGORIES.sport.oracles.find(({ address }) => address === oracle);
+    const isSportMarket = isSportOracle(oracle);
     const haveTeamNames = isSportMarket && teams?.yes?.name && teams?.no?.name;
 
     const { supply_yes = 0, supply_no = 0, supply_draw = 0 } = stateVars;
@@ -74,11 +75,11 @@ export const MarketSizePie = ({ teams, reserve_decimals, stateVars = {} as Marke
         theme: 'dark',
         color: (item: Pick<PieDatum, 'type'>) => {
             if (item.type === 'YES') {
-                return appConfig.YES_COLOR;
+                return YES_COLOR;
             } else if (item.type === 'NO') {
-                return appConfig.NO_COLOR;
+                return NO_COLOR;
             } else {
-                return appConfig.DRAW_COLOR
+                return DRAW_COLOR
             }
         },
         tooltip: {

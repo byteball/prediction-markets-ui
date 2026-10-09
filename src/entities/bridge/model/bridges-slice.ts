@@ -1,31 +1,34 @@
-import { createSlice } from '@reduxjs/toolkit';
-import { loadEVMTokens } from '@/store/thunks/load-evm-tokens';
-import type { RootState } from '@/store';
-import type { Bridge } from '@/store/types';
+import { createSlice } from "@reduxjs/toolkit";
+
+import type { RootState } from "@/shared/lib/redux";
+
+import { loadEVMTokens } from "./load-evm-tokens";
+import type { Bridge } from "./types";
 
 export interface BridgesState {
+  /** Bridges whose foreign side is Obyte, grouped by the EVM network they come from. */
   tokensByNetwork: Record<string, Bridge[]>;
 }
 
-const initialState: BridgesState = {
-  tokensByNetwork: {}
-};
+const initialState: BridgesState = { tokensByNetwork: {} };
 
 export const bridgesSlice = createSlice({
-  name: 'bridges',
+  name: "bridges",
   initialState,
   reducers: {},
   extraReducers: (builder) => {
     builder.addCase(loadEVMTokens.fulfilled, (state, action) => {
       state.tokensByNetwork = action.payload;
     });
-  }
+  },
 });
 
-export default bridgesSlice.reducer;
-
-// The function below is called a selector and allows us to select a value from
-// the state. Selectors can also be defined inline where they're used instead of
-// in the slice file. For example: `useSelector((state) => state.auth.value)`
+export const bridgesReducer = bridgesSlice.reducer;
 
 export const selectTokensByNetwork = (state: RootState) => state.bridges.tokensByNetwork;
+
+declare module "@/shared/lib/redux" {
+  interface RootState {
+    bridges: BridgesState;
+  }
+}

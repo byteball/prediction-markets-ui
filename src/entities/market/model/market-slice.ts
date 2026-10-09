@@ -1,13 +1,17 @@
-import { createSelector, createSlice, type PayloadAction } from '@reduxjs/toolkit';
-import { addRecentEvent } from '@/store/thunks/add-recent-event';
-import { loadMoreRecentEvents } from '@/store/thunks/load-more-recent-events';
-import { setActiveMarket } from '@/store/thunks/set-active-market';
-import type { RootState } from '@/store';
-import type { Candle, CurrencyCandle, MarketParams, MarketStateVars, OutcomeAmounts, OutcomeType, RecentEvent, Team } from '@/store/types';
+import { createSelector, createSlice, type PayloadAction } from "@reduxjs/toolkit";
 
-export type ActiveMarketStatus = 'not selected' | 'loading' | 'loaded' | 'error';
+import type { RootState } from "@/shared/lib/redux";
+import { selectWalletAddress } from "@/entities/wallet/@x/market";
 
-export interface ActiveState {
+import { addRecentEvent } from "./add-recent-event";
+import { loadMoreRecentEvents } from "./load-more-recent-events";
+import { setActiveMarket } from "./set-active-market";
+import type { Candle, CurrencyCandle, MarketParams, MarketStateVars, OutcomeAmounts, OutcomeType, RecentEvent, Team } from "./types";
+
+export type ActiveMarketStatus = "not selected" | "loading" | "loaded" | "error";
+
+/** The market currently opened on the market page, with everything loaded for it. */
+export interface MarketState {
   address: string | null;
   status: ActiveMarketStatus;
   stateVars: MarketStateVars;
@@ -22,9 +26,9 @@ export interface ActiveState {
   teams: { yes: Team | null; no: Team | null };
 }
 
-const initialState: ActiveState = {
+const initialState: MarketState = {
   address: null,
-  status: 'not selected', // selected, loaded
+  status: "not selected",
   stateVars: {} as MarketStateVars,
   category: null,
   params: {} as MarketParams,
@@ -37,19 +41,19 @@ const initialState: ActiveState = {
   teams: { yes: null, no: null },
 };
 
-export const activeSlice = createSlice({
-  name: 'active',
+export const marketSlice = createSlice({
+  name: "market",
   initialState,
   reducers: {
     setActiveMarketAddress: (state, action: PayloadAction<string>) => {
       state.address = action.payload;
-      state.status = 'loading';
+      state.status = "loading";
     },
     updateStateForActualMarket: (state, action: PayloadAction<{ diff: Partial<MarketStateVars>; address: string }>) => {
       const { diff, address } = action.payload;
 
       if (state.address === address) {
-        state.stateVars = { ...state.stateVars, ...diff }
+        state.stateVars = { ...state.stateVars, ...diff };
       }
     },
     updateSymbolForActualMarket: (state, action: PayloadAction<{ type?: OutcomeType; symbol?: string } | undefined>) => {
@@ -61,7 +65,7 @@ export const activeSlice = createSlice({
     },
     updateDataFeedValue: (state, action: PayloadAction<string | number | null>) => {
       state.datafeedValue = action.payload;
-    }
+    },
   },
   extraReducers: (builder) => {
     builder.addCase(setActiveMarket.fulfilled, (state, action) => {
@@ -77,11 +81,11 @@ export const activeSlice = createSlice({
       state.currencyCurrentValue = currencyCurrentValue || 0;
       state.teams = { yes: yesTeam || null, no: noTeam || null };
 
-      state.status = 'loaded';
+      state.status = "loaded";
     });
 
     builder.addCase(setActiveMarket.rejected, (state) => {
-      state.status = 'error';
+      state.status = "error";
     });
 
     builder.addCase(addRecentEvent.fulfilled, (state, action) => {
@@ -95,45 +99,44 @@ export const activeSlice = createSlice({
       if (action.payload) {
         const recentEvents = action.payload.recentEvents || [];
 
-        state.recentEvents = [...state.recentEvents, ...recentEvents]
+        state.recentEvents = [...state.recentEvents, ...recentEvents];
         state.recentEventsCount = action.payload.recentEventsCount;
       }
-    })
-  }
+    });
+  },
 });
 
-export const {
-  setActiveMarketAddress,
-  updateStateForActualMarket,
-  updateSymbolForActualMarket,
-  updateDataFeedValue,
-} = activeSlice.actions;
+export const { setActiveMarketAddress, updateStateForActualMarket, updateSymbolForActualMarket, updateDataFeedValue } = marketSlice.actions;
 
-export default activeSlice.reducer;
+export const marketReducer = marketSlice.reducer;
 
-// The function below is called a selector and allows us to select a value from
-// the state. Selectors can also be defined inline where they're used instead of
-// in the slice file. For example: `useSelector((state) => state.auth.value)`
+export const selectActiveMarketStatus = (state: RootState) => state.market.status;
+export const selectActiveMarketParams = (state: RootState): MarketParams => state.market.params || ({} as MarketParams);
+export const selectActiveMarketStateVars = (state: RootState): MarketStateVars => state.market.stateVars || ({} as MarketStateVars);
+export const selectActiveCategory = (state: RootState) => state.market.category || "No category";
+export const selectActiveAddress = (state: RootState) => state.market.address;
+export const selectActiveRecentEvents = (state: RootState) => state.market.recentEvents;
+export const selectActiveRecentEventsCount = (state: RootState) => state.market.recentEventsCount;
+export const selectActiveDailyCandles = (state: RootState) => state.market.dailyCandles;
+export const selectActiveDatafeedValue = (state: RootState) => state.market.datafeedValue;
+export const selectActiveTeams = (state: RootState) => state.market.teams;
+export const selectActiveCurrencyCandles = (state: RootState) => state.market.currencyCandles;
+export const selectActiveCurrencyCurrentValue = (state: RootState) => state.market.currencyCurrentValue;
 
-export const selectActiveMarketStatus = (state: RootState) => state.active.status;
-export const selectActiveMarketParams = (state: RootState): MarketParams => state.active.params || ({} as MarketParams);
-export const selectActiveMarketStateVars = (state: RootState): MarketStateVars => state.active.stateVars || ({} as MarketStateVars);
-export const selectActiveCategory = (state: RootState) => state.active.category || 'No category';
-export const selectActiveAddress = (state: RootState) => state.active.address;
-export const selectActiveRecentEvents = (state: RootState) => state.active.recentEvents;
-export const selectActiveRecentEventsCount = (state: RootState) => state.active.recentEventsCount;
-export const selectActiveDailyCandles = (state: RootState) => state.active.dailyCandles;
-export const selectActiveDatafeedValue = (state: RootState) => state.active.datafeedValue;
-export const selectActiveTeams = (state: RootState) => state.active.teams;
-export const selectActiveCurrencyCandles = (state: RootState) => state.active.currencyCandles;
-export const selectActiveCurrencyCurrentValue = (state: RootState) => state.active.currencyCurrentValue;
 const ZERO_BALANCES: OutcomeAmounts = { yes: 0, no: 0, draw: 0 };
 
+/** The connected wallet's positions in a tokenless market (kept in the AA state); null for tokened markets. */
 export const selectUserOutcomeBalances = createSelector(
-  [(state: RootState) => state.active.stateVars, (state: RootState) => state.active.params.is_tokenless, (state: RootState) => state.settings.walletAddress],
+  [(state: RootState) => state.market.stateVars, (state: RootState) => state.market.params.is_tokenless, selectWalletAddress],
   (stateVars, is_tokenless, walletAddress): OutcomeAmounts | null => {
     if (!walletAddress || !is_tokenless) return null;
 
     return stateVars[`balance_${walletAddress}`] ?? ZERO_BALANCES;
   }
 );
+
+declare module "@/shared/lib/redux" {
+  interface RootState {
+    market: MarketState;
+  }
+}

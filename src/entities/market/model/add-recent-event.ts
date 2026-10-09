@@ -1,8 +1,10 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 
-import client from "@/services/obyte";
-import type { AppThunkApiConfig } from "@/store/hooks";
-import type { AAResponseBody, AAResponseVars, ObyteUnit, OutcomeAmounts, RecentEvent, RecentEventType } from "@/store/types";
+import client from "@/shared/api/obyte-client";
+import type { AppThunkApiConfig } from "@/shared/lib/redux";
+import type { AAResponseBody, AAResponseVars, ObyteUnit } from "@/shared/types/obyte";
+
+import type { OutcomeAmounts, RecentEvent, RecentEventType } from "./types";
 
 export const addRecentEvent = createAsyncThunk<RecentEvent | undefined, AAResponseBody, AppThunkApiConfig>(
     'addRecentEvent',
@@ -27,8 +29,8 @@ export const addRecentEvent = createAsyncThunk<RecentEvent | undefined, AARespon
         const isAddLiquidity = !('arb_profit_tax' in responseVars);
         let type: RecentEventType | undefined;
 
-        if (!bounced && state.active.address === aa_address && joint) {
-            const params = state.active?.params || {};
+        if (!bounced && state.market.address === aa_address && joint) {
+            const params = state.market?.params || {};
             const { reserve_asset } = params;
 
             let eventObject = {
@@ -76,7 +78,7 @@ export const addRecentEvent = createAsyncThunk<RecentEvent | undefined, AARespon
                     reserve: typeof responseVars.next_reserve === 'number' ? responseVars.next_reserve : eventObject.reserve,
                 };
             } else if (responseVars.profit) {
-                const stateVars = state.active?.stateVars || {};
+                const stateVars = state.market?.stateVars || {};
                 const { yes_asset, no_asset, draw_asset } = stateVars;
                 const winner = stateVars.result;
 

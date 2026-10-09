@@ -1,59 +1,32 @@
-import { combineReducers, configureStore } from '@reduxjs/toolkit';
-import {
-  persistStore,
-  persistReducer,
-  FLUSH,
-  REHYDRATE,
-  PAUSE,
-  PERSIST,
-  PURGE,
-  REGISTER
-} from 'redux-persist';
-import storage from "redux-persist/lib/storage";
+import { configureStore } from "@reduxjs/toolkit";
+import { FLUSH, PAUSE, PERSIST, persistReducer, persistStore, PURGE, REGISTER, REHYDRATE } from "redux-persist";
 
-import userWalletSlice from './slices/user-wallet-slice';
-import settingsSlice from './slices/settings-slice';
-import activeSlice from './slices/active-slice';
-import bridgesSlice from './slices/bridges-slice';
-import searchCacheSlice from './slices/search-cache-slice';
+import { cacheSearchResult, selectSearchCache } from "@/shared/api/market-data/model/search-cache-slice";
+import { setIdCache } from "@/shared/api/market-data";
 
-import config from "@/app-config";
+import { persistConfig } from "./persist";
+import { rootReducer } from "./root-reducer";
 
-const rootReducer = combineReducers({
-  settings: settingsSlice,
-  active: activeSlice,
-  bridges: bridgesSlice,
-  userWallet: userWalletSlice,
-  searchCache: searchCacheSlice
+// The single app-wide store instance, created once. Non-React modules that need it
+// (bootstrap, the market-data id cache) import it from here.
+export const store = configureStore({
+  reducer: persistReducer(persistConfig, rootReducer),
+  middleware: (getDefaultMiddleware) =>
+    getDefaultMiddleware({
+      serializableCheck: {
+        ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER],
+      },
+    }),
 });
 
-const persistConfig = {
-  key: `prediction${config.ENVIRONMENT === "testnet" ? "-tn" : ""}314`,
-  version: 3,
-  storage,
-  whitelist: ['settings', 'searchCache'],
-}
+export const persistor = persistStore(store);
 
-const persistedReducer = persistReducer(persistConfig, rootReducer);
+export type AppStore = typeof store;
 
-const getStore = () => {
-  const store = configureStore({
-    reducer: persistedReducer,
-    middleware: (getDefaultMiddleware) =>
-      getDefaultMiddleware({
-        serializableCheck: {
-          ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER]
-        }
-      })
-  });
-
-  const persistor = persistStore(store);
-
-  return { store, persistor };
-}
-
-export default getStore;
-
-export type AppStore = ReturnType<typeof getStore>["store"];
-export type RootState = ReturnType<AppStore["getState"]>;
-export type AppDispatch = AppStore["dispatch"];
+// Persist the market-data providers' symbol -> id lookups in the store (and localStorage through it).
+setIdCache({
+  get: (provider, symbol) => selectSearchCache(store.getState())?.[provider]?.[symbol],
+  set: (provider, symbol, key) => {
+    store.dispatch(cacheSearchResult({ provider, symbol, key }));
+  },
+});

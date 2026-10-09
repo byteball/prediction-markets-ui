@@ -1,35 +1,40 @@
-import { createSelector, createSlice } from '@reduxjs/toolkit';
-import { loadUserBalance } from '@/store/thunks/load-user-balance';
-import { selectWalletAddress } from './settings-slice';
-import type { RootState } from '@/store';
-import type { WalletBalance } from '@/store/types';
+import { createSelector, createSlice } from "@reduxjs/toolkit";
 
-export type UserWalletState = Record<string, WalletBalance | undefined>;
+import type { RootState } from "@/shared/lib/redux";
 
-const initialState: UserWalletState = {};
+import { loadUserBalance } from "./load-user-balance";
+import { selectWalletAddress } from "./wallet-slice";
+import type { WalletBalance } from "./types";
 
-export const userWalletSlice = createSlice({
-    name: 'userWallet',
-    initialState,
-    reducers: {},
-    extraReducers: (builder) => {
-        builder.addCase(loadUserBalance.fulfilled, (state, action) => {
-            const { address, balance } = action.payload;
+export interface WalletBalancesState {
+  /** Hub balances by wallet address; loaded for the connected wallet, not persisted. */
+  byAddress: Record<string, WalletBalance | undefined>;
+}
 
-            state[address] = balance;
-        });
-    }
+const initialState: WalletBalancesState = { byAddress: {} };
+
+export const walletBalancesSlice = createSlice({
+  name: "walletBalances",
+  initialState,
+  reducers: {},
+  extraReducers: (builder) => {
+    builder.addCase(loadUserBalance.fulfilled, (state, action) => {
+      const { address, balance } = action.payload;
+
+      state.byAddress[address] = balance;
+    });
+  },
 });
 
-export default userWalletSlice.reducer;
+export const walletBalancesReducer = walletBalancesSlice.reducer;
 
-// The function below is called a selector and allows us to select a value from
-// the state. Selectors can also be defined inline where they're used instead of
-// in the slice file. For example: `useSelector((state) => state.auth.value)`
+const selectWalletsBalance = (state: RootState) => state.walletBalances.byAddress;
 
-const selectWalletsBalance = (state: RootState) => state.userWallet;
+/** Balances of the connected wallet, undefined until loaded. */
+export const selectWalletBalance = createSelector(selectWalletAddress, selectWalletsBalance, (address, balances) => (address ? balances[address] : undefined));
 
-export const selectWalletBalance = createSelector(
-    selectWalletAddress,
-    selectWalletsBalance,
-    (address, balances) => balances[address as string]);
+declare module "@/shared/lib/redux" {
+  interface RootState {
+    walletBalances: WalletBalancesState;
+  }
+}

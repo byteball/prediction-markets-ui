@@ -1,4 +1,4 @@
-import appConfig from "@/app-config";
+import { ALLOW_DRAW_IN_FIFA_WORLD_CUP_BEFORE } from "../config/rules";
 
 import { isDrawAllowed } from "./is-draw-allowed";
 
@@ -36,21 +36,21 @@ describe("isDrawAllowed", () => {
   });
 
   describe("when the cutoff is not configured", () => {
-    const originalCutoff = appConfig.ALLOW_DRAW_IN_FIFA_WORLD_CUP_BEFORE;
+    const originalCutoff = ALLOW_DRAW_IN_FIFA_WORLD_CUP_BEFORE.value;
 
     afterEach(() => {
-      appConfig.ALLOW_DRAW_IN_FIFA_WORLD_CUP_BEFORE = originalCutoff;
+      ALLOW_DRAW_IN_FIFA_WORLD_CUP_BEFORE.value = originalCutoff;
     });
 
     it("forbids draws for every FIFA World Cup match when the cutoff is null", () => {
-      appConfig.ALLOW_DRAW_IN_FIFA_WORLD_CUP_BEFORE = null;
+      ALLOW_DRAW_IN_FIFA_WORLD_CUP_BEFORE.value = null;
 
       expect(isDrawAllowed("FIFA World Cup", WC_GROUP_STAGE_EVENT_DATE)).toBe(false);
       expect(isDrawAllowed("FIFA World Cup", 1783022400)).toBe(false);
     });
 
     it("still allows draws for other leagues when the cutoff is null", () => {
-      appConfig.ALLOW_DRAW_IN_FIFA_WORLD_CUP_BEFORE = null;
+      ALLOW_DRAW_IN_FIFA_WORLD_CUP_BEFORE.value = null;
 
       expect(isDrawAllowed("Premier League", WC_GROUP_STAGE_EVENT_DATE)).toBe(true);
     });

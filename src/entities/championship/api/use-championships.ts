@@ -1,34 +1,32 @@
 import { useTranslation } from "react-i18next";
 import useSWR from "swr";
 
-import type { SwitchAction } from "@/components/switch-actions/switch-actions";
+import { BACKEND_URL } from "@/shared/config/env";
+import { getLangPath } from "@/shared/lib/lang-path";
+import type { SwitchAction } from "@/shared/ui/switch-actions/switch-actions";
 
-import appConfig from "@/app-config";
-import { getTabNameByType } from "@/utils/get-tab-name-by-type";
+import { getTabNameByType } from "../lib/get-tab-name-by-type";
+import type { Championships } from "../model/types";
 
-export interface Championship {
-    name: string;
-    code: string;
-    emblem?: string;
-}
+const ONE_DAY_MS = 60 * 1000 * 60 * 24;
 
-export type Championships = Record<string, Championship[]>;
-
+/** Championships by sport plus the category tabs of the main page (all / sports / currency / misc). */
 export const useChampionships = (lang?: string | null) => {
-    const { data = {}, error, isLoading, isValidating } = useSWR<Championships>(lang ? `${appConfig.BACKEND_URL}championships` : null, {refreshInterval: 60 * 1000 * 60 * 24 });
-    const { t } = useTranslation();
+  const { data = {}, error, isLoading, isValidating } = useSWR<Championships>(lang ? `${BACKEND_URL}championships` : null, { refreshInterval: ONE_DAY_MS });
+  const { t } = useTranslation();
 
-    const langPath = (!lang || lang === 'en') ? '' : `/${lang}`;
-    const sportTypes = Object.keys(data);
-    const switchActionsData: SwitchAction[] = [{ value: 'all', text: t('common.all', "All"), url: langPath ? langPath : '/' }];
-    sportTypes.forEach((type) => switchActionsData.push(({ value: type, text: getTabNameByType(type), url: `${langPath}/${type}/all` })));
-    switchActionsData.push({ value: 'currency', text: `📈 ${t('common.currency', "Currency")}`, url: `${langPath}/currency` }, { value: 'misc', text: t('common.misc', "Misc"), url: `${langPath}/misc` })
+  const langPath = getLangPath(lang);
+  const sportTypes = Object.keys(data);
+  const categories: SwitchAction[] = [{ value: "all", text: t("common.all", "All"), url: langPath ? langPath : "/" }];
 
-    return {
-        championships: data,
-        categories: switchActionsData,
-        error,
-        isLoading,
-        isValidating
-    }
-}
+  sportTypes.forEach((type) => categories.push({ value: type, text: getTabNameByType(type), url: `${langPath}/${type}/all` }));
+  categories.push({ value: "currency", text: `📈 ${t("common.currency", "Currency")}`, url: `${langPath}/currency` }, { value: "misc", text: t("common.misc", "Misc"), url: `${langPath}/misc` });
+
+  return {
+    championships: data,
+    categories,
+    error,
+    isLoading,
+    isValidating,
+  };
+};

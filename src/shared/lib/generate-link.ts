@@ -1,12 +1,16 @@
+import { ENVIRONMENT } from "@/shared/config/env";
+
 import { encodeData } from "./encode-data";
-import config from "@/app-config";
 
 const suffixes: Record<string, string> = {
   livenet: "",
   testnet: "-tn",
   devnet: "-dev",
 };
-const suffix = suffixes[config.ENVIRONMENT ?? "livenet"] ?? "";
+const suffix = suffixes[ENVIRONMENT ?? "livenet"] ?? "";
+
+/** Fee-only payment that triggers an AA without transferring any asset to it. */
+export const TRIGGER_ONLY_AMOUNT = 1e4;
 
 export type GenerateLinkParams = {
   amount: number;

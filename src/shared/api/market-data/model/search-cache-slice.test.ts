@@ -1,5 +1,5 @@
-import reducer, { cacheSearchResult, clearSearchCache, selectSearchCache } from "./search-cache-slice";
-import type { RootState } from "@/store";
+import { cacheSearchResult, clearSearchCache, searchCacheReducer as reducer, selectSearchCache } from "./search-cache-slice";
+import type { RootState } from "@/shared/lib/redux";
 
 describe("searchCacheSlice", () => {
   it("stores a resolved id under provider + symbol", () => {

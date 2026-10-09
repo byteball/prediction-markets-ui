@@ -2,12 +2,12 @@ import type { ReactNode } from "react";
 import { Download, Upload } from "lucide-react";
 import { useTranslation } from "react-i18next";
 
-import { InfoTooltip } from "@/components/info-tooltip/info-tooltip";
-import { Button } from "@/components/ui/button";
+import { InfoTooltip } from "@/shared/ui/info-tooltip";
+import { Button } from "@/shared/ui/button";
 
-import styles from "./stats-card.module.css";
+import styles from "./outcome-card.module.css";
 
-type StatsCardProps = {
+type OutcomeCardProps = {
   title: ReactNode;
   tooltip?: ReactNode;
   value?: ReactNode;
@@ -20,7 +20,7 @@ type StatsCardProps = {
   reserve?: number;
 };
 
-export const StatsCard = ({ title, tooltip = "", value = <span />, toWinValue = null, toWinSubValue = null, subValue = null, color = "#fff", onAction, isWinner, reserve = 0 }: StatsCardProps) => {
+export const OutcomeCard = ({ title, tooltip = "", value = <span />, toWinValue = null, toWinSubValue = null, subValue = null, color = "#fff", onAction, isWinner, reserve = 0 }: OutcomeCardProps) => {
   const winnerExists = isWinner !== undefined;
   const showValue = isWinner || !winnerExists;
   const { t } = useTranslation();

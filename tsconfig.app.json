@@ -28,5 +28,5 @@
     "types": ["vite/client", "vitest/globals"]
   },
   "include": ["src"],
-  "exclude": ["src/locale/*.cjs"]
+  "exclude": ["src/shared/i18n/*.cjs"]
 }

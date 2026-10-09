@@ -1,10 +1,10 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import { isEmpty } from "lodash-es";
 
-import { getCurrencyPrice } from "@/services/market-data";
-import { getBaseUsdRate } from "@/services/oswap";
-import type { AppThunkApiConfig } from "@/store/hooks";
-import type { ReserveAssets, ReserveRates } from "@/store/types";
+import { getCurrencyPrice } from "@/shared/api/market-data";
+import { getBaseUsdRate } from "../api/oswap";
+import type { AppThunkApiConfig } from "@/shared/lib/redux";
+import type { ReserveAssets, ReserveRates } from "./types";
 
 export interface UpdateReserveRateArgs {
   assets?: ReserveAssets;
@@ -16,11 +16,11 @@ export const updateReserveRate = createAsyncThunk<ReserveRates | undefined, Upda
   async ({ assets, reserveAssetsHaveBeenChanged }, { getState }) => {
     const state = getState();
 
-    if (isEmpty(state.settings.reserveRates) || reserveAssetsHaveBeenChanged || (state.settings.reserveRateUpdateTime + 1800 <= (Date.now() / 1000))) {
+    if (isEmpty(state.reserveAsset.rates) || reserveAssetsHaveBeenChanged || (state.reserveAsset.rateUpdateTime + 1800 <= (Date.now() / 1000))) {
       const startTime = Date.now();
       const rates: ReserveRates = {};
 
-      const reserveAssets = assets || state.settings.reserveAssets;
+      const reserveAssets = assets || state.reserveAsset.assets;
 
       // every non-base reserve asset, priced in USD through the market-data fallback chain
       const pricedAssets = Object.entries(reserveAssets).filter(([asset]) => asset !== "base");

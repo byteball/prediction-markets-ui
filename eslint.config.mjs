@@ -15,26 +15,6 @@ const LAYERS_BELOW = {
   features: ['entities'],
 };
 
-// Legacy (pre-FSD) folders. They are ignored by the boundaries rules until the migration is over,
-// so the strict rules apply to migrated code only while `yarn lint` stays green.
-const LEGACY_PATHS = [
-  'src/components/**',
-  'src/forms/**',
-  'src/modals/**',
-  'src/hooks/**',
-  'src/utils/**',
-  'src/store/**',
-  'src/services/**',
-  'src/locale/**',
-  'src/pages/*-page/**',
-  'src/pages/index.ts',
-  'src/pages/lazy.tsx',
-  'src/app-config.ts',
-  'src/bootstrap.ts',
-  'src/router.tsx',
-  'src/vite-env.d.ts',
-];
-
 const sameSlice = (type) => ({
   from: { element: { type } },
   allow: { to: { element: { type, captured: { slice: '{{ from.element.captured.slice }}' } } } },
@@ -71,7 +51,7 @@ export default defineConfig([
   },
   {
     // shadcn components export variant helpers (cva) next to the component by convention.
-    files: ['src/components/ui/**/*.tsx', 'src/shared/ui/**/*.tsx'],
+    files: ['src/shared/ui/**/*.tsx'],
     rules: { 'react-refresh/only-export-components': 'off' },
   },
   {
@@ -84,7 +64,8 @@ export default defineConfig([
       },
       'boundaries/legacy-templates': false,
       'boundaries/include': ['src/**/*'],
-      'boundaries/ignore': LEGACY_PATHS,
+      // Not part of any layer: the Vite type shim.
+      'boundaries/ignore': ['src/vite-env.d.ts'],
       'boundaries/elements': [
         { type: 'app', pattern: 'src/app', partialMatch: false },
         { type: 'pages', pattern: 'src/pages/*', capture: ['slice'], partialMatch: false },
@@ -102,14 +83,13 @@ export default defineConfig([
           policies: [
             // npm packages and node built-ins are not restricted here.
             { allow: { to: { module: { origin: ['external', 'core'] } } } },
-            // Transitional: legacy folders are reachable from anywhere until the migration finishes.
-            { allow: { to: { element: { isIgnored: true } } } },
             // `shared` is reachable from every layer; it is organised by segments, not slices.
             { allow: { to: { element: { type: 'shared' } } } },
             // Inside one slice (or inside `app`) everything is reachable.
             { from: { element: { type: 'app' } }, allow: { to: { element: { type: 'app' } } } },
             ...SLICED_LAYERS.map(sameSlice),
             // A layer reaches the slices of lower layers through their public API only.
+            // `model.ts` is a second entry for `app` (store assembly) so it does not pull UI into the entry chunk.
             publicApiOf('app', LAYERS_BELOW.app, ['index.ts', 'model.ts']),
             publicApiOf('pages', LAYERS_BELOW.pages),
             publicApiOf('widgets', LAYERS_BELOW.widgets),
@@ -130,10 +110,9 @@ export default defineConfig([
           ],
         },
       ],
-      // Enabled at the end of the migration, once no legacy folder is left.
-      'boundaries/no-unknown-files': 'off',
-      'boundaries/no-unknown-dependencies': 'off',
-      'boundaries/no-ignored-dependencies': 'off',
+      // Every file under src belongs to a layer, and every local import resolves to one.
+      'boundaries/no-unknown-files': 'error',
+      'boundaries/no-unknown-dependencies': 'error',
     },
   },
   {

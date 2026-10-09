@@ -1,6 +1,6 @@
 import moment from "moment";
 
-import appConfig from "@/app-config";
+import { ALLOW_DRAW_IN_FIFA_WORLD_CUP_BEFORE } from "../config/rules";
 
 // Draws are allowed for every sport league except the FIFA World Cup knockout (playoff) stage,
 // where a match can no longer end in a draw. World Cup matches kicking off before the configured
@@ -8,7 +8,7 @@ import appConfig from "@/app-config";
 export const isDrawAllowed = (league: string | null | undefined, eventDate: number): boolean => {
   if (league !== "FIFA World Cup") return true;
 
-  const cutoff = appConfig.ALLOW_DRAW_IN_FIFA_WORLD_CUP_BEFORE;
+  const cutoff = ALLOW_DRAW_IN_FIFA_WORLD_CUP_BEFORE.value;
   if (!cutoff) return false;
 
   return moment.unix(eventDate).isBefore(moment.utc(cutoff));

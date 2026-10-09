@@ -1,70 +1,34 @@
-import React from 'react';
-import { createRoot } from 'react-dom/client';
-import { HelmetProvider } from 'react-helmet-async';
-import { RouterProvider } from 'react-router-dom';
-import { Provider as StoreProvider } from 'react-redux';
-import ReactGA from "react-ga4";
-import { SWRConfig } from 'swr';
-import axios from 'axios';
+import React from "react";
+import { createRoot } from "react-dom/client";
+import { RouterProvider } from "react-router-dom";
 
-import { PersistGate } from 'redux-persist/integration/react';
-import { TooltipProvider } from '@/components/ui/tooltip';
-import { Toaster } from '@/components/ui/sonner';
+import "moment/dist/locale/es";
+import "moment/dist/locale/pt-br";
+import "moment/dist/locale/zh-cn";
+import "moment/dist/locale/ru";
+import "moment/dist/locale/uk";
 
-import { store, persistor } from '@/store/store';
-import client from '@/services/obyte';
-import { bootstrap } from '@/bootstrap';
-import appConfig from '@/app-config';
+import "@/shared/i18n";
+import "./styles/index.css";
 
-import { router } from '@/router';
+import { AppProviders } from "./providers/app-providers";
+import { router } from "./router/router";
+import { initAnalytics } from "./analytics/init";
+import { startBootstrap } from "./bootstrap";
 
-import 'moment/dist/locale/es';
-import 'moment/dist/locale/pt-br';
-import 'moment/dist/locale/zh-cn';
-import 'moment/dist/locale/ru';
-import 'moment/dist/locale/uk';
+initAnalytics(router);
+startBootstrap();
 
-import '@/locale';
-import './styles/index.css';
-
-// Registered here, not in services/obyte: bootstrap needs the store, and the store's thunks need the client (import cycle otherwise).
-client.onConnect(bootstrap);
-
-if (appConfig.GA_ID) {
-	ReactGA.initialize(appConfig.GA_ID);
-
-	ReactGA.send({ hitType: "pageview", page: router.state.location.pathname });
-
-	router.subscribe(({ historyAction, location }) => {
-		if (historyAction === 'PUSH' || historyAction === 'POP') {
-			ReactGA.send({ hitType: "pageview", page: location.pathname });
-		}
-	});
-}
-
-const container = document.getElementById('root');
+const container = document.getElementById("root");
 
 if (!container) {
-	throw new Error('Root element #root not found');
+  throw new Error("Root element #root not found");
 }
 
 createRoot(container).render(
-	<React.StrictMode>
-		<StoreProvider store={store}>
-			<HelmetProvider>
-				<PersistGate loading={null} persistor={persistor}>
-					<SWRConfig
-						value={{
-							fetcher: (url: string) => axios.get(url).then((res) => res.data),
-						}}
-					>
-						<TooltipProvider delayDuration={100}>
-							<RouterProvider router={router} future={{ v7_startTransition: true }} />
-							<Toaster position="top-center" richColors />
-						</TooltipProvider>
-					</SWRConfig>
-				</PersistGate>
-			</HelmetProvider>
-		</StoreProvider>
-	</React.StrictMode>
+  <React.StrictMode>
+    <AppProviders>
+      <RouterProvider router={router} future={{ v7_startTransition: true }} />
+    </AppProviders>
+  </React.StrictMode>
 );

@@ -1,4 +1,5 @@
-import type { MarketStateVars, OutcomeAmounts, StateVarValue } from "@/store/types";
+import type { MarketStateVars, OutcomeAmounts } from "../model/types";
+import type { StateVarValue } from "@/shared/types/obyte";
 
 const isOutcomeAmounts = (value: unknown): value is OutcomeAmounts => !!value && typeof value === "object" && typeof (value as OutcomeAmounts).yes === "number" && typeof (value as OutcomeAmounts).no === "number";
 

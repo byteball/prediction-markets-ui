@@ -1,19 +1,21 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import moment from "moment";
 
-import backend from "@/services/backend";
-import obyte from "@/services/obyte";
-import http from "@/services/http";
-import { getCurrencyMarketData, getCurrencyPrice } from "@/services/market-data";
+import obyte from "@/shared/api/obyte-client";
+import http from "@/shared/api/hub-http";
+import { getCurrencyMarketData, getCurrencyPrice } from "@/shared/api/market-data";
 
-import { setActiveMarketAddress } from "@/store/slices/active-slice";
-import { saveBaseOHLC } from "@/store/slices/settings-slice";
-import type { AppThunkApiConfig } from "@/store/hooks";
-import type { Candle, CurrencyCandle, MarketParams, MarketStateVars, RecentEvent, Team } from "@/store/types";
+import { setActiveMarketAddress } from "./market-slice";
+import { saveBaseOHLC, selectBaseOHLC } from "@/entities/reserve-asset/@x/market";
+import type { AppThunkApiConfig } from "@/shared/lib/redux";
+import type { Candle, CurrencyCandle, MarketParams, MarketStateVars, RecentEvent, Team } from "./types";
 
-import appConfig from "@/app-config";
-import { getTokenlessSymbols } from "@/utils/get-tokenless-symbols";
-import { normalizeStateVars } from "@/utils/normalize-state-vars";
+import { BASE_AAS } from "@/shared/config/env";
+import { isCurrencyOracle, isPreciousMetalOracle, isSportOracle } from "@/entities/oracle/@x/market";
+import { getChampionships } from "@/entities/championship/@x/market";
+import { getBookmakerOdds, getCrest, getDailyCandles, getDates, getFirstTradeTs, getRecentEvents, getTeam } from "../api/market-api";
+import { getTokenlessSymbols } from "../lib/get-tokenless-symbols";
+import { normalizeStateVars } from "../lib/normalize-state-vars";
 
 const initialParams = {
   allow_draw: false,
@@ -70,7 +72,7 @@ export const setActiveMarket = createAsyncThunk<SetActiveMarketResult, { address
   const base_aa: string = aa[1].base_aa;
   const reserve_asset: string = aa[1].params.reserve_asset || "base";
 
-  if (!(appConfig.BASE_AAS ?? []).includes(base_aa)) throw new Error("unknown base aa");
+  if (!(BASE_AAS ?? []).includes(base_aa)) throw new Error("unknown base aa");
 
   const tokenRegistry: string = obyte.api.getOfficialTokenRegistryAddress();
 
@@ -126,17 +128,17 @@ export const setActiveMarket = createAsyncThunk<SetActiveMarketResult, { address
   if (!params.draw_decimals) params.draw_decimals = params.reserve_decimals;
 
   const [dailyCandles, { data: recentEvents, count: recentEventsCount }, datafeedValue] = await Promise.all([
-    backend.getDailyCandles(address).catch((): Candle[] => []),
-    backend.getRecentEvents(address),
+    getDailyCandles(address).catch((): Candle[] => []),
+    getRecentEvents(address),
     http.getDataFeed([params.oracle], params.feed_name, "none"),
     obyte.justsaying("light/new_aa_to_watch", {
       aa: address,
     }),
   ]);
 
-  const isSportMarket = !!appConfig.CATEGORIES.sport.oracles.find(({ address }) => address === params.oracle);
-  const isCurrencyMarket = !!appConfig.CATEGORIES.currency.oracles.find(({ address }) => address === params.oracle);
-  const isPreciousMetalMarket = !!appConfig.PRECIOUS_METAL_ORACLE && params.oracle === appConfig.PRECIOUS_METAL_ORACLE;
+  const isSportMarket = isSportOracle(params.oracle);
+  const isCurrencyMarket = isCurrencyOracle(params.oracle);
+  const isPreciousMetalMarket = isPreciousMetalOracle(params.oracle);
 
   const isHourlyChart = params.event_date + params.waiting_period_length - moment.utc().unix() <= 7 * 24 * 3600;
 
@@ -153,15 +155,15 @@ export const setActiveMarket = createAsyncThunk<SetActiveMarketResult, { address
   let yes_crest_url: string | null = null;
   let no_crest_url: string | null = null;
 
-  const dates = await backend.getDates(address);
+  const dates = await getDates(address);
 
   const created_at: number = dates.created_at;
   const committed_at: number | undefined = dates.committed_at;
-  const first_trade_ts = await backend.getFirstTradeTs(address);
+  const first_trade_ts = await getFirstTradeTs(address);
 
   if (isSportMarket) {
     if (!yes_odds || !no_odds || !draw_odds) {
-      const odds = await backend.getBookmakerOdds("soccer", params.feed_name);
+      const odds = await getBookmakerOdds("soccer", params.feed_name);
 
       if (odds) {
         yes_odds = odds.yes_odds;
@@ -171,7 +173,7 @@ export const setActiveMarket = createAsyncThunk<SetActiveMarketResult, { address
     }
 
     const [championship, yes_abbreviation, no_abbreviation] = (params.feed_name as string).split("_");
-    const championships = await backend.getChampionships();
+    const championships = await getChampionships();
 
     const sport = Object.entries(championships).find(([, cs]) => cs.find(({ code }) => code === championship));
 
@@ -181,9 +183,9 @@ export const setActiveMarket = createAsyncThunk<SetActiveMarketResult, { address
       league = championshipData?.name;
 
       try {
-        [yesTeam, noTeam] = await Promise.all([backend.getTeam(sport[0], yes_abbreviation), backend.getTeam(sport[0], no_abbreviation)]);
+        [yesTeam, noTeam] = await Promise.all([getTeam(sport[0], yes_abbreviation), getTeam(sport[0], no_abbreviation)]);
 
-        [yes_crest_url, no_crest_url] = await Promise.all([backend.getCrest(sport[0], championship, yesTeam!.id), backend.getCrest(sport[0], championship, noTeam!.id)]);
+        [yes_crest_url, no_crest_url] = await Promise.all([getCrest(sport[0], championship, yesTeam!.id), getCrest(sport[0], championship, noTeam!.id)]);
       } catch {
         console.error("error get teams id");
       }
@@ -201,7 +203,7 @@ export const setActiveMarket = createAsyncThunk<SetActiveMarketResult, { address
         currencyCandles = candles;
       } else if (from === "GBYTE" && params.event_date > now) {
         // GBYTE live market: keep the 20-min baseOHLC cache, resolve via the provider chain.
-        const baseOHLC = state.settings?.baseOHLC;
+        const baseOHLC = selectBaseOHLC(state);
         if ((baseOHLC?.expireTs || 0) > Math.floor(Date.now() / 1000)) {
           currencyCandles = baseOHLC?.data || [];
           currencyCurrentValue = await getCurrencyPrice({ from, to });

@@ -13,6 +13,6 @@ module.exports = {
 	verbose: false,
 	createOldCatalogs: false,
 	locales: ['en'],
-	input: ['../**/*.{js,jsx,ts,tsx}'], // relative to this config file
-	output: 'src/locale/$LOCALE-template.json', // relative to cwd, run from the repo root
+	input: ['../../**/*.{js,jsx,ts,tsx}'], // relative to this config file (src/shared/i18n -> src)
+	output: 'src/shared/i18n/$LOCALE-template.json', // relative to cwd, run from the repo root
 }

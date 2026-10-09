@@ -1,11 +1,11 @@
-import { getCurrencyPrice } from "@/services/market-data";
-import { getBaseUsdRate } from "@/services/oswap";
+import { getCurrencyPrice } from "@/shared/api/market-data";
+import { getBaseUsdRate } from "../api/oswap";
 import { updateReserveRate, type UpdateReserveRateArgs } from "./update-reserve-rate";
-import type { RootState } from "@/store";
-import type { SettingsState } from "@/store/slices/settings-slice";
+import type { RootState } from "@/shared/lib/redux";
+import type { ReserveAssetState } from "./reserve-asset-slice";
 
-vi.mock("@/services/market-data", () => ({ getCurrencyPrice: vi.fn() }));
-vi.mock("@/services/oswap", () => ({ getBaseUsdRate: vi.fn() }));
+vi.mock("@/shared/api/market-data", () => ({ getCurrencyPrice: vi.fn() }));
+vi.mock("../api/oswap", () => ({ getBaseUsdRate: vi.fn() }));
 
 const ASSET = "lwvZjepKoGSiMIDalxi2GB8Pd+nK86Qsnsn1Ng7TAJE=";
 const assets = {
@@ -14,7 +14,7 @@ const assets = {
 };
 
 // Invoke the async thunk's payload creator directly with a fake dispatch/getState.
-const run = (arg: UpdateReserveRateArgs, state: Partial<SettingsState>) => updateReserveRate(arg)(vi.fn(), () => ({ settings: state }) as RootState, undefined);
+const run = (arg: UpdateReserveRateArgs, state: Partial<ReserveAssetState>) => updateReserveRate(arg)(vi.fn(), () => ({ reserveAsset: state }) as RootState, undefined);
 
 beforeEach(() => {
   vi.mocked(getCurrencyPrice).mockReset();
@@ -32,7 +32,7 @@ describe("updateReserveRate", () => {
 
     const result = await run(
       { assets, reserveAssetsHaveBeenChanged: true },
-      { reserveRates: {}, reserveAssets: {}, reserveRateUpdateTime: 0 }
+      { rates: {}, assets: {}, rateUpdateTime: 0 }
     );
 
     expect(result.payload).toEqual({ base: 30, [ASSET]: 1 });
@@ -47,7 +47,7 @@ describe("updateReserveRate", () => {
 
     const result = await run(
       { assets, reserveAssetsHaveBeenChanged: true },
-      { reserveRates: {}, reserveAssets: {}, reserveRateUpdateTime: 0 }
+      { rates: {}, assets: {}, rateUpdateTime: 0 }
     );
 
     expect(result.payload).toEqual({ [ASSET]: 1 });
@@ -59,7 +59,7 @@ describe("updateReserveRate", () => {
 
     const result = await run(
       { assets, reserveAssetsHaveBeenChanged: true },
-      { reserveRates: {}, reserveAssets: {}, reserveRateUpdateTime: 0 }
+      { rates: {}, assets: {}, rateUpdateTime: 0 }
     );
 
     expect(result.payload).toEqual({ base: 30 });
@@ -69,7 +69,7 @@ describe("updateReserveRate", () => {
     const recent = Math.floor(Date.now() / 1000);
     const result = await run(
       { assets, reserveAssetsHaveBeenChanged: false },
-      { reserveRates: { base: 30 }, reserveAssets: assets, reserveRateUpdateTime: recent }
+      { rates: { base: 30 }, assets: assets, rateUpdateTime: recent }
     );
 
     expect(result.payload).toBeUndefined();
@@ -84,7 +84,7 @@ describe("updateReserveRate", () => {
 
     const result = await run(
       { assets, reserveAssetsHaveBeenChanged: false },
-      { reserveRates: { base: 1 }, reserveAssets: assets, reserveRateUpdateTime: stale }
+      { rates: { base: 1 }, assets: assets, rateUpdateTime: stale }
     );
 
     expect(result.payload).toEqual({ base: 30, [ASSET]: 1 });

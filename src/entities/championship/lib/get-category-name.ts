@@ -1,4 +1,4 @@
-import i18n from "@/locale"
+import i18n from "@/shared/i18n"
 
 export const getCategoryName = (key: string): string => {
   if (key === 'currency') {

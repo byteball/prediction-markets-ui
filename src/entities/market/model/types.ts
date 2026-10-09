@@ -1,11 +1,10 @@
-import type { Candle as CurrencyCandle } from "@/services/market-data";
+import type { Candle as CurrencyCandle } from "@/shared/api/market-data";
 
 export type { CurrencyCandle };
 
 export type OutcomeType = "yes" | "no" | "draw";
 
-export type StateVarValue = string | number | boolean | { [key: string]: StateVarValue };
-
+/** AA parameters of a market plus what the app resolves around them (symbols, decimals, league, odds). */
 export interface MarketParams {
   oracle: string;
   feed_name: string;
@@ -110,118 +109,49 @@ export interface RecentEvent {
   [responseVar: string]: unknown;
 }
 
-export type ReserveAssets = Record<string, { symbol: string; decimals: number }>;
-
 export type MarketDates = { created_at: number; committed_at?: number };
 
-export type ReserveRates = Record<string, number>;
-
-type CreationOrderStatus = "order" | "pending" | "created";
-
-export interface CreationOrderData {
-  oracle: string;
-  feed_name: string;
-  reserve_asset: string;
-  comparison: string;
-  datafeed_value: string | number;
-  datafeed_draw_value?: string | number;
-  event_date: string;
-  waiting_period_length: number;
-  issue_fee: number;
-  redeem_fee: number;
-  arb_profit_tax: number;
-  allow_draw?: boolean | number;
-  is_tokenless?: boolean;
-  quiet_period: number;
+/** A market as the backend lists it (GET /markets) — a flat summary, not the full AA state. */
+export type MarketListItem = {
+  aa_address?: string;
+  reserve_asset?: string;
+  reserve?: number;
   reserve_decimals?: number;
+  reserve_symbol?: string;
+  yes_price?: number;
+  no_price?: number;
+  draw_price?: number;
+  allow_draw?: boolean | number;
+  event_date: number;
+  /** Daily YES price history for the sparkline. */
+  candles?: { price: number }[];
+  yes_symbol?: string;
+  is_tokenless?: boolean | number;
+  result?: OutcomeType | null;
+  waiting_period_length?: number;
+  quiet_period?: number;
+  feed_name?: string;
+  /** Calendar entries carry the value the oracle is expected to compare against. */
+  expect_datafeed_value?: string | number;
+  datafeed_value?: string | number;
+  oracle?: string;
+  comparison?: string;
+  yes_team_id?: number | string;
+  no_team_id?: number | string;
   yes_team?: string;
   no_team?: string;
-}
-
-export interface CreationOrder {
-  data: CreationOrderData;
-  status: CreationOrderStatus;
-  creation_unit_id?: string;
-  prediction_address?: string;
-  yes_asset?: string;
-  no_asset?: string;
-  draw_asset?: string;
-  yes_symbol?: string;
-  no_symbol?: string;
-  draw_symbol?: string;
-}
-
-export type WalletBalance = Record<string, { stable: number; pending: number; total?: number; is_private?: number } | undefined>;
-
-export interface Bridge {
-  bridge_id: number;
-  home_network: string;
-  home_asset: string;
-  home_asset_decimals: number;
-  home_symbol: string;
-  foreign_network: string;
-  foreign_asset: string;
-  foreign_asset_decimals: number;
-  foreign_symbol: string;
-}
-
-export type ObyteMessagePayload = {
-  asset?: string;
-  outputs?: { address: string; amount: number }[];
-} & Record<string, unknown>;
-
-export interface ObyteMessage {
-  app: string;
-  payload_location?: string;
-  payload_hash?: string;
-  payload: ObyteMessagePayload;
-}
-
-export type ObyteUnit = {
-  unit: string;
-  messages: ObyteMessage[];
-  authors?: { address: string }[];
-  timestamp?: number;
+  yes_crest_url?: string | null;
+  no_crest_url?: string | null;
+  league?: string;
+  supply_yes?: number;
+  supply_no?: number;
+  supply_draw?: number;
+  coef?: number;
+  apy?: number;
 };
 
-export interface AAResponseVars {
-  profit?: number;
-  next_coef?: number;
-  arb_profit_tax?: number;
-  [name: string]: string | number | boolean | undefined;
-}
-
-interface AAResponse {
-  responseVars?: AAResponseVars;
-  error?: string;
-}
-
-type UpdatedStateVars = Record<string, Record<string, { value: StateVarValue; old_value?: StateVarValue; delta?: number }>>;
-
-export interface AAResponseBody {
-  aa_address: string;
-  trigger_address: string;
-  trigger_unit: string;
-  trigger_initial_unit?: string;
-  bounced: boolean;
-  response: AAResponse;
-  response_unit?: string | null;
-  timestamp: number;
-  updatedStateVars?: UpdatedStateVars;
-  objResponseUnit?: ObyteUnit | null;
-}
-
-type AAEventBody = { aa_address: string; unit?: ObyteUnit } & Partial<Omit<AAResponseBody, "aa_address">>;
-
-export interface HubMessage {
-  subject?: string;
-  body?: AAEventBody;
-}
-
-export interface FactoryPredictionVar {
-  yes_asset?: string;
-  no_asset?: string;
-  draw_asset?: string;
-  is_tokenless?: boolean;
-  [name: string]: StateVarValue | undefined;
-}
+/**
+ * A calendar entry (GET /calendar): an upcoming event that may or may not have a market yet.
+ * Same shape as a listed market; `aa_address` is absent when the market has not been created.
+ */
+export type CalendarItem = MarketListItem;

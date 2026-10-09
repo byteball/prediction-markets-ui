@@ -1,5 +1,5 @@
-import i18n from "@/locale";
-import { capitalizeFirstLetter } from "./capitalize-first-letter";
+import i18n from "@/shared/i18n";
+import { capitalizeFirstLetter } from "@/shared/lib/capitalize-first-letter";
 
 export const getTabNameByType = (type: string): string => {
   const emoji = getEmojiByType(type);

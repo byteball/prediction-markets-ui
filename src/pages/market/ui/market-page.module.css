@@ -1,0 +1,150 @@
+.itemWrap {
+  padding: 15px;
+  color: #333;
+  border-radius: 7px;
+  margin-bottom: 30px;
+  box-shadow: 0px 0px 10px 10px rgba(244, 244, 244, 0.7);
+  position: relative;
+}
+
+.notifyWrap {
+  font-size: 12px;
+  font-weight: 300;
+  margin-bottom: 5px;
+}
+
+.eventDesc {
+  margin-bottom: 5px;
+  font-weight: 500;
+  font-size: 16px;
+}
+
+.infoWrap {
+  padding-top: 25px;
+  font-size: 14px;
+  overflow: hidden;
+}
+
+.infoTitle {
+  color: #bfbfbf;
+  text-transform: uppercase;
+  font-size: 14px;
+}
+
+.infoValueInCrypto {
+  font-size: 14px;
+  margin-bottom: 10px;
+}
+
+.category {
+  display: block;
+}
+
+.category:first-letter {
+  text-transform: uppercase;
+}
+
+.league {
+  width: 40px;
+  margin-top: 5px;
+  background-color: #fff;
+  cursor: normal;
+  cursor: initial;
+}
+
+.vs {
+  font-size: 26px;
+}
+
+.apyWrap {
+  margin-bottom: 16px;
+}
+
+.apyPanel {
+  background-color: #303030;
+  border-radius: 15px;
+  padding: 10px 20px;
+  box-sizing: border-box;
+  font-weight: bold;
+}
+
+.apyDesc {
+  font-size: 12px;
+  line-height: 1.3;
+  font-weight: 300;
+  margin-top: 8px;
+}
+
+.event {
+  font-size: 32px;
+  margin-bottom: 10px;
+}
+
+.emblem {
+  object-fit: contain;
+  height: 100%;
+  max-width: 120px;
+  max-height: 100%;
+}
+
+.emblemWrap {
+  height: calc(100% - 1em - 10px);
+  min-height: 120px;
+}
+
+/* Small devices (landscape phones, 576px and up) */
+@media (min-width: 576px) {
+  .vs {
+    font-size: 36px;
+  }
+
+}
+
+/* Medium devices (tablets, 768px and up) */
+@media (min-width: 768px) {
+  .infoValueInCrypto {
+    margin-bottom: 0;
+  }
+}
+
+@media (max-width: 480px) {
+  .emblem {
+    width: 70%;
+  }
+
+  .emblemWrap {
+    min-height: auto;
+    max-height: 80px;
+  }
+}
+
+@media (max-width: 576px) {
+  .event {
+    font-size: 26px;
+  }
+}
+
+.symbolWide {
+  display: none;
+}
+
+@media (min-width: 1170px) {
+  .symbolWide {
+    display: inline;
+  }
+}
+
+/* safari only */
+@media not all and (min-resolution:.001dpcm) {
+  .emblem {
+    height: auto;
+    min-height: 100%;
+  }
+}
+
+@supports (font: -apple-system-body) and (-webkit-appearance: none) {
+  .emblem {
+    height: auto;
+    min-height: 100%;
+  }
+}

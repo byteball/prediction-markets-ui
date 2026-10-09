@@ -1,4 +1,4 @@
-import i18n from "@/locale";
+import i18n from "@/shared/i18n";
 
 export const transformChampionshipName = (name: string, code: string | undefined): string => {
     if (name === 'Championship' && code === 'ELC') {

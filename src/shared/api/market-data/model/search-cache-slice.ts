@@ -1,5 +1,5 @@
 import { createSlice, type PayloadAction } from "@reduxjs/toolkit";
-import type { RootState } from "@/store";
+import type { RootState } from "@/shared/lib/redux";
 
 export interface SearchCacheState {
   results: Record<string, Record<string, string>>;
@@ -40,4 +40,10 @@ export const { cacheSearchResult, clearSearchCache } = searchCacheSlice.actions;
 
 export const selectSearchCache = (state: RootState) => state.searchCache.results;
 
-export default searchCacheSlice.reducer;
+export const searchCacheReducer = searchCacheSlice.reducer;
+
+declare module "@/shared/lib/redux" {
+  interface RootState {
+    searchCache: SearchCacheState;
+  }
+}

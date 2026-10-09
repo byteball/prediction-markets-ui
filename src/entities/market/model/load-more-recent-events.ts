@@ -1,9 +1,10 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import { uniqBy } from "lodash-es";
 
-import backend from "@/services/backend";
-import type { AppThunkApiConfig } from "@/store/hooks";
-import type { RecentEvent } from "@/store/types";
+import { getRecentEvents } from "../api/market-api";
+import type { AppThunkApiConfig } from "@/shared/lib/redux";
+
+import type { RecentEvent } from "./types";
 
 type Args = { address: string | null; page: number };
 
@@ -11,8 +12,8 @@ type Result = { recentEvents: RecentEvent[]; recentEventsCount: number } | undef
 
 export const loadMoreRecentEvents = createAsyncThunk<Result, Args, AppThunkApiConfig>("loadMoreRecentEvents", async ({ address, page }, { getState }) => {
   const state = getState();
-  if (address === state.active.address) {
-    const { data: recentEvents, count: recentEventsCount } = await backend.getRecentEvents(address as string, page);
+  if (address === state.market.address) {
+    const { data: recentEvents, count: recentEventsCount } = await getRecentEvents(address as string, page);
     const uniqRecentEvents = uniqBy(recentEvents, "trigger_unit");
 
     return {

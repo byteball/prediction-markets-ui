@@ -1,19 +1,18 @@
-import type { Mock } from "vitest";
-import { store } from "@/store/store";
-import { cacheSearchResult } from "@/store/slices/search-cache-slice";
 import { createIdResolver, type IdResolverOptions } from "./create-id-resolver";
-
-vi.mock("@/store/store", () => ({
-  store: { getState: vi.fn(), dispatch: vi.fn() }
-}));
+import { createMemoryIdCache, setIdCache, type IdCache } from "./id-cache";
 
 type Fetcher = IdResolverOptions["fetcher"];
 
-const mockedStore = store as unknown as { getState: Mock; dispatch: Mock };
+const cache: { get: ReturnType<typeof vi.fn<IdCache["get"]>>; set: ReturnType<typeof vi.fn<IdCache["set"]>> } = { get: vi.fn(), set: vi.fn() };
 
 beforeEach(() => {
-  mockedStore.getState.mockReturnValue({ searchCache: { results: {} } });
-  mockedStore.dispatch.mockReset();
+  cache.get.mockReset().mockReturnValue(undefined);
+  cache.set.mockReset();
+  setIdCache(cache);
+});
+
+afterAll(() => {
+  setIdCache(createMemoryIdCache());
 });
 
 describe("createIdResolver", () => {
@@ -25,31 +24,31 @@ describe("createIdResolver", () => {
     expect(fetcher).not.toHaveBeenCalled();
   });
 
-  it("returns the persisted id without calling the fetcher", async () => {
-    mockedStore.getState.mockReturnValue({ searchCache: { results: { x: { BAR: "bar-id" } } } });
+  it("returns the cached id without calling the fetcher", async () => {
+    cache.get.mockImplementation((provider, symbol) => (provider === "x" && symbol === "BAR" ? "bar-id" : undefined));
     const fetcher = vi.fn<Fetcher>();
     const resolve = createIdResolver({ provider: "x", fetcher });
 
-    expect(await resolve("BAR")).toBe("bar-id");
+    expect(await resolve("bar")).toBe("bar-id");
     expect(fetcher).not.toHaveBeenCalled();
   });
 
-  it("fetches, persists and returns a positive result", async () => {
+  it("fetches, caches and returns a positive result", async () => {
     const fetcher = vi.fn<Fetcher>().mockResolvedValue("baz-id");
     const resolve = createIdResolver({ provider: "x", fetcher });
 
     expect(await resolve("BAZ")).toBe("baz-id");
-    expect(mockedStore.dispatch).toHaveBeenCalledWith(cacheSearchResult({ provider: "x", symbol: "BAZ", key: "baz-id" }));
+    expect(cache.set).toHaveBeenCalledWith("x", "BAZ", "baz-id");
   });
 
-  it("caches a negative result for the session and does not persist it", async () => {
+  it("caches a negative result for the session and does not store it", async () => {
     const fetcher = vi.fn<Fetcher>().mockResolvedValue(null);
     const resolve = createIdResolver({ provider: "x", fetcher });
 
     expect(await resolve("NEG")).toBeNull();
     expect(await resolve("NEG")).toBeNull();
     expect(fetcher).toHaveBeenCalledTimes(1);
-    expect(mockedStore.dispatch).not.toHaveBeenCalled();
+    expect(cache.set).not.toHaveBeenCalled();
   });
 
   it("does not cache a transient failure (retries next call)", async () => {
@@ -73,6 +72,15 @@ describe("createIdResolver", () => {
 
     expect(await first).toBe("dup-id");
     expect(await second).toBe("dup-id");
+    expect(fetcher).toHaveBeenCalledTimes(1);
+  });
+
+  it("works with the default in-memory cache across resolver instances", async () => {
+    setIdCache(createMemoryIdCache());
+    const fetcher = vi.fn<Fetcher>().mockResolvedValue("mem-id");
+
+    expect(await createIdResolver({ provider: "x", fetcher })("MEM")).toBe("mem-id");
+    expect(await createIdResolver({ provider: "x", fetcher })("MEM")).toBe("mem-id");
     expect(fetcher).toHaveBeenCalledTimes(1);
   });
 });
