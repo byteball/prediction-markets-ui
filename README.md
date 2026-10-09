@@ -2,7 +2,7 @@
 
 ## Install
 
-Install node.js, clone the repository, then say
+Install node.js (see `.nvmrc`), clone the repository, then say
 
 ```sh
 yarn
@@ -18,10 +18,13 @@ Copy the appropriate .env.XXXX file to .env
 yarn start
 ```
 
-## Build
+## Checks
 
 ```sh
-yarn build
+yarn typecheck   # tsc
+yarn lint        # eslint, including the FSD layer boundaries
+yarn test        # vitest
+yarn build       # production build into ./build (read by prophet-backend)
 ```
 
 ## Donations
