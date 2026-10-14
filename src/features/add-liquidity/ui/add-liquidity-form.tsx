@@ -248,7 +248,14 @@ export const AddLiquidityForm = ({ yes_team, no_team, walletSlot }: AddLiquidity
             </FormItem>
 
             {allow_draw && (
-              <FormItem extra={<span style={{ color: DRAW_COLOR }}>{drawOdds}</span>} label={<small>{t("common.draw", "draw").toUpperCase()}</small>}>
+              <FormItem
+                extra={<span style={{ color: DRAW_COLOR }}>{drawOdds}</span>}
+                label={
+                  <span className="block truncate">
+                    <small>{t("common.draw", "draw").toUpperCase()}</small>
+                  </span>
+                }
+              >
                 {(control) => <InputGroup {...control} disabled={true} value={floorDecimals(drawPercent, 2)} placeholder="ex. 20" suffix="%" readOnly />}
               </FormItem>
             )}
