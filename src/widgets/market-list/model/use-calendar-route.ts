@@ -1,5 +1,5 @@
 import { useEffect, useMemo } from "react";
-import { createSearchParams, useNavigate, useParams, useSearchParams } from "react-router-dom";
+import { createSearchParams, useLocation, useNavigate, useParams, useSearchParams } from "react-router-dom";
 import { uniq } from "lodash-es";
 
 import { useAppSelector } from "@/shared/lib/redux";
@@ -21,6 +21,7 @@ export const useCalendarRoute = () => {
   const { championships } = useChampionships(lang);
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
+  const { hash } = useLocation();
 
   const calendarCurrency = searchParams.get(QUERY_CURRENCY_KEY);
   const sportTypes = useMemo(() => Object.keys(championships), [championships]);
@@ -37,15 +38,19 @@ export const useCalendarRoute = () => {
     const calendarCurrency = searchParams.get(QUERY_CURRENCY_KEY);
 
     if (category === "currency" && !calendarCurrency) {
-      navigate({ search: createSearchParams({ calendarCurrency: INIT_CALENDAR_CURRENCY }).toString() }, { preventScrollReset: true, replace: true });
+      // Keep the hash so a `#calendar` link still scrolls once the currency is filled in.
+      navigate({ search: createSearchParams({ calendarCurrency: INIT_CALENDAR_CURRENCY }).toString(), hash }, { preventScrollReset: true, replace: true });
     } else if (category !== "currency" && calendarCurrency) {
-      navigate({ search: createSearchParams({}).toString() }, { replace: true, preventScrollReset: true });
+      navigate({ search: createSearchParams({}).toString(), hash }, { replace: true, preventScrollReset: true });
     }
   }, [category]);
 
+  // Until the currency is filled in the request is disabled, so SWR reports no loading at all.
+  const waitingForCurrency = category === "currency" && !calendarCurrency;
+
   return {
     ...pages,
-    isLoading: pages.isLoading || pairsLoading,
+    isLoading: pages.isLoading || pairsLoading || waitingForCurrency,
     popularCurrencies,
   };
 };

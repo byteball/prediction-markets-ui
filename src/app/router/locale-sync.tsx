@@ -31,7 +31,8 @@ export const LocaleSync = () => {
     const cleanedUrl = stripLangPath(location.pathname);
     const current = location.pathname + location.search;
     // Replace the URL only when it actually changes; the effect re-runs on every navigation.
-    const redirect = (to: string) => to !== current && navigate(to, { replace: true });
+    // The hash is kept so in-page anchors (e.g. `/currency#calendar`) survive the redirect.
+    const redirect = (to: string) => to !== current && navigate(to + location.hash, { replace: true });
 
     if (!lang) {
       const languageFromBrowser = navigator.language.split("-")[0];
