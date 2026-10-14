@@ -14,6 +14,7 @@ import { ModalSheet } from "@/shared/ui/modal-sheet";
 type ViewParamsModalProps = {
   reserve_asset: string;
   allow_draw?: boolean | number;
+  is_tokenless?: boolean | number;
   oracle: string;
   feed_name: string;
   comparison: string;
@@ -32,6 +33,7 @@ type ViewParamsModalProps = {
 export const ViewParamsModal = ({
   reserve_asset,
   allow_draw,
+  is_tokenless,
   oracle,
   feed_name,
   comparison,
@@ -78,6 +80,10 @@ export const ViewParamsModal = ({
           <p>
             <b>{paramList.allow_draw.name}: </b>
             {allow_draw ? t("common.yes", "yes") : t("common.no", "no")}
+          </p>
+          <p>
+            <b>{paramList.issue_tokens.name}: </b>
+            {is_tokenless ? t("common.no", "no") : t("common.yes", "yes")}
           </p>
           <p>
             <b>{paramList.oracle.name}: </b>
