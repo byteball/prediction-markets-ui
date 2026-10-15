@@ -105,7 +105,7 @@ const routeHubEvent = (err: unknown, result: unknown) => {
     const isOwnRequest = handleMarketEvent(message, context, state.wallet.address);
 
     if (isOwnRequest) {
-      toast.info(i18n.t("common.received_request", "Received your request. The interface will update after the transaction stabilizes."), { position: "top-center" });
+      toast.info(i18n.t("common.received_request", "Received your request. The interface will update after the transaction stabilizes."), { position: "top-right", duration: 3000 });
     }
   }
 };

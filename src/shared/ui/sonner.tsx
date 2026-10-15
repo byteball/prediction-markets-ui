@@ -11,7 +11,7 @@ const Toaster = ({ ...props }: ToasterProps) => {
           <CircleCheckIcon className="size-4" />
         ),
         info: (
-          <InfoIcon className="size-4" />
+          <InfoIcon className="size-4 text-primary" />
         ),
         warning: (
           <TriangleAlertIcon className="size-4" />
@@ -28,6 +28,9 @@ const Toaster = ({ ...props }: ToasterProps) => {
           "--normal-bg": "var(--popover)",
           "--normal-text": "var(--popover-foreground)",
           "--normal-border": "var(--border)",
+          "--info-bg": "var(--popover)",
+          "--info-border": "color-mix(in srgb, var(--primary) 50%, transparent)",
+          "--info-text": "var(--popover-foreground)",
           "--border-radius": "var(--radius)",
         } as React.CSSProperties
       }
