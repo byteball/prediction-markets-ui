@@ -13,7 +13,6 @@ import { track } from "@/shared/lib/analytics/track";
 import { getExchangeResult, selectActiveAddress, selectActiveMarketParams, selectActiveMarketStateVars, selectUserOutcomeBalances, type OutcomeType } from "@/entities/market";
 import { selectWalletAddress, selectWalletBalance } from "@/entities/wallet";
 
-import { tokenLabel } from "../lib/token-label";
 import { buildRedeemLink } from "../lib/trade-links";
 import { useOutcomeTokens } from "../model/use-outcome-tokens";
 import { TransactionEstimation } from "./transaction-estimation";
@@ -24,13 +23,11 @@ export type AmountState = { value: string | number | undefined; valid: boolean }
 
 export type RedeemFormProps = {
   type?: OutcomeType;
-  yes_team?: string;
-  no_team?: string;
   amount: AmountState;
   setAmount: Dispatch<SetStateAction<AmountState>>;
 };
 
-export const RedeemForm = memo(({ type, yes_team, no_team, amount, setAmount }: RedeemFormProps) => {
+export const RedeemForm = memo(({ type, amount, setAmount }: RedeemFormProps) => {
   const stateVars = useAppSelector(selectActiveMarketStateVars);
   const address = useAppSelector(selectActiveAddress);
   const params = useAppSelector(selectActiveMarketParams);
@@ -98,7 +95,7 @@ export const RedeemForm = memo(({ type, yes_team, no_team, amount, setAmount }: 
     }
   };
 
-  const suffixText = type ? tokenLabel(currentToken, yes_team, no_team) : "";
+  const suffixText = type ? currentToken.label : "";
   const payoutValue = Number(payoutAmount.value);
   const canSend = is_tokenless ? !!address : !!currentToken.asset;
 
@@ -136,7 +133,7 @@ export const RedeemForm = memo(({ type, yes_team, no_team, amount, setAmount }: 
                   <SelectContent>
                     {tokens.map((token) => (
                       <SelectItem key={`to_${token.type}`} value={token.type}>
-                        {tokenLabel(token, yes_team, no_team)}
+                        {token.label}
                       </SelectItem>
                     ))}
                   </SelectContent>

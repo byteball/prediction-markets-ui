@@ -4,7 +4,7 @@ import moment from "moment";
 import i18n from "@/shared/i18n";
 import { BASE_AAS } from "@/shared/config/env";
 import { useAppSelector } from "@/shared/lib/redux";
-import { selectActiveAddress, selectActiveDailyCandles, selectActiveMarketParams, selectActiveMarketStateVars, selectActiveTeams } from "@/entities/market";
+import { selectActiveAddress, selectActiveDailyCandles, selectActiveMarketParams, selectActiveMarketStateVars, selectActiveOutcomeLabels, selectActiveTeams } from "@/entities/market";
 import { selectReservesRate } from "@/entities/reserve-asset";
 
 import type { ChartPoint, ChartType } from "../lib/chart-config";
@@ -20,9 +20,10 @@ export const useMarketChartData = (chartType: ChartType, now: number): ChartPoin
   const params = useAppSelector(selectActiveMarketParams);
   const { coef = 1, result } = useAppSelector(selectActiveMarketStateVars);
   const teams = useAppSelector(selectActiveTeams);
+  const labels = useAppSelector(selectActiveOutcomeLabels);
   const reservesRate = useAppSelector(selectReservesRate);
 
-  const { allow_draw, reserve_symbol, yes_decimals, no_decimals, draw_decimals, yes_symbol, no_symbol, draw_symbol, event_date, created_at, committed_at, base_aa, issue_fee, first_trade_ts, waiting_period_length } = params;
+  const { allow_draw, reserve_symbol, yes_decimals, no_decimals, draw_decimals, event_date, created_at, committed_at, base_aa, issue_fee, first_trade_ts, waiting_period_length } = params;
   const sevenDaysAlreadyPassed = now > event_date + 7 * DAY;
 
   return useMemo<ChartPoint[]>(() => {
@@ -58,12 +59,12 @@ export const useMarketChartData = (chartType: ChartType, now: number): ChartPoin
 
       if (chartType === "prices") {
         data.push(
-          { date, value: yes_price, type: yesLabel, currencySymbol: reserve_symbol, chartType, symbol: yes_symbol },
-          { date, value: no_price, type: noLabel, currencySymbol: reserve_symbol, chartType, symbol: no_symbol }
+          { date, value: yes_price, type: yesLabel, currencySymbol: reserve_symbol, chartType, symbol: labels.yes },
+          { date, value: no_price, type: noLabel, currencySymbol: reserve_symbol, chartType, symbol: labels.no }
         );
 
         if (allow_draw) {
-          data.push({ date, value: draw_price, type: drawLabel, currencySymbol: reserve_symbol, chartType, symbol: draw_symbol });
+          data.push({ date, value: draw_price, type: drawLabel, currencySymbol: reserve_symbol, chartType, symbol: labels.draw });
         }
       } else if (chartType === "fee") {
         data.push({ date, value: (open_coef - 1) * 100, chartType });
@@ -75,16 +76,16 @@ export const useMarketChartData = (chartType: ChartType, now: number): ChartPoin
         data.push({ date, value: apy || 0, chartType });
       } else {
         data.push(
-          { date, value: +Number(supply_yes / 10 ** yes_decimals).toFixed(yes_decimals), type: yesLabel, currencySymbol: yes_symbol, chartType },
-          { date, value: +Number(supply_no / 10 ** no_decimals).toFixed(no_decimals), type: noLabel, currencySymbol: no_symbol, chartType }
+          { date, value: +Number(supply_yes / 10 ** yes_decimals).toFixed(yes_decimals), type: yesLabel, currencySymbol: labels.yes, chartType },
+          { date, value: +Number(supply_no / 10 ** no_decimals).toFixed(no_decimals), type: noLabel, currencySymbol: labels.no, chartType }
         );
 
         if (allow_draw) {
-          data.push({ date, value: +Number(supply_draw / 10 ** draw_decimals).toFixed(draw_decimals), type: drawLabel, currencySymbol: draw_symbol, chartType });
+          data.push({ date, value: +Number(supply_draw / 10 ** draw_decimals).toFixed(draw_decimals), type: drawLabel, currencySymbol: labels.draw, chartType });
         }
       }
     });
 
     return data;
-  }, [candles, chartType, address, reservesRate, teams, i18n.language]);
+  }, [candles, chartType, address, reservesRate, teams, labels, i18n.language]);
 };

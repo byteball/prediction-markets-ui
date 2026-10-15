@@ -132,6 +132,8 @@ export const AddLiquidityForm = ({ yes_team, no_team, walletSlot }: AddLiquidity
   const data = buildAddLiquidityData({ isFirstIssue, yesPercent: probabilities.yes.value, noPercent: probabilities.no.value });
   const link = buildAddLiquidityLink({ aa: address, reserveAsset: reserve_asset, amountInPennies, data, walletAddress });
 
+  // Stays mounted while the amount is edited so the form does not jump.
+  const showFeeBlock = isFirstIssue || needsIssueFeeForLiquidity || !!meta;
   const valid = meta && amountInPenniesWithoutFee && amountInPenniesWithoutFee > 0 && reserveAmount.valid && (percentSum === 100 || !isFirstIssue);
 
   const handleChangeReserveAmount = (ev: ChangeEvent<HTMLInputElement>) => {
@@ -237,7 +239,7 @@ export const AddLiquidityForm = ({ yes_team, no_team, walletSlot }: AddLiquidity
           <p className="mb-2">{t("forms.liquidity.outcome_probabilities", "Outcome probabilities")}</p>
           <div className={`grid grid-cols-1 gap-x-2 ${allow_draw ? "md:grid-cols-3" : "md:grid-cols-2"}`}>
             <FormItem
-              extra={<span style={{ color: YES_COLOR }}>{yesOdds}</span>}
+              extra={<span className="block min-h-[1.125rem]" style={{ color: YES_COLOR }}>{yesOdds}</span>}
               label={
                 <span className="block truncate">
                   <small>{haveTeamNames ? `${yes_team}` : "YES"}</small>
@@ -249,7 +251,7 @@ export const AddLiquidityForm = ({ yes_team, no_team, walletSlot }: AddLiquidity
 
             {allow_draw && (
               <FormItem
-                extra={<span style={{ color: DRAW_COLOR }}>{drawOdds}</span>}
+                extra={<span className="block min-h-[1.125rem]" style={{ color: DRAW_COLOR }}>{drawOdds}</span>}
                 label={
                   <span className="block truncate">
                     <small>{t("common.draw", "draw").toUpperCase()}</small>
@@ -261,7 +263,7 @@ export const AddLiquidityForm = ({ yes_team, no_team, walletSlot }: AddLiquidity
             )}
 
             <FormItem
-              extra={<span style={{ color: NO_COLOR }}>{noOdds}</span>}
+              extra={<span className="block min-h-[1.125rem]" style={{ color: NO_COLOR }}>{noOdds}</span>}
               label={
                 <span className="block truncate">
                   <small>{haveTeamNames ? `${no_team}` : "NO"}</small>
@@ -271,13 +273,17 @@ export const AddLiquidityForm = ({ yes_team, no_team, walletSlot }: AddLiquidity
               {(control) => <InputGroup {...control} value={probabilities.no.value} placeholder={`ex. ${allow_draw ? 15 : 35}`} suffix="%" onChange={(ev) => handleChangeProbability(ev, "no")} />}
             </FormItem>
           </div>
-          {bookmaker_yes_odds !== null && bookmaker_no_odds !== null && bookmaker_draw_odds !== null ? <span className="text-muted-foreground">{t("forms.liquidity.suggested_probabilities", "Suggested probabilities are based on the current bookmaker odds")}</span> : null}
+          {bookmaker_yes_odds !== null && bookmaker_no_odds !== null && bookmaker_draw_odds !== null ? (
+            <FormItem className="-mt-4 mb-2">
+              <span className="text-sm text-muted-foreground">{t("forms.liquidity.suggested_probabilities", "Suggested probabilities are based on the current bookmaker odds")}</span>
+            </FormItem>
+          ) : null}
         </>
       )}
 
-      {meta && (
+      {showFeeBlock && (
         <FormItem>
-          {!isFirstIssue && (
+          {meta && !isFirstIssue && (
             <div style={{ marginBottom: 15 }}>
               <b>{t("forms.liquidity.net_amounts", "Net added amounts")}: </b>
               <div style={{ color: YES_COLOR }}>
@@ -297,12 +303,16 @@ export const AddLiquidityForm = ({ yes_team, no_team, walletSlot }: AddLiquidity
           )}
 
           <div className="metaWrap">
-            {meta?.issue_fee !== 0 && needsIssueFeeForLiquidity ? (
-              <div>
-                <span className="metaLabel">{t("transaction_estimation.issue_fee", "Issue fee")}</span>: {+Number(meta.issue_fee / 10 ** reserve_decimals).toFixed(reserve_decimals)} {reserve_symbol}
+            {needsIssueFeeForLiquidity ? (
+              <div className="min-h-[1.3125rem]">
+                {meta && meta.issue_fee !== 0 ? (
+                  <>
+                    <span className="metaLabel">{t("transaction_estimation.issue_fee", "Issue fee")}</span>: {+Number(meta.issue_fee / 10 ** reserve_decimals).toFixed(reserve_decimals)} {reserve_symbol}
+                  </>
+                ) : null}
               </div>
             ) : null}
-            {isBridged && estimate ? (
+            {meta && isBridged && estimate ? (
               <div style={{ marginTop: 20 }}>
                 {counterstake_assistant_fee ? (
                   <div>
@@ -334,7 +344,7 @@ export const AddLiquidityForm = ({ yes_team, no_team, walletSlot }: AddLiquidity
             ) : null}
           </div>
 
-          {isFirstIssue && percentSum !== 100 && (
+          {meta && isFirstIssue && percentSum !== 100 && (
             <div style={{ marginTop: 20 }}>
               <Alert variant="destructive">
                 <AlertTitle>{t("forms.liquidity.sum_100", "The percentage sum must be equal to 100")}</AlertTitle>

@@ -1,5 +1,3 @@
-import moment from "moment";
-
 import { isSportOracle } from "@/entities/oracle/@x/market";
 
 export type OutcomeSymbols = {
@@ -8,30 +6,13 @@ export type OutcomeSymbols = {
   draw_symbol: string;
 };
 
-type GetTokenlessSymbolsParams = {
-  feed_name: string;
-  event_date: number | string;
-  oracle?: string;
-};
+/**
+ * Symbols for the outcomes of a tokenless market (it has no registered assets).
+ * Sport markets use the team abbreviations from the feed name (`<championship>_<yes>_<no>_<date>`),
+ * every other market uses plain YES / NO / DRAW.
+ */
+export const getTokenlessSymbols = ({ feed_name, oracle }: { feed_name: string; oracle?: string }): OutcomeSymbols => {
+  const [, yes_team, no_team] = isSportOracle(oracle) ? feed_name.split("_") : [];
 
-
-export const getTokenlessSymbols = ({ feed_name, event_date, oracle }: GetTokenlessSymbolsParams): OutcomeSymbols => {
-  if (isSportOracle(oracle)) {
-    const [, yes_team, no_team] = feed_name.split("_");
-
-    return {
-      yes_symbol: `${feed_name}_${yes_team}`,
-      no_symbol: `${feed_name}_${no_team}`,
-      draw_symbol: `${feed_name}_DRAW`,
-    };
-  }
-
-  const date = typeof event_date === "number" ? moment.unix(event_date).utc() : moment.utc(event_date, "YYYY-MM-DDTHH:mm:ss");
-  const dateView = date.format(date.hours() === 0 && date.minutes() === 0 ? "YYYY-MM-DD" : "YYYY-MM-DD-hhmm");
-
-  return {
-    yes_symbol: `${feed_name}_${dateView}_YES`,
-    no_symbol: `${feed_name}_${dateView}_NO`,
-    draw_symbol: `${feed_name}_${dateView}_DRAW`,
-  };
+  return yes_team && no_team ? { yes_symbol: yes_team, no_symbol: no_team, draw_symbol: "DRAW" } : { yes_symbol: "YES", no_symbol: "NO", draw_symbol: "DRAW" };
 };

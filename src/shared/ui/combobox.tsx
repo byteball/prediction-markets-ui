@@ -136,6 +136,7 @@ function Combobox({ value, onValueChange, options, placeholder, searchPlaceholde
               aria-autocomplete="list"
               {...aria}
               data-slot="input"
+              autoComplete="off"
               disabled={disabled}
               className="h-10 w-full min-w-0 rounded-lg border border-input bg-transparent px-2.5 py-1 text-lg outline-none placeholder:text-muted-foreground focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 disabled:cursor-not-allowed disabled:opacity-50 aria-invalid:border-destructive dark:bg-input/30"
               placeholder={typeof placeholder === "string" ? placeholder : undefined}
@@ -191,6 +192,7 @@ function Combobox({ value, onValueChange, options, placeholder, searchPlaceholde
           <input
             ref={inputRef}
             autoFocus
+            autoComplete="off"
             data-slot="input"
             className="h-8 w-full bg-transparent px-2 text-sm outline-none placeholder:text-muted-foreground"
             placeholder={searchPlaceholder ?? i18n.t("common.search", "Search")}

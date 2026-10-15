@@ -60,7 +60,7 @@ const TradeDialog = ({ yes_team, no_team, walletSlot }: Pick<TradeModalProps, "y
         />
 
         {action === "buy" && <BuyForm amount={buyAmount} setAmount={setBuyAmount} type={request?.type} yes_team={yes_team} no_team={no_team} walletSlot={walletSlot} />}
-        {action === "redeem" && <RedeemForm amount={redeemAmount} setAmount={setRedeemAmount} type={request?.type} yes_team={yes_team} no_team={no_team} />}
+        {action === "redeem" && <RedeemForm amount={redeemAmount} setAmount={setRedeemAmount} type={request?.type} />}
       </ModalSheet>
     </>
   );

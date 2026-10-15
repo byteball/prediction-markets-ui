@@ -6,6 +6,7 @@ import { selectWalletAddress } from "@/entities/wallet/@x/market";
 import { addRecentEvent } from "./add-recent-event";
 import { loadMoreRecentEvents } from "./load-more-recent-events";
 import { setActiveMarket } from "./set-active-market";
+import { getOutcomeLabels } from "../lib/get-outcome-labels";
 import type { Candle, CurrencyCandle, MarketParams, MarketStateVars, OutcomeAmounts, OutcomeType, RecentEvent, Team } from "./types";
 
 export type ActiveMarketStatus = "not selected" | "loading" | "loaded" | "error";
@@ -122,6 +123,8 @@ export const selectActiveDatafeedValue = (state: RootState) => state.market.data
 export const selectActiveTeams = (state: RootState) => state.market.teams;
 export const selectActiveCurrencyCandles = (state: RootState) => state.market.currencyCandles;
 export const selectActiveCurrencyCurrentValue = (state: RootState) => state.market.currencyCurrentValue;
+
+export const selectActiveOutcomeLabels = createSelector([(state: RootState) => state.market.params, selectActiveTeams], getOutcomeLabels);
 
 const ZERO_BALANCES: OutcomeAmounts = { yes: 0, no: 0, draw: 0 };
 

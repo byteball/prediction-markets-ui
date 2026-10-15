@@ -5,7 +5,7 @@ import { Img } from "react-image";
 
 import { ClaimProfitForm } from "./claim-profit-form";
 import { useAppSelector } from "@/shared/lib/redux";
-import { selectActiveAddress, selectActiveMarketParams, selectActiveMarketStateVars, selectActiveMarketStatus, selectUserOutcomeBalances } from "@/entities/market";
+import { selectActiveAddress, selectActiveMarketParams, selectActiveMarketStateVars, selectActiveMarketStatus, selectActiveOutcomeLabels, selectUserOutcomeBalances } from "@/entities/market";
 import { selectWalletAddress } from "@/entities/wallet";
 
 import { Button } from "@/shared/ui/button";
@@ -27,14 +27,15 @@ export const ClaimProfitModal = ({ disabled, yes_team, no_team }: ClaimProfitMod
   const walletAddress = useAppSelector(selectWalletAddress);
   const outcomeBalances = useAppSelector(selectUserOutcomeBalances);
 
-  const { yes_decimals, no_decimals, draw_decimals, yes_symbol, no_symbol, draw_symbol, reserve_decimals, reserve_symbol, yes_crest_url, no_crest_url, is_tokenless } = useAppSelector(selectActiveMarketParams);
+  const { yes_decimals, no_decimals, draw_decimals, reserve_decimals, reserve_symbol, yes_crest_url, no_crest_url, is_tokenless } = useAppSelector(selectActiveMarketParams);
+  const labels = useAppSelector(selectActiveOutcomeLabels);
 
   const { result: winner, supply_yes, supply_no, supply_draw, reserve, yes_asset, no_asset, draw_asset } = stateVars;
 
   const supply = (winner === "yes" ? supply_yes : winner === "no" ? supply_no : supply_draw) || 0;
   const decimals = (winner === "yes" ? yes_decimals : winner === "no" ? no_decimals : draw_decimals) || 0;
   const asset: string | undefined = winner === "yes" ? yes_asset : winner === "no" ? no_asset : draw_asset;
-  const symbol: string | undefined = winner === "yes" ? yes_symbol : winner === "no" ? no_symbol : draw_symbol;
+  const symbol: string | undefined = winner === "yes" ? labels.yes : winner === "no" ? labels.no : labels.draw;
   const outcomeBalance = winner && outcomeBalances ? outcomeBalances[winner] : undefined;
   const winnerView = winner === "yes" ? yes_team || "Yes" : winner === "no" ? no_team || "No" : "Draw";
   const winnerCrest = winner === "yes" ? yes_crest_url : winner === "no" ? no_crest_url : null;

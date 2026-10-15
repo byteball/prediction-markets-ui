@@ -36,6 +36,7 @@ const InputGroup = React.forwardRef<HTMLInputElement, InputGroupProps>(function 
       <input
         ref={ref}
         data-slot="input"
+        autoComplete="off"
         className={cn("h-full min-w-0 flex-1 bg-transparent outline-none placeholder:text-muted-foreground disabled:cursor-not-allowed", className)}
         {...props}
       />

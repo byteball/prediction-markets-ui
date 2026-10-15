@@ -79,7 +79,7 @@ export const getMarketCardView = ({ market, preview, priceOrOdds, reserveRate, l
     coef = 0,
   } = market;
 
-  const yesSymbol = yes_symbol || (is_tokenless && feed_name ? getTokenlessSymbols({ feed_name, event_date, oracle }).yes_symbol : undefined);
+  const yesSymbol = yes_symbol || (is_tokenless && feed_name ? getTokenlessSymbols({ feed_name, oracle }).yes_symbol : undefined);
   const isExpiry = now > event_date;
   const exists = !!aa_address || preview;
   const isSportMarket = isSportOracle(oracle);
