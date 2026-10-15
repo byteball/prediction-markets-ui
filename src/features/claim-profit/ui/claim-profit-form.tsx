@@ -2,7 +2,6 @@ import { useState, useEffect, type ChangeEvent } from "react";
 import { useTranslation } from "react-i18next";
 
 import { QRButton } from "@/shared/ui/qr-button/qr-button";
-import { truncate } from "lodash-es";
 import { buildClaimProfitLink } from "../lib/claim-link";
 import { useAppSelector } from "@/shared/lib/redux";
 import { selectWalletBalance } from "@/entities/wallet";
@@ -94,7 +93,7 @@ export const ClaimProfitForm = ({ address, asset, supply = 0, reserve = 0, decim
             suffix={
               <Tooltip>
                 <TooltipTrigger asChild>
-                  <span style={{ maxWidth: "100%", overflow: "hidden", cursor: "default" }}>{truncate(symbol ?? "", { length: 18 })}</span>
+                  <span className="block cursor-default truncate">{symbol}</span>
                 </TooltipTrigger>
                 <TooltipContent>{symbol}</TooltipContent>
               </Tooltip>

@@ -132,6 +132,8 @@ export const AddLiquidityForm = ({ yes_team, no_team, walletSlot }: AddLiquidity
   const data = buildAddLiquidityData({ isFirstIssue, yesPercent: probabilities.yes.value, noPercent: probabilities.no.value });
   const link = buildAddLiquidityLink({ aa: address, reserveAsset: reserve_asset, amountInPennies, data, walletAddress });
 
+  // Stays mounted while the amount is edited so the form does not jump.
+  const showFeeBlock = isFirstIssue || needsIssueFeeForLiquidity || !!meta;
   const valid = meta && amountInPenniesWithoutFee && amountInPenniesWithoutFee > 0 && reserveAmount.valid && (percentSum === 100 || !isFirstIssue);
 
   const handleChangeReserveAmount = (ev: ChangeEvent<HTMLInputElement>) => {
@@ -279,76 +281,78 @@ export const AddLiquidityForm = ({ yes_team, no_team, walletSlot }: AddLiquidity
         </>
       )}
 
-      <FormItem>
-        {meta && !isFirstIssue && (
-          <div style={{ marginBottom: 15 }}>
-            <b>{t("forms.liquidity.net_amounts", "Net added amounts")}: </b>
-            <div style={{ color: YES_COLOR }}>
-              {haveTeamNames ? yes_team : t("common.yes", "yes").toUpperCase()}: {Number(yesReserveAmount / 10 ** reserve_decimals).toFixed(reserve_decimals)} {reserve_symbol} <>({Number((yesReserveAmount / amountInPenniesWithoutFee) * 100).toFixed(2)}%)</>
-            </div>
-
-            <div style={{ color: NO_COLOR }}>
-              {haveTeamNames ? no_team : t("common.no", "no").toUpperCase()}: {Number(noReserveAmount / 10 ** reserve_decimals).toFixed(reserve_decimals)} {reserve_symbol} <>({Number((noReserveAmount / amountInPenniesWithoutFee) * 100).toFixed(2)}%)</>
-            </div>
-
-            {allow_draw && (
-              <div style={{ color: DRAW_COLOR }}>
-                {haveTeamNames ? capitalizeFirstLetter(t("common.draw", "draw")) : t("common.draw", "draw").toUpperCase()}: {Number(drawReserveAmount / 10 ** reserve_decimals).toFixed(reserve_decimals)} {reserve_symbol} <>({Number((drawReserveAmount / amountInPenniesWithoutFee) * 100).toFixed(2)}%)</>
+      {showFeeBlock && (
+        <FormItem>
+          {meta && !isFirstIssue && (
+            <div style={{ marginBottom: 15 }}>
+              <b>{t("forms.liquidity.net_amounts", "Net added amounts")}: </b>
+              <div style={{ color: YES_COLOR }}>
+                {haveTeamNames ? yes_team : t("common.yes", "yes").toUpperCase()}: {Number(yesReserveAmount / 10 ** reserve_decimals).toFixed(reserve_decimals)} {reserve_symbol} <>({Number((yesReserveAmount / amountInPenniesWithoutFee) * 100).toFixed(2)}%)</>
               </div>
-            )}
-          </div>
-        )}
 
-        <div className="metaWrap">
-          {needsIssueFeeForLiquidity ? (
-            <div className="min-h-[1.3125rem]">
-              {meta && meta.issue_fee !== 0 ? (
-                <>
-                  <span className="metaLabel">{t("transaction_estimation.issue_fee", "Issue fee")}</span>: {+Number(meta.issue_fee / 10 ** reserve_decimals).toFixed(reserve_decimals)} {reserve_symbol}
-                </>
-              ) : null}
+              <div style={{ color: NO_COLOR }}>
+                {haveTeamNames ? no_team : t("common.no", "no").toUpperCase()}: {Number(noReserveAmount / 10 ** reserve_decimals).toFixed(reserve_decimals)} {reserve_symbol} <>({Number((noReserveAmount / amountInPenniesWithoutFee) * 100).toFixed(2)}%)</>
+              </div>
+
+              {allow_draw && (
+                <div style={{ color: DRAW_COLOR }}>
+                  {haveTeamNames ? capitalizeFirstLetter(t("common.draw", "draw")) : t("common.draw", "draw").toUpperCase()}: {Number(drawReserveAmount / 10 ** reserve_decimals).toFixed(reserve_decimals)} {reserve_symbol} <>({Number((drawReserveAmount / amountInPenniesWithoutFee) * 100).toFixed(2)}%)</>
+                </div>
+              )}
             </div>
-          ) : null}
-          {meta && isBridged && estimate ? (
+          )}
+
+          <div className="metaWrap">
+            {needsIssueFeeForLiquidity ? (
+              <div className="min-h-[1.3125rem]">
+                {meta && meta.issue_fee !== 0 ? (
+                  <>
+                    <span className="metaLabel">{t("transaction_estimation.issue_fee", "Issue fee")}</span>: {+Number(meta.issue_fee / 10 ** reserve_decimals).toFixed(reserve_decimals)} {reserve_symbol}
+                  </>
+                ) : null}
+              </div>
+            ) : null}
+            {meta && isBridged && estimate ? (
+              <div style={{ marginTop: 20 }}>
+                {counterstake_assistant_fee ? (
+                  <div>
+                    <span className="metaLabel">
+                      <Trans i18nKey="transaction_estimation.cs_fee">
+                        <a href="https://counterstake.org" target="_blank" rel="noopener">
+                          Counterstake
+                        </a>{" "}
+                        fee
+                      </Trans>
+                    </span>
+                    : {+Number(counterstake_assistant_fee).toFixed(fromToken.decimals)} {fromToken.symbol}
+                  </div>
+                ) : null}
+                {fromToken.foreign_asset !== reserve_asset ? (
+                  <div>
+                    <span className="metaLabel">
+                      <Trans i18nKey="transaction_estimation.oswap_rate">
+                        <a href="https://oswap.io" target="_blank" rel="noopener">
+                          Oswap
+                        </a>{" "}
+                        rate
+                      </Trans>
+                    </span>
+                    : 1 {fromToken.symbol} ≈ {+Number(estimate / (Number(reserveAmount.value) * 0.99)).toFixed(reserve_decimals)} {reserve_symbol}
+                  </div>
+                ) : null}
+              </div>
+            ) : null}
+          </div>
+
+          {meta && isFirstIssue && percentSum !== 100 && (
             <div style={{ marginTop: 20 }}>
-              {counterstake_assistant_fee ? (
-                <div>
-                  <span className="metaLabel">
-                    <Trans i18nKey="transaction_estimation.cs_fee">
-                      <a href="https://counterstake.org" target="_blank" rel="noopener">
-                        Counterstake
-                      </a>{" "}
-                      fee
-                    </Trans>
-                  </span>
-                  : {+Number(counterstake_assistant_fee).toFixed(fromToken.decimals)} {fromToken.symbol}
-                </div>
-              ) : null}
-              {fromToken.foreign_asset !== reserve_asset ? (
-                <div>
-                  <span className="metaLabel">
-                    <Trans i18nKey="transaction_estimation.oswap_rate">
-                      <a href="https://oswap.io" target="_blank" rel="noopener">
-                        Oswap
-                      </a>{" "}
-                      rate
-                    </Trans>
-                  </span>
-                  : 1 {fromToken.symbol} ≈ {+Number(estimate / (Number(reserveAmount.value) * 0.99)).toFixed(reserve_decimals)} {reserve_symbol}
-                </div>
-              ) : null}
+              <Alert variant="destructive">
+                <AlertTitle>{t("forms.liquidity.sum_100", "The percentage sum must be equal to 100")}</AlertTitle>
+              </Alert>
             </div>
-          ) : null}
-        </div>
-
-        {meta && isFirstIssue && percentSum !== 100 && (
-          <div style={{ marginTop: 20 }}>
-            <Alert variant="destructive">
-              <AlertTitle>{t("forms.liquidity.sum_100", "The percentage sum must be equal to 100")}</AlertTitle>
-            </Alert>
-          </div>
-        )}
-      </FormItem>
+          )}
+        </FormItem>
+      )}
 
       {!metamaskInstalled && isBridged && (
         <FormItem>

@@ -18,6 +18,7 @@ export {
   selectActiveCurrencyCandles,
   selectActiveCurrencyCurrentValue,
   selectUserOutcomeBalances,
+  selectActiveOutcomeLabels,
   type ActiveMarketStatus,
   type MarketState,
 } from "./model/market-slice";
@@ -40,6 +41,7 @@ export { normalizeStateVars } from "./lib/normalize-state-vars";
 export { generateTextEvent, type GenerateTextEventParams } from "./lib/generate-text-event";
 export { isDrawAllowed } from "./lib/is-draw-allowed";
 export { getTokenlessSymbols, type OutcomeSymbols } from "./lib/get-tokenless-symbols";
+export { getOutcomeLabels, type OutcomeLabels } from "./lib/get-outcome-labels";
 export { getEstimatedAPY, type EstimatedAPYParams } from "./lib/get-estimated-apy";
 export { getMarketCardView, type MarketCardView, type OutcomeView } from "./lib/get-market-card-view";
 export { getMarketAddressFromPath } from "./lib/get-market-address-from-path";

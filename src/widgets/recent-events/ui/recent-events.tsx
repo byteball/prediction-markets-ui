@@ -2,7 +2,7 @@ import moment from "moment";
 import { useMemo } from "react";
 import { Trans, useTranslation } from "react-i18next";
 
-import { selectActiveAddress, selectActiveMarketParams, selectActiveRecentEvents, selectActiveRecentEventsCount } from "@/entities/market";
+import { selectActiveAddress, selectActiveMarketParams, selectActiveOutcomeLabels, selectActiveRecentEvents, selectActiveRecentEventsCount } from "@/entities/market";
 import { loadMoreRecentEvents } from "@/entities/market";
 import { useAppDispatch, useAppSelector } from "@/shared/lib/redux";
 import type { MarketParams, RecentEvent } from "@/entities/market";
@@ -112,7 +112,8 @@ export const RecentEvents = () => {
 
   const dispatch = useAppDispatch();
 
-  const { reserve_decimals, reserve_symbol, yes_symbol, no_symbol, draw_symbol, yes_decimals, no_decimals, draw_decimals, allow_draw } = useAppSelector(selectActiveMarketParams);
+  const { reserve_decimals, reserve_symbol, yes_decimals, no_decimals, draw_decimals, allow_draw } = useAppSelector(selectActiveMarketParams);
+  const labels = useAppSelector(selectActiveOutcomeLabels);
 
   const data = useMemo(() => [...notSortedData].sort((a, b) => b.timestamp - a.timestamp), [notSortedData]);
 
@@ -135,9 +136,9 @@ export const RecentEvents = () => {
                 {...item}
                 reserve_decimals={reserve_decimals}
                 reserve_symbol={reserve_symbol}
-                yes_symbol={yes_symbol}
-                no_symbol={no_symbol}
-                draw_symbol={draw_symbol}
+                yes_symbol={labels.yes}
+                no_symbol={labels.no}
+                draw_symbol={labels.draw}
                 yes_decimals={yes_decimals}
                 no_decimals={no_decimals}
                 draw_decimals={draw_decimals}
