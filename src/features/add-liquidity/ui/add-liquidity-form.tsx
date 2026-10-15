@@ -237,7 +237,7 @@ export const AddLiquidityForm = ({ yes_team, no_team, walletSlot }: AddLiquidity
           <p className="mb-2">{t("forms.liquidity.outcome_probabilities", "Outcome probabilities")}</p>
           <div className={`grid grid-cols-1 gap-x-2 ${allow_draw ? "md:grid-cols-3" : "md:grid-cols-2"}`}>
             <FormItem
-              extra={<span style={{ color: YES_COLOR }}>{yesOdds}</span>}
+              extra={<span className="block min-h-[1.125rem]" style={{ color: YES_COLOR }}>{yesOdds}</span>}
               label={
                 <span className="block truncate">
                   <small>{haveTeamNames ? `${yes_team}` : "YES"}</small>
@@ -249,7 +249,7 @@ export const AddLiquidityForm = ({ yes_team, no_team, walletSlot }: AddLiquidity
 
             {allow_draw && (
               <FormItem
-                extra={<span style={{ color: DRAW_COLOR }}>{drawOdds}</span>}
+                extra={<span className="block min-h-[1.125rem]" style={{ color: DRAW_COLOR }}>{drawOdds}</span>}
                 label={
                   <span className="block truncate">
                     <small>{t("common.draw", "draw").toUpperCase()}</small>
@@ -261,7 +261,7 @@ export const AddLiquidityForm = ({ yes_team, no_team, walletSlot }: AddLiquidity
             )}
 
             <FormItem
-              extra={<span style={{ color: NO_COLOR }}>{noOdds}</span>}
+              extra={<span className="block min-h-[1.125rem]" style={{ color: NO_COLOR }}>{noOdds}</span>}
               label={
                 <span className="block truncate">
                   <small>{haveTeamNames ? `${no_team}` : "NO"}</small>
@@ -271,78 +271,84 @@ export const AddLiquidityForm = ({ yes_team, no_team, walletSlot }: AddLiquidity
               {(control) => <InputGroup {...control} value={probabilities.no.value} placeholder={`ex. ${allow_draw ? 15 : 35}`} suffix="%" onChange={(ev) => handleChangeProbability(ev, "no")} />}
             </FormItem>
           </div>
-          {bookmaker_yes_odds !== null && bookmaker_no_odds !== null && bookmaker_draw_odds !== null ? <span className="text-muted-foreground">{t("forms.liquidity.suggested_probabilities", "Suggested probabilities are based on the current bookmaker odds")}</span> : null}
+          {bookmaker_yes_odds !== null && bookmaker_no_odds !== null && bookmaker_draw_odds !== null ? (
+            <FormItem className="-mt-4 mb-2">
+              <span className="text-sm text-muted-foreground">{t("forms.liquidity.suggested_probabilities", "Suggested probabilities are based on the current bookmaker odds")}</span>
+            </FormItem>
+          ) : null}
         </>
       )}
 
-      {meta && (
-        <FormItem>
-          {!isFirstIssue && (
-            <div style={{ marginBottom: 15 }}>
-              <b>{t("forms.liquidity.net_amounts", "Net added amounts")}: </b>
-              <div style={{ color: YES_COLOR }}>
-                {haveTeamNames ? yes_team : t("common.yes", "yes").toUpperCase()}: {Number(yesReserveAmount / 10 ** reserve_decimals).toFixed(reserve_decimals)} {reserve_symbol} <>({Number((yesReserveAmount / amountInPenniesWithoutFee) * 100).toFixed(2)}%)</>
-              </div>
-
-              <div style={{ color: NO_COLOR }}>
-                {haveTeamNames ? no_team : t("common.no", "no").toUpperCase()}: {Number(noReserveAmount / 10 ** reserve_decimals).toFixed(reserve_decimals)} {reserve_symbol} <>({Number((noReserveAmount / amountInPenniesWithoutFee) * 100).toFixed(2)}%)</>
-              </div>
-
-              {allow_draw && (
-                <div style={{ color: DRAW_COLOR }}>
-                  {haveTeamNames ? capitalizeFirstLetter(t("common.draw", "draw")) : t("common.draw", "draw").toUpperCase()}: {Number(drawReserveAmount / 10 ** reserve_decimals).toFixed(reserve_decimals)} {reserve_symbol} <>({Number((drawReserveAmount / amountInPenniesWithoutFee) * 100).toFixed(2)}%)</>
-                </div>
-              )}
+      <FormItem>
+        {meta && !isFirstIssue && (
+          <div style={{ marginBottom: 15 }}>
+            <b>{t("forms.liquidity.net_amounts", "Net added amounts")}: </b>
+            <div style={{ color: YES_COLOR }}>
+              {haveTeamNames ? yes_team : t("common.yes", "yes").toUpperCase()}: {Number(yesReserveAmount / 10 ** reserve_decimals).toFixed(reserve_decimals)} {reserve_symbol} <>({Number((yesReserveAmount / amountInPenniesWithoutFee) * 100).toFixed(2)}%)</>
             </div>
-          )}
 
-          <div className="metaWrap">
-            {meta?.issue_fee !== 0 && needsIssueFeeForLiquidity ? (
-              <div>
-                <span className="metaLabel">{t("transaction_estimation.issue_fee", "Issue fee")}</span>: {+Number(meta.issue_fee / 10 ** reserve_decimals).toFixed(reserve_decimals)} {reserve_symbol}
+            <div style={{ color: NO_COLOR }}>
+              {haveTeamNames ? no_team : t("common.no", "no").toUpperCase()}: {Number(noReserveAmount / 10 ** reserve_decimals).toFixed(reserve_decimals)} {reserve_symbol} <>({Number((noReserveAmount / amountInPenniesWithoutFee) * 100).toFixed(2)}%)</>
+            </div>
+
+            {allow_draw && (
+              <div style={{ color: DRAW_COLOR }}>
+                {haveTeamNames ? capitalizeFirstLetter(t("common.draw", "draw")) : t("common.draw", "draw").toUpperCase()}: {Number(drawReserveAmount / 10 ** reserve_decimals).toFixed(reserve_decimals)} {reserve_symbol} <>({Number((drawReserveAmount / amountInPenniesWithoutFee) * 100).toFixed(2)}%)</>
               </div>
-            ) : null}
-            {isBridged && estimate ? (
-              <div style={{ marginTop: 20 }}>
-                {counterstake_assistant_fee ? (
-                  <div>
-                    <span className="metaLabel">
-                      <Trans i18nKey="transaction_estimation.cs_fee">
-                        <a href="https://counterstake.org" target="_blank" rel="noopener">
-                          Counterstake
-                        </a>{" "}
-                        fee
-                      </Trans>
-                    </span>
-                    : {+Number(counterstake_assistant_fee).toFixed(fromToken.decimals)} {fromToken.symbol}
-                  </div>
-                ) : null}
-                {fromToken.foreign_asset !== reserve_asset ? (
-                  <div>
-                    <span className="metaLabel">
-                      <Trans i18nKey="transaction_estimation.oswap_rate">
-                        <a href="https://oswap.io" target="_blank" rel="noopener">
-                          Oswap
-                        </a>{" "}
-                        rate
-                      </Trans>
-                    </span>
-                    : 1 {fromToken.symbol} ≈ {+Number(estimate / (Number(reserveAmount.value) * 0.99)).toFixed(reserve_decimals)} {reserve_symbol}
-                  </div>
-                ) : null}
-              </div>
-            ) : null}
+            )}
           </div>
+        )}
 
-          {isFirstIssue && percentSum !== 100 && (
-            <div style={{ marginTop: 20 }}>
-              <Alert variant="destructive">
-                <AlertTitle>{t("forms.liquidity.sum_100", "The percentage sum must be equal to 100")}</AlertTitle>
-              </Alert>
+        <div className="metaWrap">
+          {needsIssueFeeForLiquidity ? (
+            <div className="min-h-[1.3125rem]">
+              {meta && meta.issue_fee !== 0 ? (
+                <>
+                  <span className="metaLabel">{t("transaction_estimation.issue_fee", "Issue fee")}</span>: {+Number(meta.issue_fee / 10 ** reserve_decimals).toFixed(reserve_decimals)} {reserve_symbol}
+                </>
+              ) : null}
             </div>
-          )}
-        </FormItem>
-      )}
+          ) : null}
+          {meta && isBridged && estimate ? (
+            <div style={{ marginTop: 20 }}>
+              {counterstake_assistant_fee ? (
+                <div>
+                  <span className="metaLabel">
+                    <Trans i18nKey="transaction_estimation.cs_fee">
+                      <a href="https://counterstake.org" target="_blank" rel="noopener">
+                        Counterstake
+                      </a>{" "}
+                      fee
+                    </Trans>
+                  </span>
+                  : {+Number(counterstake_assistant_fee).toFixed(fromToken.decimals)} {fromToken.symbol}
+                </div>
+              ) : null}
+              {fromToken.foreign_asset !== reserve_asset ? (
+                <div>
+                  <span className="metaLabel">
+                    <Trans i18nKey="transaction_estimation.oswap_rate">
+                      <a href="https://oswap.io" target="_blank" rel="noopener">
+                        Oswap
+                      </a>{" "}
+                      rate
+                    </Trans>
+                  </span>
+                  : 1 {fromToken.symbol} ≈ {+Number(estimate / (Number(reserveAmount.value) * 0.99)).toFixed(reserve_decimals)} {reserve_symbol}
+                </div>
+              ) : null}
+            </div>
+          ) : null}
+        </div>
+
+        {meta && isFirstIssue && percentSum !== 100 && (
+          <div style={{ marginTop: 20 }}>
+            <Alert variant="destructive">
+              <AlertTitle>{t("forms.liquidity.sum_100", "The percentage sum must be equal to 100")}</AlertTitle>
+            </Alert>
+          </div>
+        )}
+      </FormItem>
 
       {!metamaskInstalled && isBridged && (
         <FormItem>
