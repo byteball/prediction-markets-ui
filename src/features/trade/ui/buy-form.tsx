@@ -17,7 +17,6 @@ import { get_result_for_buying_by_type, selectActiveAddress, selectActiveMarketP
 import { selectWalletAddress } from "@/entities/wallet";
 import { decodeFromToken, encodeFromToken, obyteReserveToken, transferCounterstake, useBridgeTokenOptions, useCounterstakeEstimate, type FromToken } from "@/entities/bridge";
 
-import { tokenLabel } from "../lib/token-label";
 import { buildBuyLink } from "../lib/trade-links";
 import { useOutcomeTokens } from "../model/use-outcome-tokens";
 import type { AmountState } from "./redeem-form";
@@ -174,7 +173,7 @@ export const BuyForm = ({ type, yes_team, no_team, amount, setAmount, walletSlot
                     <SelectContent>
                       {tokens.map((token) => (
                         <SelectItem key={`to_${token.type}`} value={token.type}>
-                          {tokenLabel(token, yes_team, no_team)}
+                          {token.label}
                         </SelectItem>
                       ))}
                     </SelectContent>
@@ -185,7 +184,7 @@ export const BuyForm = ({ type, yes_team, no_team, amount, setAmount, walletSlot
           </>
         ) : getAmount.value ? (
           <div className="md:col-span-3" style={{ marginBottom: 10, fontWeight: "bold", paddingLeft: 5 }}>
-            <span style={{ marginRight: 5 }}>{t("forms.common.you_get", "You get")}:</span> <span>{(getAmountValue > 0 ? getAmountValue : 0) / 10 ** currentToken.decimals}</span> {tokenLabel(currentToken, yes_team, no_team)}
+            <span style={{ marginRight: 5 }}>{t("forms.common.you_get", "You get")}:</span> <span>{(getAmountValue > 0 ? getAmountValue : 0) / 10 ** currentToken.decimals}</span> {currentToken.label}
           </div>
         ) : (
           ""

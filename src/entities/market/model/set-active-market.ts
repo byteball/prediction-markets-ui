@@ -89,7 +89,7 @@ export const setActiveMarket = createAsyncThunk<SetActiveMarketResult, { address
   ];
 
   if (isTokenless) {
-    const { yes_symbol, no_symbol, draw_symbol } = getTokenlessSymbols({ feed_name: aa[1].params.feed_name, event_date: aa[1].params.event_date, oracle: aa[1].params.oracle });
+    const { yes_symbol, no_symbol, draw_symbol } = getTokenlessSymbols({ feed_name: aa[1].params.feed_name, oracle: aa[1].params.oracle });
 
     tokensInfo.yes_symbol = yes_symbol;
     tokensInfo.no_symbol = no_symbol;
