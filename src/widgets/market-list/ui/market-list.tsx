@@ -12,6 +12,7 @@ import { useAppSelector } from "@/shared/lib/redux";
 import { useMarkets } from "@/entities/market";
 import { useChampionships, getEmojiByType, transformChampionshipName, getSportNameByType, getCategoryName } from "@/entities/championship";
 import { getLangPath } from "@/shared/lib/lang-path";
+import { useScrollToHash } from "@/shared/lib/hooks/use-scroll-to-hash";
 import { useCalendarRoute, QUERY_CURRENCY_KEY } from "../model/use-calendar-route";
 
 import { Button } from "@/shared/ui/button";
@@ -61,6 +62,9 @@ export const MarketList = memo(() => {
   const { calendar, popularCurrencies, isLoading: calendarIsLoading, isLoadMore: isLoadMoreCalendar, loadMore: loadCalendarMore, isLoadingMore: isLoadingCalendarMore } = useCalendarRoute();
 
   const actualCurrency = searchParams.get(QUERY_CURRENCY_KEY);
+  const hasCalendar = category === "currency" || category in championships;
+  // `/create` links here with `#calendar`; the anchor only exists once both lists have rendered.
+  useScrollToHash(hasCalendar && !isLoading && !calendarIsLoading);
   const langPath = getLangPath(lang);
   const particleList = useMemo(() => championships?.[category] || [], [championships, category]);
 
@@ -106,8 +110,8 @@ export const MarketList = memo(() => {
         <Spinner />
       )}
 
-      {category === "currency" || category in championships ? (
-        <>
+      {hasCalendar ? (
+        <div id="calendar" className="scroll-mt-4">
           <DashedDivider>{category === "currency" ? t("prediction_list.title_create", "create new markets") : t("prediction_list.title_calendar", "calendar of upcoming matches")}</DashedDivider>
 
           {category === "currency" ? (
@@ -153,7 +157,7 @@ export const MarketList = memo(() => {
           ) : (
             <Spinner />
           )}
-        </>
+        </div>
       ) : null}
     </>
   );
