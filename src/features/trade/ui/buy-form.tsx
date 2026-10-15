@@ -183,8 +183,8 @@ export const BuyForm = ({ type, yes_team, no_team, amount, setAmount, walletSlot
             </div>
           </>
         ) : getAmount.value ? (
-          <div className="md:col-span-3" style={{ marginBottom: 10, fontWeight: "bold", paddingLeft: 5 }}>
-            <span style={{ marginRight: 5 }}>{t("forms.common.you_get", "You get")}:</span> <span>{(getAmountValue > 0 ? getAmountValue : 0) / 10 ** currentToken.decimals}</span> {currentToken.label}
+          <div className="mb-2.5 font-bold md:col-span-3">
+            <span className="mr-1.5">{t("forms.common.you_get", "You get")}:</span> <span>{(getAmountValue > 0 ? getAmountValue : 0) / 10 ** currentToken.decimals}</span> {currentToken.label}
           </div>
         ) : (
           ""
