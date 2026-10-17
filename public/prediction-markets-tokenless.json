@@ -1,6 +1,6 @@
 {
   "version": "1.0",
-  "description": "Prophet prediction markets (tokenless): positions are kept as balances inside the AA instead of being issued as assets",
+  "description": "Prophet prediction markets (tokenless)",
   "homepage_url": "https://prophet.ooo",
   "source_url": "https://github.com/byteball/prediction-markets-aa",
   "field_descriptions": {
